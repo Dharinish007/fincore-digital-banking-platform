@@ -1,5 +1,6 @@
 package com.example.fincoredigitalbankingmanagementplatform2.statementgeneration.controller;
 
+import com.example.fincoredigitalbankingmanagementplatform2.statementgeneration.DTO.statementRequestDTO;
 import com.example.fincoredigitalbankingmanagementplatform2.statementgeneration.entity.transactionEntity;
 import com.example.fincoredigitalbankingmanagementplatform2.statementgeneration.service.statementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,14 @@ public class statementController {
     //Statement Service
     private statementService statementService;
     @GetMapping("/viewStatement")
-    public List<transactionEntity> viewStatement(@RequestParam String accNo, Authentication authentication){
+    public List<transactionEntity> viewStatement(@RequestBody statementRequestDTO dto, Authentication authentication){
         String email= authentication.getName();
-        return statementService.getStatement(email,accNo);
+        return statementService.getStatement(email,dto);
     }
     @GetMapping("/downloadStatement")
-    public ResponseEntity<Resource>download(@RequestParam String accNo, Authentication authentication){
+    public ResponseEntity<Resource>download(@RequestBody statementRequestDTO dto, Authentication authentication){
         String email= authentication.getName();
-        ByteArrayInputStream inputStream= statementService.downloadPDF(email,accNo);
+        ByteArrayInputStream inputStream= statementService.downloadPDF(email,dto);
         //convert it in resource form
         InputStreamResource resource=new InputStreamResource(inputStream);
 

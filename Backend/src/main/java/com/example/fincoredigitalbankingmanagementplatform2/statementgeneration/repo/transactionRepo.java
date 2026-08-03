@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface transactionRepo extends JpaRepository<transactionEntity,Long > {
     List<transactionEntity> findTop10BySenderAccountNumberOrderByTransactionDateDesc(accountEntity account);
+    List<transactionEntity> findBysenderAccountNumberAndTransactionDateBetween(
+            accountEntity account,
+            LocalDate startDate,
+            LocalDate endDate);
 }

@@ -1,5 +1,6 @@
 package com.example.fincoredigitalbankingmanagementplatform2.statementgeneration.service;
 
+import com.example.fincoredigitalbankingmanagementplatform2.statementgeneration.DTO.statementRequestDTO;
 import com.example.fincoredigitalbankingmanagementplatform2.accountlifecycle.entity.accountEntity;
 import com.example.fincoredigitalbankingmanagementplatform2.accountlifecycle.entity.userEntity;
 import com.example.fincoredigitalbankingmanagementplatform2.accountlifecycle.repo.accountRepo;
@@ -29,18 +30,18 @@ public class statementService {
     @Autowired
     private userRepo userRepo;
 
-    public List<transactionEntity> getStatement(String email, String accNo) {
+    public List<transactionEntity> getStatement(String email, statementRequestDTO dto) {
         userEntity customer=userRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("user not found"));
         accountEntity user=accountRepo.findByAccountNumberAndCustomerId(
-                        accNo,
+                        dto.getAccountNumber(),
                         customer.getCustomerId())
                 .orElseThrow(() -> new BadCredentialsException("Account not found"));
-        return user.getTransactions();
+        return repo.findBysenderAccountNumberAndTransactionDateBetween(user,dto.getStartDate(),dto.getEndDate());
     }
 
-    public ByteArrayInputStream downloadPDF(String email, String accNo) {
+    public ByteArrayInputStream downloadPDF(String email, statementRequestDTO dto) {
 
-        List<transactionEntity> statement=getStatement(email,accNo);
+        List<transactionEntity> statement=getStatement(email,dto);
         Document document=new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
