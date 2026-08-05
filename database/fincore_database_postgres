@@ -1,0 +1,6 @@
+-- FinCore Digital Banking Platform — Database Schema (PostgreSQL)
+-- Matches account-service/src/main/resources/application.properties:
+--   spring.datasource.url=jdbc:postgresql://localhost:5432/BankingApp
+--   spring.datasource.username=postgres
+--   spring.datasource.password=1998
+  
