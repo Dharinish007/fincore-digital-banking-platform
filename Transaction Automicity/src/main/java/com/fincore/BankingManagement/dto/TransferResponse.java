@@ -14,15 +14,16 @@ public class TransferResponse {
     private String sender;
     private String receiver;
     private BigDecimal amount;
+    private BigDecimal balance;
     private String status;
     private LocalDateTime date;
     private String message;
-
-    public TransferResponse(String string, String success, String moneyTransferredSuccessfully, BigDecimal amount, LocalDateTime now) {
+    public TransferResponse(String string, String success, String moneyTransferredSuccessfully, BigDecimal amount, BigDecimal balance, LocalDateTime now) {
         this.transactionId = string;
         this.sender = success;
         this.receiver = moneyTransferredSuccessfully;
         this.amount = amount;
+        this.balance = balance;
         this.status = success;
         this.date = now;
         this.message = moneyTransferredSuccessfully;

@@ -20,13 +20,13 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false,name="account_no")
     private String accountNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name="balance")
     private BigDecimal balance;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name="account_type")
     private String accountType;
 
     @OneToOne
