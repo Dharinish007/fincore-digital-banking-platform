@@ -1,0 +1,56 @@
+<div class="dashboard-layout">
+  <!-- Top Header Bar -->
+  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+  <div class="main-container">
+    <!-- Left Navigation Sidebar -->
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      <!-- Title & Breadcrumb Header -->
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>Balance Accuracy Dashboard</h1>
+          <p class="subtitle">FinCore Nexus Enterprise Audit & Real-time Ledger Discrepancy Monitoring</p>
+        </div>
+        <div class="live-indicator-badge">
+          <span class="live-pulse"></span>
+          <span>Automated Batch: Online</span>
+        </div>
+      </div>
+
+      <!-- 4 Metric Statistic Cards -->
+      <app-summary-cards [stats]="stats()"></app-summary-cards>
+
+      <!-- Reactive Form Filter Bar -->
+      <app-filter-section
+        (filterChanged)="onFilterChanged($event)"
+        (filterReset)="onFilterReset()"
+        (exportExcel)="onExportExcel()"
+        (exportPdf)="onExportPdf()">
+      </app-filter-section>
+
+      <!-- 4 Banking Analytics Charts -->
+      <app-analytics-charts></app-analytics-charts>
+
+      <!-- Balance Accuracy Data Table -->
+      <app-accuracy-table
+        [accounts]="accounts()"
+        (view)="openDetailDrawer($event)"
+        (verify)="openVerifyDialog($event)"
+        (auditLog)="openAuditLogDialog($event)"
+        (freeze)="openFreezeDialog($event)">
+      </app-accuracy-table>
+    </main>
+  </div>
+
+  <!-- Right Slide-Over Detail Drawer -->
+  <app-detail-drawer
+    [account]="selectedAccountForDrawer"
+    [isOpen]="isDrawerOpen"
+    (close)="closeDetailDrawer()"
+    (verifyClick)="openVerifyDialog($event)"
+    (auditClick)="openAuditLogDialog($event)">
+  </app-detail-drawer>
+</div>

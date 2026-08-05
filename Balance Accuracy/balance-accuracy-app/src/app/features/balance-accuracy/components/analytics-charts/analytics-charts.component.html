@@ -1,0 +1,57 @@
+<div class="charts-grid">
+  <!-- Chart 1: Accuracy Trend -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="title-group">
+        <mat-icon class="icon-green">trending_up</mat-icon>
+        <span class="chart-title">Accuracy Trend</span>
+      </div>
+      <span class="chart-badge">7 Days</span>
+    </div>
+    <div class="chart-body">
+      <canvas #trendCanvas></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 2: Branch Comparison -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="title-group">
+        <mat-icon class="icon-blue">storefront</mat-icon>
+        <span class="chart-title">Branch Comparison</span>
+      </div>
+      <span class="chart-badge">5 Branches</span>
+    </div>
+    <div class="chart-body">
+      <canvas #branchCanvas></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 3: Mismatch Distribution -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="title-group">
+        <mat-icon class="icon-red">pie_chart</mat-icon>
+        <span class="chart-title">Mismatch Distribution</span>
+      </div>
+      <span class="chart-badge">By Root Cause</span>
+    </div>
+    <div class="chart-body">
+      <canvas #distributionCanvas></canvas>
+    </div>
+  </div>
+
+  <!-- Chart 4: Daily Verification Count -->
+  <div class="chart-card">
+    <div class="chart-header">
+      <div class="title-group">
+        <mat-icon class="icon-purple">bar_chart</mat-icon>
+        <span class="chart-title">Daily Verification Count</span>
+      </div>
+      <span class="chart-badge">Batches</span>
+    </div>
+    <div class="chart-body">
+      <canvas #dailyCanvas></canvas>
+    </div>
+  </div>
+</div>
