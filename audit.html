@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Trail</title>
+    <link rel="stylesheet" href="audit.css">
+</head>
+
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            🏦 <span>FINCORE<br>BANK</span>
+        </div>
+
+        <a href="#" class="menu-item">
+            🏠 <span>Dashboard</span>
+        </a>
+
+        <a href="#" class="menu-item">
+            📄 <span>KYC Verification</span>
+        </a>
+
+        <a href="#" class="menu-item active">
+            📋 <span>Audit Trail</span>
+        </a>
+
+        <a href="#" class="menu-item">
+            👤 <span>Profile</span>
+        </a>
+    </div>
+
+    <div class="main">
+
+        <div class="navbar">
+            <h2>Audit Trail Dashboard</h2>
+            <div class="user">
+                Teller : T001
+            </div>
+        </div>
+
+        <!-- Cards -->
+        <div class="cards">
+            <div class="card">
+                <h3>Total Logs</h3>
+                <p id = "totalLogs">5</p>
+            </div>
+
+            <div class="card">
+                <h3>Success Logs</h3>
+                <p id = "successLogs">3</p>
+            </div>
+
+            <div class="card">
+                <h3>Failed Logs</h3>
+                <p id = "failedLogs">2</p>
+            </div>
+        </div>
+
+        <!-- Search & Filter Controls -->
+        <div class="search">
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by User , Audit ID or Customer ID">
+
+            <select id="statusFilter" onchange="filterTable()">
+                <option value="All">All Status</option>
+                <option value="Success">Success</option>
+                <option value="Failed">Failed</option>
+            </select>
+
+            <button onclick="filterTable()">Search</button>
+        </div>
+
+        <div class="date-filter">
+             <label>From:</label>
+             <input type="date" id="fromDate">
+
+               <label>To:</label>
+                <input type="date" id="toDate">
+
+             <button class="date-btn" onclick="filterTable()">Search Date</button>
+        </div>
+
+        <button class="refresh-btn" onclick="refreshLogs()"> Refresh Logs</button>
+
+
+        <!-- Table -->
+        <table id="auditTable">
+            <thead>
+                <tr>
+                    <th>Audit ID</th>
+                    <th>User</th>
+                    <th>Customer ID</th>
+                    <th>Action</th>
+                    <th>Module</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Details</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A01</td>
+                    <td>Teller01</td>
+                    <td>A1000</td>
+                    <td>KYC Verified</td>
+                    <td>KYC</td>
+                    <td>2026-07-18</td>
+                    <td class="success">Success</td>
+                    <td><button class = "view-btn" onclick="viewDetails(this)">View</button></td>
+                </tr>
+                <tr>
+                    <td>A02</td>
+                    <td>Teller02</td>
+                    <td>B1001</td>
+                    <td>Customer Updated</td>
+                    <td>Customer</td>
+                    <td>2026-07-15</td>
+                    <td class="success">Success</td>
+                     <td><button class = "view-btn" onclick="viewDetails(this)">View</button></td>
+                </tr>
+                <tr>
+                    <td>A03</td>
+                    <td>Teller03</td>
+                    <td>C1002</td>
+                    <td>KYC Rejected</td>
+                    <td>KYC</td>
+                    <td>2026-07-12</td>
+                    <td class="failed">Failed</td>
+                     <td><button class = "view-btn" onclick="viewDetails(this)">View</button></td>
+                </tr>
+                <tr>
+                  <td>A04</td>
+                  <td>Teller04</td>
+                  <td>D1003</td>
+                  <td>KYC Accepted</td>
+                  <td>KYC</td>
+                  <td>2026-07-10</td>
+                  <td class="success">Success</td>
+                   <td><button class = "view-btn" onclick="viewDetails(this)">View</button></td>
+                </tr>
+                <tr>
+                    <td>A05</td>
+                    <td>Teller05</td>
+                    <td>E1004</td>
+                    <td>KYC Rejected</td>
+                    <td>KYC</td>
+                    <td>2026-07-05</td>
+                    <td class="failed">Failed</td>
+                     <td><button class = "view-btn" onclick="viewDetails(this)">View</button></td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script>
+      function filterTable() {
+
+    let searchInput = document.getElementById("searchInput").value.toLowerCase().trim();
+    let statusFilter = document.getElementById("statusFilter").value;
+
+    let fromDate = document.getElementById("fromDate").value;
+    let toDate = document.getElementById("toDate").value;
+
+    let rows = document.querySelectorAll("#auditTable tbody tr");
+
+    rows.forEach(function(row) {
+
+        let auditId = row.cells[0].innerText.toLowerCase().trim();
+        let user = row.cells[1].innerText.toLowerCase().trim();
+        let customer = row.cells[2].innerText.toLowerCase().trim();
+
+        let date = row.cells[5].innerText.trim();
+        let status = row.cells[6].innerText.trim();
+
+        // Search filter
+        let matchesSearch =
+            auditId.includes(searchInput) ||
+            user.includes(searchInput) ||
+            customer.includes(searchInput);
+
+        // Status filter
+        let matchesStatus =
+            statusFilter === "All" ||
+            status === statusFilter;
+
+        // Date filter
+        let matchesDate = true;
+
+        if (fromDate !== "" && date < fromDate) {
+            matchesDate = false;
+        }
+
+        if (toDate !== "" && date > toDate) {
+            matchesDate = false;
+        }
+
+        // Show row only when ALL filters match
+        if (matchesSearch && matchesStatus && matchesDate) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+
+    });
+    updateCounts();
+}
+            
+        
+
+        function updateCounts() {
+
+    let rows = document.querySelectorAll("#auditTable tbody tr");
+
+    let total = 0;
+    let success = 0;
+    let failed = 0;
+
+    rows.forEach(function(row){
+
+        if(row.style.display !== "none"){
+
+            total++;
+
+            let status = row.cells[6].innerText.trim();
+
+            if(status === "Success"){
+                success++;
+            }
+            else if(status === "Failed"){
+                failed++;
+            }
+        }
+
+    });
+
+    document.getElementById("totalLogs").innerText = total;
+    document.getElementById("successLogs").innerText = success;
+    document.getElementById("failedLogs").innerText = failed;
+
+      }
+
+      function viewDetails(button) {
+    let row = button.parentElement.parentElement;
+
+    let auditId = row.cells[0].innerText;
+    let user = row.cells[1].innerText;
+    let customer = row.cells[2].innerText;
+    let action = row.cells[3].innerText;
+    let module = row.cells[4].innerText;
+    let date = row.cells[5].innerText;
+    let status = row.cells[6].innerText;
+
+    alert(
+        "Audit ID : " + auditId +
+        "\nUser : " + user +
+        "\nCustomer : " + customer +
+        "\nAction : " + action +
+        "\nModule : " + module +
+        "\nDate : " + date +
+        "\nStatus : " + status
+    );
+}
+  
+function refreshLogs() {
+
+    // Clear search
+    document.getElementById("searchInput").value = "";
+
+    // Reset status
+    document.getElementById("statusFilter").value = "All";
+
+    // Clear dates
+    document.getElementById("fromDate").value = "";
+    document.getElementById("toDate").value = "";
+
+    // Show all rows
+    let rows = document.querySelectorAll("#auditTable tbody tr");
+
+    rows.forEach(function(row) {
+        row.style.display = "";
+    });
+
+    // Update dashboard counts
+    updateCounts();
+}
+    </script>
+</body>
+
+</html>
