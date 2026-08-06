@@ -1,10 +1,10 @@
-package com.fincore.accountservice.controller;
+package com.fincore.BankingManagement.account.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.fincore.accountservice.entity.Account;
-import com.fincore.accountservice.service.AccountService;
+import com.fincore.BankingManagement.account.entity.Account;
+import com.fincore.BankingManagement.account.service.AccountService;
 
 @RestController
 @RequestMapping("/accounts")
