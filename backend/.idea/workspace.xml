@@ -4,7 +4,153 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="37c2b536-7f25-4171-95e7-f4b91498f186" name="Changes" comment="" />
+    <list default="true" id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/.tsbuildinfo" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/angular-compiler.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/angular-compiler.db-lock" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_bidi.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_bidi.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_scrolling.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_scrolling.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_text-field.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_text-field.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_common.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_common.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_core.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_core.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_forms.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_forms.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_badge.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_badge.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_button.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_button.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_core.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_core.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_datepicker.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_datepicker.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_dialog.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_dialog.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_divider.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_divider.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_form-field.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_form-field.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_icon.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_icon.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_input.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_input.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_menu.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_menu.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_paginator.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_paginator.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_progress-bar.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_progress-bar.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_select.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_select.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_sort.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_sort.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_table.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_table.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tabs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tabs.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tooltip.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tooltip.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser_animations_async.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser_animations_async.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_router.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_router.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/_metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/browser-72KSBDDC.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/browser-72KSBDDC.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chart__js.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chart__js.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2TAPZVZ4.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2TAPZVZ4.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2YGPWXPO.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2YGPWXPO.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-4RFYUNDC.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-4RFYUNDC.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-5Z5ISBN7.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-5Z5ISBN7.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-664MWIMC.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-664MWIMC.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6I6RQOLH.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6I6RQOLH.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6VVYZFK4.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6VVYZFK4.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-A6TVUFFE.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-A6TVUFFE.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JHXNGOQI.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JHXNGOQI.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JNTZAZAZ.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JNTZAZAZ.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JQEJGICL.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JQEJGICL.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-M54Z4DBK.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-M54Z4DBK.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-MEIJUGNZ.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-MEIJUGNZ.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NI2A4Q65.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NI2A4Q65.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NPG2GJB4.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NPG2GJB4.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-O3NOPGGP.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-O3NOPGGP.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-QWC2HM52.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-QWC2HM52.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-RNPDT76W.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-RNPDT76W.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-TN23HS4Y.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-TN23HS4Y.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-U556SHEO.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-U556SHEO.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-WDMUDEB6.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-WDMUDEB6.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-XI7U67SH.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-XI7U67SH.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/rxjs.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/rxjs.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps_ssr/_metadata.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps_ssr/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/Screenshots/AccountNotFound.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/Screenshots/InsufficientBalance.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/Screenshots/MoneyTransFerSuccess.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingManagementApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/TransactionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/AccountNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/GlobalHandleException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionController/TransactionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransactionDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/model/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/model/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/model/Transaction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/AccountRepositery/AccountRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/TransactionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/entity/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/test/java/com/fincore/BankingManagement/BankingManagementApplicationTests.java" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -12,8 +158,18 @@
   </component>
   <component name="CopilotPersistence">
     <persistenceIdMap>
-      <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/backend" value="3HYDPncHkkpjlO6IZJxwT3VHN5G" />
+      <entry key="_D:/IT_SPARKS/fincore-digital-banking-platform/backend/Transaction Automicity" value="3HYCEOLke3RQ5cIxvgs1WeWp2YM" />
+      <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/backend" value="3HYGQBYHn5XfuORT5dedgmK02sk" />
+      <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/backend/Transaction Automicity" value="3HYDYL2akgOF81rrhAhBVrLr1lN" />
+      <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/fincore-digital-banking-platform/backend/Transaction Automicity" value="3HWxP6q2vYwJJEKviiM9PGL2FEa" />
     </persistenceIdMap>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -29,10 +185,10 @@
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
-  <component name="ProjectId" id="3HYDPncHkkpjlO6IZJxwT3VHN5G" />
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="3HWxP6q2vYwJJEKviiM9PGL2FEa" />
   <component name="ProjectSessionTemplates">
     <option name="panelTemplate">
       <template>
@@ -52,20 +208,38 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "copilot.chat.legacySessionMetadata.migrated": "true",
-    "git-widget-placeholder": "team-c",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BankingManagementApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.BankingManagementApplication.executor&quot;: &quot;Run&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;team-c&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Transaction Automicity" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Transaction Automicity" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -75,11 +249,11 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="37c2b536-7f25-4171-95e7-f4b91498f186" name="Changes" comment="" />
-      <created>1786036087758</created>
+      <changelist id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="" />
+      <created>1785997600910</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1786036087758</updated>
+      <updated>1785997600910</updated>
     </task>
     <servers />
   </component>
