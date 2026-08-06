@@ -1,4 +1,4 @@
-package com.fincore.BankingManagement.Exception;
+package com.fincore.BankingManagement.BankingServices.Exception;
 
 public class AccountNotFoundException extends RuntimeException {
 

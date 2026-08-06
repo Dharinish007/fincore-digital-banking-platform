@@ -1,9 +1,9 @@
-package com.fincore.BankingManagement.TransactionController;
+package com.fincore.BankingManagement.BankingServices.TransactionController;
 
 import com.fincore.BankingManagement.BankingServices.Impl.TransactionServiceImp;
 import com.fincore.BankingManagement.BankingServices.TransactionService;
-import com.fincore.BankingManagement.dto.TransferRequest;
-import com.fincore.BankingManagement.dto.TransferResponse;
+import com.fincore.BankingManagement.BankingServices.dto.TransferRequest;
+import com.fincore.BankingManagement.BankingServices.dto.TransferResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

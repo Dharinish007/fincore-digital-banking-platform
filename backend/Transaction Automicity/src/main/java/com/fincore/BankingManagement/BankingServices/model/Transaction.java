@@ -1,5 +1,5 @@
-package com.fincore.BankingManagement.model;
-import com.fincore.BankingManagement.Enums.TransactionType;
+package com.fincore.BankingManagement.BankingServices.model;
+import com.fincore.BankingManagement.BankingServices.Enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")

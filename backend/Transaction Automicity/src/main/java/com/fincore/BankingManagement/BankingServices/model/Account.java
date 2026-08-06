@@ -1,7 +1,6 @@
-package com.fincore.BankingManagement.model;
-import com.fincore.BankingManagement.Enums.AccountStatus;
-import com.fincore.BankingManagement.Enums.AccountType;
-import com.fincore.BankingManagement.model.Customer;
+package com.fincore.BankingManagement.BankingServices.model;
+import com.fincore.BankingManagement.BankingServices.Enums.AccountStatus;
+import com.fincore.BankingManagement.BankingServices.Enums.AccountType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

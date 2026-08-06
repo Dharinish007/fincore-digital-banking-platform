@@ -1,19 +1,18 @@
 package com.fincore.BankingManagement.BankingServices.Impl;
 import com.fincore.BankingManagement.BankingServices.TransactionService;
-import com.fincore.BankingManagement.Enums.TransactionType;
-import com.fincore.BankingManagement.Repositery.TransactionRepository.AccountRepositery.AccountRepository;
-import com.fincore.BankingManagement.Repositery.TransactionRepository.TransactionRepository;
-import com.fincore.BankingManagement.dto.TransferRequest;
-import com.fincore.BankingManagement.dto.TransferResponse;
-import com.fincore.BankingManagement.model.Account;
-import com.fincore.BankingManagement.model.Transaction;
+import com.fincore.BankingManagement.BankingServices.Enums.TransactionType;
+import com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.AccountRepositery.AccountRepository;
+import com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.TransactionRepository;
+import com.fincore.BankingManagement.BankingServices.dto.TransferRequest;
+import com.fincore.BankingManagement.BankingServices.dto.TransferResponse;
+import com.fincore.BankingManagement.BankingServices.model.Account;
+import com.fincore.BankingManagement.BankingServices.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.fincore.BankingManagement.Exception.AccountNotFoundException;
+import com.fincore.BankingManagement.BankingServices.Exception.AccountNotFoundException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service

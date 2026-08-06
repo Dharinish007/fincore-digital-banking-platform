@@ -1,4 +1,4 @@
-package com.fincore.BankingManagement.model;
+package com.fincore.BankingManagement.BankingServices.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

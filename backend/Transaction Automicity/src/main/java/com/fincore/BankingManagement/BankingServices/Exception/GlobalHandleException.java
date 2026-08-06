@@ -1,4 +1,4 @@
-package com.fincore.BankingManagement.Exception;
+package com.fincore.BankingManagement.BankingServices.Exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

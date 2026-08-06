@@ -1,4 +1,4 @@
-package com.fincore.BankingManagement.Enums;
+package com.fincore.BankingManagement.BankingServices.Enums;
 
 public enum TransactionType {
     Deposit,

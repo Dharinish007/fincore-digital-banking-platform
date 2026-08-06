@@ -1,4 +1,4 @@
-package com.fincore.BankingManagement.dto;
+package com.fincore.BankingManagement.BankingServices.dto;
 
 import lombok.Data;
 

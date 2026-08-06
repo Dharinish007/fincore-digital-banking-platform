@@ -7,14 +7,15 @@ import com.fincore.BankingManagement.account.entity.Account;
 import com.fincore.BankingManagement.account.service.AccountService;
 
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/accountCreation")
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
 
     @PostMapping
-    public Account createAccount(@RequestBody Account account) {
-        return accountService.createAccount(account);
+    public String createAccount(@RequestBody Account account) {
+        accountService.createAccount(account);
+        return "Account created";
     }
 }
