@@ -1,4 +1,6 @@
-package com.fincore.accountservice.entity;
+package com.fincore.BankingManagement.account.entity;
+
+import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,7 +13,7 @@ public class Account {
 
     @Id
     @Column(name = "account_no")
-    private Long accountNo;
+    private String accountNo;
 
     @Column(name = "customer_id")
     private Long customerId;
@@ -20,7 +22,7 @@ public class Account {
     private String accountType;
 
     @Column(name = "balance")
-    private Double balance;
+    private BigDecimal balance;
 
     @Column(name = "status")
     private String status;
@@ -38,11 +40,11 @@ public class Account {
 
     }
 
-    public Long getAccountNo() {
+    public String getAccountNo() {
         return accountNo;
     }
 
-    public void setAccountNo(Long accountNo) {
+    public void setAccountNo(String accountNo) {
         this.accountNo = accountNo;
     }
 
@@ -62,11 +64,11 @@ public class Account {
         this.accountType = accountType;
     }
 
-    public Double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(Double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
