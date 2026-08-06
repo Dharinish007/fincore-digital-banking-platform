@@ -1,0 +1,168 @@
+.login-page{
+display:grid;
+grid-template-columns:1fr 1fr;
+min-height:100vh;
+font-family:Inter,sans-serif;
+}
+
+/* Left */
+
+.login-left {
+    background: linear-gradient(135deg,#2563eb,#1d4ed8);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;      /* Add this */
+    text-align: center;       /* Add this */
+    padding: 80px;
+}
+
+.brand{
+margin-bottom:50px;
+}
+
+.brand-icon{
+font-size:100px;
+margin-bottom:150px;
+height: 200px;
+width:200px;
+}
+
+.brand h1{
+font-size:50px;
+}
+
+.brand p{
+margin-top:5px;
+font-size:18px;
+opacity:.9;
+}
+
+.welcome h2{
+font-size:40px;
+margin-bottom:10px;
+}
+
+.welcome p{
+font-size:18px;
+line-height:1.8;
+max-width:500px;
+color: white !important;
+}
+
+/* Right */
+
+.login-right{
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f8fafc;
+padding:40px;
+}
+
+.login-card{
+width:100%;
+max-width:430px;
+background:white;
+padding:45px;
+border-radius:20px;
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.login-card h2{
+font-size:34px;
+margin-bottom:10px;
+}
+
+.subtitle{
+color:#64748b;
+margin-bottom:35px;
+}
+
+.input-group{
+display:flex;
+align-items:center;
+border:1px solid #d1d5db;
+padding:14px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+.input-icon{
+color:#2563eb;
+margin-right:12px;
+}
+
+.input-group input{
+border:none;
+outline:none;
+flex:1;
+font-size:16px;
+}
+
+.password-toggle{
+cursor:pointer;
+color:#64748b;
+}
+
+.login-options{
+display:flex;
+justify-content:space-between;
+margin-bottom:30px;
+font-size:14px;
+}
+
+.login-options a{
+color:#2563eb;
+text-decoration:none;
+}
+
+.login-btn{
+width:100%;
+padding:15px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:12px;
+font-size:17px;
+cursor:pointer;
+font-weight:600;
+transition:.3s;
+}
+
+.login-btn:hover{
+background:#1d4ed8;
+}
+
+.register-link{
+margin-top:25px;
+text-align:center;
+}
+
+.register-link a{
+margin-left:8px;
+color:#2563eb;
+font-weight:600;
+text-decoration:none;
+}
+
+@media(max-width:900px){
+
+.login-page{
+grid-template-columns:1fr;
+}
+
+.login-left{
+display:none;
+}
+
+.login-right{
+padding:30px;
+}
+
+.login-card{
+padding:35px;
+}
+
+}
