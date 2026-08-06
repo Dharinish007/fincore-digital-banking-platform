@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,9 +17,9 @@ public class TransferResponse {
     private BigDecimal amount;
     private BigDecimal balance;
     private String status;
-    private LocalDateTime date;
+    private LocalDate date;
     private String message;
-    public TransferResponse(String string, String success, String moneyTransferredSuccessfully, BigDecimal amount, BigDecimal balance, LocalDateTime now) {
+    public TransferResponse(String string, String success, String moneyTransferredSuccessfully, BigDecimal amount, BigDecimal balance, LocalDate now) {
         this.transactionId = string;
         this.sender = success;
         this.receiver = moneyTransferredSuccessfully;

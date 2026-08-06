@@ -1,15 +1,18 @@
 package com.fincore.BankingManagement.BankingServices.Impl;
 import com.fincore.BankingManagement.BankingServices.TransactionService;
+import com.fincore.BankingManagement.Enums.TransactionType;
 import com.fincore.BankingManagement.Repositery.TransactionRepository.AccountRepositery.AccountRepository;
 import com.fincore.BankingManagement.Repositery.TransactionRepository.TransactionRepository;
 import com.fincore.BankingManagement.dto.TransferRequest;
 import com.fincore.BankingManagement.dto.TransferResponse;
 import com.fincore.BankingManagement.model.Account;
+import com.fincore.BankingManagement.model.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fincore.BankingManagement.Exception.AccountNotFoundException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -24,10 +27,10 @@ public class TransactionServiceImp implements TransactionService {
     @Transactional
     public TransferResponse transferFunds(TransferRequest request) throws AccountNotFoundException {
         Account sender = accountRepositery
-                .findByAccountNumber(request.getSenderAccountNumber())
+                .findByAccountNo(request.getSenderAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException("Sender Account Not Found"));
         Account receiver = accountRepositery
-                .findByAccountNumber(request.getReceiverAccountNumber())
+                .findByAccountNo(request.getReceiverAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException("Receiver Account Not Found"));
         BigDecimal amount = request.getAmount();
         BigDecimal balance = sender.getBalance().subtract(amount);
@@ -39,19 +42,11 @@ public class TransactionServiceImp implements TransactionService {
         accountRepositery.save(sender);
         accountRepositery.save(receiver);
 
-        com.fincore.BankingManagement.model.TransactionHistory history = new com.fincore.BankingManagement.model.TransactionHistory();
-
-        history.setSenderAccount(sender);
-
-        history.setReceiverAccount(receiver);
-
-        history.setAmount(request.getAmount());
-
-        history.setStatus("SUCCESS");
-
-        history.setTransactionType("TRANSFER");
-
-        history.setTransactionDate(LocalDateTime.now());
+        Transaction history = new Transaction();
+        history.setAccount(sender);
+        history.setAmount(amount);
+        history.setTransactionDate(LocalDate.now());
+        history.setTransactionType(TransactionType.Transfer);
 
         transactionrepo.save(history);
         return new TransferResponse(
@@ -61,11 +56,11 @@ public class TransactionServiceImp implements TransactionService {
                 "Money transferred successfully",
                 request.getAmount(),
                 sender.getBalance(),
-                LocalDateTime.now()
+                LocalDate.now()
         );
     }
     public BigDecimal balanceEnquiry(String accountNumber) {
-        Account acc = accountRepositery.findByAccountNumber(accountNumber).orElseThrow(() -> new RuntimeException("Account Not Found"));
+        Account acc = accountRepositery.findByAccountNo(accountNumber).orElseThrow(() -> new RuntimeException("Account Not Found"));
         return acc.getBalance();
     }
 }

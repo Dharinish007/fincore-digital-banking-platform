@@ -1,41 +1,54 @@
 package com.fincore.BankingManagement.model;
-
+import com.fincore.BankingManagement.Enums.AccountStatus;
+import com.fincore.BankingManagement.Enums.AccountType;
+import com.fincore.BankingManagement.model.Customer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.engine.internal.Cascade;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "account")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name="account")
 public class Account {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "account_no")
+    private String accountNo;
 
-    @Column(unique = true, nullable = false,name="account_no")
-    private String accountNumber;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    private Customer customer;
 
-    @Column(nullable = false,name="balance")
-    private BigDecimal balance;
+    @Column(name = "account_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AccountType accountType;
 
-    @Column(nullable = false,name="account_type")
-    private String accountType;
+    @Column(name = "balance", precision = 15, scale = 2)
+    private BigDecimal balance = BigDecimal.ZERO;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private AccountStatus status = AccountStatus.Active;
 
-    @OneToMany(mappedBy = "senderAccount")
-    private List<TransactionHistory> sentTransactions = new ArrayList<>();
+    @Column(name = "branch_name")
+    private String branchName;
 
-    @OneToMany(mappedBy = "receiverAccount")
-    private List<TransactionHistory> receivedTransactions = new ArrayList<>();
+    @Column(name = "ifsc_code")
+    private String ifscCode;
+
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
+    }
+
+    // Getters and Setters
 }
