@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import API from "./api/kycApi";
 
 const c = {
   bg: "#0B0E14",
@@ -113,22 +114,70 @@ function Line({ children }) {
   return <div className="font-mono text-sm py-1.5" style={{ color: c.text }}>{children}</div>;
 }
 
-function ActionButtons({ role }) {
+function ActionButtons({ role, kycId }) {
+
   const canDecide = role !== "Bank Teller";
+
+  const approveKyc = async () => {
+    try {
+      await API.put("/approve", {
+        kycId: kycId,
+      });
+
+      alert("KYC Approved");
+      window.location.reload();
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const rejectKyc = async () => {
+    try {
+      await API.put("/reject", {
+        kycId: kycId,
+      });
+
+      alert("KYC Rejected");
+      window.location.reload();
+
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   return (
     <div className="font-mono text-sm mt-1 flex items-center gap-3 flex-wrap">
+
       <span style={{ color: c.text }}>Action:</span>
-      <span style={{ color: c.blue, cursor: "pointer" }}>[Flag for Review]</span>
-      <span style={{ color: canDecide ? c.blue : "#4A5568", cursor: canDecide ? "pointer" : "default" }}>
+
+      <span style={{ color: c.blue }}>
+        [Flag for Review]
+      </span>
+
+      <span
+        onClick={canDecide ? approveKyc : undefined}
+        style={{
+          color: canDecide ? c.blue : "#4A5568",
+          cursor: canDecide ? "pointer" : "default",
+        }}
+      >
         [Approve]
       </span>
-      <span style={{ color: canDecide ? c.blue : "#4A5568", cursor: canDecide ? "pointer" : "default" }}>
+
+      <span
+        onClick={canDecide ? rejectKyc : undefined}
+        style={{
+          color: canDecide ? c.blue : "#4A5568",
+          cursor: canDecide ? "pointer" : "default",
+        }}
+      >
         [Reject]
       </span>
+
     </div>
   );
 }
-
 const demoSlides = [
   {
     account: "1234-5678-9012", type: "Savings", balance: "12,847.50",
@@ -194,26 +243,88 @@ function Dashboard({ role }) {
   );
 }
 
+// function KYC({ role }) {
+//   return (
+//     <div className="p-6">
+//       <h1 className="text-xl font-semibold mb-1" style={{ color: c.text }}>KYC Verification</h1>
+//       <p className="text-sm mb-5" style={{ color: c.muted }}>
+//         Bank Tellers can flag a profile for review. Approval or rejection requires Supervisor or Admin.
+//       </p>
+//       {customers.map((cust) => (
+//         <div key={cust.id} className="rounded-lg p-5 mb-4"
+//           style={{ background: c.card, border: `1px solid ${c.border}` }}>
+//           <div className="text-sm font-semibold mb-2" style={{ color: c.text }}>{cust.name}</div>
+//           <Line>Account: {cust.id} | Type: {cust.type}</Line>
+//           <Line>KYC: {cust.kyc} | Risk: {cust.risk}</Line>
+//           <Line>
+//             Documents: {["Aadhaar", "PAN card", "Address proof"].map((d, i) => (
+//               <span key={d}>{cust.docs.includes(d) ? d : `${d} (missing)`}{i < 2 ? ", " : ""}</span>
+//             ))}
+//           </Line>
+//           <Line>Audit: Logged to Audit DB | Immutable</Line>
+//           <ActionButtons role={role} kyc={cust.kyc} />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
 function KYC({ role }) {
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    API.get("/all")
+      .then((response) => {
+        setCustomers(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching KYC data:", error);
+      });
+  }, []);
+
   return (
     <div className="p-6">
-      <h1 className="text-xl font-semibold mb-1" style={{ color: c.text }}>KYC Verification</h1>
+      <h1 className="text-xl font-semibold mb-1" style={{ color: c.text }}>
+        KYC Verification
+      </h1>
+
       <p className="text-sm mb-5" style={{ color: c.muted }}>
-        Bank Tellers can flag a profile for review. Approval or rejection requires Supervisor or Admin.
+        Live data from Spring Boot Backend
       </p>
+
       {customers.map((cust) => (
-        <div key={cust.id} className="rounded-lg p-5 mb-4"
-          style={{ background: c.card, border: `1px solid ${c.border}` }}>
-          <div className="text-sm font-semibold mb-2" style={{ color: c.text }}>{cust.name}</div>
-          <Line>Account: {cust.id} | Type: {cust.type}</Line>
-          <Line>KYC: {cust.kyc} | Risk: {cust.risk}</Line>
+        <div
+          key={cust.kycId}
+          className="rounded-lg p-5 mb-4"
+          style={{
+            background: c.card,
+            border: `1px solid ${c.border}`,
+          }}
+        >
+          <div
+            className="text-sm font-semibold mb-2"
+            style={{ color: c.text }}
+          >
+            {cust.firstName} {cust.lastName}
+          </div>
+
+          <Line>KYC ID: {cust.kycId}</Line>
+
+          <Line>Email: {cust.email || "Not Available"}</Line>
+
           <Line>
-            Documents: {["Aadhaar", "PAN card", "Address proof"].map((d, i) => (
-              <span key={d}>{cust.docs.includes(d) ? d : `${d} (missing)`}{i < 2 ? ", " : ""}</span>
-            ))}
+            Government ID: {cust.governmentIdType} -{" "}
+            {cust.governmentIdNumber}
           </Line>
-          <Line>Audit: Logged to Audit DB | Immutable</Line>
-          <ActionButtons role={role} kyc={cust.kyc} />
+
+          <Line>City: {cust.city}</Line>
+
+          <Line>Status: {cust.status}</Line>
+
+          <ActionButtons
+    role={role}
+    kycId={cust.kycId}
+/>
         </div>
       ))}
     </div>
