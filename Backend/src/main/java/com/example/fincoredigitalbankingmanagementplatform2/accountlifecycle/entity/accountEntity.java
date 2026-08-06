@@ -19,23 +19,25 @@ public class accountEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "account_id")
-    private Long accountId;
+    private Integer accountId;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private userEntity customerId;
 
-    @Column(name = "account_number")
+    @Column(name = "account_number", length = 20)
     private String accountNumber;
 
-    @Column(name = "account_type")
+    @Column(name = "account_type", length = 30)
     private String accountType;
 
+    @Column(precision = 12, scale = 2)
     private BigDecimal balance;
 
-    @Column(name = "available_balance")
+    @Column(name = "available_balance", precision = 12, scale = 2)
     private BigDecimal availableBalance;
 
+    @Column(length = 20)
     private String status;
 
     @Column(name = "created_date")

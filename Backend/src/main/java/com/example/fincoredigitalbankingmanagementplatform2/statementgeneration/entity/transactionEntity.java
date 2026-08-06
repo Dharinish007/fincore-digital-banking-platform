@@ -10,28 +10,35 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "transaction_detail")
+@Table(name = "transaction_details")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class transactionEntity {
-    @Id
+     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id")
-    private Long transactionId;
+    private Integer transactionId;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     private accountEntity senderAccountNumber;
-    @Column(name = "amount")
+
+    @Column(name = "amount", precision = 12, scale = 2)
     private BigDecimal amount;
-    @Column(name = "transaction_type")
+
+    @Column(name = "transaction_type", length = 20)
     private String transactionType;
-    @Column(name = "transaction_status")
+
+    @Column(name = "transaction_status", length = 20)
     private String status;
+
     @Column(name = "transaction_date")
     private LocalDateTime transactionDate;
-    @Column(name = "description")
+
+    @Column(name = "description", length = 200)
     private String remarks;
+
 
 
 }

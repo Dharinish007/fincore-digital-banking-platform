@@ -30,18 +30,30 @@ public class statementService {
     @Autowired
     private userRepo userRepo;
 
-    public List<transactionEntity> getStatement(String email, statementRequestDTO dto) {
+    public List<statementResponseDTO> getStatement(String email, statementRequestDTO dto) {
         userEntity customer=userRepo.findByEmail(email).orElseThrow(()->new UsernameNotFoundException("user not found"));
-        accountEntity user=accountRepo.findByAccountNumberAndCustomerId(
+        accountEntity user=accountRepo.findByAccountIdAndCustomerId(
                         dto.getAccountNumber(),
                         customer.getCustomerId())
                 .orElseThrow(() -> new BadCredentialsException("Account not found"));
-        return repo.findBysenderAccountNumberAndTransactionDateBetween(user,dto.getStartDate(),dto.getEndDate());
+        return user.getTransactions().stream()
+                .map(t -> {
+                    statementResponseDTO responseDTO = new statementResponseDTO();
+                    responseDTO.setTransactionId(t.getTransactionId());
+                    responseDTO.setAccountNumber(t.getSenderAccountNumber().getAccountNumber());
+                    responseDTO.setAmount(t.getAmount());
+                    responseDTO.setTransactionType(t.getTransactionType());
+                    responseDTO.setStatus(t.getStatus());
+                    responseDTO.setTransactionDate(t.getTransactionDate());
+                    responseDTO.setRemarks(t.getRemarks());
+                    return responseDTO;
+                })
+                .toList();  
     }
 
     public ByteArrayInputStream downloadPDF(String email, statementRequestDTO dto) {
 
-        List<transactionEntity> statement=getStatement(email,dto);
+        List<statementResponseDTO> statement=getStatement(email,dto);
         Document document=new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
@@ -68,21 +80,19 @@ public class statementService {
 
     }
     //create pdf in table form
-    private static @NonNull PdfPTable getPdfPTable(List<transactionEntity> statement) {
-        PdfPTable table = new PdfPTable(5);
+    private static @NonNull PdfPTable getPdfPTable(List<statementResponseDTO> statement) {
+        PdfPTable table = new PdfPTable(4);
         table.addCell("Date");
         table.addCell("ID");
-        table.addCell("Paid to/Received from");
         table.addCell("Type");
         table.addCell("Amount");
 
 
-        for (transactionEntity t : statement) {
+        for (statementResponseDTO t : statement) {
             table.addCell(t.getTransactionDate().toString());
             table.addCell(String.valueOf(t.getTransactionId()));
-            table.addCell(t.getTransactionType());
-            table.addCell(String.valueOf(t.getAmount()));
-
+            table.addCell(t.getAccountNo());
+            table.addCell(t.getAmount().toString());
 
         }
         return table;
