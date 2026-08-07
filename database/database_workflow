@@ -1,0 +1,105 @@
+# Fincore Digital Banking Platform — Database Workflow (Milestone 1)
+
+Reference document for the database setup and schema relationships across **Customer Service**, **Account Service**, and **Transaction Service**.
+
+---
+
+## 1. Database Overview
+
+- **Engine:** PostgreSQL
+- **Database name:** `fincoredatabase`
+- **Scope:** Milestone 1 — all 3 services share one database 
+- **Schema file:** `database/fincore_schema.sql` (in repo)
+
+---
+
+## 2. Table Ownership by Service
+
+| Service | Tables Owned |
+|---|---|
+| Customer Service | `customers` |
+| Account Service | `accounts` |
+| Transaction Service | `transactions`, `audit_log` (shared) |
+
+---
+
+## 3. Entity Relationship Flow
+
+```
+customers (1) ──────< accounts (many)
+                          │
+                          │ referenced by
+                          ▼
+                 transactions (many)
+                 - debit_account_id  → accounts.account_id
+                 - credit_account_id → accounts.account_id
+
+audit_log — standalone table, references other entities
+            by ID string only (no hard FK), written by all services
+```
+
+- One customer can have **many** accounts.
+- One account can appear in **many** transactions, either as the debit side or the credit side.
+- `audit_log` is intentionally decoupled (no FK) since any service can write to it.
+
+---
+
+## 4. Setup Order (must run in this sequence)
+
+```bash
+# 1. Create the database
+psql -U postgres -c "CREATE DATABASE fincore_bank_db;"
+
+# 2. Run the full schema script (creates tables in dependency order,
+#    then loads seed data)
+psql -U postgres -d fincore_bank_db -f database/fincore_schema.sql
+```
+
+The script internally follows this table creation order
+
+1. `customers`
+2. `accounts` (FK → `customers`)
+3. `transactions` (FK → `accounts`)
+4. `audit_log` (no FK)
+
+---
+
+## 5. Key Constraints to Know
+
+| Table | Constraint | Rule |
+|---|---|---|
+| `customers` | `chk_kyc_status` | must be `NOT_STARTED`, `IN_REVIEW`, `APPROVED`, or `DECLINED` |
+| `accounts` | `chk_balance_nonneg` | `available_balance >= 0` always |
+| `accounts` | `fk_accounts_customer` | `customer_id` must exist in `customers` |
+| `transactions` | `chk_amount_positive` | `txn_amount > 0` |
+| `transactions` | `fk_txn_debit_account` / `fk_txn_credit_account` | account IDs must exist in `accounts` |
+
+**Not enforced at the DB level** (must be validated in backend service code):
+- `FUND_TRANSFER` → both `debit_account_id` and `credit_account_id` required
+- `CASH_DEPOSIT` → only `credit_account_id` required, `debit_account_id` must be NULL
+- `CASH_WITHDRAWAL` → only `debit_account_id` required, `credit_account_id` must be NULL
+
+---
+
+## 6. Sequence Reset (after loading seed data)
+
+The schema script ends with this — re-run manually if you add/remove seed rows by hand:
+
+```sql
+SELECT setval('customers_customer_id_seq', (SELECT MAX(customer_id) FROM customers), true);
+SELECT setval('accounts_account_id_seq', (SELECT MAX(account_id) FROM accounts), true);
+SELECT setval('transactions_transaction_id_seq', (SELECT MAX(transaction_id) FROM transactions), true);
+SELECT setval('audit_log_audit_id_seq', (SELECT MAX(audit_id) FROM audit_log), true);
+```
+
+---
+
+## 7. Before Connecting Your Backend Service
+
+- [ ] Confirm each JPA/ORM entity's table-name mapping matches exactly: `customers`, `accounts`, `transactions`, `audit_log`
+- [ ] Confirm enum values in code match the `CHECK` constraint values exactly (case-sensitive)
+- [ ] Confirm `ddl-auto` (or equivalent) is set to `validate` or `none` in shared environments — not `update`/`create`, to avoid silently creating duplicate tables
+- [ ] Confirm DB credentials/env vars point to `fincoredatabase`
+
+---
+
