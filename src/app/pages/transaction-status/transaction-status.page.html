@@ -1,0 +1,51 @@
+<div class="glass-card" *ngIf="tx">
+  <h2>Transaction Status</h2>
+  <div class="status-grid">
+    <div class="status-col">
+      <h3>{{tx.id}}</h3>
+      <div>{{tx.reference}} • {{tx.amount | currency}}</div>
+      <div style="margin-top:8px">Status: <strong>{{tx.status}}</strong></div>
+    </div>
+    <div class="status-col">
+      <div class="steps">
+        <div class="step" [class.done]="tx.status==='Initiated' || tx.status==='Processing' || tx.status==='Success'">
+          <div class="circle">1</div>
+          <div class="label">Initiated</div>
+        </div>
+        <div class="step" [class.done]="tx.status==='Processing' || tx.status==='Success'">
+          <div class="circle">2</div>
+          <div class="label">Processing</div>
+        </div>
+        <div class="step" [class.done]="tx.status==='Success'">
+          <div class="circle">3</div>
+          <div class="label">Completed</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+        <ng-container *ngIf="tx.status==='Failed'">
+          <div style="color:var(--muted);margin-right:auto">Reason: {{tx.failureReason || 'Unknown error'}}</div>
+          <button class="navy-btn primary" (click)="retry()">Retry</button>
+          <button class="navy-btn" (click)="back()">Back</button>
+        </ng-container>
+        <ng-container *ngIf="tx.status==='Success'">
+          <button class="navy-btn primary" (click)="viewDetails()">View Transaction Details</button>
+          <button class="navy-btn">Download Receipt</button>
+          <button class="navy-btn" (click)="back()">Back to Dashboard</button>
+        </ng-container>
+        <ng-container *ngIf="tx.status==='Processing' || tx.status==='Pending'">
+          <div style="margin-right:auto;color:var(--muted)">Processing...</div>
+          <button class="navy-btn" (click)="back()">Back</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="glass-card empty-state" *ngIf="!tx">
+  <h2>Transaction Status</h2>
+  <p>No transaction is selected yet.</p>
+  <p>Please initiate a transaction first or view history to check the status.</p>
+  <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
+    <button class="navy-btn primary" (click)="router.navigate(['initiate-transaction'])">Initiate Transaction</button>
+    <button class="navy-btn" (click)="back()">Back to Dashboard</button>
+  </div>
+</div>

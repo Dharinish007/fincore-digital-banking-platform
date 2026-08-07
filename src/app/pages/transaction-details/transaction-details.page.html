@@ -1,0 +1,33 @@
+<div class="glass-card" *ngIf="tx">
+  <h2>Transaction Details</h2>
+  <div class="details-grid">
+    <div class="details-col">
+      <div><strong>ID:</strong> {{tx.id}}</div>
+      <div><strong>Sender:</strong> {{tx.sender}}</div>
+      <div><strong>Receiver:</strong> {{tx.receiver}}</div>
+      <div><strong>Type:</strong> {{tx.type}}</div>
+      <div><strong>Reference:</strong> {{tx.reference}}</div>
+      <div><strong>Date:</strong> {{tx.date | date:'medium'}}</div>
+    </div>
+    <div class="details-col">
+      <div><strong>Amount:</strong> {{tx.amount | currency}}</div>
+      <div><strong>Charges:</strong> {{tx.charges | currency}}</div>
+      <div><strong>Status:</strong> <span class="muted">{{tx.status}}</span></div>
+      <div *ngIf="tx.description"><strong>Description:</strong> <div class="muted">{{tx.description}}</div></div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="navy-btn" (click)="back()">Back</button>
+        <button class="navy-btn primary">Download Receipt</button>
+        <button class="navy-btn">Print</button>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:18px">
+    <h3>Timeline</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+      <div><strong>Transaction Created:</strong> {{tx.date | date:'medium'}}</div>
+      <div *ngIf="tx.status==='Processing' || tx.status==='Success' || tx.status==='Failed'"><strong>Processing:</strong> In progress</div>
+      <div *ngIf="tx.status==='Success'"><strong>Completed:</strong> Completed successfully</div>
+      <div *ngIf="tx.status==='Failed'"><strong>Failed:</strong> {{tx.failureReason || 'Unknown reason'}}</div>
+    </div>
+  </div>
+</div>

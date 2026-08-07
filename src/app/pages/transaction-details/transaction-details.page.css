@@ -1,0 +1,5 @@
+.glass-card div{margin:6px 0}
+.details-grid{display:grid;grid-template-columns:1fr 320px;gap:18px;margin-top:12px}
+.details-col div{margin-bottom:8px}
+
+@media(max-width:800px){.details-grid{grid-template-columns:1fr}}

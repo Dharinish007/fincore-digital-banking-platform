@@ -1,0 +1,51 @@
+<div class="glass-card" style="max-width:820px">
+  <h2>Initiate Transaction</h2>
+  <form [formGroup]="form">
+    <div class="form-grid">
+      <div class="form-col">
+        <label>Sender Account Number</label>
+        <input formControlName="sender" placeholder="12-digit account" />
+        <div *ngIf="form.get('sender')?.invalid && form.get('sender')?.touched" class="muted">Enter 12-digit sender account</div>
+      </div>
+      <div class="form-col">
+        <label>Receiver Account Number</label>
+        <input formControlName="receiver" placeholder="12-digit account" />
+        <div *ngIf="form.get('receiver')?.invalid && form.get('receiver')?.touched" class="muted">Enter 12-digit receiver account</div>
+      </div>
+
+      <div class="form-col">
+        <label>Transaction Type</label>
+        <select formControlName="type">
+          <option value="">--select--</option>
+          <option value="Transfer">Transfer</option>
+          <option value="Deposit">Deposit</option>
+          <option value="Withdraw">Withdraw</option>
+        </select>
+      </div>
+      <div class="form-col">
+        <label>Amount</label>
+        <input type="number" formControlName="amount" />
+      </div>
+
+      <div class="form-col">
+        <label>Reference Number</label>
+        <input formControlName="reference" />
+      </div>
+      <div class="form-col">
+        <label>Date</label>
+        <input type="date" formControlName="date" />
+      </div>
+
+      <div class="form-col-full">
+        <label>Description</label>
+        <textarea formControlName="description" rows="3"></textarea>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="navy-btn" type="button" (click)="validateAll()">Validate</button>
+      <button class="navy-btn" type="button" (click)="reset()">Reset</button>
+      <button class="navy-btn primary" type="button" (click)="proceed()">Proceed</button>
+    </div>
+  </form>
+</div>

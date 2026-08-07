@@ -1,0 +1,29 @@
+<div class="glass-card">
+  <h2>Transaction History</h2>
+  <div class="filters-row">
+    <input placeholder="Search" [(ngModel)]="filter" />
+    <select [(ngModel)]="statusFilter">
+      <option value="">All Status</option>
+      <option value="Success">Success</option>
+      <option value="Failed">Failed</option>
+      <option value="Pending">Pending</option>
+    </select>
+    <div style="margin-left:auto">Showing {{list?.length || 0}} transactions</div>
+  </div>
+  <div style="overflow:auto">
+    <table class="tx-table">
+      <thead><tr><th>ID</th><th>Sender</th><th>Receiver</th><th>Type</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let t of list | slice:0:200" (click)="open(t)" style="cursor:pointer">
+          <td>{{t.id}}</td>
+          <td>{{t.sender}}</td>
+          <td>{{t.receiver}}</td>
+          <td>{{t.type}}</td>
+          <td>{{t.amount | currency}}</td>
+          <td>{{t.date | date}}</td>
+          <td>{{t.status}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

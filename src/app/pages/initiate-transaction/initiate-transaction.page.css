@@ -1,0 +1,7 @@
+label{display:block;color:var(--muted);margin-bottom:6px}
+input,select,textarea{background:transparent;border:1px solid var(--border);padding:8px;color:inherit;border-radius:6px;width:100%;box-sizing:border-box}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.form-col{width:100%}
+.form-col-full{grid-column:1 / -1}
+
+@media(max-width:800px){.form-grid{grid-template-columns:1fr}.main-content{padding:20px}}

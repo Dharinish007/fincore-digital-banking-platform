@@ -1,0 +1,11 @@
+<aside class="sidebar" [class.open]="isOpen" role="navigation">
+  <div class="logo">FinCore Bank</div>
+  <div class="subtitle">Transaction Atomicity</div>
+  <nav>
+    <a *ngFor="let m of menus" [routerLink]="m.path !== 'logout' ? m.path : null" (click)="onNav(m,$event)" routerLinkActive="active" [routerLinkActiveOptions]="{exact:false}" class="nav-item">
+      <span class="nav-icon">●</span>
+      <span class="nav-text">{{m.label}}</span>
+    </a>
+  </nav>
+  <div class="sidebar-backdrop" *ngIf="isOpen" (click)="close()"></div>
+</aside>

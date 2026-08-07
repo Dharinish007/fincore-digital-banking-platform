@@ -1,0 +1,8 @@
+table{width:100%;border-collapse:collapse}
+thead th{color:var(--muted);text-align:left;padding:8px}
+tbody td{padding:8px;border-top:1px solid rgba(255,255,255,0.05)}
+.filters-row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.tx-table thead th{padding:10px}
+.tx-table tbody td{padding:10px}
+
+@media(max-width:800px){.filters-row{flex-direction:column;align-items:stretch}}
