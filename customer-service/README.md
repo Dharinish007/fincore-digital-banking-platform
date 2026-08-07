@@ -7,9 +7,9 @@ No Kafka. No Redis. Just REST + JPA — kept deliberately simple to run.
 - Java 17
 - Spring Boot 3.2.5
 - Spring Data JPA
-- H2 (default, in-memory, zero setup) / PostgreSQL (optional profile)
+- H2 (default, in-memory, zero setup) / PostgreSQL 
 - Lombok, MapStruct
-- springdoc-openapi (Swagger UI)
+- springdoc-openapi 
 
 ## Run in IntelliJ
 1. **Open** → select the `customer-service` folder → IntelliJ will detect the `pom.xml` and import it as a Maven project automatically.
@@ -43,13 +43,6 @@ By default the `dev` profile (H2) is active. To use PostgreSQL instead:
 | PUT    | `/api/v1/customers/{id}` | Update customer details |
 | PATCH  | `/api/v1/customers/{id}/kyc-status` | Update KYC status only |
 | DELETE | `/api/v1/customers/{id}` | Delete a customer |
-
-## Tools
-- Swagger UI: http://localhost:8081/swagger-ui.html
-- H2 Console (dev profile only): http://localhost:8081/h2-console
-  - JDBC URL: `jdbc:h2:mem:customerdb`
-  - Username: `sa`, Password: *(blank)*
-- Health check: http://localhost:8081/actuator/health
 
 ## Sample request
 
