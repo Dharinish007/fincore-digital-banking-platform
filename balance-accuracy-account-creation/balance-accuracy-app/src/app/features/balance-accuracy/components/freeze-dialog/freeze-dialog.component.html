@@ -1,0 +1,41 @@
+<div class="freeze-dialog-container">
+  <div class="dialog-header">
+    <mat-icon class="icon-freeze">ac_unit</mat-icon>
+    <h2>Freeze Account Security Lock</h2>
+  </div>
+
+  <div class="dialog-body">
+    <p class="warning-text">
+      Are you sure you want to freeze account <strong>{{ data.account.accountNumber }}</strong> ({{ data.account.customerName }})?
+    </p>
+    <p class="sub-text">
+      Freezing will halt all pending debit/credit transactions, online banking access, and debit cards tied to this account immediately.
+    </p>
+
+    <form [formGroup]="freezeForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Reason for Security Freeze</mat-label>
+        <textarea
+          matInput
+          formControlName="reason"
+          rows="3"
+          placeholder="State official reason for account freeze (e.g. Unresolved ledger mismatch > $5,000, suspected fraud)">
+        </textarea>
+        <mat-error *ngIf="freezeForm.get('reason')?.hasError('required')">
+          Reason for freezing is mandatory for compliance.
+        </mat-error>
+        <mat-error *ngIf="freezeForm.get('reason')?.hasError('minlength')">
+          Reason must be at least 8 characters.
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="warn" (click)="onConfirm()" [disabled]="freezeForm.invalid">
+      <mat-icon>lock</mat-icon>
+      <span>Confirm Freeze</span>
+    </button>
+  </div>
+</div>

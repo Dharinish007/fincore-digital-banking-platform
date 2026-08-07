@@ -1,0 +1,88 @@
+<div class="filter-card">
+  <div class="filter-header">
+    <div class="header-title">
+      <mat-icon>tune</mat-icon>
+      <span>Filter & Search Audit Records</span>
+    </div>
+    <div class="action-buttons-top">
+      <button class="btn-excel" (click)="onExportExcel()">
+        <mat-icon>table_chart</mat-icon>
+        <span>Export Excel</span>
+      </button>
+      <button class="btn-pdf" (click)="onExportPdf()">
+        <mat-icon>picture_as_pdf</mat-icon>
+        <span>Export PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <form [formGroup]="filterForm" (ngSubmit)="onSearch()" class="filter-form">
+    <div class="filter-grid">
+      <!-- Date Range (Start & End) -->
+      <mat-form-field appearance="outline" class="density-compact">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="startDate" placeholder="Choose start date">
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="density-compact">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="endDate" placeholder="Choose end date">
+        <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+
+      <!-- Branch Selection -->
+      <mat-form-field appearance="outline">
+        <mat-label>Branch</mat-label>
+        <mat-select formControlName="branch">
+          <mat-option *ngFor="let b of branches" [value]="b">{{ b }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Account Type -->
+      <mat-form-field appearance="outline">
+        <mat-label>Account Type</mat-label>
+        <mat-select formControlName="accountType">
+          <mat-option *ngFor="let t of accountTypes" [value]="t">{{ t }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Status Selection -->
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option *ngFor="let s of statuses" [value]="s">{{ s }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Customer Search -->
+      <mat-form-field appearance="outline">
+        <mat-label>Search Customer</mat-label>
+        <input matInput formControlName="customerSearch" placeholder="Name or Customer ID" />
+        <mat-icon matSuffix>person_search</mat-icon>
+      </mat-form-field>
+
+      <!-- Account Number Search -->
+      <mat-form-field appearance="outline">
+        <mat-label>Search Account Number</mat-label>
+        <input matInput formControlName="accountNumberSearch" placeholder="e.g. ACC-10000849" />
+        <mat-icon matSuffix>tag</mat-icon>
+      </mat-form-field>
+
+      <!-- Action Buttons -->
+      <div class="filter-actions">
+        <button mat-flat-button color="primary" type="submit" class="btn-search">
+          <mat-icon>search</mat-icon>
+          <span>Search</span>
+        </button>
+
+        <button mat-stroked-button type="button" (click)="onReset()" class="btn-reset">
+          <mat-icon>restart_alt</mat-icon>
+          <span>Reset</span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

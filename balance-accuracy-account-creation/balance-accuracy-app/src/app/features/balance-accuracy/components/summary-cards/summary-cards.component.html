@@ -1,0 +1,67 @@
+<div class="summary-cards-grid">
+  <!-- Card 1: Total Accounts -->
+  <div class="stat-card">
+    <div class="card-header">
+      <span class="card-title">Total Accounts</span>
+      <div class="icon-wrapper icon-blue">
+        <mat-icon>account_balance</mat-icon>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="value">{{ stats.totalAccounts }}</div>
+      <div class="trend positive">
+        <mat-icon>trending_up</mat-icon>
+        <span>+12.5% vs last cycle</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Total Balance Checked -->
+  <div class="stat-card">
+    <div class="card-header">
+      <span class="card-title">Total Balance Checked</span>
+      <div class="icon-wrapper icon-emerald">
+        <mat-icon>payments</mat-icon>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="value">${{ stats.totalBalanceChecked | number:'1.2-2' }}</div>
+      <div class="subtext">Across 5 Primary Branches</div>
+    </div>
+  </div>
+
+  <!-- Card 3: Mismatch Accounts -->
+  <div class="stat-card card-alert">
+    <div class="card-header">
+      <span class="card-title">Mismatch Accounts</span>
+      <div class="icon-wrapper icon-red">
+        <mat-icon>warning</mat-icon>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="value text-red">{{ stats.mismatchAccounts }}</div>
+      <div class="trend negative">
+        <mat-icon>priority_high</mat-icon>
+        <span>Requires Auditor Review</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Accuracy Percentage -->
+  <div class="stat-card">
+    <div class="card-header">
+      <span class="card-title">Accuracy Percentage</span>
+      <div class="icon-wrapper icon-purple">
+        <mat-icon>fact_check</mat-icon>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="value" [ngClass]="stats.accuracyPercentage >= 90 ? 'text-green' : 'text-orange'">
+        {{ stats.accuracyPercentage }}%
+      </div>
+      <div class="accuracy-progress-bar">
+        <div class="progress-fill" [style.width.%]="stats.accuracyPercentage"></div>
+      </div>
+    </div>
+  </div>
+</div>

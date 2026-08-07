@@ -1,0 +1,56 @@
+.freeze-dialog-container {
+  padding: 8px;
+
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border-color);
+
+    .icon-freeze {
+      color: #EF4444;
+      font-size: 26px;
+      width: 26px;
+      height: 26px;
+    }
+
+    h2 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin: 0;
+    }
+  }
+
+  .dialog-body {
+    padding: 16px 0;
+
+    .warning-text {
+      font-size: 0.95rem;
+      color: var(--text-white);
+      margin-bottom: 6px;
+
+      strong { color: #EF4444; }
+    }
+
+    .sub-text {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+
+    form {
+      mat-form-field { width: 100%; }
+    }
+  }
+
+  .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border-color);
+  }
+}
