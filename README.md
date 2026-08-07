@@ -128,8 +128,9 @@ ng serve
 
 ## 👥 Contributors
 
-- Bharti Bhat
-- Ramya Chavya
+- Bharati Bhat
+- Ramya Chava
 - Janhvi Pandey
 - Indu Patil
-- Shamukha Sai
+- Shanmukha Sai
+- Raziya
