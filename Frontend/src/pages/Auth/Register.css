@@ -1,222 +1,255 @@
-/* ===========================
+/* ==================================
    Register Page
-=========================== */
+================================== */
 
-.register-page {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  min-height: 100vh;
-  background: #f5f9ff;
+.register-page{
+    display:grid;
+    grid-template-columns:40% 60%;
+    min-height:100vh;
+    background:#0f172a;
+    font-family:"Inter",sans-serif;
 }
 
-/* ===========================
+/* ==================================
    Left Panel
-=========================== */
+================================== */
 
-.register-left {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #fff;
-  padding: 60px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.register-left{
+    background:linear-gradient(135deg,#020617,#1e3a8a,#2563eb);
+    color:#fff;
+    padding:60px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
 }
 
-.brand {
-  margin-bottom: 60px;
+.brand{
+    margin-bottom:60px;
 }
 
-.brand-icon {
-  font-size: 60px;
-  margin-bottom: 15px;
+.brand-icon{
+    width:140px;
+    height:140px;
+    margin:0 auto 25px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:60px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    box-shadow:0 0 30px rgba(37,99,235,.4);
 }
 
-.brand h1 {
-  font-size: 48px;
-  margin-bottom: 10px;
+.brand h1{
+    font-size:48px;
+    margin-bottom:10px;
+    color:#fff;
 }
 
-.brand p {
-  font-size: 18px;
-  opacity: .9;
+.brand p{
+    font-size:18px;
+    color:#cbd5e1;
 }
 
-.welcome-content h2 {
-  font-size: 38px;
-  margin-bottom: 20px;
+.welcome-content h2{
+    font-size:38px;
+    margin-bottom:20px;
+    color:#fff;
 }
 
-.welcome-content p {
-  line-height: 1.8;
-  font-size: 18px;
-  opacity: .95;
+.welcome-content p{
+    line-height:1.8;
+    font-size:18px;
+    color:#cbd5e1;
 }
 
-/* ===========================
+/* ==================================
    Right Panel
-=========================== */
+================================== */
 
-.register-right {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 40px;
+.register-right{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+    background:#0f172a;
 }
 
-.register-card {
-  width: 100%;
-  max-width: 700px;
-  background: #fff;
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 15px 40px rgba(0,0,0,.08);
+/* ==================================
+   Register Card
+================================== */
+
+.register-card{
+    width:100%;
+    max-width:700px;
+    background:#1e293b;
+    border-radius:22px;
+    padding:40px;
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 20px 45px rgba(0,0,0,.45);
 }
 
-.register-card h2 {
-  text-align: center;
-  font-size: 34px;
-  color: #1e293b;
+.register-card h2{
+    text-align:center;
+    font-size:34px;
+    color:#fff;
 }
 
-.subtitle {
-  text-align: center;
-  color: #64748b;
-  margin: 10px 0 30px;
+.subtitle{
+    text-align:center;
+    color:#94a3b8;
+    margin:10px 0 30px;
 }
 
-/* ===========================
-   Form
-=========================== */
+/* ==================================
+   Form Inputs
+================================== */
 
-.input-group {
-  display: flex;
-  align-items: center;
-  border: 1px solid #d1d5db;
-  border-radius: 12px;
-  padding: 14px 16px;
-  margin-bottom: 18px;
-  transition: .3s;
+.input-group{
+    display:flex;
+    align-items:center;
+    background:#334155;
+    border:1px solid #475569;
+    border-radius:12px;
+    padding:14px 16px;
+    margin-bottom:18px;
+    transition:.3s;
 }
 
-.input-group:focus-within {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37,99,235,.15);
+.input-group:focus-within{
+    border-color:#2563eb;
+    box-shadow:0 0 15px rgba(37,99,235,.3);
 }
 
-.input-icon {
-  color: #2563eb;
-  margin-right: 12px;
-  font-size: 18px;
+.input-icon{
+    color:#60a5fa;
+    margin-right:12px;
+    font-size:18px;
 }
 
 .input-group input,
-.input-group textarea {
-  width: 100%;
-  border: none;
-  outline: none;
-  font-size: 15px;
-  resize: none;
-  background: transparent;
+.input-group textarea{
+    width:100%;
+    border:none;
+    outline:none;
+    font-size:15px;
+    resize:none;
+    background:transparent;
+    color:#fff;
 }
 
-.toggle-password {
-  cursor: pointer;
-  color: #64748b;
+.input-group input::placeholder,
+.input-group textarea::placeholder{
+    color:#94a3b8;
 }
 
-/* ===========================
-   Terms
-=========================== */
-
-.terms {
-  margin: 20px 0;
-  font-size: 15px;
+.toggle-password{
+    cursor:pointer;
+    color:#94a3b8;
 }
 
-.terms label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #475569;
+/* ==================================
+   Terms & Conditions
+================================== */
+
+.terms{
+    margin:20px 0;
+    font-size:15px;
 }
 
-/* ===========================
-   Button
-=========================== */
-
-.register-btn {
-  width: 100%;
-  background: #2563eb;
-  color: white;
-  padding: 15px;
-  border: none;
-  border-radius: 12px;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: .3s;
+.terms label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#cbd5e1;
 }
 
-.register-btn:hover {
-  background: #1d4ed8;
-  transform: translateY(-2px);
+.terms input[type="checkbox"]{
+    accent-color:#2563eb;
 }
 
-/* ===========================
+/* ==================================
+   Register Button
+================================== */
+
+.register-btn{
+    width:100%;
+    background:#2563eb;
+    color:#fff;
+    padding:15px;
+    border:none;
+    border-radius:12px;
+    font-size:17px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.register-btn:hover{
+    background:#1d4ed8;
+    transform:translateY(-2px);
+    box-shadow:0 10px 25px rgba(37,99,235,.4);
+}
+
+/* ==================================
    Login Link
-=========================== */
+================================== */
 
-.login-link {
-  text-align: center;
-  margin-top: 25px;
-  color: #475569;
+.login-link{
+    text-align:center;
+    margin-top:25px;
+    color:#cbd5e1;
 }
 
-.login-link a {
-  margin-left: 8px;
-  color: #2563eb;
-  font-weight: 600;
-  text-decoration: none;
+.login-link a{
+    margin-left:8px;
+    color:#60a5fa;
+    font-weight:600;
+    text-decoration:none;
 }
 
-.login-link a:hover {
-  text-decoration: underline;
+.login-link a:hover{
+    color:#93c5fd;
+    text-decoration:underline;
 }
 
-/* ===========================
+/* ==================================
    Responsive
-=========================== */
+================================== */
 
-@media (max-width: 992px) {
+@media(max-width:992px){
 
-  .register-page {
-    grid-template-columns: 1fr;
-  }
-
-  .register-left {
-    display: none;
-  }
-
-  .register-right {
-    padding: 20px;
-  }
-
-  .register-card {
-    padding: 30px;
-  }
+.register-page{
+    grid-template-columns:1fr;
 }
 
-@media (max-width: 576px) {
+.register-left{
+    display:none;
+}
 
-  .register-card h2 {
-    font-size: 28px;
-  }
+.register-right{
+    padding:20px;
+}
 
-  .register-card {
-    padding: 20px;
-  }
+.register-card{
+    padding:30px;
+}
 
-  .brand h1 {
-    font-size: 40px;
-  }
+}
+
+@media(max-width:576px){
+
+.register-card h2{
+    font-size:28px;
+}
+
+.register-card{
+    padding:20px;
+}
+
+.brand h1{
+    font-size:40px;
+}
+
 }
