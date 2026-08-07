@@ -1,0 +1,25 @@
+<div class="layout-container" [class.sidebar-collapsed]="isCollapsed()">
+
+  <!-- Fixed Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Mobile overlay backdrop -->
+  <div
+    class="sidebar-overlay"
+    (click)="closeOnOverlay()"
+    aria-hidden="true"
+  ></div>
+
+  <!-- Main Content Wrapper -->
+  <div class="main-wrapper">
+
+    <!-- Top Navigation Bar -->
+    <app-navbar></app-navbar>
+
+    <!-- Feature Content via Router -->
+    <main class="content-area" id="main-content" tabindex="-1">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+</div>

@@ -1,0 +1,196 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// ── History Container ────────────────────────────────────────────────────────
+.history-container {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+
+  .history-count {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+}
+
+// ── Timeline ─────────────────────────────────────────────────────────────────
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1.25rem;
+  cursor: pointer;
+
+  &:hover .timeline-card {
+    border-color: var(--primary);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.timeline-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.timeline-dot {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &.dot-credit   { background: var(--success-light); mat-icon { color: var(--success-dark, #15803d); } }
+  &.dot-debit    { background: var(--danger-light);  mat-icon { color: var(--danger-dark, #b91c1c); } }
+  &.dot-transfer { background: var(--info-light);    mat-icon { color: var(--info-dark, #0369a1); } }
+
+  // default (fee)
+  background: var(--bg-surface-2);
+  mat-icon { color: var(--text-muted); }
+}
+
+.timeline-line {
+  width: 2px;
+  flex: 1;
+  background: var(--border-color);
+  margin: 4px 0;
+  min-height: 16px;
+}
+
+.timeline-item:last-child .timeline-line {
+  display: none;
+}
+
+// ── Timeline Card ────────────────────────────────────────────────────────────
+.timeline-card {
+  flex: 1;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.txn-ref {
+  font-family: monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.card-description {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 8px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.meta-account {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-family: monospace;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+}
+
+// ── Card Amount ──────────────────────────────────────────────────────────────
+.card-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.amount-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+
+  &.amount-credit { color: var(--success-dark, #15803d); }
+  &.amount-debit  { color: var(--danger-dark, #b91c1c); }
+}
+
+.amount-currency {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.amount-date {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.amount-time {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 600px) {
+  .card-top { flex-direction: column; }
+  .card-amount { align-items: flex-start; text-align: left; }
+}

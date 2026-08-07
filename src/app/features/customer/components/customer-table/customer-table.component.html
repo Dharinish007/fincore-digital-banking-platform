@@ -1,0 +1,105 @@
+@if (isLoading) {
+  <div class="skeleton-rows">
+    @for (i of [1,2,3,4,5]; track i) {
+      <div class="skeleton-row"></div>
+    }
+  </div>
+} @else if (customers.length === 0) {
+  <app-empty-state
+    icon="groups"
+    title="No customers found"
+    description="Try adjusting your search or filters. You can also add a new customer."
+    actionLabel="Add Customer"
+    (actionClicked)="addCustomer.emit()">
+  </app-empty-state>
+} @else {
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="customer-table">
+
+      <!-- Avatar Column -->
+      <ng-container matColumnDef="avatar">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let c">
+          <div class="customer-avatar" [style.background-color]="getAvatarColor(c.id)">
+            {{ getInitials(c.firstName, c.lastName) }}
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer ID</th>
+        <td mat-cell *matCellDef="let c"><span class="id-chip">{{ c.id }}</span></td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let c">
+          <span class="customer-name">{{ c.firstName }} {{ c.lastName }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let c"><span class="email-text">{{ c.email }}</span></td>
+      </ng-container>
+
+      <!-- Phone Column -->
+      <ng-container matColumnDef="phone">
+        <th mat-header-cell *matHeaderCellDef>Phone</th>
+        <td mat-cell *matCellDef="let c">{{ c.phone }}</td>
+      </ng-container>
+
+      <!-- Type Column -->
+      <ng-container matColumnDef="customerType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let c">
+          <app-customer-status-chip [value]="c.customerType"></app-customer-status-chip>
+        </td>
+      </ng-container>
+
+      <!-- Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let c">
+          <app-customer-status-chip [value]="c.status"></app-customer-status-chip>
+        </td>
+      </ng-container>
+
+      <!-- Branch Column -->
+      <ng-container matColumnDef="branch">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Branch</th>
+        <td mat-cell *matCellDef="let c">{{ c.branch }}</td>
+      </ng-container>
+
+      <!-- Created Date Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+        <td mat-cell *matCellDef="let c">{{ c.createdAt | date:'MMM d, y' }}</td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let c">
+          <div class="row-actions">
+            <a mat-icon-button [routerLink]="['/customer', c.id]" matTooltip="View Profile">
+              <mat-icon>visibility</mat-icon>
+            </a>
+            <a mat-icon-button [routerLink]="['/customer', c.id, 'edit']" matTooltip="Edit Customer">
+              <mat-icon>edit</mat-icon>
+            </a>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [routerLink]="['/customer', row.id]" class="data-row"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons aria-label="Customers paginator"></mat-paginator>
+  </div>
+}

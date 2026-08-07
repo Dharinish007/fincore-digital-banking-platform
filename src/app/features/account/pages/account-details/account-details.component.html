@@ -1,0 +1,102 @@
+@if (account$ | async; as account) {
+  <div class="page">
+    <div class="details-header">
+      <div class="breadcrumb">
+        <a routerLink="/account">Accounts</a>
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ account.accountNumber }}</span>
+      </div>
+      <div class="header-actions">
+        <a mat-stroked-button [routerLink]="['/account', account.id, 'edit']">
+          <mat-icon>edit</mat-icon> Edit Account
+        </a>
+        <a mat-flat-button color="primary" routerLink="/account">
+          <mat-icon>arrow_back</mat-icon> Back to List
+        </a>
+      </div>
+    </div>
+
+    <!-- Account Hero -->
+    <div class="account-hero">
+      <div class="hero-icon">
+        <mat-icon>{{ getTypeIcon(account.accountType) }}</mat-icon>
+      </div>
+      <div class="hero-info">
+        <p class="hero-number">{{ account.accountNumber }}</p>
+        <h1 class="hero-balance">{{ account.availableBalance | currency:account.currency:'symbol':'1.2-2' }}</h1>
+        <p class="hero-sub">Total Balance: {{ account.balance | currency:account.currency:'symbol':'1.2-2' }}</p>
+        <div class="hero-chips">
+          <app-account-status-chip [value]="account.accountType"></app-account-status-chip>
+          <app-account-status-chip [value]="account.status"></app-account-status-chip>
+          <span class="currency-badge">{{ account.currency }}</span>
+        </div>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-label">Branch</span>
+        <span class="stat-value">{{ account.branch }}</span>
+      </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="details-grid">
+      <!-- Account Info -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>account_balance_wallet</mat-icon> Account Details</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Account Number</span><span class="dv mono">{{ account.accountNumber }}</span></div>
+          <div class="detail-row"><span class="dl">Account Type</span><span class="dv"><app-account-status-chip [value]="account.accountType"></app-account-status-chip></span></div>
+          <div class="detail-row"><span class="dl">Status</span><span class="dv"><app-account-status-chip [value]="account.status"></app-account-status-chip></span></div>
+          <div class="detail-row"><span class="dl">Currency</span><span class="dv">{{ account.currency }}</span></div>
+          <div class="detail-row"><span class="dl">Branch</span><span class="dv">{{ account.branch }}</span></div>
+          @if (account.description) {
+            <div class="detail-row"><span class="dl">Notes</span><span class="dv">{{ account.description }}</span></div>
+          }
+        </div>
+      </div>
+
+      <!-- Balance Info -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>payments</mat-icon> Balance Summary</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Total Balance</span><span class="dv balance-positive">{{ account.balance | currency:account.currency:'symbol':'1.2-2' }}</span></div>
+          <div class="detail-row"><span class="dl">Available Balance</span><span class="dv balance-positive">{{ account.availableBalance | currency:account.currency:'symbol':'1.2-2' }}</span></div>
+          <div class="detail-row"><span class="dl">Blocked Amount</span><span class="dv balance-blocked">{{ account.balance - account.availableBalance | currency:account.currency:'symbol':'1.2-2' }}</span></div>
+        </div>
+      </div>
+
+      <!-- Customer Info -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>person</mat-icon> Account Holder</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Customer Name</span><span class="dv">{{ account.customerName }}</span></div>
+          <div class="detail-row"><span class="dl">Customer ID</span><span class="dv mono">{{ account.customerId }}</span></div>
+          <div class="detail-row">
+            <span class="dl">Profile</span>
+            <a [routerLink]="['/customer', account.customerId]" class="profile-link">View Customer <mat-icon>open_in_new</mat-icon></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>schedule</mat-icon> Timeline</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Opened On</span><span class="dv">{{ account.openedAt | date:'MMMM d, y' }}</span></div>
+          <div class="detail-row"><span class="dl">Last Updated</span><span class="dv">{{ account.updatedAt | date:'MMMM d, y, h:mm a' }}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <app-empty-state
+    icon="account_balance_wallet"
+    title="Account not found"
+    description="The requested account could not be located."
+    actionLabel="Back to Accounts"
+    (actionClicked)="[]">
+  </app-empty-state>
+}

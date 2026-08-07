@@ -1,0 +1,120 @@
+@if (transaction$ | async; as txn) {
+  <div class="details-page">
+
+    <!-- Breadcrumb & Actions -->
+    <div class="details-header">
+      <div class="breadcrumb">
+        <a routerLink="/transaction">Transactions</a>
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ txn.id }}</span>
+      </div>
+      <div class="header-actions">
+        <a mat-flat-button color="primary" routerLink="/transaction">
+          <mat-icon>arrow_back</mat-icon> Back to List
+        </a>
+      </div>
+    </div>
+
+    <!-- Hero Panel -->
+    <div class="txn-hero">
+      <div class="hero-icon">
+        <mat-icon>{{ getTypeIcon(txn.type) }}</mat-icon>
+      </div>
+      <div class="hero-info">
+        <p class="hero-ref">{{ txn.referenceNumber }}</p>
+        <h1 class="hero-amount">{{ txn.amount | currency:txn.currency:'symbol':'1.2-2' }}</h1>
+        <p class="hero-currency">{{ txn.currency }} · {{ txn.type }}</p>
+        <div class="hero-chips">
+          <app-transaction-status-chip [value]="txn.type"></app-transaction-status-chip>
+          <app-transaction-status-chip [value]="txn.status"></app-transaction-status-chip>
+        </div>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-label">Transaction Date</span>
+        <span class="stat-value">{{ txn.transactionDate | date:'MMMM d, y' }}</span>
+        <span class="stat-sub">{{ txn.transactionDate | date:'h:mm a' }}</span>
+      </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="details-grid">
+
+      <!-- Transaction Info -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>receipt_long</mat-icon> Transaction Details</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Transaction ID</span><span class="dv mono">{{ txn.id }}</span></div>
+          <div class="detail-row"><span class="dl">Reference Number</span><span class="dv mono">{{ txn.referenceNumber }}</span></div>
+          <div class="detail-row"><span class="dl">Type</span><span class="dv"><app-transaction-status-chip [value]="txn.type"></app-transaction-status-chip></span></div>
+          <div class="detail-row"><span class="dl">Status</span><span class="dv"><app-transaction-status-chip [value]="txn.status"></app-transaction-status-chip></span></div>
+          <div class="detail-row"><span class="dl">Amount</span><span class="dv amount-value">{{ txn.amount | currency:txn.currency:'symbol':'1.2-2' }}</span></div>
+          <div class="detail-row"><span class="dl">Currency</span><span class="dv">{{ txn.currency }}</span></div>
+          <div class="detail-row"><span class="dl">Description</span><span class="dv">{{ txn.description }}</span></div>
+          @if (txn.remarks) {
+            <div class="detail-row"><span class="dl">Remarks</span><span class="dv remarks">{{ txn.remarks }}</span></div>
+          }
+        </div>
+      </div>
+
+      <!-- Account Info -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>account_balance_wallet</mat-icon> Account Information</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Source Account</span><span class="dv mono">{{ txn.sourceAccountNumber }}</span></div>
+          <div class="detail-row"><span class="dl">Source Account ID</span><span class="dv mono">{{ txn.sourceAccountId }}</span></div>
+          @if (txn.destinationAccountNumber) {
+            <div class="detail-row"><span class="dl">Destination Account</span><span class="dv mono">{{ txn.destinationAccountNumber }}</span></div>
+            <div class="detail-row"><span class="dl">Destination ID</span><span class="dv mono">{{ txn.destinationAccountId }}</span></div>
+          }
+          <div class="detail-row">
+            <span class="dl">View Account</span>
+            <a [routerLink]="['/account', txn.sourceAccountId]" class="profile-link">
+              View Account <mat-icon>open_in_new</mat-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Info -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>person</mat-icon> Customer Information</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Customer Name</span><span class="dv">{{ txn.customerName }}</span></div>
+          <div class="detail-row"><span class="dl">Customer ID</span><span class="dv mono">{{ txn.customerId }}</span></div>
+          <div class="detail-row">
+            <span class="dl">Profile</span>
+            <a [routerLink]="['/customer', txn.customerId]" class="profile-link">
+              View Customer <mat-icon>open_in_new</mat-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Audit Info -->
+      <div class="detail-card">
+        <div class="card-title"><mat-icon>schedule</mat-icon> Audit & Timeline</div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row"><span class="dl">Created By</span><span class="dv">{{ txn.createdBy }}</span></div>
+          <div class="detail-row"><span class="dl">Transaction Date</span><span class="dv">{{ txn.transactionDate | date:'MMMM d, y, h:mm a' }}</span></div>
+          <div class="detail-row"><span class="dl">Created At</span><span class="dv">{{ txn.createdAt | date:'MMMM d, y, h:mm a' }}</span></div>
+          @if (txn.completedAt) {
+            <div class="detail-row"><span class="dl">Completed At</span><span class="dv">{{ txn.completedAt | date:'MMMM d, y, h:mm a' }}</span></div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+} @else {
+  <app-empty-state
+    icon="receipt_long"
+    title="Transaction not found"
+    description="The requested transaction could not be located in the system."
+    actionLabel="Back to Transactions"
+    (actionClicked)="[]">
+  </app-empty-state>
+}

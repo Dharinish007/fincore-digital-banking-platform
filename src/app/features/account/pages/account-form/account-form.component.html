@@ -1,0 +1,106 @@
+<div class="page">
+  <div class="form-breadcrumb">
+    <a routerLink="/account">Accounts</a>
+    <mat-icon>chevron_right</mat-icon>
+    @if (isEditMode) {
+      <a [routerLink]="['/account', accountId]">Account</a>
+      <mat-icon>chevron_right</mat-icon>
+    }
+    <span>{{ pageTitle }}</span>
+  </div>
+
+  <app-page-header
+    [title]="pageTitle"
+    [subtitle]="pageSubtitle"
+    [icon]="isEditMode ? 'edit' : 'account_balance'">
+  </app-page-header>
+
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <!-- Account Owner -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>person</mat-icon> Account Holder</div>
+
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Customer</mat-label>
+          <mat-select formControlName="customerId">
+            @for (c of customerStubs; track c.id) {
+              <mat-option [value]="c.id">{{ c.name }} ({{ c.id }})</mat-option>
+            }
+          </mat-select>
+          @if (hasError('customerId','required')) { <mat-error>Customer is required.</mat-error> }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Account Configuration -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>account_balance_wallet</mat-icon> Account Configuration</div>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Account Type</mat-label>
+          <mat-select formControlName="accountType">
+            @for (t of accountTypes; track t) {
+              <mat-option [value]="t">{{ t.replace('_', ' ') }}</mat-option>
+            }
+          </mat-select>
+          @if (hasError('accountType','required')) { <mat-error>Account type is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Currency</mat-label>
+          <mat-select formControlName="currency">
+            @for (c of currencies; track c) { <mat-option [value]="c">{{ c }}</mat-option> }
+          </mat-select>
+          @if (hasError('currency','required')) { <mat-error>Currency is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Branch</mat-label>
+          <mat-select formControlName="branch">
+            @for (b of branches; track b) { <mat-option [value]="b">{{ b }}</mat-option> }
+          </mat-select>
+          @if (hasError('branch','required')) { <mat-error>Branch is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>{{ isEditMode ? 'Current Balance' : 'Initial Deposit' }}</mat-label>
+          <mat-icon matPrefix>payments</mat-icon>
+          <input matInput type="number" formControlName="balance" min="0" step="0.01" placeholder="0.00">
+          @if (hasError('balance','required')) { <mat-error>Amount is required.</mat-error> }
+          @if (hasError('balance','min')) { <mat-error>Amount cannot be negative.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Account Status</mat-label>
+          <mat-select formControlName="status">
+            @for (s of statuses; track s) { <mat-option [value]="s">{{ s }}</mat-option> }
+          </mat-select>
+          @if (hasError('status','required')) { <mat-error>Status is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description / Notes (optional)</mat-label>
+          <textarea matInput formControlName="description" rows="3" placeholder="e.g. Fixed term deposit – 12 months at 4.5% p.a."></textarea>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button mat-stroked-button type="button" (click)="cancel()">
+        <mat-icon>close</mat-icon> Cancel
+      </button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="isSaving">
+        @if (isSaving) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          <ng-container>
+            <mat-icon>{{ isEditMode ? 'save' : 'account_balance' }}</mat-icon>
+            {{ isEditMode ? 'Save Changes' : 'Open Account' }}
+          </ng-container>
+        }
+      </button>
+    </div>
+  </form>
+</div>

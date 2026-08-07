@@ -1,0 +1,131 @@
+<div class="page dashboard-page">
+  
+  <!-- Welcome Banner -->
+  <app-dashboard-welcome-banner
+    [userName]="user?.fullName || 'User'"
+    [role]="role || 'Unknown'">
+  </app-dashboard-welcome-banner>
+
+  <!-- Summary Cards Grid -->
+  @if (hasRole([Role.ADMIN, Role.EMPLOYEE])) {
+    <section class="dashboard-section" aria-label="Summary Metrics">
+      @if (summaryCards$ | async; as cards) {
+        <div class="metrics-grid">
+          @for (card of cards; track card.title) {
+            <app-statistic-card
+              [label]="card.title"
+              [value]="card.value"
+              [icon]="card.icon"
+              [trend]="card.trend"
+              [iconBgColor]="card.iconBgColor || 'var(--accent-light)'"
+              [iconColor]="card.iconColor || 'var(--accent)'">
+            </app-statistic-card>
+          }
+        </div>
+      } @else {
+        <div class="metrics-grid skeleton-grid">
+          @for (i of [1,2,3,4,5,6]; track i) {
+            <div class="skeleton-card"></div>
+          }
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Main Dashboard Layout -->
+  <div class="dashboard-grid">
+    
+    <!-- Left Column (Main Content) -->
+    <div class="dashboard-main-col">
+      
+      <!-- Charts Area -->
+      @if (hasRole([Role.ADMIN, Role.EMPLOYEE])) {
+        <section class="dashboard-section" aria-label="Analytics">
+          <div class="charts-grid">
+            <app-card-container title="Monthly Transactions">
+              @if (monthlyTransactionsChart$ | async; as data) {
+                <app-dashboard-chart-widget type="line" [chartData]="data" [height]="300"></app-dashboard-chart-widget>
+              } @else {
+                <app-loading-spinner message="Loading chart data..."></app-loading-spinner>
+              }
+            </app-card-container>
+
+            <app-card-container title="Customer Growth">
+              @if (customerGrowthChart$ | async; as data) {
+                <app-dashboard-chart-widget type="bar" [chartData]="data" [height]="300"></app-dashboard-chart-widget>
+              } @else {
+                <app-loading-spinner message="Loading chart data..."></app-loading-spinner>
+              }
+            </app-card-container>
+          </div>
+        </section>
+      }
+
+      <!-- Recent Transactions -->
+      <section class="dashboard-section" aria-label="Recent Transactions">
+        <app-card-container title="Recent Transactions" [noPadding]="true">
+          <div card-actions>
+            <button class="view-all-btn">View All</button>
+          </div>
+          @if (recentTransactions$ | async; as transactions) {
+            <app-dashboard-transactions-table [transactions]="transactions"></app-dashboard-transactions-table>
+          } @else {
+            <div class="loading-state">
+              <app-loading-spinner message="Loading transactions..."></app-loading-spinner>
+            </div>
+          }
+        </app-card-container>
+      </section>
+      
+    </div>
+
+    <!-- Right Column (Sidebar Content) -->
+    <div class="dashboard-side-col">
+      
+      <!-- Quick Actions -->
+      <section class="dashboard-section" aria-label="Quick Actions">
+        <app-card-container title="Quick Actions">
+          <app-dashboard-quick-actions [actions]="filteredQuickActions"></app-dashboard-quick-actions>
+        </app-card-container>
+      </section>
+      
+      <!-- Distribution Chart (Admin/Employee only) -->
+      @if (hasRole([Role.ADMIN, Role.EMPLOYEE])) {
+        <section class="dashboard-section" aria-label="Transaction Distribution">
+          <app-card-container title="Transaction Distribution">
+            @if (depositsVsWithdrawalsChart$ | async; as data) {
+              <app-dashboard-chart-widget type="doughnut" [chartData]="data" [height]="250"></app-dashboard-chart-widget>
+            } @else {
+              <app-loading-spinner message="Loading chart data..."></app-loading-spinner>
+            }
+          </app-card-container>
+        </section>
+      }
+
+      <!-- Notifications -->
+      <section class="dashboard-section" aria-label="Notifications">
+        <app-card-container title="Recent Notifications">
+          @if (notifications$ | async; as notifications) {
+            <app-dashboard-notification-panel [notifications]="notifications"></app-dashboard-notification-panel>
+          } @else {
+            <app-loading-spinner message="Loading notifications..."></app-loading-spinner>
+          }
+        </app-card-container>
+      </section>
+
+      <!-- Activity Timeline (Admin/Employee only) -->
+      @if (hasRole([Role.ADMIN, Role.EMPLOYEE])) {
+        <section class="dashboard-section" aria-label="Activity Timeline">
+          <app-card-container title="System Activity">
+            @if (activityTimeline$ | async; as activities) {
+              <app-dashboard-activity-timeline [activities]="activities"></app-dashboard-activity-timeline>
+            } @else {
+              <app-loading-spinner message="Loading activity..."></app-loading-spinner>
+            }
+          </app-card-container>
+        </section>
+      }
+      
+    </div>
+  </div>
+</div>

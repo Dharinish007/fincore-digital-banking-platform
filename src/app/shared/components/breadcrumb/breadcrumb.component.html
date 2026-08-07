@@ -1,0 +1,17 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink="/dashboard"><mat-icon inline="true">home</mat-icon></a>
+    </li>
+    @for (bc of breadcrumbService.breadcrumbs$ | async; track bc.url; let last = $last) {
+      <li class="breadcrumb-separator"><mat-icon inline="true">chevron_right</mat-icon></li>
+      <li class="breadcrumb-item" [class.active]="last" [attr.aria-current]="last ? 'page' : null">
+        @if (last) {
+          {{ bc.label }}
+        } @else {
+          <a [routerLink]="bc.url">{{ bc.label }}</a>
+        }
+      </li>
+    }
+  </ol>
+</nav>

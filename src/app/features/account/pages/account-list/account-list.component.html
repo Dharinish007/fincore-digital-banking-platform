@@ -1,0 +1,27 @@
+<div class="page">
+  <app-page-header
+    title="Account Management"
+    subtitle="Browse and manage all customer bank accounts"
+    icon="account_balance"
+    actionLabel="Open Account"
+    actionIcon="add"
+    [routerLink]="['/account/new']">
+  </app-page-header>
+
+  <app-account-filter
+    [branches]="branches"
+    (filterChanged)="onFilterChanged($event)">
+  </app-account-filter>
+
+  @if (accounts$ | async; as accounts) {
+    <div class="results-summary">
+      <span>{{ accounts.length }} account{{ accounts.length !== 1 ? 's' : '' }} found</span>
+    </div>
+    <app-account-table
+      [accounts]="accounts"
+      [isLoading]="isLoading">
+    </app-account-table>
+  } @else {
+    <app-account-table [accounts]="[]" [isLoading]="true"></app-account-table>
+  }
+</div>
