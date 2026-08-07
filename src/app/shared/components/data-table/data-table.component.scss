@@ -1,0 +1,15 @@
+.table-container {
+  overflow: auto;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+}
+
+table {
+  width: 100%;
+}
+
+.empty-cell {
+  text-align: center;
+  padding: var(--spacing-6);
+  color: var(--text-secondary);
+}

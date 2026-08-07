@@ -1,0 +1,99 @@
+// ============================================================
+// Main Layout Component Styles
+// FinCore Enterprise Digital Banking Platform
+// ============================================================
+
+// ── Layout Container ─────────────────────────────────────────
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-main);
+}
+
+// ── Main Wrapper ─────────────────────────────────────────────
+.main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  // Margin compensates for the fixed sidebar
+  margin-left: var(--sidebar-width);
+  transition: margin-left var(--sidebar-transition);
+  min-width: 0; // Prevent flex blowout
+}
+
+// Sidebar collapsed: shrink margin to icon rail width
+.sidebar-collapsed .main-wrapper {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+// ── Content Area ─────────────────────────────────────────────
+.content-area {
+  flex: 1;
+  padding: 1.75rem 2rem;
+  background-color: var(--bg-main);
+  // Ensure content fills available height
+  display: flex;
+  flex-direction: column;
+  // Prevent outline ring from appearing on programmatic focus
+  &:focus {
+    outline: none;
+  }
+}
+
+// ── Sidebar Overlay (Mobile) ─────────────────────────────────
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: var(--bg-overlay);
+  z-index: var(--z-overlay);
+  backdrop-filter: blur(2px);
+  animation: overlay-in 0.25s ease;
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// ── Responsive: Tablet (≤ 1024px) ────────────────────────────
+@media (max-width: 1024px) {
+  .main-wrapper {
+    // Tablet: sidebar collapses to icon rail automatically via sidebar.scss
+    margin-left: var(--sidebar-collapsed-width);
+  }
+
+  // Override: layout-container.sidebar-collapsed on tablet = same
+  .sidebar-collapsed .main-wrapper {
+    margin-left: var(--sidebar-collapsed-width);
+  }
+}
+
+// ── Responsive: Mobile (≤ 768px) ─────────────────────────────
+@media (max-width: 768px) {
+  .main-wrapper {
+    // Mobile: sidebar flies off-screen, no margin needed
+    margin-left: 0 !important;
+  }
+
+  .content-area {
+    padding: 1.25rem 1rem;
+  }
+
+  // Show overlay when sidebar is open on mobile
+  // The sidebar gains .mobile-open class via JS (we use !isCollapsed on mobile)
+  // For simplicity we show overlay whenever sidebar is NOT collapsed on mobile
+  .sidebar-overlay {
+    display: block;
+  }
+
+  // Hide overlay by default; shown only when sidebar is open
+  .layout-container:not(.sidebar-collapsed) .sidebar-overlay {
+    display: block;
+  }
+
+  .layout-container.sidebar-collapsed .sidebar-overlay {
+    display: none;
+  }
+}

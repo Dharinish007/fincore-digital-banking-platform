@@ -1,0 +1,123 @@
+<header class="navbar" role="banner">
+
+  <!-- ── Left: Hamburger + Brand ─────────────────────────── -->
+  <div class="navbar-left">
+    <!-- Mobile / tablet hamburger -->
+    <button
+      class="hamburger-btn focus-ring"
+      (click)="toggleSidebar()"
+      aria-label="Toggle navigation sidebar"
+      type="button"
+    >
+      <span class="material-icons-round">menu</span>
+    </button>
+
+    <!-- Application Logo & Title -->
+    <div class="app-brand" aria-label="FinCore Digital Banking Platform">
+      <div class="app-logo" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="7" fill="#2563eb"/>
+          <path d="M6 22h20M6 22v-2l10-8 10 8v2" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/>
+          <rect x="12" y="16" width="4" height="6" rx="1" fill="#fff" opacity=".95"/>
+          <rect x="19" y="14" width="3" height="8" rx="1" fill="#fff" opacity=".75"/>
+          <rect x="10" y="12" width="2" height="10" rx="1" fill="#fff" opacity=".75"/>
+        </svg>
+      </div>
+      <div class="app-title-group">
+        <span class="app-title">{{ platformTitle }}</span>
+        <span class="app-subtitle">{{ platformSubtitle }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Right: Actions + User Profile ──────────────────── -->
+  <div class="navbar-right">
+
+    <!-- System Status Indicator -->
+    <div class="system-status" aria-label="System status: Live" title="All systems operational">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="status-label">Live</span>
+    </div>
+
+    <!-- Divider -->
+    <div class="navbar-divider" aria-hidden="true"></div>
+
+    <!-- Notification Bell -->
+    <button class="icon-btn focus-ring" aria-label="View notifications ({{ notificationsCount() }} unread)" type="button">
+      <span class="material-icons-round">notifications</span>
+      @if (notificationsCount() > 0) {
+        <span class="notification-badge" aria-hidden="true">{{ notificationsCount() }}</span>
+      }
+    </button>
+
+    <!-- Divider -->
+    <div class="navbar-divider" aria-hidden="true"></div>
+
+    <!-- Profile Menu -->
+    <div class="profile-menu-wrapper">
+      <button
+        class="profile-trigger focus-ring"
+        (click)="toggleProfileMenu()"
+        [attr.aria-expanded]="showProfileMenu()"
+        aria-haspopup="true"
+        aria-label="Open profile menu"
+        type="button"
+      >
+        <div class="avatar" aria-hidden="true">
+          <span class="avatar-initials">{{ getInitials() }}</span>
+        </div>
+        <div class="user-info" aria-hidden="true">
+          <span class="user-name">{{ currentUser()?.fullName || 'Guest' }}</span>
+          <span class="user-role">{{ currentUser()?.role || 'User' }}</span>
+        </div>
+        <span class="material-icons-round dropdown-caret" aria-hidden="true">
+          {{ showProfileMenu() ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+
+      <!-- Dropdown -->
+      @if (showProfileMenu()) {
+        <div class="profile-dropdown" role="menu" aria-label="Profile menu">
+          <div class="dropdown-header">
+            <div class="dropdown-avatar">{{ getInitials() }}</div>
+            <div class="dropdown-user-details">
+              <span class="dropdown-user-name">{{ currentUser()?.fullName || 'Guest' }}</span>
+              <span class="dropdown-user-email">{{ currentUser()?.username || 'Not logged in' }}</span>
+            </div>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <ul class="dropdown-menu-list" role="list">
+            <li role="none">
+              <button class="dropdown-item" type="button" role="menuitem">
+                <span class="material-icons-round">person_outline</span>
+                My Profile
+              </button>
+            </li>
+            <li role="none">
+              <button class="dropdown-item" type="button" role="menuitem">
+                <span class="material-icons-round">settings</span>
+                Settings
+              </button>
+            </li>
+            <li role="none">
+              <button class="dropdown-item" type="button" role="menuitem">
+                <span class="material-icons-round">help_outline</span>
+                Help & Support
+              </button>
+            </li>
+          </ul>
+
+          <div class="dropdown-divider"></div>
+
+          <button class="dropdown-item dropdown-item--danger" type="button" role="menuitem" (click)="logout()">
+            <span class="material-icons-round">logout</span>
+            Sign Out
+          </button>
+        </div>
+      }
+    </div>
+
+  </div>
+</header>

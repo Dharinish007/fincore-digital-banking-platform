@@ -1,0 +1,154 @@
+// ── Skeleton ────────────────────────────────────────────────────────────────
+.skeleton-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+}
+
+.skeleton-row {
+  height: 52px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-surface-2) 25%, var(--border-color) 50%, var(--bg-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+// ── Table Wrapper ───────────────────────────────────────────────────────────
+.table-wrapper {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.txn-table {
+  width: 100%;
+  min-width: 1000px;
+
+  .mat-mdc-header-cell {
+    background: var(--bg-surface-2);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 12px 14px;
+    border-bottom: 2px solid var(--border-color);
+  }
+
+  .mat-mdc-cell {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-color);
+  }
+}
+
+// ── Data Row ────────────────────────────────────────────────────────────────
+.data-row {
+  cursor: pointer;
+  transition: background var(--transition-fast, 0.15s ease);
+
+  &:hover {
+    background: var(--bg-surface-2);
+  }
+}
+
+// ── Cell Types ──────────────────────────────────────────────────────────────
+.txn-id {
+  font-family: monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--accent-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.ref-number {
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.customer-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .customer-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-primary);
+  }
+
+  .customer-id {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    font-family: monospace;
+  }
+}
+
+.acc-number {
+  font-family: monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.amount {
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-variant-numeric: tabular-nums;
+
+  &.amount-credit { color: var(--success-dark, #15803d); }
+  &.amount-debit  { color: var(--danger-dark, #b91c1c); }
+}
+
+.currency-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-surface-2);
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.created-by {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+
+  .data-row:hover & {
+    opacity: 1;
+  }
+}
+
+tr.data-row:hover .row-actions { opacity: 1; }
+
+// ── Responsive ──────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+}

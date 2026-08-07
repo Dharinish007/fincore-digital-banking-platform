@@ -1,0 +1,340 @@
+// ============================================================
+// Sidebar Component Styles
+// FinCore Enterprise Digital Banking Platform
+// ============================================================
+
+// ── Local Constants ─────────────────────────────────────────
+$header-height: var(--navbar-height);
+$transition: var(--sidebar-transition);
+
+// ── Root Element ────────────────────────────────────────────
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: linear-gradient(180deg, #0f172a 0%, #111827 50%, #0f172a 100%);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: var(--z-sidebar);
+  overflow: hidden;
+  transition: width $transition;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.25);
+
+  // ── Collapsed State ───────────────────────────────────────
+  &.collapsed {
+    width: var(--sidebar-collapsed-width);
+
+    .brand-text,
+    .nav-label {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+    }
+
+    .brand {
+      justify-content: center;
+    }
+
+    .toggle-btn {
+      opacity: 1;
+    }
+
+    .nav-link {
+      justify-content: center;
+      padding: 0.75rem;
+
+      .active-indicator {
+        left: 0;
+        right: 0;
+        width: 3px;
+        border-radius: 0 4px 4px 0;
+      }
+    }
+
+    .logout-btn {
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    .sidebar-footer {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+}
+
+// ── Header ──────────────────────────────────────────────────
+.sidebar-header {
+  height: $header-height;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem 0 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  flex-shrink: 0;
+  gap: 0.5rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  overflow: hidden;
+  flex: 1;
+  min-width: 0;
+  transition: justify-content $transition;
+}
+
+.brand-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 8px rgba(37, 99, 235, 0.4));
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity var(--transition-slow), width var(--sidebar-transition);
+
+  .brand-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .brand-badge {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #60a5fa;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+}
+
+// ── Toggle Button ────────────────────────────────────────────
+.toggle-btn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.45);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-base);
+
+  .material-icons-round {
+    font-size: 18px;
+    transition: transform var(--transition-base);
+  }
+
+  &:hover {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+}
+
+// ── Navigation ───────────────────────────────────────────────
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-md);
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base),
+    padding var(--sidebar-transition);
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+
+  .nav-icon {
+    flex-shrink: 0;
+    font-size: 20px;
+    transition: color var(--transition-base);
+  }
+
+  .nav-label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity var(--transition-slow), width var(--sidebar-transition);
+  }
+
+  // Active indicator bar
+  .active-indicator {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    background: var(--accent);
+    border-radius: 4px 0 0 4px;
+    transition: height var(--transition-base);
+  }
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.07);
+
+    .nav-icon {
+      color: #93c5fd;
+    }
+  }
+
+  // Active state (set by routerLinkActive)
+  &.active {
+    color: #ffffff;
+    background: linear-gradient(
+      135deg,
+      rgba(37, 99, 235, 0.35) 0%,
+      rgba(37, 99, 235, 0.18) 100%
+    );
+    font-weight: 600;
+
+    .nav-icon {
+      color: #60a5fa;
+    }
+
+    .active-indicator {
+      height: 24px;
+    }
+  }
+}
+
+// ── Footer ───────────────────────────────────────────────────
+.sidebar-footer {
+  padding: 0.75rem;
+  flex-shrink: 0;
+  transition: padding $transition;
+}
+
+.footer-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.07);
+  margin-bottom: 0.75rem;
+}
+
+.logout-btn {
+  border-radius: var(--radius-md);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition:
+    color var(--transition-base),
+    background-color var(--transition-base),
+    padding var(--sidebar-transition);
+
+  &:hover {
+    color: #fca5a5;
+    background-color: rgba(239, 68, 68, 0.12);
+
+    .nav-icon {
+      color: #fca5a5;
+    }
+  }
+}
+
+// ── Responsive: Tablet (≤ 1024px) ────────────────────────────
+@media (max-width: 1024px) {
+  .sidebar {
+    width: var(--sidebar-collapsed-width);
+
+    .brand-text,
+    .nav-label {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+    }
+
+    .brand {
+      justify-content: center;
+    }
+
+    .nav-link {
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    .logout-btn {
+      justify-content: center;
+      padding: 0.75rem;
+    }
+
+    .sidebar-footer {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+}
+
+// ── Responsive: Mobile (≤ 768px) ─────────────────────────────
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: var(--sidebar-width) !important;
+    transition: transform $transition, width $transition;
+
+    .brand-text,
+    .nav-label {
+      opacity: 1 !important;
+      width: auto !important;
+      pointer-events: auto !important;
+    }
+
+    .brand {
+      justify-content: flex-start !important;
+    }
+
+    .nav-link {
+      justify-content: flex-start !important;
+      padding: 0.7rem 1rem !important;
+    }
+
+    .logout-btn {
+      justify-content: flex-start !important;
+      padding: 0.7rem 1rem !important;
+    }
+
+    .sidebar-footer {
+      padding: 0.75rem !important;
+    }
+
+    &.mobile-open {
+      transform: translateX(0);
+    }
+  }
+}

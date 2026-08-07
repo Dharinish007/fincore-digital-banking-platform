@@ -1,0 +1,25 @@
+.page { padding-bottom: 40px; }
+.form-breadcrumb {
+  display: flex; align-items: center; gap: 4px; font-size: 0.875rem;
+  color: var(--text-muted); margin-bottom: 20px;
+  a { color: var(--accent); text-decoration: none; &:hover { text-decoration: underline; } }
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+.form-card {
+  background: var(--bg-surface); border: 1px solid var(--border-color);
+  border-radius: var(--radius-md); padding: 24px; margin-bottom: 20px; box-shadow: var(--shadow-sm);
+}
+.section-title {
+  display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 600;
+  color: var(--text-primary); margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border-color);
+  mat-icon { color: var(--accent); font-size: 18px; width: 18px; height: 18px; }
+}
+.form-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px 16px;
+  mat-form-field { width: 100%; }
+  .full-width { grid-column: 1 / -1; }
+}
+.form-actions {
+  display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding-top: 20px;
+  button { min-width: 140px; height: 44px; gap: 8px; }
+}

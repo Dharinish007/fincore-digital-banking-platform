@@ -1,0 +1,101 @@
+@if (isLoading) {
+  <div class="skeleton-rows">
+    @for (i of [1,2,3,4,5]; track i) { <div class="skeleton-row"></div> }
+  </div>
+} @else if (accounts.length === 0) {
+  <app-empty-state
+    icon="account_balance_wallet"
+    title="No accounts found"
+    description="Try adjusting your search or filters, or open a new account."
+    actionLabel="Open Account"
+    (actionClicked)="openAccount.emit()">
+  </app-empty-state>
+} @else {
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="acc-table">
+
+      <!-- Account Number -->
+      <ng-container matColumnDef="accountNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account Number</th>
+        <td mat-cell *matCellDef="let a"><span class="acc-number">{{ a.accountNumber }}</span></td>
+      </ng-container>
+
+      <!-- Customer Name -->
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+        <td mat-cell *matCellDef="let a">
+          <div class="customer-cell">
+            <span class="customer-name">{{ a.customerName }}</span>
+            <span class="customer-id">{{ a.customerId }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Account Type -->
+      <ng-container matColumnDef="accountType">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let a">
+          <app-account-status-chip [value]="a.accountType"></app-account-status-chip>
+        </td>
+      </ng-container>
+
+      <!-- Branch -->
+      <ng-container matColumnDef="branch">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Branch</th>
+        <td mat-cell *matCellDef="let a">{{ a.branch }}</td>
+      </ng-container>
+
+      <!-- Balance -->
+      <ng-container matColumnDef="balance">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Balance</th>
+        <td mat-cell *matCellDef="let a">
+          <span class="balance" [class.negative]="a.balance < 0">
+            {{ a.balance | currency:a.currency:'symbol':'1.2-2' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Currency -->
+      <ng-container matColumnDef="currency">
+        <th mat-header-cell *matHeaderCellDef>Currency</th>
+        <td mat-cell *matCellDef="let a">
+          <span class="currency-badge">{{ a.currency }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let a">
+          <app-account-status-chip [value]="a.status"></app-account-status-chip>
+        </td>
+      </ng-container>
+
+      <!-- Opened Date -->
+      <ng-container matColumnDef="openedAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Opened</th>
+        <td mat-cell *matCellDef="let a">{{ a.openedAt | date:'MMM d, y' }}</td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let a">
+          <div class="row-actions">
+            <a mat-icon-button [routerLink]="['/account', a.id]" matTooltip="View Account">
+              <mat-icon>visibility</mat-icon>
+            </a>
+            <a mat-icon-button [routerLink]="['/account', a.id, 'edit']" matTooltip="Edit Account">
+              <mat-icon>edit</mat-icon>
+            </a>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [routerLink]="['/account', row.id]" class="data-row"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+  </div>
+}

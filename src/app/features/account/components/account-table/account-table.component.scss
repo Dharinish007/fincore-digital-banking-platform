@@ -1,0 +1,51 @@
+.table-wrapper { width: 100%; overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--border-color); }
+.acc-table { width: 100%; font-size: 0.875rem; }
+
+.acc-number {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+}
+
+.customer-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  .customer-name { font-weight: 500; }
+  .customer-id { font-size: 0.75rem; color: var(--text-muted); font-family: monospace; }
+}
+
+.balance {
+  font-weight: 600;
+  color: var(--success-dark);
+  &.negative { color: var(--danger-dark); }
+}
+
+.currency-badge {
+  font-family: monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--bg-surface-2);
+  border: 1px solid var(--border-color);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+}
+
+.row-actions { display: flex; gap: 4px; opacity: 0; transition: opacity 150ms ease; }
+.data-row { cursor: pointer; transition: background 120ms ease;
+  &:hover { background: var(--bg-surface-2); .row-actions { opacity: 1; } }
+}
+
+.skeleton-rows { display: flex; flex-direction: column; gap: 8px; padding: 8px 0; }
+.skeleton-row {
+  height: 52px; border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-surface-2) 25%, var(--border-color) 50%, var(--bg-surface-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }

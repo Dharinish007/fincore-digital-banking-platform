@@ -1,0 +1,27 @@
+<div class="page-header">
+  <app-breadcrumb></app-breadcrumb>
+  <div class="header-content">
+    <div class="title-area">
+      @if (icon) {
+        <mat-icon class="header-icon">{{ icon }}</mat-icon>
+      }
+      <div>
+        <h1 class="page-title">{{ title }}</h1>
+        @if (subtitle) {
+          <p class="page-subtitle">{{ subtitle }}</p>
+        }
+      </div>
+    </div>
+  </div>
+  
+  @if (actionLabel) {
+    <div class="action-area">
+      <button mat-flat-button color="primary" (click)="actionClicked.emit()">
+        @if (actionIcon) {
+          <mat-icon>{{ actionIcon }}</mat-icon>
+        }
+        {{ actionLabel }}
+      </button>
+    </div>
+  }
+</div>

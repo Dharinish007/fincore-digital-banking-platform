@@ -1,0 +1,154 @@
+@if (customer$ | async; as customer) {
+  <div class="page">
+    <div class="details-header">
+      <div class="breadcrumb">
+        <a routerLink="/customer">Customers</a>
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ customer.firstName }} {{ customer.lastName }}</span>
+      </div>
+      <div class="header-actions">
+        <a mat-stroked-button [routerLink]="['/customer', customer.id, 'edit']">
+          <mat-icon>edit</mat-icon> Edit Customer
+        </a>
+        <a mat-flat-button color="primary" routerLink="/customer">
+          <mat-icon>arrow_back</mat-icon> Back to List
+        </a>
+      </div>
+    </div>
+
+    <!-- Profile Hero -->
+    <div class="profile-hero">
+      <div class="hero-avatar" [style.background-color]="getAvatarColor(customer.id)">
+        {{ getInitials(customer) }}
+      </div>
+      <div class="hero-info">
+        <h1 class="hero-name">{{ customer.firstName }} {{ customer.lastName }}</h1>
+        <p class="hero-id">{{ customer.id }}</p>
+        <div class="hero-badges">
+          <app-customer-status-chip [value]="customer.status"></app-customer-status-chip>
+          <app-customer-status-chip [value]="customer.customerType"></app-customer-status-chip>
+          <app-customer-status-chip [value]="customer.kycStatus"></app-customer-status-chip>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-value">{{ customer.linkedAccountsCount }}</span>
+          <span class="stat-label">Accounts Linked</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">{{ customer.branch }}</span>
+          <span class="stat-label">Home Branch</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Details Grid -->
+    <div class="details-grid">
+      <!-- Personal Information -->
+      <div class="detail-card">
+        <div class="card-title">
+          <mat-icon>person</mat-icon> Personal Information
+        </div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row">
+            <span class="detail-label">First Name</span>
+            <span class="detail-value">{{ customer.firstName }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Last Name</span>
+            <span class="detail-value">{{ customer.lastName }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Date of Birth</span>
+            <span class="detail-value">{{ customer.dateOfBirth | date:'MMMM d, y' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Gender</span>
+            <span class="detail-value">{{ customer.gender }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Details -->
+      <div class="detail-card">
+        <div class="card-title">
+          <mat-icon>contacts</mat-icon> Contact Details
+        </div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row">
+            <span class="detail-label">Email</span>
+            <span class="detail-value link">{{ customer.email }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Phone</span>
+            <span class="detail-value">{{ customer.phone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Address -->
+      <div class="detail-card">
+        <div class="card-title">
+          <mat-icon>location_on</mat-icon> Address
+        </div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row">
+            <span class="detail-label">Street</span>
+            <span class="detail-value">{{ customer.address.street }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">City</span>
+            <span class="detail-value">{{ customer.address.city }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">State / Postal</span>
+            <span class="detail-value">{{ customer.address.state }}, {{ customer.address.postalCode }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Country</span>
+            <span class="detail-value">{{ customer.address.country }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Info -->
+      <div class="detail-card">
+        <div class="card-title">
+          <mat-icon>admin_panel_settings</mat-icon> Account Information
+        </div>
+        <mat-divider></mat-divider>
+        <div class="detail-rows">
+          <div class="detail-row">
+            <span class="detail-label">Customer Status</span>
+            <span class="detail-value"><app-customer-status-chip [value]="customer.status"></app-customer-status-chip></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Customer Type</span>
+            <span class="detail-value"><app-customer-status-chip [value]="customer.customerType"></app-customer-status-chip></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">KYC Status</span>
+            <span class="detail-value"><app-customer-status-chip [value]="customer.kycStatus"></app-customer-status-chip></span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Branch</span>
+            <span class="detail-value">{{ customer.branch }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Member Since</span>
+            <span class="detail-value">{{ customer.createdAt | date:'MMMM d, y' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Last Updated</span>
+            <span class="detail-value">{{ customer.updatedAt | date:'MMMM d, y, h:mm a' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <app-empty-state icon="person_off" title="Customer not found" description="The requested customer record could not be located." actionLabel="Back to Customers" (actionClicked)="['/customer']"></app-empty-state>
+}

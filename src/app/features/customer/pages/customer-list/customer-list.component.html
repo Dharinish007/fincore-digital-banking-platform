@@ -1,0 +1,32 @@
+<div class="page">
+  <div *appHasPermission="'edit:customers'">
+    <app-page-header
+      title="Customer Management"
+      subtitle="Browse, search and manage customer records"
+      icon="groups"
+      actionLabel="Add Customer"
+      actionIcon="add"
+      [routerLink]="['/customer/new']">
+    </app-page-header>
+  </div>
+  <div *appHasPermission="'view:customers'">
+
+  <app-customer-filter
+    [branches]="branches"
+    (filterChanged)="onFilterChanged($event)">
+  </app-customer-filter>
+
+  @if (customers$ | async; as customers) {
+    <div class="results-summary">
+      <span>{{ customers.length }} customer{{ customers.length !== 1 ? 's' : '' }} found</span>
+    </div>
+    <app-customer-table
+      [customers]="customers"
+      [isLoading]="isLoading"
+      (addCustomer)="['/customer/new']">
+    </app-customer-table>
+  } @else {
+      <app-customer-table [customers]="[]" [isLoading]="true"></app-customer-table>
+    }
+  </div>
+</div>

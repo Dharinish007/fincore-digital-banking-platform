@@ -1,0 +1,162 @@
+<div class="page">
+  <div class="form-breadcrumb">
+    <a routerLink="/customer">Customers</a>
+    <mat-icon>chevron_right</mat-icon>
+    @if (isEditMode) {
+      <a [routerLink]="['/customer', customerId]">Customer</a>
+      <mat-icon>chevron_right</mat-icon>
+    }
+    <span>{{ pageTitle }}</span>
+  </div>
+
+  <app-page-header
+    [title]="pageTitle"
+    [subtitle]="pageSubtitle"
+    [icon]="isEditMode ? 'edit' : 'person_add'">
+  </app-page-header>
+
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <!-- Personal Info Section -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>person</mat-icon> Personal Information</div>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>First Name</mat-label>
+          <input matInput formControlName="firstName" placeholder="e.g. James">
+          @if (hasError('firstName','required')) { <mat-error>First name is required.</mat-error> }
+          @if (hasError('firstName','minlength')) { <mat-error>At least 2 characters.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last Name</mat-label>
+          <input matInput formControlName="lastName" placeholder="e.g. Harrison">
+          @if (hasError('lastName','required')) { <mat-error>Last name is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date of Birth</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          @if (hasError('dateOfBirth','required')) { <mat-error>Date of birth is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Gender</mat-label>
+          <mat-select formControlName="gender">
+            @for (g of genders; track g) {
+              <mat-option [value]="g">{{ g }}</mat-option>
+            }
+          </mat-select>
+          @if (hasError('gender','required')) { <mat-error>Gender is required.</mat-error> }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>contacts</mat-icon> Contact Details</div>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Email Address</mat-label>
+          <mat-icon matPrefix>email</mat-icon>
+          <input matInput formControlName="email" type="email" placeholder="name@example.com">
+          @if (hasError('email','required')) { <mat-error>Email is required.</mat-error> }
+          @if (hasError('email','email')) { <mat-error>Enter a valid email address.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Mobile Number</mat-label>
+          <mat-icon matPrefix>phone</mat-icon>
+          <input matInput formControlName="phone" placeholder="+1-555-0100">
+          @if (hasError('phone','required')) { <mat-error>Phone is required.</mat-error> }
+          @if (hasError('phone','pattern')) { <mat-error>Enter a valid phone number.</mat-error> }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Address Section -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>location_on</mat-icon> Address</div>
+      <div class="form-grid">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Street Address</mat-label>
+          <input matInput formControlName="street" placeholder="123 Main Street">
+          @if (hasError('street','required')) { <mat-error>Street address is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city" placeholder="New York">
+          @if (hasError('city','required')) { <mat-error>City is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>State</mat-label>
+          <input matInput formControlName="state" placeholder="NY">
+          @if (hasError('state','required')) { <mat-error>State is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Postal Code</mat-label>
+          <input matInput formControlName="postalCode" placeholder="10001">
+          @if (hasError('postalCode','required')) { <mat-error>Postal code is required.</mat-error> }
+          @if (hasError('postalCode','pattern')) { <mat-error>Enter a valid postal code.</mat-error> }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Account Settings Section -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>admin_panel_settings</mat-icon> Account Settings</div>
+      <div class="form-grid">
+        <mat-form-field appearance="outline">
+          <mat-label>Customer Type</mat-label>
+          <mat-select formControlName="customerType">
+            @for (t of customerTypes; track t) {
+              <mat-option [value]="t">{{ t }}</mat-option>
+            }
+          </mat-select>
+          @if (hasError('customerType','required')) { <mat-error>Customer type is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Branch</mat-label>
+          <mat-select formControlName="branch">
+            @for (b of branches; track b) {
+              <mat-option [value]="b">{{ b }}</mat-option>
+            }
+          </mat-select>
+          @if (hasError('branch','required')) { <mat-error>Branch is required.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            @for (s of statuses; track s) {
+              <mat-option [value]="s">{{ s }}</mat-option>
+            }
+          </mat-select>
+          @if (hasError('status','required')) { <mat-error>Status is required.</mat-error> }
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button mat-stroked-button type="button" (click)="cancel()">
+        <mat-icon>close</mat-icon> Cancel
+      </button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="isSaving">
+        @if (isSaving) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          <ng-container>
+            <mat-icon>{{ isEditMode ? 'save' : 'person_add' }}</mat-icon>
+            {{ isEditMode ? 'Save Changes' : 'Create Customer' }}
+          </ng-container>
+        }
+      </button>
+    </div>
+  </form>
+</div>

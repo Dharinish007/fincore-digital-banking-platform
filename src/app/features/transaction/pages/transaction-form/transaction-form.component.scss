@@ -1,0 +1,70 @@
+// ── Page Layout ──────────────────────────────────────────────────────────────
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  animation: page-enter 0.3s ease;
+}
+
+@keyframes page-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Breadcrumb ───────────────────────────────────────────────────────────────
+.form-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+
+  a { color: var(--primary); text-decoration: none; font-weight: 500; &:hover { text-decoration: underline; } }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+// ── Form Card ────────────────────────────────────────────────────────────────
+.form-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 1.25rem;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: var(--primary); }
+}
+
+// ── Form Grid ────────────────────────────────────────────────────────────────
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0 1.25rem;
+
+  .full-width { grid-column: 1 / -1; }
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Form Actions ─────────────────────────────────────────────────────────────
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+
+  mat-spinner { display: inline-block; }
+}
