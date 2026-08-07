@@ -124,33 +124,24 @@
 
 /* Banking Card */
 
-.bank-card{
-    width:420px;
-    height:260px;
-    border-radius:20px;
-    background:linear-gradient(135deg,#2563eb,#1e40af);
-    color:white;
-    padding:35px;
-    box-shadow:0 20px 45px rgba(37,99,235,.35);
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
+.bank-card {
+    width: 420px;
+    height: 260px;
+    color: white;
+    padding: 35px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 100px; /* Increase emoji size */
 }
 
-.bank-title{
-    font-size:28px;
-    font-weight:bold;
+.bank-icon {
+    margin-left: 200px;
+    font-size: 500px; /* Change to 150px, 180px, etc. */
 }
 
-.bank-balance{
-    font-size:42px;
-    font-weight:bold;
-}
-
-.bank-footer{
-    font-size:18px;
-    color:#dbeafe;
-}
 
 /* Features */
 
@@ -207,16 +198,16 @@
     background:linear-gradient(135deg,#1d4ed8,#2563eb);
     color:white;
     text-align:center;
-    padding:80px 20px;
+    padding:20px 10px;
 }
 
 .cta h2{
-    font-size:42px;
+    font-size:35px;
     margin-bottom:20px;
 }
 
 .cta p{
-    font-size:18px;
+    font-size:15px;
     margin-bottom:30px;
     color:#e2e8f0;
 }

@@ -3,11 +3,12 @@
 ================================== */
 
 .register-page{
-    display:grid;
-    grid-template-columns:40% 60%;
-    min-height:100vh;
-    background:#0f172a;
-    font-family:"Inter",sans-serif;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    min-height: 100vh;
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(135deg, #020617, #1e3a8a, #2563eb);
+    background-attachment: fixed;
 }
 
 /* ==================================
@@ -15,53 +16,53 @@
 ================================== */
 
 .register-left{
-    background:linear-gradient(135deg,#020617,#1e3a8a,#2563eb);
-    color:#fff;
-    padding:60px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    text-align:center;
+    background: transparent;
+    color: #fff;
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
 }
 
 .brand{
-    margin-bottom:60px;
+    margin-bottom: 60px;
 }
 
 .brand-icon{
-    width:140px;
-    height:140px;
-    margin:0 auto 25px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:60px;
-    border-radius:50%;
-    background:rgba(255,255,255,.08);
-    box-shadow:0 0 30px rgba(37,99,235,.4);
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 60px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    box-shadow: 0 0 30px rgba(37,99,235,.4);
 }
 
 .brand h1{
-    font-size:48px;
-    margin-bottom:10px;
-    color:#fff;
+    font-size: 48px;
+    margin-bottom: 10px;
+    color: #fff;
 }
 
 .brand p{
-    font-size:18px;
-    color:#cbd5e1;
+    font-size: 18px;
+    color: #cbd5e1;
 }
 
 .welcome-content h2{
-    font-size:38px;
-    margin-bottom:20px;
-    color:#fff;
+    font-size: 38px;
+    margin-bottom: 20px;
+    color: #fff;
 }
 
 .welcome-content p{
-    line-height:1.8;
-    font-size:18px;
-    color:#cbd5e1;
+    line-height: 1.8;
+    font-size: 18px;
+    color: #cbd5e1;
 }
 
 /* ==================================
@@ -69,11 +70,11 @@
 ================================== */
 
 .register-right{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:40px;
-    background:#0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background: transparent;
 }
 
 /* ==================================
@@ -81,25 +82,25 @@
 ================================== */
 
 .register-card{
-    width:100%;
-    max-width:700px;
-    background:#1e293b;
-    border-radius:22px;
-    padding:40px;
-    border:1px solid rgba(255,255,255,.08);
-    box-shadow:0 20px 45px rgba(0,0,0,.45);
+    width: 100%;
+    max-width: 700px;
+    background: #1e293b;
+    border-radius: 22px;
+    padding: 40px;
+    border: 1px solid rgba(255,255,255,.08);
+    box-shadow: 0 20px 45px rgba(0,0,0,.45);
 }
 
 .register-card h2{
-    text-align:center;
-    font-size:34px;
-    color:#fff;
+    text-align: center;
+    font-size: 34px;
+    color: #fff;
 }
 
 .subtitle{
-    text-align:center;
-    color:#94a3b8;
-    margin:10px 0 30px;
+    text-align: center;
+    color: #94a3b8;
+    margin: 10px 0 30px;
 }
 
 /* ==================================
@@ -107,46 +108,46 @@
 ================================== */
 
 .input-group{
-    display:flex;
-    align-items:center;
-    background:#334155;
-    border:1px solid #475569;
-    border-radius:12px;
-    padding:14px 16px;
-    margin-bottom:18px;
-    transition:.3s;
+    display: flex;
+    align-items: center;
+    background: #334155;
+    border: 1px solid #475569;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    transition: .3s;
 }
 
 .input-group:focus-within{
-    border-color:#2563eb;
-    box-shadow:0 0 15px rgba(37,99,235,.3);
+    border-color: #2563eb;
+    box-shadow: 0 0 15px rgba(37,99,235,.3);
 }
 
 .input-icon{
-    color:#60a5fa;
-    margin-right:12px;
-    font-size:18px;
+    color: #60a5fa;
+    margin-right: 12px;
+    font-size: 18px;
 }
 
 .input-group input,
 .input-group textarea{
-    width:100%;
-    border:none;
-    outline:none;
-    font-size:15px;
-    resize:none;
-    background:transparent;
-    color:#fff;
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 15px;
+    resize: none;
+    background: transparent;
+    color: #fff;
 }
 
 .input-group input::placeholder,
 .input-group textarea::placeholder{
-    color:#94a3b8;
+    color: #94a3b8;
 }
 
 .toggle-password{
-    cursor:pointer;
-    color:#94a3b8;
+    cursor: pointer;
+    color: #94a3b8;
 }
 
 /* ==================================
@@ -154,19 +155,19 @@
 ================================== */
 
 .terms{
-    margin:20px 0;
-    font-size:15px;
+    margin: 20px 0;
+    font-size: 15px;
 }
 
 .terms label{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    color:#cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #cbd5e1;
 }
 
 .terms input[type="checkbox"]{
-    accent-color:#2563eb;
+    accent-color: #2563eb;
 }
 
 /* ==================================
@@ -174,22 +175,22 @@
 ================================== */
 
 .register-btn{
-    width:100%;
-    background:#2563eb;
-    color:#fff;
-    padding:15px;
-    border:none;
-    border-radius:12px;
-    font-size:17px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.3s;
+    width: 100%;
+    background: #2563eb;
+    color: #fff;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .3s;
 }
 
 .register-btn:hover{
-    background:#1d4ed8;
-    transform:translateY(-2px);
-    box-shadow:0 10px 25px rgba(37,99,235,.4);
+    background: #1d4ed8;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37,99,235,.4);
 }
 
 /* ==================================
@@ -197,59 +198,57 @@
 ================================== */
 
 .login-link{
-    text-align:center;
-    margin-top:25px;
-    color:#cbd5e1;
+    text-align: center;
+    margin-top: 25px;
+    color: #cbd5e1;
 }
 
 .login-link a{
-    margin-left:8px;
-    color:#60a5fa;
-    font-weight:600;
-    text-decoration:none;
+    margin-left: 8px;
+    color: #60a5fa;
+    font-weight: 600;
+    text-decoration: none;
 }
 
 .login-link a:hover{
-    color:#93c5fd;
-    text-decoration:underline;
+    color: #93c5fd;
+    text-decoration: underline;
 }
 
 /* ==================================
    Responsive
 ================================== */
 
-@media(max-width:992px){
+@media (max-width: 992px){
 
-.register-page{
-    grid-template-columns:1fr;
+    .register-page{
+        grid-template-columns: 1fr;
+    }
+
+    .register-left{
+        display: none;
+    }
+
+    .register-right{
+        padding: 20px;
+    }
+
+    .register-card{
+        padding: 30px;
+    }
 }
 
-.register-left{
-    display:none;
-}
+@media (max-width: 576px){
 
-.register-right{
-    padding:20px;
-}
+    .register-card h2{
+        font-size: 28px;
+    }
 
-.register-card{
-    padding:30px;
-}
+    .register-card{
+        padding: 20px;
+    }
 
-}
-
-@media(max-width:576px){
-
-.register-card h2{
-    font-size:28px;
-}
-
-.register-card{
-    padding:20px;
-}
-
-.brand h1{
-    font-size:40px;
-}
-
+    .brand h1{
+        font-size: 40px;
+    }
 }

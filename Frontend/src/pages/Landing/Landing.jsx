@@ -72,19 +72,7 @@ function Landing() {
           <div className="hero-right">
 
             <div className="bank-card">
-
-              <div className="bank-title">
-                🏦 FinCore Bank
-              </div>
-
-              <div className="bank-balance">
-                ₹ 8,45,620
-              </div>
-
-              <div className="bank-footer">
-                Secure Banking Platform
-              </div>
-
+                <span className="bank-icon">🏦</span>
             </div>
 
           </div>
