@@ -1,1088 +1,313 @@
 /* ==========================================
    Admin Dashboard
-   Premium Dark Theme
+   Main Layout
 ========================================== */
 
-.dashboard-container {
-  display: flex;
+.admin-dashboard {
   min-height: 100vh;
+
+  display: flex;
+
   background: #0f172a;
+
   color: #e2e8f0;
+
   font-family: "Inter", sans-serif;
 }
 
 
 /* ==========================================
-   Sidebar
+   Main Area
 ========================================== */
 
-.sidebar {
-  width: 270px;
-  background: linear-gradient(180deg, #020617, #111827);
-  color: white;
-
-  display: flex;
-  flex-direction: column;
-
-  position: fixed;
-
-  height: 100vh;
-
-  left: 0;
-  top: 0;
-
-  padding: 25px;
-
-  border-right: 1px solid rgba(255,255,255,.08);
-
-  box-sizing: border-box;
-}
-
-
-/* Sidebar Header */
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-
-  gap: 15px;
-
-  margin-bottom: 45px;
-}
-
-.logo-circle {
-  width: 58px;
-  height: 58px;
-
-  border-radius: 16px;
-
-  background: #2563eb;
-
-  color: white;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-size: 26px;
-
-  box-shadow:
-    0 0 25px rgba(37,99,235,.4);
-}
-
-.sidebar-header h2 {
-  margin: 0;
-
-  font-size: 25px;
-
-  font-weight: 700;
-}
-
-.sidebar-header span {
-  display: block;
-
-  margin-top: 4px;
-
-  font-size: 12px;
-
-  color: #94a3b8;
-}
-
-
-/* ==========================================
-   Sidebar Menu
-========================================== */
-
-.menu {
+.admin-main {
   flex: 1;
 
-  list-style: none;
-
-  padding: 0;
-  margin: 0;
-}
-
-.menu li {
-  display: flex;
-
-  align-items: center;
-
-  gap: 15px;
-
-  padding: 14px 16px;
-
-  margin-bottom: 8px;
-
-  border-radius: 12px;
-
-  cursor: pointer;
-
-  transition: all .3s ease;
-
-  font-size: 14px;
-
-  font-weight: 500;
-
-  color: #94a3b8;
-}
-
-.menu li svg {
-  font-size: 17px;
-}
-
-.menu li:hover {
-  background: rgba(37,99,235,.15);
-
-  color: white;
-
-  transform: translateX(5px);
-}
-
-.menu .active {
-  background: #2563eb;
-
-  color: white;
-
-  font-weight: 600;
-
-  box-shadow:
-    0 8px 20px rgba(37,99,235,.3);
-}
-
-
-/* ==========================================
-   Logout
-========================================== */
-
-.logout {
-  background: #1e293b;
-
-  padding: 14px;
-
-  border-radius: 12px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 10px;
-
-  cursor: pointer;
-
-  transition: .3s;
-
-  color: #cbd5e1;
-
-  font-size: 14px;
-}
-
-.logout:hover {
-  background: #dc2626;
-
-  color: white;
-}
-
-
-/* ==========================================
-   Main Content
-========================================== */
-
-.main-content {
-  margin-left: 270px;
-  min-height: 100vh;
   min-width: 0;
+
+  min-height: 100vh;
+
+  margin-left: 270px;
+
+  display: flex;
+
+  flex-direction: column;
 
   background: #0f172a;
 
-  display: flex;
-  flex-direction: column;
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Dashboard Content
+========================================== */
+
+.admin-content {
+  padding: 35px;
 
   box-sizing: border-box;
 }
 
 
 /* ==========================================
-   Fixed / Sticky Topbar
+   Welcome Section
 ========================================== */
 
-.topbar {
-  height: 75px;
-
-  background: #1e293b;
-
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-
-  padding: 0 30px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  box-sizing: border-box;
-  flex-shrink: 0;
-
-  position: sticky;
-  top: 0;
-
-  z-index: 900;
-
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-}
-
-
-/* Search */
-
-.search-box {
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  background: #334155;
-
-  padding: 11px 16px;
-
-  border-radius: 12px;
-
-  width: 360px;
-
-  color: #94a3b8;
-
-  border: 1px solid transparent;
-
-  transition: all 0.3s ease;
-
-  box-sizing: border-box;
-}
-
-.search-box:focus-within {
-  border-color: #2563eb;
-
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
-}
-
-.search-box input {
-  border: none;
-
-  background: transparent;
-
-  width: 100%;
-
-  outline: none;
-
-  color: white;
-
-  font-size: 14px;
-}
-
-.search-box input::placeholder {
-  color: #94a3b8;
-}
-
-
-
-/* Top Right */
-
-.top-right {
-  display: flex;
-
-  align-items: center;
-
-  gap: 18px;
-}
-
-.notification {
-  position: relative;
-
-  cursor: pointer;
-}
-
-.bell {
-  font-size: 21px;
-
-  color: #94a3b8;
-}
-
-.bell:hover {
-  color: #60a5fa;
-}
-
-.notification-dot {
-  position: absolute;
-
-  top: -2px;
-  right: -2px;
-
-  width: 7px;
-  height: 7px;
-
-  background: #ef4444;
-
-  border-radius: 50%;
-
-  border: 2px solid #1e293b;
-}
-
-
-/* Profile */
-
-.profile {
-  width: 42px;
-  height: 42px;
-
-  border-radius: 50%;
-
-  background: linear-gradient(
-    135deg,
-    #2563eb,
-    #3b82f6
-  );
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  color: white;
-
-  font-weight: 700;
-
-  box-shadow:
-    0 0 15px rgba(37,99,235,.35);
-}
-
-.admin-info {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 3px;
-}
-
-.admin-info strong {
-  color: white;
-
-  font-size: 14px;
-}
-
-.admin-info span {
-  color: #64748b;
-
-  font-size: 11px;
-}
-
-
-/* ==========================================
-   Welcome
-========================================== */
-
-.welcome {
-  margin: 35px 0;
-
+.admin-welcome {
   display: flex;
 
   justify-content: space-between;
 
   align-items: center;
 
-  gap: 20px;
+  gap: 25px;
+
+  margin-bottom: 35px;
 }
 
-.welcome h1 {
+
+/* Welcome Text */
+
+.welcome-text h1 {
   margin: 0;
+
+  color: #ffffff;
 
   font-size: 34px;
 
-  color: white;
+  font-weight: 700;
+
+  line-height: 1.3;
 }
 
-.welcome p {
-  margin-top: 9px;
+.welcome-text p {
+  margin: 10px 0 0;
 
   color: #94a3b8;
 
   font-size: 15px;
+
+  line-height: 1.6;
 }
 
 
-/* System Status */
+/* ==========================================
+   System Status
+========================================== */
 
-.dashboard-date {
+.system-status {
+  min-width: 220px;
+
   background: #111827;
 
   border: 1px solid #1f2937;
 
-  padding: 14px 18px;
-
   border-radius: 12px;
+
+  padding: 14px 18px;
 
   display: flex;
 
   flex-direction: column;
 
-  gap: 6px;
+  gap: 7px;
+
+  box-sizing: border-box;
 }
 
-.dashboard-date span {
+.status-label {
   color: #64748b;
 
   font-size: 11px;
+
+  font-weight: 500;
 }
 
-.dashboard-date strong {
-  color: #d1fae5;
-
-  font-size: 12px;
-
+.system-status strong {
   display: flex;
 
   align-items: center;
 
-  gap: 7px;
+  gap: 8px;
+
+  color: #d1fae5;
+
+  font-size: 12px;
+
+  font-weight: 600;
 }
 
 .status-dot {
   width: 7px;
-  height: 7px;
 
-  background: #22c55e;
+  height: 7px;
 
   border-radius: 50%;
 
+  background: #22c55e;
+
   display: inline-block;
+
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
 }
 
 
 /* ==========================================
-   Statistics Cards
+   Statistics Section
 ========================================== */
 
-.cards {
+.admin-stats {
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 22px;
 
   margin-bottom: 40px;
 }
 
-.card {
-  background: #1e293b;
-
-  border: 1px solid rgba(255,255,255,.06);
-
-  border-radius: 18px;
-
-  padding: 23px;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.25);
-
-  transition: .3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-
-  border-color: rgba(37,99,235,.5);
-
-  box-shadow:
-    0 15px 35px rgba(37,99,235,.15);
-}
-
-.card-top {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  margin-bottom: 20px;
-}
-
-.card-icon {
-  width: 52px;
-  height: 52px;
-
-  border-radius: 14px;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  color: white;
-
-  font-size: 22px;
-}
-
-.blue {
-  background: #2563eb;
-}
-
-.green {
-  background: #059669;
-}
-
-.orange {
-  background: #d97706;
-}
-
-.purple {
-  background: #7c3aed;
-}
-
-
-/* Growth */
-
-.growth {
-  display: flex;
-
-  align-items: center;
-
-  gap: 4px;
-
-  font-size: 11px;
-
-  font-weight: 600;
-
-  padding: 5px 8px;
-
-  border-radius: 20px;
-}
-
-.growth.positive {
-  background: rgba(34,197,94,.12);
-
-  color: #4ade80;
-}
-
-.growth.negative {
-  background: rgba(239,68,68,.12);
-
-  color: #f87171;
-}
-
-
-/* Card Content */
-
-.card-content p {
-  color: #94a3b8;
-
-  font-size: 13px;
-
-  margin: 0 0 7px;
-}
-
-.card-content h2 {
-  margin: 0;
-
-  color: white;
-
-  font-size: 28px;
-}
-
-.card-content span {
-  display: block;
-
-  margin-top: 8px;
-
-  color: #64748b;
-
-  font-size: 11px;
-}
-
 
 /* ==========================================
-   Section Header
+   Management Section
 ========================================== */
 
-.section-header {
-  margin-bottom: 20px;
-}
-
-.section-header h2 {
-  margin: 0;
-
-  color: white;
-
-  font-size: 21px;
-}
-
-.section-header p {
-  margin-top: 6px;
-
-  color: #64748b;
-
-  font-size: 13px;
-}
-
-
-/* ==========================================
-   Management Overview
-========================================== */
-
-.overview-grid {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  gap: 20px;
-
+.management-section {
   margin-bottom: 35px;
 }
 
-.overview-card {
-  background: #1e293b;
 
-  border: 1px solid rgba(255,255,255,.06);
+/* Section Heading */
 
-  border-radius: 18px;
-
-  padding: 22px;
-
-  display: flex;
-
-  gap: 17px;
-
-  transition: .3s;
+.section-heading {
+  margin-bottom: 20px;
 }
 
-.overview-card:hover {
-  transform: translateY(-4px);
-
-  border-color: #2563eb;
-
-  box-shadow:
-    0 12px 30px rgba(37,99,235,.12);
-}
-
-.overview-icon {
-  min-width: 48px;
-
-  width: 48px;
-  height: 48px;
-
-  border-radius: 13px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  color: white;
-
-  font-size: 20px;
-}
-
-.overview-content h3 {
-  margin: 0 0 7px;
-
-  color: white;
-
-  font-size: 15px;
-}
-
-.overview-content p {
+.section-heading h2 {
   margin: 0;
 
-  color: #94a3b8;
+  color: #ffffff;
 
-  font-size: 12px;
-
-  line-height: 1.6;
-}
-
-.overview-stats {
-  display: flex;
-
-  gap: 15px;
-
-  margin-top: 15px;
-
-  font-size: 11px;
-
-  color: #64748b;
-}
-
-.overview-stats strong {
-  color: #cbd5e1;
-}
-
-
-/* ==========================================
-   Transactions Table
-========================================== */
-
-.table-card {
-  background: #1e293b;
-
-  border: 1px solid rgba(255,255,255,.06);
-
-  border-radius: 18px;
-
-  padding: 25px;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.25);
-}
-
-.table-header {
-  display: flex;
-
-  justify-content: space-between;
-
-  align-items: center;
-
-  margin-bottom: 22px;
-}
-
-.table-header h2 {
-  margin: 0;
-
-  color: white;
-
-  font-size: 20px;
-}
-
-.table-header p {
-  margin-top: 6px;
-
-  color: #64748b;
-
-  font-size: 12px;
-}
-
-.view-all-btn {
-  border: none;
-
-  background: rgba(37,99,235,.15);
-
-  color: #60a5fa;
-
-  padding: 9px 15px;
-
-  border-radius: 9px;
-
-  cursor: pointer;
-
-  font-size: 12px;
-
-  font-weight: 600;
-
-  transition: .3s;
-}
-
-.view-all-btn:hover {
-  background: #2563eb;
-
-  color: white;
-}
-
-
-/* Table */
-
-.table-wrapper {
-  width: 100%;
-
-  overflow-x: auto;
-}
-
-table {
-  width: 100%;
-
-  border-collapse: collapse;
-
-  min-width: 700px;
-}
-
-thead {
-  background: #111827;
-}
-
-th {
-  padding: 14px;
-
-  text-align: left;
-
-  color: #64748b;
-
-  font-size: 11px;
-
-  font-weight: 600;
-
-  text-transform: uppercase;
-}
-
-td {
-  padding: 15px 14px;
-
-  color: #cbd5e1;
-
-  font-size: 13px;
-
-  border-top: 1px solid rgba(255,255,255,.05);
-}
-
-tbody tr {
-  transition: .2s;
-}
-
-tbody tr:hover {
-  background: #172033;
-}
-
-
-/* Customer */
-
-.customer-cell {
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-}
-
-.customer-avatar {
-  width: 36px;
-  height: 36px;
-
-  border-radius: 10px;
-
-  background: #334155;
-
-  display: flex;
-
-  justify-content: center;
-
-  align-items: center;
-
-  color: #60a5fa;
-
-  font-size: 10px;
+  font-size: 21px;
 
   font-weight: 700;
 }
 
-.customer-cell strong {
-  display: block;
-
-  color: #e2e8f0;
-
-  font-size: 12px;
-}
-
-.customer-cell span {
-  display: block;
-
-  margin-top: 3px;
+.section-heading p {
+  margin: 6px 0 0;
 
   color: #64748b;
 
-  font-size: 10px;
-}
-
-.amount {
-  color: white;
-
-  font-weight: 600;
-}
-
-
-/* Status */
-
-.status {
-  display: inline-block;
-
-  padding: 5px 10px;
-
-  border-radius: 20px;
-
-  font-size: 10px;
-
-  font-weight: 600;
-}
-
-.status.success {
-  background: rgba(34,197,94,.12);
-
-  color: #4ade80;
-}
-
-.status.pending {
-  background: rgba(245,158,11,.12);
-
-  color: #fbbf24;
+  font-size: 13px;
 }
 
 
 /* ==========================================
-   Responsive
+   Transactions Section
+========================================== */
+
+.transactions-section {
+  width: 100%;
+}
+
+
+/* ==========================================
+   Tablet / Smaller Desktop
 ========================================== */
 
 @media (max-width: 1300px) {
 
-  .cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .overview-grid {
-    grid-template-columns: 1fr;
+  .admin-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
 }
 
+
+/* ==========================================
+   Tablet
+========================================== */
 
 @media (max-width: 992px) {
 
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
+  .admin-main {
     margin-left: 0;
   }
 
-  .welcome {
-    flex-direction: column;
-
-    align-items: flex-start;
+  .admin-content {
+    padding: 30px;
   }
 
-  .search-box {
-    width: 260px;
+  .admin-welcome {
+    align-items: flex-start;
   }
 
 }
 
 
+/* ==========================================
+   Mobile
+========================================== */
+
 @media (max-width: 768px) {
 
-  .main-content {
+  .admin-content {
     padding: 20px;
   }
 
-  .topbar {
+  .admin-welcome {
     flex-direction: column;
 
-    gap: 15px;
-
     align-items: stretch;
+
+    margin-bottom: 30px;
   }
 
-  .search-box {
-    width: auto;
+  .welcome-text h1 {
+    font-size: 28px;
   }
 
-  .top-right {
-    justify-content: flex-end;
+  .welcome-text p {
+    font-size: 14px;
   }
 
-  .admin-info {
-    display: none;
+  .system-status {
+    width: 100%;
+
+    min-width: 0;
   }
 
-  .cards {
+  .admin-stats {
     grid-template-columns: 1fr;
+
+    gap: 18px;
+
+    margin-bottom: 30px;
   }
 
-  .welcome h1 {
-    font-size: 27px;
-  }
-
-  .table-card {
-    padding: 18px;
+  .section-heading h2 {
+    font-size: 20px;
   }
 
 }
 
 
 /* ==========================================
-   Responsive
+   Small Mobile
 ========================================== */
 
-@media (max-width: 1300px) {
+@media (max-width: 480px) {
 
-  .cards {
-    grid-template-columns: repeat(2, 1fr);
+  .admin-content {
+    padding: 15px;
   }
 
-  .overview-grid {
-    grid-template-columns: 1fr;
+  .welcome-text h1 {
+    font-size: 24px;
   }
 
-}
-
-
-@media (max-width: 992px) {
-
-  .sidebar {
-    display: none;
-  }
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .welcome {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .search-box {
-    width: 260px;
-  }
-
-}
-
-
-@media (max-width: 768px) {
-
-  .main-content {
-    margin-left: 0;
-  }
-
-  .topbar {
-    height: auto;
-    min-height: 75px;
-
-    padding: 15px 20px;
-
-    flex-direction: column;
-    gap: 15px;
-
-    align-items: stretch;
-  }
-
-  .search-box {
-    width: 100%;
-  }
-
-  .top-right {
-    justify-content: flex-end;
-  }
-
-  .admin-info {
-    display: none;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-
-  .welcome h1 {
-    font-size: 27px;
-  }
-
-  .table-card {
-    padding: 18px;
+  .welcome-text p {
+    font-size: 13px;
   }
 
 }

@@ -1,0 +1,199 @@
+/* ==========================================
+   Admin Statistics Card
+========================================== */
+
+.admin-stat-card {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  padding: 23px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25);
+
+  transition: all 0.3s ease;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Hover
+========================================== */
+
+.admin-stat-card:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(37, 99, 235, 0.5);
+
+  box-shadow:
+    0 15px 35px rgba(37, 99, 235, 0.15);
+}
+
+
+/* ==========================================
+   Top Section
+========================================== */
+
+.admin-stat-card-top {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 20px;
+}
+
+
+/* ==========================================
+   Icon
+========================================== */
+
+.admin-stat-icon {
+  width: 52px;
+
+  height: 52px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  color: #ffffff;
+
+  font-size: 22px;
+}
+
+
+/* Icon Colors */
+
+.admin-stat-icon.blue {
+  background: #2563eb;
+}
+
+.admin-stat-icon.green {
+  background: #059669;
+}
+
+.admin-stat-icon.orange {
+  background: #d97706;
+}
+
+.admin-stat-icon.purple {
+  background: #7c3aed;
+}
+
+
+/* ==========================================
+   Growth
+========================================== */
+
+.admin-stat-growth {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 5px 9px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+/* Positive */
+
+.admin-stat-growth.positive {
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #4ade80;
+}
+
+
+/* Negative */
+
+.admin-stat-growth.negative {
+  background: rgba(239, 68, 68, 0.12);
+
+  color: #f87171;
+}
+
+
+/* Neutral */
+
+.admin-stat-growth.neutral {
+  background: rgba(148, 163, 184, 0.12);
+
+  color: #94a3b8;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.admin-stat-content p {
+  color: #94a3b8;
+
+  font-size: 13px;
+
+  margin: 0 0 7px;
+}
+
+
+.admin-stat-content h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 28px;
+
+  font-weight: 700;
+}
+
+
+.admin-stat-content span {
+  display: block;
+
+  margin-top: 8px;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+  .admin-stat-card {
+    padding: 20px;
+  }
+
+  .admin-stat-icon {
+    width: 48px;
+
+    height: 48px;
+
+    font-size: 20px;
+  }
+
+  .admin-stat-content h2 {
+    font-size: 25px;
+  }
+
+}
