@@ -4,34 +4,68 @@
 
 .teller-navbar {
     height: 75px;
+
     background: #111827;
+
     border-bottom: 1px solid #1f2937;
+
     padding: 0 35px;
+
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
+    box-sizing: border-box;
+
+    flex-shrink: 0;
 }
 
-/* Search */
+
+/* ==========================================
+   Search
+========================================== */
 
 .teller-search {
     width: 380px;
+
     display: flex;
+
     align-items: center;
+
     gap: 12px;
+
     background: #1f2937;
+
     border: 1px solid #374151;
+
     padding: 12px 18px;
+
     border-radius: 12px;
+
     color: #9ca3af;
+
+    transition: all 0.3s ease;
+}
+
+.teller-search:focus-within {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .teller-search input {
     border: none;
+
     background: transparent;
+
     color: #ffffff;
+
     outline: none;
+
     width: 100%;
+
     font-size: 15px;
 }
 
@@ -39,29 +73,97 @@
     color: #6b7280;
 }
 
-/* Right */
+
+/* ==========================================
+   Right Section
+========================================== */
 
 .teller-navbar-right {
     display: flex;
+
     align-items: center;
+
     gap: 25px;
 }
 
+
+/* ==========================================
+   Notification
+========================================== */
+
 .teller-nav-icon {
     font-size: 21px;
+
     color: #60a5fa;
+
     cursor: pointer;
+
+    transition: 0.3s;
 }
+
+.teller-nav-icon:hover {
+    color: #93c5fd;
+
+    transform: scale(1.08);
+}
+
+
+/* ==========================================
+   Profile
+========================================== */
 
 .teller-profile {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
+
     color: #ffffff;
+
     font-weight: 600;
 }
 
 .teller-profile svg {
     font-size: 34px;
+
     color: #3b82f6;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+    .teller-navbar {
+        padding: 0 20px;
+    }
+
+    .teller-search {
+        width: 240px;
+    }
+
+    .teller-navbar-right {
+        gap: 15px;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .teller-navbar {
+        padding: 0 15px;
+    }
+
+    .teller-search {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .teller-profile span {
+        display: none;
+    }
+
 }

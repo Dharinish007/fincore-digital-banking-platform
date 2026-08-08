@@ -17,26 +17,20 @@ function ManagerDashboard() {
   return (
     <div className="manager-dashboard">
 
-      {/* Sidebar */}
-
+      {/* Fixed Sidebar */}
       <ManagerSidebar />
 
-      {/* Main */}
-
+      {/* Main Area */}
       <div className="manager-main">
 
         {/* Navbar */}
-
         <ManagerNavbar />
 
         {/* Dashboard Content */}
-
         <main className="manager-content">
 
           {/* Heading */}
-
           <div className="manager-heading">
-
             <h1>
               Welcome Back, Manager 👋
             </h1>
@@ -44,11 +38,9 @@ function ManagerDashboard() {
             <p>
               Monitor banking operations, customer activities and approvals.
             </p>
-
           </div>
 
           {/* Statistics */}
-
           <div className="manager-stats">
 
             <ManagerStatCard
@@ -82,19 +74,14 @@ function ManagerDashboard() {
           </div>
 
           {/* Dashboard Sections */}
-
           <div className="manager-dashboard-grid">
 
             <div className="manager-section">
-
               <PendingKYC />
-
             </div>
 
             <div className="manager-section">
-
               <LoanRequests />
-
             </div>
 
           </div>

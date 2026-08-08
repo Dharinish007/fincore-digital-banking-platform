@@ -17,28 +17,44 @@ function CustomerDashboard() {
   return (
     <div className="customer-dashboard">
 
-      {/* Sidebar */}
+      {/* =========================
+          Fixed Sidebar
+      ========================= */}
+
       <CustomerSidebar />
 
-      {/* Main Content */}
+      {/* =========================
+          Main Area
+      ========================= */}
+
       <div className="customer-main">
 
         {/* Navbar */}
+
         <CustomerNavbar />
 
-        {/* Dashboard Body */}
-        <div className="dashboard-content">
+        {/* Dashboard Content */}
+
+        <main className="dashboard-content">
+
+          {/* Heading */}
 
           <div className="dashboard-heading">
-            <h1>Welcome Back, Vaishnavi 👋</h1>
+
+            <h1>
+              Welcome Back, Vaishnavi 👋
+            </h1>
 
             <p>
               Here's an overview of your banking activities and account
               summary.
             </p>
+
           </div>
 
-          {/* Statistics */}
+          {/* =========================
+              Statistics
+          ========================= */}
 
           <div className="stats-grid">
 
@@ -72,25 +88,27 @@ function CustomerDashboard() {
 
           </div>
 
-          {/* Bottom Section */}
+          {/* =========================
+              Bottom Section
+          ========================= */}
 
           <div className="dashboard-bottom">
 
+            {/* Recent Transactions */}
+
             <div className="transactions-section">
-
               <RecentTransactions />
-
             </div>
 
+            {/* Quick Actions */}
+
             <div className="actions-section">
-
               <QuickActions />
-
             </div>
 
           </div>
 
-        </div>
+        </main>
 
       </div>
 

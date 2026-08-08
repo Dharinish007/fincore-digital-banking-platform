@@ -28,46 +28,48 @@ function CustomerSidebar() {
 
       </div>
 
+
       {/* Navigation */}
 
       <ul>
 
         <li className="active">
           <FaHome />
-          Dashboard
+          <span>Dashboard</span>
         </li>
 
         <li>
           <FaWallet />
-          My Accounts
+          <span>My Accounts</span>
         </li>
 
         <li>
           <FaExchangeAlt />
-          Transfer Money
+          <span>Transfer Money</span>
         </li>
 
         <li>
           <FaHistory />
-          Transactions
+          <span>Transactions</span>
         </li>
 
         <li>
           <FaIdCard />
-          KYC Upload
+          <span>KYC Upload</span>
         </li>
 
         <li>
           <FaClipboardList />
-          Audit Logs
+          <span>Audit Logs</span>
         </li>
 
         <li>
           <FaUser />
-          Profile
+          <span>Profile</span>
         </li>
 
       </ul>
+
 
       {/* Logout */}
 
@@ -75,7 +77,7 @@ function CustomerSidebar() {
 
         <FaSignOutAlt />
 
-        Logout
+        <span>Logout</span>
 
       </button>
 
