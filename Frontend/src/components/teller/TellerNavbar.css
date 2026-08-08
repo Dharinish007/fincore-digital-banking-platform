@@ -3,6 +3,13 @@
 ========================================== */
 
 .teller-navbar {
+    position: fixed;
+
+    top: 0;
+    left: 270px;
+
+    width: calc(100% - 270px);
+
     height: 75px;
 
     background: #111827;
@@ -19,7 +26,7 @@
 
     box-sizing: border-box;
 
-    flex-shrink: 0;
+    z-index: 999;
 }
 
 
@@ -132,12 +139,36 @@
 
 
 /* ==========================================
-   Responsive
+   Responsive - Tablet
+========================================== */
+
+@media (max-width: 992px) {
+
+    .teller-navbar {
+        left: 85px;
+
+        width: calc(100% - 85px);
+
+        padding: 0 25px;
+    }
+
+    .teller-search {
+        width: 280px;
+    }
+}
+
+
+/* ==========================================
+   Responsive - Mobile
 ========================================== */
 
 @media (max-width: 768px) {
 
     .teller-navbar {
+        left: 0;
+
+        width: 100%;
+
         padding: 0 20px;
     }
 
@@ -148,8 +179,12 @@
     .teller-navbar-right {
         gap: 15px;
     }
-
 }
+
+
+/* ==========================================
+   Small Mobile
+========================================== */
 
 @media (max-width: 576px) {
 
@@ -158,12 +193,10 @@
     }
 
     .teller-search {
-        width: 100%;
-        max-width: 200px;
+        width: 170px;
     }
 
     .teller-profile span {
         display: none;
     }
-
 }

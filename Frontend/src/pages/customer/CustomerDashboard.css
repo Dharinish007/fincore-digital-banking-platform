@@ -16,13 +16,14 @@
 
 .customer-main {
     margin-left: 270px;
+
+    width: calc(100% - 270px);
     min-height: 100vh;
 
     display: flex;
     flex-direction: column;
 
     background: #0b1020;
-    overflow: hidden;
 }
 
 
@@ -31,7 +32,13 @@
 ========================================== */
 
 .dashboard-content {
+    flex: 1;
+
     padding: 35px;
+    padding-top: 110px;
+
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 
@@ -95,7 +102,6 @@
     border: 1px solid #1f2937;
     border-radius: 18px;
     padding: 24px;
-
     transition: all 0.3s ease;
 }
 
@@ -110,20 +116,20 @@
    Scrollbar
 ========================================== */
 
-::-webkit-scrollbar {
+.dashboard-content::-webkit-scrollbar {
     width: 8px;
 }
 
-::-webkit-scrollbar-track {
+.dashboard-content::-webkit-scrollbar-track {
     background: #111827;
 }
 
-::-webkit-scrollbar-thumb {
+.dashboard-content::-webkit-scrollbar-thumb {
     background: #2563eb;
     border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+.dashboard-content::-webkit-scrollbar-thumb:hover {
     background: #3b82f6;
 }
 
@@ -141,7 +147,24 @@
     .dashboard-bottom {
         grid-template-columns: 1fr;
     }
+}
 
+
+/* ==========================================
+   Responsive - Small Tablet
+========================================== */
+
+@media (max-width: 992px) {
+
+    .customer-main {
+        margin-left: 85px;
+        width: calc(100% - 85px);
+    }
+
+    .dashboard-content {
+        padding: 25px;
+        padding-top: 100px;
+    }
 }
 
 
@@ -149,31 +172,16 @@
    Responsive - Mobile
 ========================================== */
 
-@media (max-width: 992px) {
-
-    .customer-main {
-        margin-left: 85px;
-    }
-
-    .dashboard-content {
-        padding: 25px;
-    }
-
-}
-
-
-/* ==========================================
-   Responsive - Small Mobile
-========================================== */
-
 @media (max-width: 768px) {
 
     .customer-main {
         margin-left: 0;
+        width: 100%;
     }
 
     .dashboard-content {
         padding: 20px;
+        padding-top: 95px;
     }
 
     .dashboard-heading h1 {
@@ -187,5 +195,4 @@
     .stats-grid {
         grid-template-columns: 1fr;
     }
-
 }

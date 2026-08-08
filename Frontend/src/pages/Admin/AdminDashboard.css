@@ -190,37 +190,45 @@
 ========================================== */
 
 .main-content {
-  flex: 1;
-
   margin-left: 270px;
-
-  padding: 30px;
-
+  min-height: 100vh;
   min-width: 0;
+
+  background: #0f172a;
+
+  display: flex;
+  flex-direction: column;
+
+  box-sizing: border-box;
 }
 
 
 /* ==========================================
-   Topbar
+   Fixed / Sticky Topbar
 ========================================== */
 
 .topbar {
+  height: 75px;
+
   background: #1e293b;
 
-  border: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 
-  border-radius: 16px;
-
-  padding: 14px 22px;
+  padding: 0 30px;
 
   display: flex;
-
   justify-content: space-between;
-
   align-items: center;
 
-  box-shadow:
-    0 10px 30px rgba(0,0,0,.25);
+  box-sizing: border-box;
+  flex-shrink: 0;
+
+  position: sticky;
+  top: 0;
+
+  z-index: 900;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -242,6 +250,18 @@
   width: 360px;
 
   color: #94a3b8;
+
+  border: 1px solid transparent;
+
+  transition: all 0.3s ease;
+
+  box-sizing: border-box;
+}
+
+.search-box:focus-within {
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 .search-box input {
@@ -261,6 +281,7 @@
 .search-box input::placeholder {
   color: #94a3b8;
 }
+
 
 
 /* Top Right */
@@ -958,6 +979,90 @@ tbody tr:hover {
 
   .search-box {
     width: auto;
+  }
+
+  .top-right {
+    justify-content: flex-end;
+  }
+
+  .admin-info {
+    display: none;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome h1 {
+    font-size: 27px;
+  }
+
+  .table-card {
+    padding: 18px;
+  }
+
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1300px) {
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 992px) {
+
+  .sidebar {
+    display: none;
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .welcome {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-box {
+    width: 260px;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .topbar {
+    height: auto;
+    min-height: 75px;
+
+    padding: 15px 20px;
+
+    flex-direction: column;
+    gap: 15px;
+
+    align-items: stretch;
+  }
+
+  .search-box {
+    width: 100%;
   }
 
   .top-right {

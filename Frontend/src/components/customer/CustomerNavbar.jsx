@@ -1,7 +1,6 @@
-import React from "react";
 import {
-  FaBell,
   FaSearch,
+  FaBell,
   FaUserCircle,
 } from "react-icons/fa";
 
@@ -11,7 +10,8 @@ function CustomerNavbar() {
   return (
     <header className="customer-navbar">
 
-      <div className="navbar-search">
+      {/* Search */}
+      <div className="customer-search">
 
         <FaSearch />
 
@@ -22,11 +22,12 @@ function CustomerNavbar() {
 
       </div>
 
-      <div className="navbar-right">
+      {/* Right Section */}
+      <div className="customer-navbar-right">
 
-        <FaBell className="nav-icon" />
+        <FaBell className="customer-nav-icon" />
 
-        <div className="profile">
+        <div className="customer-profile">
 
           <FaUserCircle />
 
