@@ -47,8 +47,8 @@ Database Team
 
 ## Default local XAMPP configuration:
 
-Host: localhost
-Port: 3306
-Username: root
-Password: empty
-Database: digital_banking
+- Host: localhost
+- Port: 3306
+- Username: root
+- Password: empty
+- Database: digital_banking
