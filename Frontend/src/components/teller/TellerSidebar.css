@@ -1,0 +1,105 @@
+/* ==========================================
+   Teller Sidebar
+========================================== */
+
+.teller-sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #111827;
+    border-right: 1px solid #1f2937;
+    color: #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    flex-shrink: 0;
+}
+
+/* ==========================================
+   Logo
+========================================== */
+
+.teller-sidebar-logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.teller-logo-icon {
+    font-size: 55px;
+    color: #2563eb;
+    margin-bottom: 12px;
+}
+
+.teller-sidebar-logo h2 {
+    font-size: 28px;
+    color: #ffffff;
+}
+
+.teller-sidebar-logo p {
+    color: #9ca3af;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* ==========================================
+   Navigation
+========================================== */
+
+.teller-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.teller-sidebar ul li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    margin-bottom: 9px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #9ca3af;
+    transition: all 0.3s ease;
+}
+
+.teller-sidebar ul li:hover {
+    background: rgba(37, 99, 235, 0.12);
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+.teller-sidebar ul li.active {
+    background: #2563eb;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+.teller-sidebar ul li svg {
+    font-size: 18px;
+}
+
+/* ==========================================
+   Logout
+========================================== */
+
+.teller-logout-btn {
+    border: 1px solid #374151;
+    background: #1f2937;
+    color: #d1d5db;
+    padding: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+}
+
+.teller-logout-btn:hover {
+    background: #ef4444;
+    border-color: #ef4444;
+    color: #ffffff;
+}

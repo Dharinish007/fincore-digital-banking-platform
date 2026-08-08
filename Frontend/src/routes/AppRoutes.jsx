@@ -7,20 +7,9 @@ import Register from "../pages/Auth/Register";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import CustomerDashboard from "../pages/customer/CustomerDashboard";
 import ManagerDashboard from "../pages/Manager/ManagerDashboard";
+import TellerDashboard from "../pages/Teller/TellerDashboard";
 
 
-const TellerDashboard = () => (
-  <div
-    style={{
-      textAlign: "center",
-      marginTop: "100px",
-      fontSize: "32px",
-      fontWeight: "bold",
-    }}
-  >
-    Teller Dashboard (Coming Soon)
-  </div>
-);
 
 const NotFound = () => (
   <div

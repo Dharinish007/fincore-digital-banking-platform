@@ -1,0 +1,67 @@
+/* ==========================================
+   Teller Navbar
+========================================== */
+
+.teller-navbar {
+    height: 75px;
+    background: #111827;
+    border-bottom: 1px solid #1f2937;
+    padding: 0 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Search */
+
+.teller-search {
+    width: 380px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1f2937;
+    border: 1px solid #374151;
+    padding: 12px 18px;
+    border-radius: 12px;
+    color: #9ca3af;
+}
+
+.teller-search input {
+    border: none;
+    background: transparent;
+    color: #ffffff;
+    outline: none;
+    width: 100%;
+    font-size: 15px;
+}
+
+.teller-search input::placeholder {
+    color: #6b7280;
+}
+
+/* Right */
+
+.teller-navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+.teller-nav-icon {
+    font-size: 21px;
+    color: #60a5fa;
+    cursor: pointer;
+}
+
+.teller-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.teller-profile svg {
+    font-size: 34px;
+    color: #3b82f6;
+}
