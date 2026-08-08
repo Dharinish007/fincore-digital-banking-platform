@@ -16,7 +16,7 @@ function Landing() {
       <nav className="landing-navbar">
         <div className="container navbar-content">
           <div className="logo">
-            <FaUniversity className="logo-icon" />
+            <FaUniversity />
             <span>FinCore</span>
           </div>
 

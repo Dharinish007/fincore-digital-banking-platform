@@ -1,0 +1,166 @@
+/* ==========================================
+   Customer Navbar
+========================================== */
+
+.customer-navbar {
+    height: 75px;
+    background: #111827;
+    border-bottom: 1px solid #1f2937;
+    padding: 0 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ==========================================
+   Search Bar
+========================================== */
+
+.navbar-search {
+    width: 360px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1f2937;
+    border: 1px solid #374151;
+    padding: 12px 18px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.navbar-search:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+.navbar-search svg {
+    color: #9ca3af;
+    font-size: 18px;
+}
+
+.navbar-search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #ffffff;
+    font-size: 15px;
+}
+
+.navbar-search input::placeholder {
+    color: #9ca3af;
+}
+
+/* ==========================================
+   Right Section
+========================================== */
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* ==========================================
+   Notification Icons
+========================================== */
+
+.nav-icon {
+    width: 42px;
+    height: 42px;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #60a5fa;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-icon:hover {
+    background: #2563eb;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   Profile
+========================================== */
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #1f2937;
+    padding: 8px 14px;
+    border-radius: 12px;
+    border: 1px solid #374151;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profile:hover {
+    border-color: #2563eb;
+}
+
+.profile svg {
+    font-size: 36px;
+    color: #60a5fa;
+}
+
+.profile span {
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 992px) {
+
+    .customer-navbar {
+        padding: 0 20px;
+    }
+
+    .navbar-search {
+        width: 240px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .customer-navbar {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 20px;
+        gap: 15px;
+    }
+
+    .navbar-search {
+        width: 100%;
+    }
+
+    .navbar-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .profile span {
+        display: none;
+    }
+
+    .navbar-right {
+        gap: 15px;
+    }
+
+}
