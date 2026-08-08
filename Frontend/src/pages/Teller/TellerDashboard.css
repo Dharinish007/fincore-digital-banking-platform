@@ -1,0 +1,109 @@
+/* ==========================================
+   Teller Dashboard
+========================================== */
+
+.teller-dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: #0b1020;
+    color: #e5e7eb;
+    font-family: "Inter", sans-serif;
+}
+
+.teller-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0b1020;
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.teller-content {
+    padding: 35px;
+}
+
+/* ==========================================
+   Heading
+========================================== */
+
+.teller-heading {
+    margin-bottom: 35px;
+}
+
+.teller-heading h1 {
+    font-size: 34px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.teller-heading p {
+    color: #9ca3af;
+    font-size: 16px;
+}
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.teller-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+/* ==========================================
+   Dashboard Sections
+========================================== */
+
+.teller-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.teller-section {
+    width: 100%;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1200px) {
+
+    .teller-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .teller-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .teller-content {
+        padding: 20px;
+    }
+
+    .teller-heading h1 {
+        font-size: 28px;
+    }
+
+    .teller-heading p {
+        font-size: 15px;
+    }
+
+    .teller-stats {
+        grid-template-columns: 1fr;
+    }
+
+}

@@ -6,19 +6,8 @@ import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
 import CustomerDashboard from "../pages/customer/CustomerDashboard";
+import ManagerDashboard from "../pages/Manager/ManagerDashboard";
 
-const ManagerDashboard = () => (
-  <div
-    style={{
-      textAlign: "center",
-      marginTop: "100px",
-      fontSize: "32px",
-      fontWeight: "bold",
-    }}
-  >
-    Manager Dashboard (Coming Soon)
-  </div>
-);
 
 const TellerDashboard = () => (
   <div
@@ -58,7 +47,6 @@ function AppRoutes() {
       <Route path="/manager/dashboard" element={<ManagerDashboard />} />
       <Route path="/teller/dashboard" element={<TellerDashboard />} />
       <Route path="/customer/dashboard" element={<CustomerDashboard />} />
-
       {/* Redirect */}
       <Route path="/home" element={<Navigate to="/" replace />} />
 

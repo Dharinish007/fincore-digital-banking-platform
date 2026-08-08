@@ -1,0 +1,66 @@
+.loan-requests {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 18px;
+    padding: 25px;
+}
+
+.loan-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.loan-header h3 {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.loan-header button {
+    border: none;
+    background: transparent;
+    color: #60a5fa;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.loan-row {
+    padding: 16px 0;
+    border-bottom: 1px solid #1f2937;
+}
+
+.loan-row:last-child {
+    border-bottom: none;
+}
+
+.loan-row strong {
+    display: block;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.loan-row span {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.loan-amount {
+    color: #60a5fa;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.loan-review {
+    border: none;
+    background: rgba(37, 99, 235, 0.15);
+    color: #60a5fa;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.loan-review:hover {
+    background: #2563eb;
+    color: white;
+}

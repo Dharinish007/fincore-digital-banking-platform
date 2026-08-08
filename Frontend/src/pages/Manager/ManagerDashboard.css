@@ -1,0 +1,104 @@
+/* ==========================================
+   Manager Dashboard
+========================================== */
+
+.manager-dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: #0b1020;
+    color: #e5e7eb;
+    font-family: "Inter", sans-serif;
+}
+
+.manager-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0b1020;
+}
+
+/* ==========================================
+   Content
+========================================== */
+
+.manager-content {
+    padding: 35px;
+}
+
+/* ==========================================
+   Heading
+========================================== */
+
+.manager-heading {
+    margin-bottom: 35px;
+}
+
+.manager-heading h1 {
+    font-size: 34px;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.manager-heading p {
+    color: #9ca3af;
+    font-size: 16px;
+}
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.manager-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+/* ==========================================
+   Dashboard Grid
+========================================== */
+
+.manager-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.manager-section {
+    width: 100%;
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1200px) {
+
+    .manager-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .manager-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .manager-content {
+        padding: 20px;
+    }
+
+    .manager-heading h1 {
+        font-size: 28px;
+    }
+
+    .manager-stats {
+        grid-template-columns: 1fr;
+    }
+
+}
