@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   FaUser,
@@ -24,7 +24,7 @@ function Register() {
       {/* Left Panel */}
       <div className="register-left">
         <div className="brand">
-          <FaUniversity className="brand-icon" />
+          <FaUniversity />
           <h1>FinCore</h1>
           <p>Digital Banking Management Platform</p>
         </div>

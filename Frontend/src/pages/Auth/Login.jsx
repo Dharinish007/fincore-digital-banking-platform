@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   FaUniversity,
@@ -28,7 +28,7 @@ function Login() {
 
         <div className="brand">
 
-          <FaUniversity className="brand-icon" />
+          <FaUniversity />
 
           <h1>FinCore</h1>
 

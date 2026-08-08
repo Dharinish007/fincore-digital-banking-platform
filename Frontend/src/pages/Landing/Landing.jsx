@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import {
   FaUniversity,
@@ -17,7 +16,7 @@ function Landing() {
       <nav className="landing-navbar">
         <div className="container navbar-content">
           <div className="logo">
-            <FaUniversity className="logo-icon" />
+            <FaUniversity />
             <span>FinCore</span>
           </div>
 
@@ -73,19 +72,7 @@ function Landing() {
           <div className="hero-right">
 
             <div className="bank-card">
-
-              <div className="bank-title">
-                🏦 FinCore Bank
-              </div>
-
-              <div className="bank-balance">
-                ₹ 8,45,620
-              </div>
-
-              <div className="bank-footer">
-                Secure Banking Platform
-              </div>
-
+                <span className="bank-icon">🏦</span>
             </div>
 
           </div>

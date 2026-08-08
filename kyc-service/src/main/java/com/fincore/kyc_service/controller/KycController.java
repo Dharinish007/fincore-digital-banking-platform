@@ -1,5 +1,5 @@
 package com.fincore.kyc_service.controller;
-
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,9 +12,17 @@ import com.fincore.kyc_service.dto.KycRequestDTO;
 import com.fincore.kyc_service.dto.KycResponseDTO;
 import com.fincore.kyc_service.service.KycService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 public class KycController {
+	
+	@GetMapping("/api/v1/kyc/all")
+	public List<KycResponseDTO> getAllKyc() {
+	    return kycService.getAllKyc();
+	}
+
 
     @Autowired
     private KycService kycService;
