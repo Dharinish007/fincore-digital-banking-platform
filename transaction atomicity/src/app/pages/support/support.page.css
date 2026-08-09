@@ -1,6 +1,0 @@
-.support-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:12px}
-.support-card{padding:16px;border-radius:10px;background:var(--card-2);min-height:110px;border:1px solid var(--border)}
-@media(max-width:1000px){.support-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.support-grid{grid-template-columns:1fr}}
-
-/* support styles */

@@ -10,7 +10,6 @@ import { HeaderComponent } from './header/header.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { SummaryCardsComponent } from './summary-cards/summary-cards.component';
 import { FilterSectionComponent } from './filter-section/filter-section.component';
-import { AnalyticsChartsComponent } from './analytics-charts/analytics-charts.component';
 import { AccuracyTableComponent } from './accuracy-table/accuracy-table.component';
 import { DetailDrawerComponent } from './detail-drawer/detail-drawer.component';
 import { VerifyDialogComponent } from './verify-dialog/verify-dialog.component';
@@ -27,12 +26,11 @@ import { FreezeDialogComponent } from './freeze-dialog/freeze-dialog.component';
     SidebarComponent,
     SummaryCardsComponent,
     FilterSectionComponent,
-    AnalyticsChartsComponent,
     AccuracyTableComponent,
-    DetailDrawerComponent
+    DetailDrawerComponent,
   ],
   templateUrl: './balance-accuracy-dashboard.component.html',
-  styleUrls: ['./balance-accuracy-dashboard.component.scss']
+  styleUrls: ['./balance-accuracy-dashboard.component.scss'],
 })
 export class BalanceAccuracyDashboardComponent implements OnInit {
   private balanceService = inject(BalanceAccuracyService);
@@ -72,8 +70,12 @@ export class BalanceAccuracyDashboardComponent implements OnInit {
   }
 
   public openDetailDrawer(account: BankAccount): void {
-    this.selectedAccountForDrawer = account;
-    this.isDrawerOpen = true;
+    this.balanceService
+      .refreshBalanceAccuracy(account.accountNumber)
+      .subscribe((updatedAccount) => {
+        this.selectedAccountForDrawer = updatedAccount;
+        this.isDrawerOpen = true;
+      });
   }
 
   public closeDetailDrawer(): void {
@@ -84,12 +86,16 @@ export class BalanceAccuracyDashboardComponent implements OnInit {
   public openVerifyDialog(account: BankAccount): void {
     const dialogRef = this.dialog.open(VerifyDialogComponent, {
       width: '560px',
-      data: { account }
+      data: { account },
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.balanceService.verifyAccount(account.id, result.action, result.remarks);
+        this.balanceService.verifyAccount(
+          account.id,
+          result.action,
+          result.remarks,
+        );
         // Refresh selected account in drawer if open
         if (this.selectedAccountForDrawer?.id === account.id) {
           const updated = this.balanceService.getAccountById(account.id);
@@ -100,20 +106,22 @@ export class BalanceAccuracyDashboardComponent implements OnInit {
   }
 
   public openAuditLogDialog(account: BankAccount): void {
-    const logs = this.balanceService.getAuditLogsForAccount(account.accountNumber);
+    const logs = this.balanceService.getAuditLogsForAccount(
+      account.accountNumber,
+    );
     this.dialog.open(AuditLogDialogComponent, {
       width: '640px',
-      data: { account, logs }
+      data: { account, logs },
     });
   }
 
   public openFreezeDialog(account: BankAccount): void {
     const dialogRef = this.dialog.open(FreezeDialogComponent, {
       width: '480px',
-      data: { account }
+      data: { account },
     });
 
-    dialogRef.afterClosed().subscribe(reason => {
+    dialogRef.afterClosed().subscribe((reason) => {
       if (reason) {
         this.balanceService.freezeAccount(account.id, reason);
         if (this.selectedAccountForDrawer?.id === account.id) {

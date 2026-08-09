@@ -57,3 +57,13 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+## Integration with Backend (added)
+
+This frontend has been adapted to work with the repository's Spring Boot backend. Key endpoints used:
+
+- POST `http://localhost:8080/accountCreation` — account creation
+- POST `http://localhost:8080/api/transfer/transfer` — funds transfer
+- GET `http://localhost:8080/api/transfer/enquiry/{accountNumber}` — balance enquiry
+
+If your backend runs on a different port or base path, update `src/app/environments/environment.ts`.

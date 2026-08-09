@@ -1,6 +1,6 @@
 package com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.AccountRepositery;
 
-import com.fincore.BankingManagement.BankingServices.model.Account;
+import com.fincore.BankingManagement.Entities.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

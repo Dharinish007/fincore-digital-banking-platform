@@ -1,0 +1,26 @@
+<div class="transfer-form">
+  <h2>Funds Transfer</h2>
+  <form (ngSubmit)="submit()">
+    <div>
+      <label>Sender Account</label>
+      <input name="sender" [(ngModel)]="sender" required />
+    </div>
+    <div>
+      <label>Receiver Account</label>
+      <input name="receiver" [(ngModel)]="receiver" required />
+    </div>
+    <div>
+      <label>Amount</label>
+      <input name="amount" type="number" [(ngModel)]="amount" required />
+    </div>
+    <div>
+      <label>Reference (optional)</label>
+      <input name="reference" [(ngModel)]="reference" />
+    </div>
+    <div style="margin-top: 12px">
+      <button type="submit">Send</button>
+    </div>
+  </form>
+
+  <div class="status" *ngIf="statusMessage">{{ statusMessage }}</div>
+</div>

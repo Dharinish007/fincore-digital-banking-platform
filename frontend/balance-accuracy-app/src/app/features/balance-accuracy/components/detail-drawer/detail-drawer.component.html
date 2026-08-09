@@ -7,7 +7,9 @@
         <mat-icon class="icon-brand">account_balance_wallet</mat-icon>
         <div class="title-text">
           <h2>{{ account.accountNumber }}</h2>
-          <span class="sub">{{ account.customerName }} • {{ account.branch }}</span>
+          <span class="sub"
+            >{{ account.customerName }} • {{ account.branch }}</span
+          >
         </div>
       </div>
       <button mat-icon-button (click)="onClose()" class="btn-close">
@@ -15,8 +17,15 @@
       </button>
     </div>
     <div class="header-actions">
-      <app-status-badge [status]="account.status"></app-status-badge>
-      <button mat-flat-button color="primary" (click)="onVerify()" class="btn-verify">
+      <app-status-badge
+        [status]="account.isActive ? 'Active' : 'Inactive'"
+      ></app-status-badge>
+      <button
+        mat-flat-button
+        color="primary"
+        (click)="onVerify()"
+        class="btn-verify"
+      >
         <mat-icon>fact_check</mat-icon>
         <span>Reconcile / Verify</span>
       </button>
@@ -52,6 +61,18 @@
           <span class="val">{{ account.accountType }}</span>
         </div>
         <div class="info-item">
+          <span class="label">Backend Accuracy</span>
+          <span
+            class="val"
+            [ngClass]="{
+              'text-green': account.balanceAccurate,
+              'text-red': !account.balanceAccurate,
+            }"
+          >
+            {{ account.balanceAccurate ? "Accurate" : "Discrepancy" }}
+          </span>
+        </div>
+        <div class="info-item">
           <span class="label">Currency</span>
           <span class="val">{{ account.currency }}</span>
         </div>
@@ -71,19 +92,32 @@
       <div class="balance-grid">
         <div class="bal-box">
           <span class="lbl">Reported Ledger Balance</span>
-          <span class="amount">${{ account.ledgerBalance | number:'1.2-2' }}</span>
+          <span class="amount"
+            >₹{{ account.ledgerBalance | number: "1.2-2" }}</span
+          >
         </div>
         <div class="bal-box">
           <span class="lbl">Available Balance</span>
-          <span class="amount text-secondary">${{ account.availableBalance | number:'1.2-2' }}</span>
+          <span class="amount text-secondary"
+            >₹{{ account.availableBalance | number: "1.2-2" }}</span
+          >
         </div>
         <div class="bal-box">
           <span class="lbl">System Calculated Balance</span>
-          <span class="amount text-blue">${{ account.systemCalculatedBalance | number:'1.2-2' }}</span>
+          <span class="amount text-blue"
+            >₹{{ account.systemCalculatedBalance | number: "1.2-2" }}</span
+          >
         </div>
-        <div class="bal-box diff-box" [ngClass]="account.difference === 0 ? 'zero' : 'alert'">
+        <div
+          class="bal-box diff-box"
+          [ngClass]="account.difference === 0 ? 'zero' : 'alert'"
+        >
           <span class="lbl">Variance / Difference</span>
-          <span class="amount">{{ account.difference > 0 ? '+' : '' }}${{ account.difference | number:'1.2-2' }}</span>
+          <span class="amount"
+            >{{ account.difference > 0 ? "+" : "" }}₹{{
+              account.difference | number: "1.2-2"
+            }}</span
+          >
         </div>
       </div>
     </div>
@@ -94,25 +128,37 @@
         <mat-icon>lock_clock</mat-icon>
         <span>Active Debit & Credit Holds</span>
       </div>
-      <div *ngIf="account.debitHolds.length === 0 && account.creditHolds.length === 0" class="empty-state">
+      <div
+        *ngIf="
+          account.debitHolds.length === 0 && account.creditHolds.length === 0
+        "
+        class="empty-state"
+      >
         No active holds placed on this account.
       </div>
-      <div class="holds-list" *ngIf="account.debitHolds.length > 0 || account.creditHolds.length > 0">
+      <div
+        class="holds-list"
+        *ngIf="account.debitHolds.length > 0 || account.creditHolds.length > 0"
+      >
         <div class="hold-item" *ngFor="let h of account.debitHolds">
           <span class="hold-type type-debit">{{ h.type }}</span>
           <div class="hold-info">
             <span class="reason">{{ h.reason }}</span>
-            <span class="meta">Placed by: {{ h.placedBy }} on {{ h.placedDate }}</span>
+            <span class="meta"
+              >Placed by: {{ h.placedBy }} on {{ h.placedDate }}</span
+            >
           </div>
-          <span class="hold-amount">${{ h.amount | number:'1.2-2' }}</span>
+          <span class="hold-amount">₹{{ h.amount | number: "1.2-2" }}</span>
         </div>
         <div class="hold-item" *ngFor="let h of account.creditHolds">
           <span class="hold-type type-credit">{{ h.type }}</span>
           <div class="hold-info">
             <span class="reason">{{ h.reason }}</span>
-            <span class="meta">Placed by: {{ h.placedBy }} on {{ h.placedDate }}</span>
+            <span class="meta"
+              >Placed by: {{ h.placedBy }} on {{ h.placedDate }}</span
+            >
           </div>
-          <span class="hold-amount">${{ h.amount | number:'1.2-2' }}</span>
+          <span class="hold-amount">₹{{ h.amount | number: "1.2-2" }}</span>
         </div>
       </div>
     </div>
@@ -130,8 +176,13 @@
             <span class="tx-time">{{ tx.date }} • {{ tx.id }}</span>
           </div>
           <div class="tx-right">
-            <span class="tx-amount" [ngClass]="tx.type === 'Credit' ? 'text-green' : 'text-red'">
-              {{ tx.type === 'Credit' ? '+' : '-' }}${{ tx.amount | number:'1.2-2' }}
+            <span
+              class="tx-amount"
+              [ngClass]="tx.type === 'Credit' ? 'text-green' : 'text-red'"
+            >
+              {{ tx.type === "Credit" ? "+" : "-" }}₹{{
+                tx.amount | number: "1.2-2"
+              }}
             </span>
             <span class="tx-status">{{ tx.status }}</span>
           </div>
@@ -145,7 +196,9 @@
         <mat-icon>notes</mat-icon>
         <span>Auditor Notes & Status Remarks</span>
       </div>
-      <p class="remarks-text">{{ account.remarks || 'No remarks entered for this account.' }}</p>
+      <p class="remarks-text">
+        {{ account.remarks || "No remarks entered for this account." }}
+      </p>
     </div>
   </div>
 </div>

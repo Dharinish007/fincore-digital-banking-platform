@@ -1,4 +1,5 @@
 package com.fincore.BankingManagement.BankingServices.model;
+import com.fincore.BankingManagement.Entities.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +16,7 @@ import java.util.List;
 public class Customer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "customer_id")
     private Long customerId;
 
@@ -32,4 +34,5 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer")
     private List<Account> accounts;
+
 }

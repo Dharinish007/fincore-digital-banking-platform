@@ -1,0 +1,57 @@
+.transfer-form {
+  max-width: 760px;
+  margin: 12px auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 18px;
+  border-radius: 8px;
+  color: var(--text-white);
+
+  h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    div {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+      }
+
+      input,
+      select {
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-white);
+        padding: 8px 10px;
+        border-radius: 4px;
+      }
+    }
+
+    button {
+      grid-column: 1 / -1;
+      width: 140px;
+      justify-self: start;
+      background: #2563eb;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  }
+
+  .status {
+    margin-top: 12px;
+    color: var(--text-secondary);
+  }
+}

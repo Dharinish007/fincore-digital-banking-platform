@@ -5,151 +5,208 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/.tsbuildinfo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/angular-compiler.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/angular-compiler.db-lock" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_bidi.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_bidi.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_scrolling.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_scrolling.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_text-field.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_cdk_text-field.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_common.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_common.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_core.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_core.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_forms.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_forms.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_badge.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_badge.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_button.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_button.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_core.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_core.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_datepicker.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_datepicker.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_dialog.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_dialog.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_divider.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_divider.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_form-field.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_form-field.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_icon.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_icon.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_input.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_input.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_menu.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_menu.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_paginator.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_paginator.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_progress-bar.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_progress-bar.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_select.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_select.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_sort.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_sort.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_table.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_table.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tabs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tabs.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tooltip.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_material_tooltip.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser_animations_async.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_platform-browser_animations_async.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_router.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/@angular_router.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/_metadata.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/browser-72KSBDDC.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/browser-72KSBDDC.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chart__js.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chart__js.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2TAPZVZ4.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2TAPZVZ4.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2YGPWXPO.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-2YGPWXPO.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-4RFYUNDC.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-4RFYUNDC.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-5Z5ISBN7.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-5Z5ISBN7.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-664MWIMC.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-664MWIMC.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6I6RQOLH.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6I6RQOLH.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6VVYZFK4.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-6VVYZFK4.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-A6TVUFFE.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-A6TVUFFE.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JHXNGOQI.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JHXNGOQI.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JNTZAZAZ.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JNTZAZAZ.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JQEJGICL.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-JQEJGICL.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-M54Z4DBK.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-M54Z4DBK.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-MEIJUGNZ.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-MEIJUGNZ.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NI2A4Q65.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NI2A4Q65.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NPG2GJB4.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-NPG2GJB4.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-O3NOPGGP.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-O3NOPGGP.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-QWC2HM52.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-QWC2HM52.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-RNPDT76W.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-RNPDT76W.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-TN23HS4Y.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-TN23HS4Y.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-U556SHEO.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-U556SHEO.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-WDMUDEB6.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-WDMUDEB6.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-XI7U67SH.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/chunk-XI7U67SH.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/rxjs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps/rxjs.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps_ssr/_metadata.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.angular/cache/19.2.27/finco-app/vite/deps_ssr/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/.vscode/extensions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/.vscode/tasks.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/angular.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/app.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/app.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/app.component.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/app.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/app.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/app.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/core/models/account.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/core/models/audit-log.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/core/models/filter.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/core/models/summary-stats.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/core/services/balance-accuracy.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/core/services/export.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/accuracy-table/accuracy-table.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/accuracy-table/accuracy-table.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/accuracy-table/accuracy-table.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/analytics-charts/analytics-charts.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/analytics-charts/analytics-charts.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/analytics-charts/analytics-charts.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/audit-log-dialog/audit-log-dialog.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/audit-log-dialog/audit-log-dialog.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/audit-log-dialog/audit-log-dialog.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/detail-drawer/detail-drawer.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/detail-drawer/detail-drawer.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/detail-drawer/detail-drawer.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/filter-section/filter-section.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/filter-section/filter-section.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/filter-section/filter-section.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/freeze-dialog/freeze-dialog.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/freeze-dialog/freeze-dialog.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/freeze-dialog/freeze-dialog.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/header/header.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/header/header.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/header/header.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/sidebar/sidebar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/sidebar/sidebar.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/sidebar/sidebar.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/summary-cards/summary-cards.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/summary-cards/summary-cards.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/summary-cards/summary-cards.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/verify-dialog/verify-dialog.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/verify-dialog/verify-dialog.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/features/balance-accuracy/components/verify-dialog/verify-dialog.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/app/shared/components/status-badge/status-badge.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/main.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/src/styles.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/tsconfig.app.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Balance Accuracy/balance-accuracy-app/tsconfig.spec.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Sample_Database" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/Screenshots/AccountNotFound.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/Screenshots/InsufficientBalance.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/Screenshots/MoneyTransFerSuccess.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingManagementApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/TransactionType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/AccountNotFoundException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/GlobalHandleException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionController/TransactionController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransactionDto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferResponse.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/model/Account.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/model/Customer.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/model/Transaction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/AccountRepositery/AccountRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/TransactionRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/entity/Account.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Transaction Automicity/src/test/java/com/fincore/BankingManagement/BankingManagementApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingManagementApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingManagementApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/model/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/model/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/model/Customer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/model/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/model/Transaction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/AccountRepositery/AccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/AccountRepositery/AccountRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/entity/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/controller/BalanceAccuracyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/controller/BalanceAccuracyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/service/BalanceAccuracyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/service/BalanceAccuracyService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/3rdpartylicenses.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/browser/chunk-4RRHP3NT.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/browser/chunk-4T5E7CKJ.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/browser/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/browser/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/browser/main-EG2NR6IB.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/browser/polyfills-5CFQRCPP.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/browser/styles-COEFY6EP.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dist/finco-app/prerendered-routes.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/account.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/account.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/balance-accuracy.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/balance-accuracy.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/transaction.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/transaction.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/sidebar/sidebar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/sidebar/sidebar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/app-routing.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/app.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/app.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/app.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/app.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/components/navbar/navbar.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/components/navbar/navbar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/components/navbar/navbar.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/components/sidebar/sidebar.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/components/sidebar/sidebar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/components/sidebar/sidebar.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/material.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/models/account.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/models/transaction.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/dashboard/dashboard.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/dashboard/dashboard.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/dashboard/dashboard.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/initiate-transaction/initiate-transaction.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/initiate-transaction/initiate-transaction.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/initiate-transaction/initiate-transaction.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/profile/profile.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/profile/profile.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/profile/profile.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/reports/reports.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/reports/reports.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/reports/reports.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/settings/settings.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/settings/settings.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/settings/settings.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/support/support.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/support/support.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/support/support.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-confirmation/transaction-confirmation.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-confirmation/transaction-confirmation.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-confirmation/transaction-confirmation.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-details/transaction-details.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-details/transaction-details.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-details/transaction-details.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-history/transaction-history.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-history/transaction-history.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-history/transaction-history.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-status/transaction-status.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-status/transaction-status.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/pages/transaction-status/transaction-status.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/services/api.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/services/layout.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/services/transaction.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/main.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/polyfills.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/angular.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/app-routing.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/app.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/app.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/app.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/app.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/components/navbar/navbar.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/components/navbar/navbar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/components/navbar/navbar.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/components/sidebar/sidebar.component.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/components/sidebar/sidebar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/components/sidebar/sidebar.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/material.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/models/account.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/models/transaction.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/dashboard/dashboard.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/dashboard/dashboard.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/dashboard/dashboard.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/initiate-transaction/initiate-transaction.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/initiate-transaction/initiate-transaction.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/initiate-transaction/initiate-transaction.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/profile/profile.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/profile/profile.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/profile/profile.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/reports/reports.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/reports/reports.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/reports/reports.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/settings/settings.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/settings/settings.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/settings/settings.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/support/support.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/support/support.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/support/support.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-confirmation/transaction-confirmation.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-confirmation/transaction-confirmation.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-confirmation/transaction-confirmation.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-details/transaction-details.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-details/transaction-details.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-details/transaction-details.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-history/transaction-history.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-history/transaction-history.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-history/transaction-history.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-status/transaction-status.page.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-status/transaction-status.page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/pages/transaction-status/transaction-status.page.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/services/api.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/services/layout.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/app/services/transaction.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/main.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/polyfills.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/src/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../transaction atomicity/tsconfig.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,6 +216,7 @@
   <component name="CopilotPersistence">
     <persistenceIdMap>
       <entry key="_D:/IT_SPARKS/fincore-digital-banking-platform/backend/Transaction Automicity" value="3HYCEOLke3RQ5cIxvgs1WeWp2YM" />
+      <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/Backend" value="3Hdz2tcKfvBRp910CP479qkYfGr" />
       <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/backend" value="3HYGQBYHn5XfuORT5dedgmK02sk" />
       <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/backend/Transaction Automicity" value="3HYDYL2akgOF81rrhAhBVrLr1lN" />
       <entry key="_D:/practice/BankingManagement/fincore-digital-banking-platform/fincore-digital-banking-platform/backend/Transaction Automicity" value="3HWxP6q2vYwJJEKviiM9PGL2FEa" />
@@ -168,6 +226,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -221,9 +281,9 @@
     &quot;git-widget-placeholder&quot;: &quot;team-c&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.12300122&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
 }</component>

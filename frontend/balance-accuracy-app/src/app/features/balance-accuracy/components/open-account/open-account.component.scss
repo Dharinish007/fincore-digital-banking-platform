@@ -1,0 +1,53 @@
+.open-account-form {
+  max-width: 640px;
+  /* align to left so it appears next to the sidebar rather than centered */
+  margin: 12px 0 12px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  padding: 18px;
+  border-radius: 8px;
+  color: var(--text-white);
+
+  h2 {
+    margin: 0 0 12px 0;
+    font-size: 1.1rem;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+
+    label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    input,
+    select {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-white);
+      padding: 8px 10px;
+      border-radius: 4px;
+    }
+
+    button {
+      grid-column: 1 / -1;
+      width: 180px;
+      justify-self: start;
+      background: #10b981;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  }
+
+  .status {
+    margin-top: 12px;
+    color: var(--text-secondary);
+  }
+}

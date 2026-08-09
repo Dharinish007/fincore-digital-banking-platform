@@ -1,5 +1,6 @@
 package com.fincore.BankingManagement.BankingServices.model;
 import com.fincore.BankingManagement.BankingServices.Enums.TransactionType;
+import com.fincore.BankingManagement.Entities.Account;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

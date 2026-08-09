@@ -8,15 +8,26 @@
   </div>
 
   <div class="responsive-table-wrapper">
-    <table mat-table [dataSource]="dataSource" matSort class="accuracy-mat-table">
-
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      class="accuracy-mat-table"
+    >
       <!-- Account Number Column -->
       <ng-container matColumnDef="accountNumber">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account Number</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Account Number
+        </th>
         <td mat-cell *matCellDef="let element" class="font-mono">
           <div class="acc-cell">
             <span class="acc-num">{{ element.accountNumber }}</span>
-            <span class="frozen-tag" *ngIf="element.isFrozen" matTooltip="Account Frozen">❄️ FROZEN</span>
+            <span
+              class="frozen-tag"
+              *ngIf="element.isFrozen"
+              matTooltip="Account Frozen"
+              >❄️ FROZEN</span
+            >
           </div>
         </td>
       </ng-container>
@@ -42,17 +53,25 @@
 
       <!-- Ledger Balance Column -->
       <ng-container matColumnDef="ledgerBalance">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Ledger Balance</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Ledger Balance
+        </th>
         <td mat-cell *matCellDef="let element" class="amount-cell">
-          ${{ element.ledgerBalance | number:'1.2-2' }}
+          ₹{{ element.ledgerBalance | number: "1.2-2" }}
         </td>
       </ng-container>
 
       <!-- Available Balance Column -->
       <ng-container matColumnDef="availableBalance">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Available Balance</th>
-        <td mat-cell *matCellDef="let element" class="amount-cell text-secondary">
-          ${{ element.availableBalance | number:'1.2-2' }}
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Available Balance
+        </th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          class="amount-cell text-secondary"
+        >
+          ₹{{ element.availableBalance | number: "1.2-2" }}
         </td>
       </ng-container>
 
@@ -60,21 +79,27 @@
       <ng-container matColumnDef="difference">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Difference</th>
         <td mat-cell *matCellDef="let element" class="amount-cell">
-          <span [ngClass]="{
-            'diff-zero': element.difference === 0,
-            'diff-positive': element.difference > 0,
-            'diff-negative': element.difference < 0
-          }">
-            {{ element.difference > 0 ? '+' : '' }}${{ element.difference | number:'1.2-2' }}
+          <span
+            [ngClass]="{
+              'diff-zero': element.difference === 0,
+              'diff-positive': element.difference > 0,
+              'diff-negative': element.difference < 0,
+            }"
+          >
+            {{ element.difference > 0 ? "+" : "" }}₹{{
+              element.difference | number: "1.2-2"
+            }}
           </span>
         </td>
       </ng-container>
 
-      <!-- Status Column -->
+      <!-- Status Column (Account lifecycle: Active / Inactive) -->
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
         <td mat-cell *matCellDef="let element">
-          <app-status-badge [status]="element.status"></app-status-badge>
+          <app-status-badge
+            [status]="element.isActive ? 'Active' : 'Inactive'"
+          ></app-status-badge>
         </td>
       </ng-container>
 
@@ -82,7 +107,7 @@
       <ng-container matColumnDef="lastVerified">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Verified</th>
         <td mat-cell *matCellDef="let element" class="time-cell">
-          {{ element.lastVerified | date:'medium' }}
+          {{ element.lastVerified | date: "medium" }}
         </td>
       </ng-container>
 
@@ -91,19 +116,40 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let element">
           <div class="action-buttons">
-            <button mat-icon-button class="btn-action btn-view" (click)="onView(element)" matTooltip="View Full Details">
+            <button
+              mat-icon-button
+              class="btn-action btn-view"
+              (click)="onView(element)"
+              matTooltip="View Full Details"
+            >
               <mat-icon>visibility</mat-icon>
             </button>
 
-            <button mat-icon-button class="btn-action btn-verify" (click)="onVerify(element)" matTooltip="Verify & Reconcile">
+            <button
+              mat-icon-button
+              class="btn-action btn-verify"
+              (click)="onVerify(element)"
+              matTooltip="Verify & Reconcile"
+            >
               <mat-icon>fact_check</mat-icon>
             </button>
 
-            <button mat-icon-button class="btn-action btn-audit" (click)="onAuditLog(element)" matTooltip="View Audit Trail">
+            <button
+              mat-icon-button
+              class="btn-action btn-audit"
+              (click)="onAuditLog(element)"
+              matTooltip="View Audit Trail"
+            >
               <mat-icon>history</mat-icon>
             </button>
 
-            <button mat-icon-button class="btn-action btn-freeze" (click)="onFreeze(element)" [disabled]="element.isFrozen" matTooltip="Freeze Account">
+            <button
+              mat-icon-button
+              class="btn-action btn-freeze"
+              (click)="onFreeze(element)"
+              [disabled]="element.isFrozen"
+              matTooltip="Freeze Account"
+            >
               <mat-icon>ac_unit</mat-icon>
             </button>
           </div>
@@ -111,7 +157,11 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="table-row"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        class="table-row"
+      ></tr>
     </table>
   </div>
 
@@ -119,6 +169,7 @@
     [pageSizeOptions]="[10, 25, 50, 100]"
     showFirstLastButtons
     aria-label="Select page of bank accounts"
-    class="custom-paginator">
+    class="custom-paginator"
+  >
   </mat-paginator>
 </div>

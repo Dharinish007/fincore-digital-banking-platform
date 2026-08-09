@@ -7,11 +7,11 @@ import {
   Transaction,
   TransactionFilterCriteria,
   TransactionStatus,
-  TransactionSummaryStats
+  TransactionSummaryStats,
 } from '../models/transaction.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TransactionService {
   private http = inject(HttpClient);
@@ -27,7 +27,7 @@ export class TransactionService {
     const list = this.rawTransactions();
     const filters = this.filterCriteria();
 
-    return list.filter(tx => {
+    return list.filter((tx) => {
       if (filters.searchQuery) {
         const q = filters.searchQuery.toLowerCase();
         const matchId = tx.id.toLowerCase().includes(q);
@@ -35,7 +35,13 @@ export class TransactionService {
         const matchReceiver = tx.receiver.toLowerCase().includes(q);
         const matchRef = tx.reference.toLowerCase().includes(q);
         const matchType = tx.type.toLowerCase().includes(q);
-        if (!matchId && !matchSender && !matchReceiver && !matchRef && !matchType) {
+        if (
+          !matchId &&
+          !matchSender &&
+          !matchReceiver &&
+          !matchRef &&
+          !matchType
+        ) {
           return false;
         }
       }
@@ -59,13 +65,22 @@ export class TransactionService {
   public summaryStats = computed<TransactionSummaryStats>(() => {
     const list = this.rawTransactions();
     const total = list.length;
-    const success = list.filter(t => t.status === 'Success').length;
-    const failed = list.filter(t => t.status === 'Failed' || t.status === 'Rolled Back').length;
-    const pending = list.filter(t => t.status === 'Pending' || t.status === 'Processing').length;
-    const amount = list.reduce((acc, curr) => acc + (curr.status === 'Success' ? curr.amount : 0), 0);
+    const success = list.filter((t) => t.status === 'Success').length;
+    const failed = list.filter(
+      (t) => t.status === 'Failed' || t.status === 'Rolled Back',
+    ).length;
+    const pending = list.filter(
+      (t) => t.status === 'Pending' || t.status === 'Processing',
+    ).length;
+    const amount = list.reduce(
+      (acc, curr) => acc + (curr.status === 'Success' ? curr.amount : 0),
+      0,
+    );
 
     const todayStr = new Date().toDateString();
-    const todayCount = list.filter(t => new Date(t.date).toDateString() === todayStr).length;
+    const todayCount = list.filter(
+      (t) => new Date(t.date).toDateString() === todayStr,
+    ).length;
     const successRate = total > 0 ? Math.round((success / total) * 100) : 100;
 
     return {
@@ -75,7 +90,7 @@ export class TransactionService {
       pending,
       amount,
       todayCount,
-      successRate
+      successRate,
     };
   });
 
@@ -84,35 +99,42 @@ export class TransactionService {
   }
 
   public fetchTransactionsFromBackend(): void {
-    this.http.get<any[]>(this.apiUrl).pipe(
-      map(data => data.map(item => ({
-        id: item.id || `TX${Math.floor(100000 + Math.random() * 900000)}`,
-        sender: item.sender || '100084920192',
-        senderName: item.senderName || 'Aditi Verma',
-        receiver: item.receiver || '400092817261',
-        receiverName: item.receiverName || 'Apex Logistics Ltd',
-        type: item.type || 'Transfer',
-        amount: Number(item.amount || 0),
-        date: item.date || new Date().toISOString(),
-        reference: item.reference || `REF${Math.floor(100000 + Math.random() * 900000)}`,
-        status: item.status || 'Success',
-        charges: Number(item.charges || 0),
-        failureReason: item.failureReason,
-        description: item.description
-      }))),
-      tap(backendList => {
-        if (backendList && backendList.length > 0) {
-          this.rawTransactions.set(backendList);
-          this.tx$.next(backendList);
-        } else {
+    this.http
+      .get<any[]>(this.apiUrl)
+      .pipe(
+        map((data) =>
+          data.map((item) => ({
+            id: item.id || `TX${Math.floor(100000 + Math.random() * 900000)}`,
+            sender: item.sender || '100084920192',
+            senderName: item.senderName || 'Aditi Verma',
+            receiver: item.receiver || '400092817261',
+            receiverName: item.receiverName || 'Apex Logistics Ltd',
+            type: item.type || 'Transfer',
+            amount: Number(item.amount || 0),
+            date: item.date || new Date().toISOString(),
+            reference:
+              item.reference ||
+              `REF${Math.floor(100000 + Math.random() * 900000)}`,
+            status: item.status || 'Success',
+            charges: Number(item.charges || 0),
+            failureReason: item.failureReason,
+            description: item.description,
+          })),
+        ),
+        tap((backendList) => {
+          if (backendList && backendList.length > 0) {
+            this.rawTransactions.set(backendList);
+            this.tx$.next(backendList);
+          } else {
+            this.seedMockTransactions();
+          }
+        }),
+        catchError(() => {
           this.seedMockTransactions();
-        }
-      }),
-      catchError(() => {
-        this.seedMockTransactions();
-        return of([]);
-      })
-    ).subscribe();
+          return of([]);
+        }),
+      )
+      .subscribe();
   }
 
   private seedMockTransactions(): void {
@@ -124,12 +146,12 @@ export class TransactionService {
         receiver: '400092817261',
         receiverName: 'Apex Logistics Ltd',
         type: 'Transfer',
-        amount: 24500.00,
+        amount: 24500.0,
         date: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
         reference: 'REF892019',
         status: 'Success',
-        charges: 15.00,
-        description: 'Vendor payment for Q3 software license renewal'
+        charges: 15.0,
+        description: 'Vendor payment for Q3 software license renewal',
       },
       {
         id: 'TX100982',
@@ -138,12 +160,12 @@ export class TransactionService {
         receiver: '100084920192',
         receiverName: 'Aditi Verma',
         type: 'Deposit',
-        amount: 150000.00,
+        amount: 150000.0,
         date: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
         reference: 'REF892020',
         status: 'Success',
-        charges: 0.00,
-        description: 'Salary credit for July 2026'
+        charges: 0.0,
+        description: 'Salary credit for July 2026',
       },
       {
         id: 'TX100984',
@@ -152,14 +174,15 @@ export class TransactionService {
         receiver: '100084920192',
         receiverName: 'Aditi Verma',
         type: 'Transfer',
-        amount: 8750.50,
+        amount: 8750.5,
         date: new Date(Date.now() - 1000 * 60 * 720).toISOString(),
         reference: 'REF892022',
         status: 'Failed',
-        failureReason: 'INSUFFICIENT_FUNDS_ATOMIC_ROLLBACK: Debit account locked due to concurrent transaction lock',
-        charges: 0.00,
-        description: 'Quarterly dividend payout'
-      }
+        failureReason:
+          'INSUFFICIENT_FUNDS_ATOMIC_ROLLBACK: Debit account locked due to concurrent transaction lock',
+        charges: 0.0,
+        description: 'Quarterly dividend payout',
+      },
     ];
 
     this.rawTransactions.set(mockList);
@@ -176,7 +199,9 @@ export class TransactionService {
 
   public getById(id: string): Transaction | undefined {
     if (!id) return undefined;
-    const found = this.rawTransactions().find(t => t.id === id || t.reference === id);
+    const found = this.rawTransactions().find(
+      (t) => t.id === id || t.reference === id,
+    );
     if (found) return found;
 
     const pending = this.pendingTx();
@@ -212,7 +237,7 @@ export class TransactionService {
       ...tx,
       id: generatedId,
       status: 'Processing',
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
     };
 
     this.pendingTx.set(updatedPending);
@@ -221,10 +246,15 @@ export class TransactionService {
     this.rawTransactions.set([updatedPending, ...currentList]);
     this.tx$.next(this.rawTransactions());
 
-    // Connect to backend REST endpoint /api/transactions/transfer
-    this.http.post<any>(`${this.apiUrl}/transfer`, tx).pipe(
-      catchError(() => of(null))
-    ).subscribe();
+    // Connect to backend REST endpoint /api/transfer/transfer
+    this.http
+      .post<any>(`${environment.apiUrl}/transfer/transfer`, {
+        senderAccountNumber: tx.sender,
+        receiverAccountNumber: tx.receiver,
+        amount: tx.amount,
+      })
+      .pipe(catchError(() => of(null)))
+      .subscribe();
 
     // Two-Phase Commit visual simulation
     setTimeout(() => {
@@ -234,12 +264,12 @@ export class TransactionService {
         ? undefined
         : 'ATOMIC_TRANSACTION_FAILURE: Receiver ledger rejected debit during Phase-2 commit verification.';
 
-      const updatedList = this.rawTransactions().map(t => {
+      const updatedList = this.rawTransactions().map((t) => {
         if (t.id === generatedId || t.reference === tx.reference) {
           return {
             ...t,
             status: finalStatus,
-            failureReason
+            failureReason,
           };
         }
         return t;
@@ -251,15 +281,26 @@ export class TransactionService {
       this.pendingTx.set({
         ...updatedPending,
         status: finalStatus,
-        failureReason
+        failureReason,
       });
     }, 2200);
 
     return of(updatedPending);
   }
 
-  public updateTransactionStatus(id: string, status: TransactionStatus, failureReason?: string): void {
-    const list = this.rawTransactions().map(t => {
+  public getBalanceEnquiry(accountNumber: string) {
+    return this.http.get(
+      `${environment.apiUrl}/transfer/enquiry/${accountNumber}`,
+      { responseType: 'text' },
+    );
+  }
+
+  public updateTransactionStatus(
+    id: string,
+    status: TransactionStatus,
+    failureReason?: string,
+  ): void {
+    const list = this.rawTransactions().map((t) => {
       if (t.id === id || t.reference === id) {
         return { ...t, status, failureReason };
       }
@@ -279,7 +320,7 @@ export class TransactionService {
     return this.confirm({
       ...tx,
       status: 'Pending',
-      failureReason: undefined
+      failureReason: undefined,
     });
   }
 }

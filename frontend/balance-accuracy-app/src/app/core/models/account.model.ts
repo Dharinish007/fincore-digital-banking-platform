@@ -1,6 +1,11 @@
 export type AccountStatus = 'Verified' | 'Mismatch' | 'Pending';
 
-export type AccountType = 'Savings' | 'Checking' | 'Corporate' | 'Fixed Deposit' | 'Money Market';
+export type AccountType =
+  | 'Savings'
+  | 'Checking'
+  | 'Corporate'
+  | 'Fixed Deposit'
+  | 'Money Market';
 
 export interface PendingTransaction {
   id: string;
@@ -34,7 +39,12 @@ export interface BankAccount {
   systemCalculatedBalance: number;
   difference: number;
   status: AccountStatus;
+  balanceAccurate: boolean;
   lastVerified: string;
+  /** lifecycle status from DB: 'Active' | 'Blocked' | 'Closed' */
+  accountStatus?: string;
+  /** true when account lifecycle status is Active */
+  isActive?: boolean;
   pendingTransactions: PendingTransaction[];
   debitHolds: HoldItem[];
   creditHolds: HoldItem[];

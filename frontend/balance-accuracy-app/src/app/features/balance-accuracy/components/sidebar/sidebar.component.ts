@@ -16,22 +16,38 @@ export interface NavItem {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, MatIconModule, MatTooltipModule],
+  imports: [
+    CommonModule,
+    RouterLink,
+    RouterLinkActive,
+    MatIconModule,
+    MatTooltipModule,
+  ],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
   @Input() collapsed = false;
 
   public navItems: NavItem[] = [
-    { label: 'Balance Accuracy', icon: 'fact_check', route: '/', exact: true, badge: 'Live' },
-    { label: 'Open Account', icon: 'account_balance_wallet', route: '/accounts' },
-    { label: 'Transactions', icon: 'swap_horiz', route: '/transactions', exact: true, badge: 'Atomic' },
-    { label: 'Initiate Transfer', icon: 'send', route: '/transactions/initiate' },
-    { label: 'Transaction History', icon: 'receipt_long', route: '/transactions/history' },
-    { label: 'Reports', icon: 'description', route: '/reports' },
-    { label: 'Profile', icon: 'person', route: '/profile' },
-    { label: 'Settings', icon: 'settings', route: '/settings' },
-    { label: 'Support', icon: 'help_outline', route: '/support' }
+    { label: 'Dashboard', icon: 'dashboard', route: '' },
+    {
+      label: 'Accounts',
+      icon: 'account_balance_wallet',
+      route: 'open-account',
+    },
+    { label: 'Funds Transfer', icon: 'send', route: 'transfer' },
+    { label: 'Loans', icon: 'credit_score' },
+    { label: 'Payments', icon: 'payments' },
+    { label: 'KYC', icon: 'verified_user' },
+    { label: 'Audit', icon: 'history_edu' },
+    {
+      label: 'Balance Accuracy',
+      icon: 'fact_check',
+      active: true,
+      badge: 'Live',
+    },
+    { label: 'Reports', icon: 'description' },
+    { label: 'Settings', icon: 'settings' },
   ];
 }

@@ -1,10 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-export type OpenedAccountType = 'Savings' | 'Checking' | 'Corporate' | 'Fixed Deposit' | 'Money Market';
+export type OpenedAccountType =
+  | 'Savings'
+  | 'Checking'
+  | 'Corporate'
+  | 'Fixed Deposit'
+  | 'Money Market';
 
 export interface OpenedAccount {
   accountNumber: string;
@@ -17,6 +22,7 @@ export interface OpenedAccount {
   openingBalance: number;
   status: 'Pending' | 'Active' | 'Verified';
   openedDate: string;
+  message?: string;
 }
 
 export interface CreateAccountRequest {
@@ -37,14 +43,17 @@ export interface CreateAccountRequest {
   password: string;
   confirm: string;
   terms: boolean;
+  accountNo?: string;
+  ifscCode?: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AccountService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}/accounts`;
+  // Backend account creation endpoint is at /accountCreation (root path)
+  private apiUrl = `${environment.apiUrl.replace('/api', '')}/accountCreation`;
 
   private accountsSubject = new BehaviorSubject<OpenedAccount[]>([]);
   public accounts$ = this.accountsSubject.asObservable();
@@ -55,38 +64,81 @@ export class AccountService {
   }
 
   create(request: CreateAccountRequest): Observable<OpenedAccount> {
-    return this.http.post<any>(this.apiUrl, request).pipe(
-      map(res => ({
-        accountNumber: res.accountNumber || `ACC-${30000000 + this.sequence * 617}`,
-        customerId: String(res.customerId || `CUST-${70000 + this.sequence}`),
-        name: res.customerName || request.fullname,
-        email: res.email || request.email,
-        mobile: res.mobile || request.mobile,
-        branch: res.branch || request.branch,
-        accountType: (res.accountType || request.accountType) as OpenedAccountType,
-        openingBalance: res.initialDeposit !== undefined ? res.initialDeposit : request.initialDeposit,
-        status: (res.status || 'Active') as 'Active',
-        openedDate: res.createdAt || new Date().toISOString()
-      })),
-      tap(acc => this.accountsSubject.next([acc, ...this.accountsSubject.getValue()])),
-      catchError(() => {
-        // Fallback to local creation if backend unavailable
-        const seq = this.sequence++;
-        const fallbackAcc: OpenedAccount = {
-          accountNumber: `ACC-${30000000 + seq * 617}`,
-          customerId: `CUST-${70000 + seq}`,
-          name: request.fullname,
-          email: request.email,
-          mobile: request.mobile,
-          branch: request.branch,
-          accountType: request.accountType,
-          openingBalance: request.initialDeposit,
-          status: 'Active',
-          openedDate: new Date().toISOString()
-        };
-        this.accountsSubject.next([fallbackAcc, ...this.accountsSubject.getValue()]);
-        return of(fallbackAcc);
-      })
-    );
+    const payload = {
+      customerName: request.fullname,
+      email: request.email,
+      phone: request.mobile,
+      accountNo: request.accountNo || undefined,
+      accountType: request.accountType,
+      balance: request.initialDeposit,
+      status: 'Active',
+      branchName: request.branch,
+      ifscCode: request.ifscCode || '',
+    };
+
+    return this.http
+      .post(this.apiUrl, payload, { responseType: 'text' as const })
+      .pipe(
+        map((raw: string) => {
+          let res: any = raw;
+          if (typeof raw === 'string') {
+            const trimmed = raw.trim();
+            if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+              try {
+                res = JSON.parse(trimmed);
+              } catch {
+                res = raw;
+              }
+            }
+          }
+
+          if (typeof res === 'string') {
+            return {
+              accountNumber: request.accountNo || this.generateAccountNo(),
+              customerId: `CUST-${70000 + this.sequence}`,
+              name: request.fullname,
+              email: request.email,
+              mobile: request.mobile,
+              branch: request.branch,
+              accountType: request.accountType,
+              openingBalance: request.initialDeposit,
+              status: 'Active' as const,
+              openedDate: new Date().toISOString(),
+              message: res,
+            } as OpenedAccount;
+          }
+
+          return {
+            accountNumber:
+              res.accountNo || res.accountNumber || this.generateAccountNo(),
+            customerId: String(
+              res.customerId || `CUST-${70000 + this.sequence}`,
+            ),
+            name: res.customerName || request.fullname,
+            email: res.email || request.email,
+            mobile: res.phone || request.mobile,
+            branch: res.branchName || request.branch,
+            accountType: (res.accountType ||
+              request.accountType) as OpenedAccountType,
+            openingBalance:
+              res.balance !== undefined
+                ? Number(res.balance)
+                : request.initialDeposit,
+            status: (res.status || 'Active') as 'Active',
+            openedDate: res.createdAt || new Date().toISOString(),
+            message: res.message || 'Account created successfully',
+          } as OpenedAccount;
+        }),
+        tap((acc) =>
+          this.accountsSubject.next([acc, ...this.accountsSubject.getValue()]),
+        ),
+        catchError((error) => {
+          return throwError(() => error);
+        }),
+      );
+  }
+
+  private generateAccountNo(): string {
+    return `SB${Math.floor(10000000 + Math.random() * 90000000)}`;
   }
 }

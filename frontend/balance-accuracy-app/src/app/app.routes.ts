@@ -5,100 +5,25 @@ export const routes: Routes = [
     path: '',
     loadComponent: () =>
       import('./features/balance-accuracy/components/balance-accuracy-dashboard.component').then(
-        m => m.BalanceAccuracyDashboardComponent
-      )
+        (m) => m.BalanceAccuracyDashboardComponent,
+      ),
   },
   {
-    path: 'accounts',
+    path: 'transfer',
     loadComponent: () =>
-      import('./features/accounts/components/new-account/new-account.component').then(
-        m => m.NewAccountComponent
-      )
+      import('./features/balance-accuracy/components/transfer/transfer.component').then(
+        (m) => m.TransferComponent,
+      ),
   },
   {
-    path: 'transactions',
-    children: [
-      {
-        path: '',
-        loadComponent: () =>
-          import('./features/transactions/components/transaction-dashboard/transaction-dashboard.component').then(
-            m => m.TransactionDashboardComponent
-          )
-      },
-      {
-        path: 'initiate',
-        loadComponent: () =>
-          import('./features/transactions/components/initiate-transaction/initiate-transaction.component').then(
-            m => m.InitiateTransactionComponent
-          )
-      },
-      {
-        path: 'confirm',
-        loadComponent: () =>
-          import('./features/transactions/components/transaction-confirmation/transaction-confirmation.component').then(
-            m => m.TransactionConfirmationComponent
-          )
-      },
-      {
-        path: 'status/:id',
-        loadComponent: () =>
-          import('./features/transactions/components/transaction-status/transaction-status.component').then(
-            m => m.TransactionStatusComponent
-          )
-      },
-      {
-        path: 'status',
-        loadComponent: () =>
-          import('./features/transactions/components/transaction-status/transaction-status.component').then(
-            m => m.TransactionStatusComponent
-          )
-      },
-      {
-        path: 'history',
-        loadComponent: () =>
-          import('./features/transactions/components/transaction-history/transaction-history.component').then(
-            m => m.TransactionHistoryComponent
-          )
-      },
-      {
-        path: 'details/:id',
-        loadComponent: () =>
-          import('./features/transactions/components/transaction-details/transaction-details.component').then(
-            m => m.TransactionDetailsComponent
-          )
-      }
-    ]
-  },
-  {
-    path: 'reports',
+    path: 'open-account',
     loadComponent: () =>
-      import('./features/transactions/components/reports/reports.component').then(
-        m => m.ReportsComponent
-      )
-  },
-  {
-    path: 'profile',
-    loadComponent: () =>
-      import('./features/transactions/components/profile/profile.component').then(
-        m => m.ProfileComponent
-      )
-  },
-  {
-    path: 'settings',
-    loadComponent: () =>
-      import('./features/transactions/components/settings/settings.component').then(
-        m => m.SettingsComponent
-      )
-  },
-  {
-    path: 'support',
-    loadComponent: () =>
-      import('./features/transactions/components/support/support.component').then(
-        m => m.SupportComponent
-      )
+      import('./features/balance-accuracy/components/open-account/open-account.component').then(
+        (m) => m.OpenAccountComponent,
+      ),
   },
   {
     path: '**',
-    redirectTo: ''
-  }
+    redirectTo: '',
+  },
 ];

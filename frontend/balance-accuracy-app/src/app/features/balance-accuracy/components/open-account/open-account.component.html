@@ -1,0 +1,50 @@
+<div class="open-account-form">
+  <h2>Open New Account</h2>
+  <form (ngSubmit)="submit()">
+    <div>
+      <label>Full Name</label>
+      <input name="fullname" [(ngModel)]="fullname" required />
+    </div>
+    <div>
+      <label>Email</label>
+      <input name="email" [(ngModel)]="email" />
+    </div>
+    <div>
+      <label>Mobile</label>
+      <input name="mobile" [(ngModel)]="mobile" />
+    </div>
+    <div>
+      <label>Branch</label>
+      <input name="branch" [(ngModel)]="branch" />
+    </div>
+    <div>
+      <label>IFSC Code</label>
+      <input name="ifscCode" [(ngModel)]="ifscCode" />
+    </div>
+    <div>
+      <label>Account Number (optional)</label>
+      <input
+        name="accountNo"
+        [(ngModel)]="accountNo"
+        placeholder="Leave blank to auto-generate"
+      />
+    </div>
+    <div>
+      <label>Account Type</label>
+      <select name="accountType" [(ngModel)]="accountType">
+        <option>Savings</option>
+        <option>Checking</option>
+        <option>Corporate</option>
+      </select>
+    </div>
+    <div>
+      <label>Initial Deposit</label>
+      <input name="initialDeposit" type="number" [(ngModel)]="initialDeposit" />
+    </div>
+    <div style="margin-top: 12px">
+      <button type="submit">Create Account</button>
+    </div>
+  </form>
+
+  <div class="status" *ngIf="statusMessage">{{ statusMessage }}</div>
+</div>

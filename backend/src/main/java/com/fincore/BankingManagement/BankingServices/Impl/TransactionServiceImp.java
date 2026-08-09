@@ -5,8 +5,8 @@ import com.fincore.BankingManagement.BankingServices.repository.TransactionRepos
 import com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.TransactionRepository;
 import com.fincore.BankingManagement.BankingServices.dto.TransferRequest;
 import com.fincore.BankingManagement.BankingServices.dto.TransferResponse;
-import com.fincore.BankingManagement.BankingServices.model.Account;
 import com.fincore.BankingManagement.BankingServices.model.Transaction;
+import com.fincore.BankingManagement.Entities.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

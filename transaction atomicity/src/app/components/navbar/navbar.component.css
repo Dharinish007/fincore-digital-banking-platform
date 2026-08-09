@@ -1,7 +1,0 @@
-.topbar{background:linear-gradient(90deg,#0f3d85 0%,#1455c8 100%);height:72px;display:flex;align-items:center;padding:0 24px;box-shadow:0 18px 34px rgba(0,0,0,0.25);border-bottom:1px solid rgba(255,255,255,0.08)}
-.topbar .title{font-weight:700;color:#fff;letter-spacing:0.02em}
-.topbar img{width:36px;height:36px;border-radius:50%}
-.topbar button.navy-btn{padding:8px 12px;border-radius:12px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);color:#fff}
-.topbar .right {margin-left:auto;display:flex;align-items:center;gap:14px}
-
-.topbar{height:72px;display:flex;align-items:center;padding:0 24px}
