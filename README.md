@@ -21,13 +21,6 @@ management of banking services.
 
 ## ⚙️ Key Features
 
-- 🏦 **Account Creation** – Create and validate customer bank accounts.
-- 💳 **Fund Transfer** – Transfer funds between bank accounts.
-- 📊 **Balance Accuracy** – Monitor balances and identify discrepancies.
-- 🔄 **Transaction Atomicity** – Maintain consistent and reliable transactions.
-
-## ⚙️ Key Features
-
 - 🏦 **Account Creation**– Create and validate customer bank accounts.
 - 📊 **Balance Accuracy** – Monitor balances and identify discrepancies.
 - 🔄 **Transaction Atomicity** – Maintain consistent and reliable transactions.
