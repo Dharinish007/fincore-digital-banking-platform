@@ -4,26 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/model/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Entities/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/model/Transaction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Entities/Transaction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/CustomerRepo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/CustomerRepo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/TransactionRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/TransactionRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Entities/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Entities/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/controller/BalanceAccuracyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/controller/BalanceAccuracyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/repository/BalanceAccuracyRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/repository/BalanceAccuracyRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/service/BalanceAccuracyService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/service/BalanceAccuracyService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/transaction.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/transaction.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.ts" afterDir="false" />
-    </list>
+    <list default="true" id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
