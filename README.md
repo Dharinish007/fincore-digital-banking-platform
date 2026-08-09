@@ -87,7 +87,7 @@ Port: 3306
 
 ## 🧩 Database ER Model
 
-<img width="1536" height="1024" alt="ChatGPT Image Aug 9, 2026, 09_22_03 PM" src="https://github.com/user-attachments/assets/6f0a152a-f239-425d-9edf-0d14fb2fa09b" />
+<img width="1264" height="843" alt="Gemini_Generated_Image_an2mdaan2mdaan2m" src="https://github.com/user-attachments/assets/ddafe67c-4830-4607-b77b-0283ca6c5ded" />
 
 ## 👥 Team Members
 
