@@ -12,7 +12,6 @@ accurate account balances and reliable financial operations.
 #⚙️ Key Features
 
 - 🏦 **Account Creation**– Create and validate customer bank accounts.
-- 💳 **Fund Transfer** – Transfer funds securely between bank accounts.
 - 📊 **Balance Accuracy** – Monitor balances and identify discrepancies.
 - 🔄 **Transaction Atomicity** – Maintain consistent and reliable transactions.
 
