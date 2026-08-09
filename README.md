@@ -76,7 +76,7 @@ Port: 3306
 
 <img width="1600" height="829" alt="WhatsApp Image 2026-08-09 at 9 09 35 PM" src="https://github.com/user-attachments/assets/6841c68f-31a2-4f09-81d1-730731a79d00" />
 
-##🔄 Transaction Atomicity
+## 🔄 Transaction Atomicity
 
 <img width="1600" height="825" alt="WhatsApp Image 2026-08-09 at 9 09 34 PM" src="https://github.com/user-attachments/assets/d9d10ebf-a445-414f-81f3-5ca0597f76fc" />
 
