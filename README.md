@@ -1,15 +1,15 @@
-#🏦 FinCore Digital Banking Platform
+## 🏦 FinCore Digital Banking Platform
 
 > Enterprise Digital Banking Platform for Account Creation, Fund Transfer,
 > Balance Accuracy, and Transaction Atomicity.
 
-#📌 Introduction
+## 📌 Introduction
 
 FinCore is a digital banking management platform designed to manage
 customer accounts, fund transfers, and transaction records while maintaining
 accurate account balances and reliable financial operations.
 
-#⚙️ Key Features
+## ⚙️ Key Features
 
 - 🏦 **Account Creation**– Create and validate customer bank accounts.
 - 📊 **Balance Accuracy** – Monitor balances and identify discrepancies.
@@ -17,7 +17,7 @@ accurate account balances and reliable financial operations.
 
 ---
 
-# 🛠️ Technology Stack
+## 🛠️ Technology Stack
 
 | Layer | Technology |
 |---|---|
@@ -28,7 +28,7 @@ accurate account balances and reliable financial operations.
 | 📦 Build Tool | Maven |
 | 🔗 Version Control | Git & GitHub |
 
-# 📁 Project Structure
+## 📁 Project Structure
 
 ├── frontend/       # Angular Application
 ├── backend/        # Spring Boot REST API
@@ -59,7 +59,7 @@ Port: 3306
 
 <img width="1600" height="829" alt="WhatsApp Image 2026-08-09 at 9 09 35 PM" src="https://github.com/user-attachments/assets/6841c68f-31a2-4f09-81d1-730731a79d00" />
 
-🔄 Transaction Atomicity
+##🔄 Transaction Atomicity
 
 <img width="1600" height="825" alt="WhatsApp Image 2026-08-09 at 9 09 34 PM" src="https://github.com/user-attachments/assets/d9d10ebf-a445-414f-81f3-5ca0597f76fc" />
 
