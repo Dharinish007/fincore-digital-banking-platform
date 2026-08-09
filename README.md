@@ -1,7 +1,7 @@
 ## 🏦 FinCore Digital Banking Platform
 
-> Enterprise Digital Banking Platform for Account Creation, Fund Transfer,
-> Balance Accuracy, and Transaction Atomicity.
+*> Enterprise Digital Banking Platform for Account Creation, Fund Transfer,
+> Balance Accuracy, and Transaction Atomicity.*
 
 ## 📌 Introduction
 
