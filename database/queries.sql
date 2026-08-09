@@ -1,161 +1,50 @@
--- ==========================================
--- FinCore Digital Banking Application
--- Common SQL Queries
--- ==========================================
+-- Useful verification queries for FinCore
 
-USE fincore_db;
+USE kyc_db;
 
--- ==========================================
--- RBAC (Role-Based Access Control)
--- ==========================================
+-- All users and roles
+SELECT id, username, email, role, status FROM users ORDER BY id;
 
--- View all roles
-SELECT * FROM Roles;
+-- Accounts with customer and KYC status
+SELECT a.account_number, a.account_type, a.balance, a.status,
+       c.first_name, c.last_name, c.kyc_status, c.risk_level
+FROM accounts a
+JOIN customers c ON c.id = a.customer_id
+ORDER BY a.id;
 
--- View all users with their roles
-SELECT
-    u.user_id,
-    u.full_name,
-    u.email,
-    r.role_name
-FROM Users u
-JOIN Roles r
-ON u.role_id = r.role_id;
+-- Find account by number (transfer validation)
+SELECT * FROM accounts WHERE account_number = '1234-5678-9012';
 
--- Get role of a specific user
-SELECT
-    u.full_name,
-    r.role_name
-FROM Users u
-JOIN Roles r
-ON u.role_id = r.role_id
-WHERE u.user_id = 1;
+-- Recent transactions
+SELECT t.transaction_reference, t.transaction_type, t.amount, t.status, t.performed_by, t.timestamp,
+       sa.account_number AS source_account,
+       ta.account_number AS target_account
+FROM transactions t
+JOIN accounts sa ON sa.id = t.source_account_id
+LEFT JOIN accounts ta ON ta.id = t.target_account_id
+ORDER BY t.timestamp DESC
+LIMIT 50;
 
--- ==========================================
--- USER LOGIN
--- ==========================================
+-- KYC queue
+SELECT kyc_id, first_name, last_name, email, status FROM kyc ORDER BY kyc_id;
 
-SELECT *
-FROM Users
-WHERE username = 'customer1'
-AND password = 'password123';
+-- Frozen accounts (should block transfer/withdraw)
+SELECT account_number, status, balance FROM accounts WHERE status = 'FROZEN';
 
--- ==========================================
--- KYC VERIFICATION
--- ==========================================
+-- Balance check before/after transfer example
+SELECT account_number, balance, status FROM accounts
+WHERE account_number IN ('1234-5678-9012', '2231-9087-4410');
 
--- View all KYC records
-SELECT * FROM KYC_Details;
+USE fincore_audit;
 
--- View pending KYC requests
-SELECT *
-FROM KYC_Details
-WHERE verification_status='Pending';
+-- Latest audit events
+SELECT id, entity_name, entity_id, action, performed_by, status, description, timestamp
+FROM audit_logs
+ORDER BY timestamp DESC
+LIMIT 100;
 
--- View approved KYC
-SELECT *
-FROM KYC_Details
-WHERE verification_status='Approved';
-
--- View rejected KYC
-SELECT *
-FROM KYC_Details
-WHERE verification_status='Rejected';
-
--- Approve KYC
-UPDATE KYC_Details
-SET verification_status='Approved',
-verified_by=2,
-verified_date=NOW()
-WHERE kyc_id=1;
-
--- Reject KYC
-UPDATE KYC_Details
-SET verification_status='Rejected',
-verified_by=2,
-verified_date=NOW(),
-remarks='Document mismatch'
-WHERE kyc_id=2;
-
--- Customer KYC Status
-SELECT
-u.full_name,
-k.verification_status,
-k.verified_date
-FROM Users u
-JOIN KYC_Details k
-ON u.user_id=k.user_id;
-
--- ==========================================
--- AUDIT TRAIL
--- ==========================================
-
--- View complete audit logs
-SELECT *
-FROM Audit_Logs
-ORDER BY action_time DESC;
-
--- View logs of a specific user
-SELECT *
-FROM Audit_Logs
-WHERE user_id=1;
-
--- View logs of KYC module
-SELECT *
-FROM Audit_Logs
-WHERE module_name='KYC';
-
--- Search audit logs by action
-SELECT *
-FROM Audit_Logs
-WHERE action='KYC Approved';
-
--- ==========================================
--- REPORTS
--- ==========================================
-
--- Total Users
-SELECT COUNT(*) AS Total_Users
-FROM Users;
-
--- Total Customers
-SELECT COUNT(*) AS Total_Customers
-FROM Users
-WHERE role_id=3;
-
--- Total Pending KYC
-SELECT COUNT(*) AS Pending_KYC
-FROM KYC_Details
-WHERE verification_status='Pending';
-
--- Total Approved KYC
-SELECT COUNT(*) AS Approved_KYC
-FROM KYC_Details
-WHERE verification_status='Approved';
-
--- Total Rejected KYC
-SELECT COUNT(*) AS Rejected_KYC
-FROM KYC_Details
-WHERE verification_status='Rejected';
-
--- ==========================================
--- USER MANAGEMENT
--- ==========================================
-
--- Update User Email
-UPDATE Users
-SET email='newmail@example.com'
-WHERE user_id=1;
-
--- Change User Status
-UPDATE Users
-SET status='BLOCKED'
-WHERE user_id=5;
-
--- Delete Audit Log
-DELETE FROM Audit_Logs
-WHERE log_id=10;
-
--- ==========================================
--- END OF FILE
--- ==========================================
+-- Audit by action
+SELECT action, COUNT(*) AS cnt
+FROM audit_logs
+GROUP BY action
+ORDER BY cnt DESC;
