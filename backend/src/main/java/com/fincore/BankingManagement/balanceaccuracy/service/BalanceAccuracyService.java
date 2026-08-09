@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.balanceaccuracy.service;
 
 import com.fincore.BankingManagement.BankingServices.Enums.TransactionType;
-import com.fincore.BankingManagement.BankingServices.model.Transaction;
+import com.fincore.BankingManagement.Entities.Transaction;
 import com.fincore.BankingManagement.Entities.Account;
 import com.fincore.BankingManagement.balanceaccuracy.repository.BalanceAccuracyRepository;
 

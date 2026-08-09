@@ -1,14 +1,12 @@
 package com.fincore.BankingManagement.Entities;
 import com.fincore.BankingManagement.BankingServices.Enums.AccountStatus;
 import com.fincore.BankingManagement.BankingServices.Enums.AccountType;
-import com.fincore.BankingManagement.BankingServices.model.Customer;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -42,11 +40,11 @@ public class Account {
     private String ifscCode;
 
     @Column(name = "created_at", updatable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDate.now();
+        createdAt = LocalDateTime.now();
     }
 
 }

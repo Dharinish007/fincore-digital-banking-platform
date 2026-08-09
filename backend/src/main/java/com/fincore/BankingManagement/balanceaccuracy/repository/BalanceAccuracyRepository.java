@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.balanceaccuracy.repository;
 
 import com.fincore.BankingManagement.BankingServices.Enums.TransactionType;
-import com.fincore.BankingManagement.BankingServices.model.Transaction;
+import com.fincore.BankingManagement.Entities.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

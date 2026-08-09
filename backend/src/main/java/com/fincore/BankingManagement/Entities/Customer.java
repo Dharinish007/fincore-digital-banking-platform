@@ -1,5 +1,4 @@
-package com.fincore.BankingManagement.BankingServices.model;
-import com.fincore.BankingManagement.Entities.Account;
+package com.fincore.BankingManagement.Entities;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,7 +2,7 @@ package com.fincore.BankingManagement.BankingServices.repository.TransactionRepo
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import com.fincore.BankingManagement.BankingServices.model.Transaction;
+import com.fincore.BankingManagement.Entities.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction,Long> {

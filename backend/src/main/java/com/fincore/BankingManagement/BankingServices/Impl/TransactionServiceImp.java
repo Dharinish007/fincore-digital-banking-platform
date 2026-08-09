@@ -5,7 +5,7 @@ import com.fincore.BankingManagement.BankingServices.repository.TransactionRepos
 import com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.TransactionRepository;
 import com.fincore.BankingManagement.BankingServices.dto.TransferRequest;
 import com.fincore.BankingManagement.BankingServices.dto.TransferResponse;
-import com.fincore.BankingManagement.BankingServices.model.Transaction;
+import com.fincore.BankingManagement.Entities.Transaction;
 import com.fincore.BankingManagement.Entities.Account;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,6 +31,9 @@ public class TransactionServiceImp implements TransactionService {
         Account receiver = accountRepositery
                 .findByAccountNo(request.getReceiverAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException("Receiver Account Not Found"));
+        if(sender.getAccountNo().equals(receiver.getAccountNo())) {
+            throw new RuntimeException("Sender and Receiver accounts cannot be the same");
+        }
         BigDecimal amount = request.getAmount();
         BigDecimal balance = sender.getBalance().subtract(amount);
         if (balance.compareTo(BigDecimal.ZERO) < 0) {

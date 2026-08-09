@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.balanceaccuracy.controller;
 
 import com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.AccountRepositery.AccountRepository;
-import com.fincore.BankingManagement.BankingServices.model.Customer;
+import com.fincore.BankingManagement.Entities.Customer;
 import com.fincore.BankingManagement.BankingServices.Enums.AccountStatus;
 import com.fincore.BankingManagement.Entities.Account;
 import com.fincore.BankingManagement.balanceaccuracy.service.BalanceAccuracyService;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.stream.Collectors;
 import com.fincore.BankingManagement.balanceaccuracy.dto.BalanceAccuracyAccountDTO;
 
 @RestController

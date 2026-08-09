@@ -30,6 +30,7 @@ export class TransferComponent {
   amount = 0;
   reference = '';
   statusMessage = '';
+  statusClass: 'info' | 'success' | 'error' = 'info';
 
   constructor(private txService: TransactionService) {}
 
@@ -54,13 +55,22 @@ export class TransferComponent {
 
     this.txService.confirm(tx).subscribe(
       (res) => {
-        this.statusMessage = 'Transfer submitted. Processing...';
-        setTimeout(() => {
-          this.statusMessage = 'Transfer completed (check transactions view).';
-        }, 2500);
+        const isSuccess = res.transaction.status === 'Success';
+        const backendMessage = res.backendResponse?.message;
+        const balanceInfo = res.backendResponse?.balance
+          ? ` New balance: ${res.backendResponse.balance}`
+          : '';
+
+        this.statusClass = isSuccess ? 'success' : 'error';
+        this.statusMessage = backendMessage
+          ? `${backendMessage}${balanceInfo}`
+          : isSuccess
+            ? `Money Transferred Successfully.${balanceInfo}`
+            : 'Transfer failed. Please check the transaction details.';
       },
       (err) => {
-        this.statusMessage = 'Failed to submit transfer.';
+        this.statusClass = 'error';
+        this.statusMessage = err?.message || 'Failed to submit transfer.';
       },
     );
   }

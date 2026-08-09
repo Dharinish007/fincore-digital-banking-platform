@@ -1,6 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {
@@ -9,6 +9,11 @@ import {
   TransactionStatus,
   TransactionSummaryStats,
 } from '../models/transaction.model';
+
+type ConfirmResult = {
+  transaction: Transaction;
+  backendResponse?: any;
+};
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +26,25 @@ export class TransactionService {
   private pendingTx = signal<Transaction | null>(null);
 
   public filterCriteria = signal<TransactionFilterCriteria>({});
+
+  private parseBackendError(error: any): string {
+    if (error?.error?.message) {
+      return error.error.message;
+    }
+    if (typeof error?.message === 'string') {
+      return error.message;
+    }
+    return 'Failed to submit transfer.';
+  }
+
+  private isSuccessStatus(status: string | number): boolean {
+    return (
+      status === 'SUCCESS' ||
+      status === 'Success' ||
+      status === 200 ||
+      status === '200'
+    );
+  }
   private tx$ = new BehaviorSubject<Transaction[]>([]);
 
   public filteredTransactions = computed(() => {
@@ -231,7 +255,7 @@ export class TransactionService {
     this.filterCriteria.set({});
   }
 
-  public confirm(tx: Transaction): Observable<Transaction> {
+  public confirm(tx: Transaction): Observable<ConfirmResult> {
     const generatedId = 'TX' + Math.floor(100000 + Math.random() * 900000);
     const updatedPending: Transaction = {
       ...tx,
@@ -246,46 +270,65 @@ export class TransactionService {
     this.rawTransactions.set([updatedPending, ...currentList]);
     this.tx$.next(this.rawTransactions());
 
-    // Connect to backend REST endpoint /api/transfer/transfer
-    this.http
+    return this.http
       .post<any>(`${environment.apiUrl}/transfer/transfer`, {
         senderAccountNumber: tx.sender,
         receiverAccountNumber: tx.receiver,
         amount: tx.amount,
       })
-      .pipe(catchError(() => of(null)))
-      .subscribe();
+      .pipe(
+        catchError((error) => {
+          const errMessage = this.parseBackendError(error);
+          if (!error?.status || error.status === 0) {
+            return of(null);
+          }
+          this.updateTransactionStatus(updatedPending.id, 'Failed', errMessage);
+          return throwError(() => ({
+            message: errMessage,
+            transaction: updatedPending,
+          }));
+        }),
+        map((backendResponse) => {
+          const hasBackendResponse = backendResponse !== null;
+          const isSuccess = hasBackendResponse
+            ? this.isSuccessStatus(backendResponse.status)
+            : Math.random() > 0.15;
+          const finalStatus: TransactionStatus = isSuccess
+            ? 'Success'
+            : 'Failed';
+          const failureReason = isSuccess
+            ? undefined
+            : backendResponse?.message ||
+              'ATOMIC_TRANSACTION_FAILURE: Receiver ledger rejected debit during Phase-2 commit verification.';
 
-    // Two-Phase Commit visual simulation
-    setTimeout(() => {
-      const isSuccess = Math.random() > 0.15;
-      const finalStatus: TransactionStatus = isSuccess ? 'Success' : 'Failed';
-      const failureReason = isSuccess
-        ? undefined
-        : 'ATOMIC_TRANSACTION_FAILURE: Receiver ledger rejected debit during Phase-2 commit verification.';
-
-      const updatedList = this.rawTransactions().map((t) => {
-        if (t.id === generatedId || t.reference === tx.reference) {
-          return {
-            ...t,
+          const updatedTx: Transaction = {
+            ...updatedPending,
+            id: backendResponse?.transactionId || updatedPending.id,
+            date: backendResponse?.date || updatedPending.date,
             status: finalStatus,
             failureReason,
           };
-        }
-        return t;
-      });
 
-      this.rawTransactions.set(updatedList);
-      this.tx$.next(updatedList);
+          const updatedList = this.rawTransactions().map((t) => {
+            if (t.id === updatedPending.id || t.reference === tx.reference) {
+              return {
+                ...t,
+                id: updatedTx.id,
+                date: updatedTx.date,
+                status: updatedTx.status,
+                failureReason: updatedTx.failureReason,
+              };
+            }
+            return t;
+          });
 
-      this.pendingTx.set({
-        ...updatedPending,
-        status: finalStatus,
-        failureReason,
-      });
-    }, 2200);
+          this.rawTransactions.set(updatedList);
+          this.tx$.next(updatedList);
+          this.pendingTx.set(updatedTx);
 
-    return of(updatedPending);
+          return { transaction: updatedTx, backendResponse };
+        }),
+      );
   }
 
   public getBalanceEnquiry(accountNumber: string) {
@@ -316,7 +359,7 @@ export class TransactionService {
     }
   }
 
-  public retryTransaction(tx: Transaction): Observable<Transaction> {
+  public retryTransaction(tx: Transaction): Observable<ConfirmResult> {
     return this.confirm({
       ...tx,
       status: 'Pending',

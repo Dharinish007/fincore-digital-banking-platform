@@ -1,10 +1,11 @@
 package com.fincore.BankingManagement.account.service;
 
-import com.fincore.BankingManagement.BankingServices.model.Customer;
+import com.fincore.BankingManagement.Entities.Customer;
 import com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.CustomerRepo;
 import com.fincore.BankingManagement.Entities.Account;
 import com.fincore.BankingManagement.account.DTOs.AccountCreationRequest;
 import com.fincore.BankingManagement.account.repository.AccoRepository;
+import com.fincore.BankingManagement.account.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,23 +17,26 @@ public class AccountService {
     @Autowired
     private AccoRepository accountRepository;
     @Autowired
-    private CustomerRepo customerRepository;
+    private CustomerRepository customerRepository;
 
     @Transactional
-    public Account createAccount(AccountCreationRequest request) {
+    public String createAccount(AccountCreationRequest request) {
 
         // Check whether account number already exists
         if (accountRepository.existsByAccountNo(request.getAccountNo())) {
-            throw new RuntimeException("Account already exists");
+            return "Account already exists";
         }
-
+       else if(customerRepository.existsByEmail(request.getEmail())) {
+            return "Email already exists";
+        }
+       else if(customerRepository.existsByMobileNumber(request.getPhone())){
+           return "Mobile number already exists";
+        }
         Customer SavedCustomer = new Customer();
         SavedCustomer.setEmail(request.getEmail());
         SavedCustomer.setFullName(request.getCustomerName());
         SavedCustomer.setMobileNumber(request.getPhone());
         customerRepository.save(SavedCustomer);
-        System.out.println("Customer saved: " + SavedCustomer.getFullName());
-
         Account account = new Account();
         account.setAccountNo(request.getAccountNo());
         account.setCustomer(SavedCustomer);
@@ -42,6 +46,6 @@ public class AccountService {
         account.setBranchName(request.getBranchName());
         account.setIfscCode(request.getIfscCode());
         accountRepository.save(account);
-        return  account;
+        return "Account created";
     }
 }

@@ -26,7 +26,9 @@
           </div>
           <div>
             <h3>Transfer & Settlement Details</h3>
-            <p class="muted">Enter sender and receiver account information accurately.</p>
+            <p class="muted">
+              Enter sender and receiver account information accurately.
+            </p>
           </div>
         </div>
 
@@ -34,22 +36,42 @@
           <div class="form-grid">
             <div class="form-field">
               <label>Sender Account</label>
-              <input name="sender" [(ngModel)]="sender" placeholder="Enter sender account" required />
+              <input
+                name="sender"
+                [(ngModel)]="sender"
+                placeholder="Enter sender account"
+                required
+              />
             </div>
 
             <div class="form-field">
               <label>Receiver Account</label>
-              <input name="receiver" [(ngModel)]="receiver" placeholder="Enter receiver account" required />
+              <input
+                name="receiver"
+                [(ngModel)]="receiver"
+                placeholder="Enter receiver account"
+                required
+              />
             </div>
 
             <div class="form-field">
               <label>Amount</label>
-              <input name="amount" type="number" [(ngModel)]="amount" placeholder="0.00" required />
+              <input
+                name="amount"
+                type="number"
+                [(ngModel)]="amount"
+                placeholder="0.00"
+                required
+              />
             </div>
 
             <div class="form-field">
               <label>Reference (optional)</label>
-              <input name="reference" [(ngModel)]="reference" placeholder="Enter optional reference" />
+              <input
+                name="reference"
+                [(ngModel)]="reference"
+                placeholder="Enter optional reference"
+              />
             </div>
           </div>
 
@@ -60,8 +82,14 @@
           </div>
         </form>
 
-        <div class="status-alert" *ngIf="statusMessage">
-          <mat-icon>info</mat-icon>
+        <div class="status-alert" [ngClass]="statusClass" *ngIf="statusMessage">
+          <mat-icon>{{
+            statusClass === "error"
+              ? "error"
+              : statusClass === "success"
+                ? "check_circle"
+                : "info"
+          }}</mat-icon>
           <span>{{ statusMessage }}</span>
         </div>
       </div>
