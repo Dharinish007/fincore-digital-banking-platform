@@ -1,13 +1,30 @@
-## 🏦 FinCore Digital Banking Platform
+# 🏦 FinCore Digital Banking Platform
 
-*> Enterprise Digital Banking Platform for Account Creation, Fund Transfer,
-> Balance Accuracy, and Transaction Atomicity.*
+> An enterprise-grade digital banking management platform built to support
+> secure banking operations, seamless financial transactions, accurate data
+> management, and scalable banking services.
+
+---
 
 ## 📌 Introduction
 
-FinCore is a digital banking management platform designed to manage
-customer accounts, fund transfers, and transaction records while maintaining
-accurate account balances and reliable financial operations.
+FinCore is a comprehensive digital banking management platform designed to
+simplify and modernize core banking operations. It provides a centralized
+system for managing customer accounts, financial transactions, and banking
+data while focusing on security, accuracy, reliability, and scalability.
+
+The platform follows a modular architecture with dedicated frontend,
+backend, and database layers, enabling seamless integration and efficient
+management of banking services.
+
+---
+
+## ⚙️ Key Features
+
+- 🏦 **Account Creation** – Create and validate customer bank accounts.
+- 💳 **Fund Transfer** – Transfer funds between bank accounts.
+- 📊 **Balance Accuracy** – Monitor balances and identify discrepancies.
+- 🔄 **Transaction Atomicity** – Maintain consistent and reliable transactions.
 
 ## ⚙️ Key Features
 
