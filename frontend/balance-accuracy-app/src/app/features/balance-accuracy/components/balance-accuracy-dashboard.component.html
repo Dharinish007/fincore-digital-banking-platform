@@ -38,6 +38,8 @@
       <!-- Balance Accuracy Data Table -->
       <app-accuracy-table
         [accounts]="accounts()"
+        [isRefreshing]="isRefreshing"
+        (refresh)="onRefreshRecords()"
         (view)="openDetailDrawer($event)"
         (verify)="openVerifyDialog($event)"
         (auditLog)="openAuditLogDialog($event)"

@@ -40,6 +40,7 @@ export class BalanceAccuracyDashboardComponent implements OnInit {
   public sidebarCollapsed = false;
   public selectedAccountForDrawer: BankAccount | null = null;
   public isDrawerOpen = false;
+  public isRefreshing = false;
 
   // Signals from BalanceAccuracyService
   public stats = this.balanceService.summaryStats;
@@ -48,6 +49,19 @@ export class BalanceAccuracyDashboardComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  public onRefreshRecords(): void {
+    if (this.isRefreshing) return;
+    this.isRefreshing = true;
+    this.balanceService.fetchAccountsFromBackend().subscribe({
+      next: () => {
+        this.isRefreshing = false;
+      },
+      error: () => {
+        this.isRefreshing = false;
+      },
+    });
+  }
 
   public toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;

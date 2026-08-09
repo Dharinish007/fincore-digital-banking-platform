@@ -1,5 +1,5 @@
 <div class="dashboard-layout">
-  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+  <app-header moduleTitle="Fund Transfer Module" moduleIcon="send" (toggleSidebar)="toggleSidebar()"></app-header>
 
   <div class="main-container">
     <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
@@ -34,6 +34,11 @@
           >
             <mat-icon>auto_fix_high</mat-icon> Fill Sample Data
           </button>
+        </div>
+
+        <div class="status-banner" *ngIf="statusMessage" [class.success]="isSuccess" [class.error]="!isSuccess" style="margin-bottom: 20px; padding: 12px 16px; border-radius: 8px; font-weight: 500; display: flex; align-items: center; gap: 8px;" [style.background]="isSuccess ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'" [style.color]="isSuccess ? '#10B981' : '#EF4444'" [style.border]="isSuccess ? '1px solid #10B981' : '1px solid #EF4444'">
+          <mat-icon>{{ isSuccess ? 'check_circle' : 'error' }}</mat-icon>
+          <span>{{ statusMessage }}</span>
         </div>
 
         <form [formGroup]="form" class="transaction-form">
@@ -144,8 +149,8 @@
             <button mat-stroked-button type="button" (click)="reset()">
               <mat-icon>restart_alt</mat-icon> Reset
             </button>
-            <button mat-stroked-button type="button" (click)="validateAll()">
-              <mat-icon>fact_check</mat-icon> Validate Form
+            <button mat-stroked-button type="button" (click)="submitDirect()" [disabled]="isSubmitting">
+              <mat-icon>send</mat-icon> Submit Transfer
             </button>
             <button
               mat-flat-button

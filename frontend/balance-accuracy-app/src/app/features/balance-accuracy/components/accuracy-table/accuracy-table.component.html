@@ -5,6 +5,18 @@
       <span>Live Account Reconciliation Records</span>
       <span class="count-badge">{{ dataSource.data.length }} Accounts</span>
     </div>
+    <div class="banner-actions">
+      <button
+        type="button"
+        class="btn-refresh"
+        (click)="onRefresh()"
+        [disabled]="isRefreshing"
+        matTooltip="Refresh Live Records"
+      >
+        <mat-icon [class.spinning]="isRefreshing">refresh</mat-icon>
+        <span>{{ isRefreshing ? 'Refreshing...' : 'Refresh' }}</span>
+      </button>
+    </div>
   </div>
 
   <div class="responsive-table-wrapper">
@@ -51,16 +63,6 @@
         </td>
       </ng-container>
 
-      <!-- Ledger Balance Column -->
-      <ng-container matColumnDef="ledgerBalance">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-          Ledger Balance
-        </th>
-        <td mat-cell *matCellDef="let element" class="amount-cell">
-          ₹{{ element.ledgerBalance | number: "1.2-2" }}
-        </td>
-      </ng-container>
-
       <!-- Available Balance Column -->
       <ng-container matColumnDef="availableBalance">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -72,87 +74,6 @@
           class="amount-cell text-secondary"
         >
           ₹{{ element.availableBalance | number: "1.2-2" }}
-        </td>
-      </ng-container>
-
-      <!-- Difference Column -->
-      <ng-container matColumnDef="difference">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Difference</th>
-        <td mat-cell *matCellDef="let element" class="amount-cell">
-          <span
-            [ngClass]="{
-              'diff-zero': element.difference === 0,
-              'diff-positive': element.difference > 0,
-              'diff-negative': element.difference < 0,
-            }"
-          >
-            {{ element.difference > 0 ? "+" : "" }}₹{{
-              element.difference | number: "1.2-2"
-            }}
-          </span>
-        </td>
-      </ng-container>
-
-      <!-- Status Column (Account lifecycle: Active / Inactive) -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-        <td mat-cell *matCellDef="let element">
-          <app-status-badge
-            [status]="element.isActive ? 'Active' : 'Inactive'"
-          ></app-status-badge>
-        </td>
-      </ng-container>
-
-      <!-- Last Verified Column -->
-      <ng-container matColumnDef="lastVerified">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Last Verified</th>
-        <td mat-cell *matCellDef="let element" class="time-cell">
-          {{ element.lastVerified | date: "medium" }}
-        </td>
-      </ng-container>
-
-      <!-- Actions Column -->
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Actions</th>
-        <td mat-cell *matCellDef="let element">
-          <div class="action-buttons">
-            <button
-              mat-icon-button
-              class="btn-action btn-view"
-              (click)="onView(element)"
-              matTooltip="View Full Details"
-            >
-              <mat-icon>visibility</mat-icon>
-            </button>
-
-            <button
-              mat-icon-button
-              class="btn-action btn-verify"
-              (click)="onVerify(element)"
-              matTooltip="Verify & Reconcile"
-            >
-              <mat-icon>fact_check</mat-icon>
-            </button>
-
-            <button
-              mat-icon-button
-              class="btn-action btn-audit"
-              (click)="onAuditLog(element)"
-              matTooltip="View Audit Trail"
-            >
-              <mat-icon>history</mat-icon>
-            </button>
-
-            <button
-              mat-icon-button
-              class="btn-action btn-freeze"
-              (click)="onFreeze(element)"
-              [disabled]="element.isFrozen"
-              matTooltip="Freeze Account"
-            >
-              <mat-icon>ac_unit</mat-icon>
-            </button>
-          </div>
         </td>
       </ng-container>
 

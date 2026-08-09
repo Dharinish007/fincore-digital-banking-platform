@@ -136,7 +136,51 @@ export class InitiateTransactionComponent implements OnInit {
     this.router.navigate(['/transactions/confirm']);
   }
 
+  public isSubmitting = false;
+  public statusMessage = '';
+  public isSuccess = false;
+
+  public submitDirect(): void {
+    this.form.markAllAsTouched();
+    if (this.form.invalid) return;
+
+    const val = this.form.value;
+    if (val.sender === val.receiver) {
+      this.form.get('receiver')?.setErrors({ sameAccount: true });
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.statusMessage = '';
+
+    const tx: Transaction = {
+      id: '',
+      sender: val.sender,
+      receiver: val.receiver,
+      type: val.type,
+      amount: Number(val.amount),
+      reference: val.reference,
+      date: val.date instanceof Date ? val.date.toISOString() : new Date(val.date).toISOString(),
+      status: 'Pending',
+      charges: Number(val.amount) > 10000 ? 15 : 5,
+      description: val.description
+    };
+
+    this.txService.confirm(tx).subscribe({
+      next: () => {
+        this.isSubmitting = false;
+        this.isSuccess = true;
+        this.statusMessage = `Fund Transfer initiated successfully! Reference: ${val.reference}`;
+      },
+      error: () => {
+        this.isSubmitting = false;
+        this.isSuccess = false;
+        this.statusMessage = 'Failed to submit transfer. Please check account details.';
+      }
+    });
+  }
+
   public cancel(): void {
-    this.router.navigate(['/transactions']);
+    this.router.navigate(['/balance-accuracy']);
   }
 }

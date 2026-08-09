@@ -1,17 +1,30 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { Transaction } from '../../../../core/models/transaction.model';
+import { HeaderComponent } from '../header/header.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-transfer',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    HeaderComponent,
+    SidebarComponent,
+  ],
   templateUrl: './transfer.component.html',
   styleUrls: ['./transfer.component.scss'],
 })
 export class TransferComponent {
+  sidebarCollapsed = false;
+
   sender = '';
   receiver = '';
   amount = 0;
@@ -19,6 +32,10 @@ export class TransferComponent {
   statusMessage = '';
 
   constructor(private txService: TransactionService) {}
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
 
   submit() {
     const tx: Transaction = {

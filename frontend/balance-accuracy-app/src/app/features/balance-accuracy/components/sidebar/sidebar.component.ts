@@ -30,24 +30,20 @@ export class SidebarComponent {
   @Input() collapsed = false;
 
   public navItems: NavItem[] = [
-    { label: 'Dashboard', icon: 'dashboard', route: '' },
     {
-      label: 'Accounts',
+      label: 'Account Creation',
       icon: 'account_balance_wallet',
-      route: 'open-account',
+      route: '/accounts',
     },
-    { label: 'Funds Transfer', icon: 'send', route: 'transfer' },
-    { label: 'Loans', icon: 'credit_score' },
-    { label: 'Payments', icon: 'payments' },
-    { label: 'KYC', icon: 'verified_user' },
-    { label: 'Audit', icon: 'history_edu' },
+    {
+      label: 'Fund Transfer',
+      icon: 'send',
+      route: '/fund-transfer',
+    },
     {
       label: 'Balance Accuracy',
       icon: 'fact_check',
-      active: true,
-      badge: 'Live',
+      route: '/balance-accuracy',
     },
-    { label: 'Reports', icon: 'description' },
-    { label: 'Settings', icon: 'settings' },
   ];
 }

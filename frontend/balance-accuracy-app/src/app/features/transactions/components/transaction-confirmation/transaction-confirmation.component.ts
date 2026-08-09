@@ -32,7 +32,7 @@ export class TransactionConfirmationComponent implements OnInit {
   ngOnInit(): void {
     this.tx = this.txService.getPending();
     if (!this.tx) {
-      this.router.navigate(['/transactions/initiate']);
+      this.router.navigate(['/fund-transfer']);
     }
   }
 
@@ -49,11 +49,11 @@ export class TransactionConfirmationComponent implements OnInit {
   }
 
   public edit(): void {
-    this.router.navigate(['/transactions/initiate']);
+    this.router.navigate(['/fund-transfer']);
   }
 
   public cancel(): void {
     this.txService.setPending(null);
-    this.router.navigate(['/transactions']);
+    this.router.navigate(['/fund-transfer']);
   }
 }

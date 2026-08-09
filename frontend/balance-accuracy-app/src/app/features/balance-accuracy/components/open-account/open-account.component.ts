@@ -1,19 +1,32 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import {
   AccountService,
   CreateAccountRequest,
 } from '../../../../core/services/account.service';
+import { HeaderComponent } from '../header/header.component';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-open-account',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    HeaderComponent,
+    SidebarComponent,
+  ],
   templateUrl: './open-account.component.html',
   styleUrls: ['./open-account.component.scss'],
 })
 export class OpenAccountComponent {
+  sidebarCollapsed = false;
+
   fullname = '';
   email = '';
   mobile = '';
@@ -26,6 +39,10 @@ export class OpenAccountComponent {
   statusMessage = '';
 
   constructor(private accountService: AccountService) {}
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+  }
 
   submit() {
     // if user left accountNo blank, generate a client-side account number

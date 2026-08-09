@@ -91,11 +91,11 @@ export class BalanceAccuracyService {
   });
 
   constructor() {
-    this.fetchAccountsFromBackend();
+    this.fetchAccountsFromBackend().subscribe();
   }
 
-  private fetchAccountsFromBackend(): void {
-    this.http
+  public fetchAccountsFromBackend(): Observable<BankAccount[]> {
+    return this.http
       .get<BankAccount[]>(`${this.apiUrl}/accounts`)
       .pipe(
         map((response) =>
@@ -123,8 +123,7 @@ export class BalanceAccuracyService {
           this.accountsSubject.next([]);
           return of([]);
         }),
-      )
-      .subscribe();
+      );
   }
 
   public refreshBalanceAccuracy(

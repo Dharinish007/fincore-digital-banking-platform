@@ -78,10 +78,10 @@ export class TransactionStatusComponent implements OnInit, OnDestroy {
   }
 
   public initiateNew(): void {
-    this.router.navigate(['/transactions/initiate']);
+    this.router.navigate(['/fund-transfer']);
   }
 
   public backToDashboard(): void {
-    this.router.navigate(['/transactions']);
+    this.router.navigate(['/balance-accuracy']);
   }
 }

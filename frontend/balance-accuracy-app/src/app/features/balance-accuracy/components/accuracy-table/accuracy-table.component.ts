@@ -7,7 +7,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BankAccount } from '../../../../core/models/account.model';
-import { StatusBadgeComponent } from '../../../../shared/components/status-badge/status-badge.component';
 
 @Component({
   selector: 'app-accuracy-table',
@@ -19,30 +18,26 @@ import { StatusBadgeComponent } from '../../../../shared/components/status-badge
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule,
-    StatusBadgeComponent
+    MatTooltipModule
   ],
   templateUrl: './accuracy-table.component.html',
   styleUrls: ['./accuracy-table.component.scss']
 })
 export class AccuracyTableComponent implements OnChanges, AfterViewInit {
   @Input() accounts: BankAccount[] = [];
+  @Input() isRefreshing = false;
 
   @Output() view = new EventEmitter<BankAccount>();
   @Output() verify = new EventEmitter<BankAccount>();
   @Output() auditLog = new EventEmitter<BankAccount>();
   @Output() freeze = new EventEmitter<BankAccount>();
+  @Output() refresh = new EventEmitter<void>();
 
   public displayedColumns: string[] = [
     'accountNumber',
     'customerName',
     'branch',
-    'ledgerBalance',
-    'availableBalance',
-    'difference',
-    'status',
-    'lastVerified',
-    'actions'
+    'availableBalance'
   ];
 
   public dataSource = new MatTableDataSource<BankAccount>([]);
@@ -75,5 +70,11 @@ export class AccuracyTableComponent implements OnChanges, AfterViewInit {
 
   onFreeze(account: BankAccount): void {
     this.freeze.emit(account);
+  }
+
+  onRefresh(): void {
+    if (!this.isRefreshing) {
+      this.refresh.emit();
+    }
   }
 }
