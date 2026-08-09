@@ -53,20 +53,20 @@ management of banking services.
 └── README.md
 
 ## 🚀 Quick Start
-* 🖥️ Frontend* -
+* 🖥️ Frontend -
 cd frontend/balance-accuracy-app
 npm install
 npm start
 
 Runs on: http://localhost:4200
 
-* ⚙️ Backend*-
+* ⚙️ Backend -
 cd backend
 ./mvnw spring-boot:run
 
 Runs on: http://localhost:8080
 
-* 🗄️ Database*-
+* 🗄️ Database -
 Database: MySQL
 Name: digital_banking
 Environment: XAMPP / phpMyAdmin
