@@ -52,7 +52,7 @@ management of banking services.
 ├── DB/             # SQL Scripts
 └── README.md
 
-*#🚀 Quick Start*
+## 🚀 Quick Start
 🖥️ Frontend
 cd frontend/balance-accuracy-app
 npm install
