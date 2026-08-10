@@ -13,7 +13,7 @@ import { MatMenuModule } from '@angular/material/menu';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {
-  @Input() moduleTitle = 'Frontend';
+  @Input() moduleTitle = 'Balance Accuracy';
   @Input() moduleIcon = 'fact_check';
   @Output() toggleSidebar = new EventEmitter<void>();
 
