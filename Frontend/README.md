@@ -1,16 +1,126 @@
-# React + Vite
+# 🏦 FinCore — Digital Banking Management Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FinCore is a modern **Digital Banking Management Platform** designed to provide a secure, role-based banking experience for customers and bank employees.
 
-Currently, two official plugins are available:
+The platform follows a **Role-Based Access Control (RBAC)** architecture where different users receive access to different dashboards and banking operations according to their assigned roles.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 🚀 Project Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+FinCore aims to provide a centralized digital banking platform for managing customers, employees, accounts, transactions, KYC verification, roles, audit logs, and other banking operations.
 
-## Expanding the ESLint configuration
+The system supports four primary roles:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 👤 Customer
+- 🛡️ Admin
+- 👨‍💼 Manager
+- 🏦 Teller
+
+Each role has its own dedicated dashboard and navigation structure.
+
+---
+
+## 🎯 Project Objectives
+
+The main objectives of FinCore are:
+
+- Provide a modern digital banking interface.
+- Implement Role-Based Access Control (RBAC).
+- Provide separate dashboards for different banking roles.
+- Allow customers to manage their banking activities.
+- Allow administrators to manage employees and roles.
+- Provide transaction monitoring and management.
+- Support KYC verification workflows.
+- Maintain audit logs for important banking activities.
+- Build a scalable and maintainable frontend architecture.
+- Provide a responsive user interface across different screen sizes.
+
+---
+
+# 🛠️ Technology Stack
+
+## Frontend
+
+| Technology | Purpose |
+|---|---|
+| React.js | Frontend framework |
+| Vite | Development and build tool |
+| JavaScript (ES6+) | Programming language |
+| React Router DOM | Application routing |
+| Axios | API communication |
+| CSS3 | Styling |
+| Bootstrap | UI utilities/components |
+| React Icons | Icons |
+| React Toastify | Notifications |
+
+---
+
+# 🏗️ Current Architecture
+
+The frontend follows a component-based architecture.
+
+```text
+src/
+│
+├── components/
+│   │
+│   ├── admin/
+│   │   ├── AdminSidebar.jsx
+│   │   ├── AdminSidebar.css
+│   │   ├── AdminNavbar.jsx
+│   │   ├── AdminNavbar.css
+│   │   ├── AdminStatCard.jsx
+│   │   ├── AdminStatCard.css
+│   │   ├── ManagementOverview.jsx
+│   │   ├── ManagementOverview.css
+│   │   ├── RecentTransactions.jsx
+│   │   └── RecentTransactions.css
+│   │
+│   ├── customer/
+│   │   ├── CustomerSidebar.jsx
+│   │   ├── CustomerSidebar.css
+│   │   ├── CustomerNavbar.jsx
+│   │   ├── CustomerNavbar.css
+│   │   ├── CustomerStatCard.jsx
+│   │   ├── QuickActions.jsx
+│   │   └── RecentTransactions.jsx
+│   │
+│   ├── manager/
+│   │   ├── ManagerSidebar.jsx
+│   │   ├── ManagerSidebar.css
+│   │   ├── ManagerNavbar.jsx
+│   │   ├── ManagerNavbar.css
+│   │   └── ...
+│   │
+│   └── teller/
+│       ├── TellerSidebar.jsx
+│       ├── TellerSidebar.css
+│       ├── TellerNavbar.jsx
+│       ├── TellerNavbar.css
+│       └── ...
+│
+├── pages/
+│   │
+│   ├── admin/
+│   │   ├── AdminDashboard.jsx
+│   │   └── AdminDashboard.css
+│   │
+│   ├── customer/
+│   │   ├── CustomerDashboard.jsx
+│   │   └── CustomerDashboard.css
+│   │
+│   ├── manager/
+│   │   ├── ManagerDashboard.jsx
+│   │   └── ManagerDashboard.css
+│   │
+│   └── teller/
+│       ├── TellerDashboard.jsx
+│       └── TellerDashboard.css
+│
+├── routes/
+│   └── AppRoutes.jsx
+│
+├── App.jsx
+├── main.jsx
+└── index.css
