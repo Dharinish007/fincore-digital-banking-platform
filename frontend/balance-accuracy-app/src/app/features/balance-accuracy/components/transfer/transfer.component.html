@@ -46,14 +46,34 @@
 
             <div class="form-field">
               <label>Receiver Account</label>
-              <input
-                name="receiver"
-                [(ngModel)]="receiver"
-                placeholder="Enter receiver account"
-                required
-              />
+              <div class="receiver-field">
+                <input
+                  name="receiver"
+                  [(ngModel)]="receiver"
+                  placeholder="Enter receiver account"
+                  required
+                />
+                <button
+                  *ngIf="receiver?.trim()"
+                  type="button"
+                  class="btn-receiver"
+                  (click)="resolveReceiver()"
+                >
+                  Get Receiver
+                </button>
+              </div>
+              <div
+                class="receiver-response"
+                *ngIf="receiverName || receiverLookupMessage"
+              >
+                <span *ngIf="receiverName"
+                  ><strong>Receiver:</strong> {{ receiverName }}</span
+                >
+                <span *ngIf="receiverLookupMessage" class="lookup-message">{{
+                  receiverLookupMessage
+                }}</span>
+              </div>
             </div>
-
             <div class="form-field">
               <label>Amount</label>
               <input
@@ -76,11 +96,20 @@
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn-send">
+            <button type="submit" class="btn-send" [disabled]="isSending">
               <mat-icon>send</mat-icon> Send
             </button>
           </div>
         </form>
+
+        <div class="processing-indicator" *ngIf="showProcessing">
+          <span>Processing</span>
+          <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
 
         <div class="status-alert" [ngClass]="statusClass" *ngIf="statusMessage">
           <mat-icon>{{
@@ -91,6 +120,23 @@
                 : "info"
           }}</mat-icon>
           <span>{{ statusMessage }}</span>
+        </div>
+
+        <div
+          class="status-details"
+          *ngIf="
+            backendStatus || backendBalance !== null || backendTransactionId
+          "
+        >
+          <div *ngIf="backendStatus">
+            <strong>Status:</strong> {{ backendStatus }}
+          </div>
+          <div *ngIf="backendBalance !== null">
+            <strong>Balance:</strong> {{ backendBalance | number: "1.2-2" }}
+          </div>
+          <div *ngIf="backendTransactionId">
+            <strong>Transaction ID:</strong> {{ backendTransactionId }}
+          </div>
         </div>
       </div>
     </main>

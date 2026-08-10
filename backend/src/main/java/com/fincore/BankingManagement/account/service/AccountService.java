@@ -37,6 +37,8 @@ public class AccountService {
         SavedCustomer.setFullName(request.getCustomerName());
         SavedCustomer.setMobileNumber(request.getPhone());
         customerRepository.save(SavedCustomer);
+
+
         Account account = new Account();
         account.setAccountNo(request.getAccountNo());
         account.setCustomer(SavedCustomer);

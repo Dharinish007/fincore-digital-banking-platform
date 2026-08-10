@@ -35,4 +35,9 @@ public class TransactionController {
     public String GetMapping(){
         return "This is fincore Banking Management Api";
     }
+
+    @GetMapping("/getReceiver/{receiverAccountNumber}")
+    public ResponseEntity<?> getReceiver(@PathVariable String receiverAccountNumber) {
+        return transactionservice.getReceiver(receiverAccountNumber);
+    }
 }

@@ -8,6 +8,8 @@ import com.fincore.BankingManagement.BankingServices.dto.TransferResponse;
 import com.fincore.BankingManagement.Entities.Transaction;
 import com.fincore.BankingManagement.Entities.Account;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.fincore.BankingManagement.BankingServices.Exception.AccountNotFoundException;
@@ -31,7 +33,7 @@ public class TransactionServiceImp implements TransactionService {
         Account receiver = accountRepositery
                 .findByAccountNo(request.getReceiverAccountNumber())
                 .orElseThrow(() -> new AccountNotFoundException("Receiver Account Not Found"));
-        if(sender.getAccountNo().equals(receiver.getAccountNo())) {
+        if (sender.getAccountNo().equals(receiver.getAccountNo())) {
             throw new RuntimeException("Sender and Receiver accounts cannot be the same");
         }
         BigDecimal amount = request.getAmount();
@@ -60,8 +62,14 @@ public class TransactionServiceImp implements TransactionService {
                 LocalDate.now()
         );
     }
+
     public BigDecimal balanceEnquiry(String accountNumber) {
         Account acc = accountRepositery.findByAccountNo(accountNumber).orElseThrow(() -> new RuntimeException("Account Not Found"));
         return acc.getBalance();
+    }
+
+    public ResponseEntity<?> getReceiver(String accountNumber) {
+        Account receiver=accountRepositery.findByAccountNo(accountNumber).orElseThrow(() -> new RuntimeException("Account Not Found"));
+        return new ResponseEntity<>(receiver.getCustomer().getFullName(), HttpStatus.OK);
     }
 }

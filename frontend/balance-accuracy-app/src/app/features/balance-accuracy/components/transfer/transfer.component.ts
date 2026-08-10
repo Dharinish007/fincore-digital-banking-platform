@@ -31,6 +31,14 @@ export class TransferComponent {
   reference = '';
   statusMessage = '';
   statusClass: 'info' | 'success' | 'error' = 'info';
+  backendStatus = '';
+  backendBalance: number | null = null;
+  backendTransactionId = '';
+  receiverName = '';
+  receiverLookupMessage = '';
+  isSending = false;
+  showProcessing = false;
+  private processingIndicatorTimeout?: number;
 
   constructor(private txService: TransactionService) {}
 
@@ -39,6 +47,19 @@ export class TransferComponent {
   }
 
   submit() {
+    this.statusMessage = '';
+    this.backendStatus = '';
+    this.backendBalance = null;
+    this.backendTransactionId = '';
+    this.isSending = true;
+    this.showProcessing = false;
+    if (this.processingIndicatorTimeout) {
+      clearTimeout(this.processingIndicatorTimeout);
+    }
+    this.processingIndicatorTimeout = window.setTimeout(() => {
+      this.showProcessing = true;
+    }, 1200);
+
     const tx: Transaction = {
       id: '',
       sender: this.sender,
@@ -56,21 +77,81 @@ export class TransferComponent {
     this.txService.confirm(tx).subscribe(
       (res) => {
         const isSuccess = res.transaction.status === 'Success';
+        const backendStatus = res.backendResponse?.status;
         const backendMessage = res.backendResponse?.message;
-        const balanceInfo = res.backendResponse?.balance
-          ? ` New balance: ${res.backendResponse.balance}`
-          : '';
+        const backendBalance = res.backendResponse?.balance;
+        const backendTransactionId =
+          res.backendResponse?.transactionId || res.transaction.id;
+
+        this.backendStatus = backendStatus
+          ? `${backendStatus}`
+          : isSuccess
+            ? 'Success'
+            : 'Failed';
+        this.backendBalance = backendBalance != null ? backendBalance : null;
+        this.backendTransactionId = backendTransactionId;
 
         this.statusClass = isSuccess ? 'success' : 'error';
-        this.statusMessage = backendMessage
-          ? `${backendMessage}${balanceInfo}`
-          : isSuccess
-            ? `Money Transferred Successfully.${balanceInfo}`
-            : 'Transfer failed. Please check the transaction details.';
+        this.statusMessage =
+          backendMessage ||
+          (isSuccess
+            ? 'Money Transferred Successfully'
+            : 'Transfer failed. Please check the transaction details.');
+        this.clearProcessingState();
       },
       (err) => {
         this.statusClass = 'error';
         this.statusMessage = err?.message || 'Failed to submit transfer.';
+        this.clearProcessingState();
+      },
+    );
+  }
+
+  private clearProcessingState(): void {
+    this.isSending = false;
+    this.showProcessing = false;
+    if (this.processingIndicatorTimeout) {
+      clearTimeout(this.processingIndicatorTimeout);
+      this.processingIndicatorTimeout = undefined;
+    }
+  }
+
+  resolveReceiver() {
+    this.receiverName = '';
+    this.receiverLookupMessage = '';
+
+    if (!this.receiver?.trim()) {
+      this.receiverLookupMessage =
+        'Please enter a receiver account number first.';
+      return;
+    }
+
+    this.txService.getReceiverName(this.receiver.trim()).subscribe(
+      (response) => {
+        let parsed = response;
+
+        try {
+          const json = JSON.parse(response as string);
+          parsed =
+            json?.name ||
+            json?.receiverName ||
+            json?.accountName ||
+            json?.data ||
+            JSON.stringify(json);
+        } catch {
+          parsed = response;
+        }
+
+        if (typeof parsed === 'string' && parsed.trim()) {
+          this.receiverName = parsed;
+        } else {
+          this.receiverLookupMessage = 'Receiver lookup returned empty result.';
+        }
+      },
+      (error) => {
+        this.receiverLookupMessage =
+          error?.message ||
+          'Unable to resolve receiver name. Please verify the account number.';
       },
     );
   }
