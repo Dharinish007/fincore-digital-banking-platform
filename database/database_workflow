@@ -2,16 +2,12 @@
 
 Reference document for the database setup and schema relationships across **Customer Service**, **Account Service**, and **Transaction Service**.
 
----
-
 ## 1. Database Overview
 
 - **Engine:** PostgreSQL
 - **Database name:** `fincoredatabase`
 - **Scope:** Milestone 1 — all 3 services share one database 
 - **Schema file:** `database/fincore_schema.sql` (in repo)
-
----
 
 ## 2. Table Ownership by Service
 
@@ -21,11 +17,9 @@ Reference document for the database setup and schema relationships across **Cust
 | Account Service | `accounts` |
 | Transaction Service | `transactions`, `audit_log` (shared) |
 
----
 
 ## 3. Entity Relationship Flow
 
-```
 customers (1) ──────< accounts (many)
                           │
                           │ referenced by
@@ -36,13 +30,12 @@ customers (1) ──────< accounts (many)
 
 audit_log — standalone table, references other entities
             by ID string only (no hard FK), written by all services
-```
+
 
 - One customer can have **many** accounts.
 - One account can appear in **many** transactions, either as the debit side or the credit side.
 - `audit_log` is intentionally decoupled (no FK) since any service can write to it.
 
----
 
 ## 4. Setup Order (must run in this sequence)
 
