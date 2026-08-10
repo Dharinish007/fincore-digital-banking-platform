@@ -1,0 +1,70 @@
+<div class="dashboard-layout">
+  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+  <div class="main-container">
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <main class="content-area">
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>Platform Settings</h1>
+          <p class="subtitle">
+            FinCore Enterprise System Preferences & Security Controls
+          </p>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="setting-item">
+          <div>
+            <h3>Enterprise Dark Theme</h3>
+            <p>Use high-contrast slate dark theme for treasury auditing.</p>
+          </div>
+          <mat-slide-toggle
+            [(ngModel)]="settings.darkMode"
+            color="primary"
+          ></mat-slide-toggle>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h3>Real-time Transaction Notifications</h3>
+            <p>
+              Receive push alerts for failed or rolled-back atomic transfers.
+            </p>
+          </div>
+          <mat-slide-toggle
+            [(ngModel)]="settings.notifications"
+            color="primary"
+          ></mat-slide-toggle>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h3>Auto-Refresh Ledger Stream</h3>
+            <p>
+              Automatically update table views when new transactions commit.
+            </p>
+          </div>
+          <mat-slide-toggle
+            [(ngModel)]="settings.autoRefresh"
+            color="primary"
+          ></mat-slide-toggle>
+        </div>
+
+        <div class="setting-item">
+          <div>
+            <h3>Two-Factor Approval Lock</h3>
+            <p>
+              Require security token for high-value transfers above ₹10,000.
+            </p>
+          </div>
+          <mat-slide-toggle
+            [(ngModel)]="settings.twoFactor"
+            color="primary"
+          ></mat-slide-toggle>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

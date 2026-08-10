@@ -1,0 +1,96 @@
+<div class="verify-dialog-container">
+  <div class="dialog-header">
+    <div class="header-title">
+      <mat-icon class="icon-verify">fact_check</mat-icon>
+      <div>
+        <h2>Reconcile Account Balance</h2>
+        <span class="sub"
+          >{{ data.account.accountNumber }} •
+          {{ data.account.customerName }}</span
+        >
+      </div>
+    </div>
+    <button mat-icon-button (click)="onCancel()" class="btn-close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-body">
+    <!-- Comparison Table Cards -->
+    <div class="comparison-grid">
+      <div class="comp-box">
+        <span class="label">Old / Reported Balance</span>
+        <span class="value"
+          >₹{{ data.account.ledgerBalance | number: "1.2-2" }}</span
+        >
+      </div>
+      <div class="comp-box highlight-blue">
+        <span class="label">System Calculated</span>
+        <span class="value"
+          >₹{{ data.account.systemCalculatedBalance | number: "1.2-2" }}</span
+        >
+      </div>
+      <div
+        class="comp-box"
+        [ngClass]="
+          data.account.difference === 0 ? 'highlight-green' : 'highlight-red'
+        "
+      >
+        <span class="label">Difference / Discrepancy</span>
+        <span class="value"
+          >{{ data.account.difference > 0 ? "+" : "" }}₹{{
+            data.account.difference | number: "1.2-2"
+          }}</span
+        >
+      </div>
+    </div>
+
+    <!-- Verification Form -->
+    <form [formGroup]="verifyForm" class="remarks-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Audit Remarks & Reconciliation Explanation</mat-label>
+        <textarea
+          matInput
+          formControlName="remarks"
+          rows="4"
+          placeholder="Enter audit notes, batch reference, or reason for approving/rejecting balance reconciliation..."
+        >
+        </textarea>
+        <mat-error *ngIf="verifyForm.get('remarks')?.hasError('required')">
+          Audit remarks are required for audit trail tracking.
+        </mat-error>
+        <mat-error *ngIf="verifyForm.get('remarks')?.hasError('minlength')">
+          Remarks must be at least 5 characters long.
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+
+  <div class="dialog-actions">
+    <button mat-stroked-button (click)="onCancel()" class="btn-cancel">
+      Cancel
+    </button>
+
+    <button
+      mat-flat-button
+      color="warn"
+      (click)="onReject()"
+      [disabled]="verifyForm.invalid"
+      class="btn-reject"
+    >
+      <mat-icon>gavel</mat-icon>
+      <span>Reject Mismatch</span>
+    </button>
+
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onApprove()"
+      [disabled]="verifyForm.invalid"
+      class="btn-approve"
+    >
+      <mat-icon>check_circle</mat-icon>
+      <span>Approve Reconciliation</span>
+    </button>
+  </div>
+</div>

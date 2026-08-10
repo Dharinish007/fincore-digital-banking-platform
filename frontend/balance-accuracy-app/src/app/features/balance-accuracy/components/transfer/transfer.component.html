@@ -1,0 +1,144 @@
+<div class="dashboard-layout">
+  <app-header
+    moduleTitle="Fund Transfer"
+    moduleIcon="send"
+    (toggleSidebar)="toggleSidebar()"
+  >
+  </app-header>
+
+  <div class="main-container">
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <main class="content-area">
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>Funds Transfer</h1>
+          <p class="subtitle">
+            Initiate instant account-to-account funds transfer and settlement
+          </p>
+        </div>
+      </div>
+
+      <div class="form-container-card">
+        <div class="card-header">
+          <div class="header-icon">
+            <mat-icon>send</mat-icon>
+          </div>
+          <div>
+            <h3>Transfer & Settlement Details</h3>
+            <p class="muted">
+              Enter sender and receiver account information accurately.
+            </p>
+          </div>
+        </div>
+
+        <form (ngSubmit)="submit()" class="transfer-form-inner">
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Sender Account</label>
+              <input
+                name="sender"
+                [(ngModel)]="sender"
+                placeholder="Enter sender account"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label>Receiver Account</label>
+              <div class="receiver-field">
+                <input
+                  name="receiver"
+                  [(ngModel)]="receiver"
+                  placeholder="Enter receiver account"
+                  required
+                />
+                <button
+                  *ngIf="receiver?.trim()"
+                  type="button"
+                  class="btn-receiver"
+                  (click)="resolveReceiver()"
+                >
+                  Get Receiver
+                </button>
+              </div>
+              <div
+                class="receiver-response"
+                *ngIf="receiverName || receiverLookupMessage"
+              >
+                <span *ngIf="receiverName"
+                  ><strong>Receiver:</strong> {{ receiverName }}</span
+                >
+                <span *ngIf="receiverLookupMessage" class="lookup-message">{{
+                  receiverLookupMessage
+                }}</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>Amount</label>
+              <input
+                name="amount"
+                type="number"
+                [(ngModel)]="amount"
+                placeholder="0.00"
+                required
+              />
+            </div>
+
+            <div class="form-field">
+              <label>Reference (optional)</label>
+              <input
+                name="reference"
+                [(ngModel)]="reference"
+                placeholder="Enter optional reference"
+              />
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-send" [disabled]="isSending">
+              <mat-icon>send</mat-icon> Send
+            </button>
+          </div>
+        </form>
+
+        <div class="processing-indicator" *ngIf="showProcessing">
+          <span>Processing</span>
+          <div class="dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="status-alert" [ngClass]="statusClass" *ngIf="statusMessage">
+          <mat-icon>{{
+            statusClass === "error"
+              ? "error"
+              : statusClass === "success"
+                ? "check_circle"
+                : "info"
+          }}</mat-icon>
+          <span>{{ statusMessage }}</span>
+        </div>
+
+        <div
+          class="status-details"
+          *ngIf="
+            backendStatus || backendBalance !== null || backendTransactionId
+          "
+        >
+          <div *ngIf="backendStatus">
+            <strong>Status:</strong> {{ backendStatus }}
+          </div>
+          <div *ngIf="backendBalance !== null">
+            <strong>Balance:</strong> {{ backendBalance | number: "1.2-2" }}
+          </div>
+          <div *ngIf="backendTransactionId">
+            <strong>Transaction ID:</strong> {{ backendTransactionId }}
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

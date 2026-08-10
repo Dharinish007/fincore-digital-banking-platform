@@ -1,0 +1,168 @@
+<div class="dashboard-layout">
+  <app-header moduleTitle="Fund Transfer Module" moduleIcon="send" (toggleSidebar)="toggleSidebar()"></app-header>
+
+  <div class="main-container">
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <main class="content-area">
+      <!-- Title & Header Bar -->
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>Initiate Atomic Banking Transaction</h1>
+          <p class="subtitle">
+            Secure Two-Phase Commitment Form with Instant Balance Validation
+          </p>
+        </div>
+        <button mat-stroked-button color="basic" (click)="cancel()">
+          <mat-icon>arrow_back</mat-icon> Back to Dashboard
+        </button>
+      </div>
+
+      <div class="form-container-card">
+        <div class="card-header">
+          <div class="header-icon"><mat-icon>send</mat-icon></div>
+          <div>
+            <h3>Transfer & Settlement Details</h3>
+            <p class="muted">
+              Enter sender and receiver account information accurately.
+            </p>
+          </div>
+          <button
+            mat-stroked-button
+            class="sample-btn"
+            (click)="fillSampleData()"
+          >
+            <mat-icon>auto_fix_high</mat-icon> Fill Sample Data
+          </button>
+        </div>
+
+        <div class="status-banner" *ngIf="statusMessage" [class.success]="isSuccess" [class.error]="!isSuccess" style="margin-bottom: 20px; padding: 12px 16px; border-radius: 8px; font-weight: 500; display: flex; align-items: center; gap: 8px;" [style.background]="isSuccess ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)'" [style.color]="isSuccess ? '#10B981' : '#EF4444'" [style.border]="isSuccess ? '1px solid #10B981' : '1px solid #EF4444'">
+          <mat-icon>{{ isSuccess ? 'check_circle' : 'error' }}</mat-icon>
+          <span>{{ statusMessage }}</span>
+        </div>
+
+        <form [formGroup]="form" class="transaction-form">
+          <div class="form-grid">
+            <!-- Sender Account -->
+            <mat-form-field appearance="outline">
+              <mat-label>Sender Account Number</mat-label>
+              <input
+                matInput
+                formControlName="sender"
+                placeholder="12-digit account number"
+                maxlength="12"
+              />
+              <mat-icon matPrefix>account_balance_wallet</mat-icon>
+              <mat-error *ngIf="form.get('sender')?.hasError('required')"
+                >Sender account is required.</mat-error
+              >
+              <mat-error *ngIf="form.get('sender')?.hasError('pattern')"
+                >Sender account must be exactly 12 digits.</mat-error
+              >
+            </mat-form-field>
+
+            <!-- Receiver Account -->
+            <mat-form-field appearance="outline">
+              <mat-label>Receiver Account Number</mat-label>
+              <input
+                matInput
+                formControlName="receiver"
+                placeholder="12-digit account number"
+                maxlength="12"
+              />
+              <mat-icon matPrefix>account_balance</mat-icon>
+              <mat-error *ngIf="form.get('receiver')?.hasError('required')"
+                >Receiver account is required.</mat-error
+              >
+              <mat-error *ngIf="form.get('receiver')?.hasError('pattern')"
+                >Receiver account must be exactly 12 digits.</mat-error
+              >
+              <mat-error *ngIf="form.get('receiver')?.hasError('sameAccount')"
+                >Receiver account cannot be the same as sender
+                account.</mat-error
+              >
+            </mat-form-field>
+
+            <!-- Transaction Type -->
+            <mat-form-field appearance="outline">
+              <mat-label>Transaction Type</mat-label>
+              <mat-select formControlName="type">
+                <mat-option value="Transfer">Transfer</mat-option>
+                <mat-option value="Deposit">Deposit</mat-option>
+                <mat-option value="Withdraw">Withdraw</mat-option>
+              </mat-select>
+              <mat-icon matPrefix>category</mat-icon>
+            </mat-form-field>
+
+            <!-- Amount -->
+            <mat-form-field appearance="outline">
+              <mat-label>Amount (₹)</mat-label>
+              <input
+                matInput
+                type="number"
+                formControlName="amount"
+                placeholder="0.00"
+                min="1"
+              />
+              <mat-icon matPrefix>attach_money</mat-icon>
+              <mat-error *ngIf="form.get('amount')?.hasError('required')"
+                >Amount is required.</mat-error
+              >
+              <mat-error *ngIf="form.get('amount')?.hasError('min')"
+                >Minimum transfer amount is ₹1.00.</mat-error
+              >
+            </mat-form-field>
+
+            <!-- Reference Number -->
+            <mat-form-field appearance="outline">
+              <mat-label>Reference Number</mat-label>
+              <input matInput formControlName="reference" readonly />
+              <mat-icon matPrefix>tag</mat-icon>
+            </mat-form-field>
+
+            <!-- Date -->
+            <mat-form-field appearance="outline">
+              <mat-label>Transaction Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="date" />
+              <mat-datepicker-toggle
+                matIconSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <!-- Description -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description / Payment Remarks</mat-label>
+              <textarea
+                matInput
+                formControlName="description"
+                rows="3"
+                placeholder="Add transaction notes or invoice reference..."
+              ></textarea>
+              <mat-icon matPrefix>notes</mat-icon>
+            </mat-form-field>
+          </div>
+
+          <!-- Form Buttons -->
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="reset()">
+              <mat-icon>restart_alt</mat-icon> Reset
+            </button>
+            <button mat-stroked-button type="button" (click)="submitDirect()" [disabled]="isSubmitting">
+              <mat-icon>send</mat-icon> Submit Transfer
+            </button>
+            <button
+              mat-flat-button
+              color="primary"
+              type="button"
+              (click)="proceed()"
+            >
+              <mat-icon>arrow_forward</mat-icon> Proceed to Confirmation
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+  </div>
+</div>
