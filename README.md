@@ -267,7 +267,6 @@ The branch contains:
 * KYC backend
 * Database
 * Screenshots
-* Documentation
 
 
 ## 📌 Project Information
