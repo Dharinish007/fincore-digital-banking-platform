@@ -372,71 +372,7 @@ Keep all required services running while testing the complete application.
 * Self-service banking access
 * Customer-specific operations
 
-## 💪 Strengths
 
-* Clear separation between Admin and Teller experiences
-* JWT-based authentication
-* Role-aware frontend navigation
-* Backend-side authorization
-* Structured multi-stage KYC workflow
-* Dedicated Frontend-KYC module
-* Centralized audit logging
-* Failed login attempts are recorded
-* Searchable and sortable audit records
-* Enterprise-oriented banking interface
-
-## ⚠️ Current Challenges and Limitations
-
-* Role and permission checks should be continuously verified on every protected backend endpoint.
-* Login lockout and rate-limiting require further implementation.
-* Complete KYC document and liveness integration requires further validation.
-* Audit log CSV/PDF export is not currently confirmed.
-* Database credentials require production hardening.
-* CORS configuration should be restricted for production.
-* Main Frontend and Frontend-KYC require a clear long-term integration strategy.
-
-## 🚀 Recommended Improvements
-
-### 🔐 Access Control
-
-* Add automated RBAC endpoint tests.
-* Implement account lockout.
-* Add login rate-limiting.
-* Expand backend authorization test coverage.
-
-### 🪪 KYC
-
-* Complete end-to-end KYC backend integration.
-* Implement secure document storage.
-* Add reviewer notes.
-* Add rejection reasons.
-* Improve KYC status management.
-
-### 📜 Audit Trail
-
-* Add CSV export.
-* Add PDF export.
-* Add date-range filtering.
-* Add actor filtering.
-* Add status filtering.
-
-### 🛡️ Security & Deployment
-
-* Move credentials to environment variables.
-* Restrict CORS to trusted frontend origins.
-* Add HTTPS for production.
-* Improve secure token handling.
-* Add centralized logging and monitoring.
-
-## 🗺️ Future Roadmap
-
-| Stage | Enhancement                   | Purpose                                          |
-| ----- | ----------------------------- | ------------------------------------------------ |
-| 01    | Login lockout & rate-limiting | Reduce risk from repeated failed login attempts  |
-| 02    | Full KYC backend integration  | Complete document, liveness, and review workflow |
-| 03    | Audit log export & filtering  | Support compliance reporting and investigation   |
-| 04    | Expanded RBAC test coverage   | Verify backend authorization independently       |
-| 05    | Production hardening          | Improve secrets, CORS, HTTPS, and monitoring     |
 
 ## 🔀 Version Control
 
