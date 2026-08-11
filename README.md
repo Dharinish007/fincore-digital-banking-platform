@@ -142,54 +142,6 @@ Business & Role Validation
       ↓
 MySQL Database
 ```
-
-### Request Flow
-
-```text
-User
-  ↓
-React Frontend
-  ↓
-JWT Bearer Token
-  ↓
-Spring Boot JWT Filter
-  ↓
-Controller
-  ↓
-Service Layer
-  ↓
-Role & Business Validation
-  ↓
-Repository
-  ↓
-MySQL Database
-```
-
-## 🔄 End-to-End Workflow
-
-```text
-Login
-  ↓
-JWT Issued
-  ↓
-Role Attached to Session
-  │
-  ├── Admin
-  │     ├── User Management
-  │     ├── Role Management
-  │     ├── Audit Logs
-  │     └── Settings
-  │
-  └── Teller
-        └── Operations Console
-              ├── View Accounts
-              ├── Statements
-              ├── Transfers
-              └── KYC Records
-```
-
-
-
 ## 📂 Project Structure
 
 ```text
@@ -218,27 +170,6 @@ fincore-digital-banking-platform/
 └── README.md
 ```
 
-## 🗄️ Database Components
-
-The project uses MySQL for persistent data storage.
-
-**Main Database Components**
-
-* Users
-* Roles
-* Customers
-* KYC Records
-* Audit Logs
-
-**Database Files**
-
-```text
-database/
-│
-├── schema.sql
-├── queries.sql
-└── sample_data.sql
-```
 
 ## ▶️ Running the Project
 
@@ -320,16 +251,6 @@ Password:
 root
 ```
 
-### Quick Summary
-
-| Component     | Port |
-| ------------- | ---- |
-| MySQL         | 3306 |
-| Audit Trail   | 8081 |
-| KYC Service   | 8080 |
-| Main Frontend | 5173 |
-| KYC Frontend  | 5174 |
-
 Keep all required services running while testing the complete application.
 
 ## 📌 Core Modules
@@ -341,36 +262,6 @@ Keep all required services running while testing the complete application.
 | 📜 Audit Trail        | Records and tracks system activities   |
 | 👨‍💼 Admin Dashboard | Provides administrative management     |
 | 🏦 Teller Operations  | Provides restricted banking operations |
-
-## 🔐 Role-Based Access Control
-
-### Admin
-
-* Full system access
-* User Management
-* Role Management
-* Audit Logs
-* Settings
-* System administration
-
-### Supervisor
-
-* Approval-level operations
-* Oversight
-* Elevated banking privileges
-
-### Teller
-
-* View accounts
-* View KYC records
-* Generate statements
-* Initiate transfers
-* Restricted from administrative operations
-
-### Customer
-
-* Self-service banking access
-* Customer-specific operations
 
 
 
@@ -387,6 +278,24 @@ The branch contains:
 * Database
 * Screenshots
 * Documentation
+
+
+## 📌 Project Information
+
+| Information    | Details                          |
+| -------------- | -------------------------------- |
+| Project        | FinCore Digital Banking Platform |
+| Team           | Team D                           |
+| Branch         | team-d                           |
+| Frontend       | React                            |
+| Backend        | Spring Boot                      |
+| Database       | MySQL                            |
+| Authentication | JWT                              |
+| Audit Trail    | localhost:8081                   |
+| KYC Service    | localhost:8080                   |
+| Main Frontend  | localhost:5173                   |
+| KYC Frontend   | localhost:5174                   |
+| MySQL          | localhost:3306                   |
 
 ## 👥 Team Contributions
 
@@ -412,29 +321,3 @@ The modular frontend, backend, microservices, and database structure provides a 
 
 > **"Authenticate securely, act within role, and record everything."**
 
-## 📌 Project Information
-
-| Information    | Details                          |
-| -------------- | -------------------------------- |
-| Project        | FinCore Digital Banking Platform |
-| Team           | Team D                           |
-| Branch         | team-d                           |
-| Frontend       | React                            |
-| Backend        | Spring Boot                      |
-| Database       | MySQL                            |
-| Authentication | JWT                              |
-| Audit Trail    | localhost:8081                   |
-| KYC Service    | localhost:8080                   |
-| Main Frontend  | localhost:5173                   |
-| KYC Frontend   | localhost:5174                   |
-| MySQL          | localhost:3306                   |
-
-## 👥 Contributors
-
-* **Soumya Ranjan Puthal** — Frontend Developer
-* **Vaishnavi Mahadik** — Frontend Developer
-* **Thejashree B** — Frontend Developer
-* **Tharun M** — Frontend Developer
-* **Sathiya Priya T** — Backend Developer
-* **Sharvari Shalgar** — Backend Developer
-* **Vaishnavi Warkar** — Database Developer
