@@ -109,27 +109,27 @@ The application follows a layered architecture with a React frontend, Spring Boo
 
 ### 🏠 Home Page
 
-![Home Page](Screenshots/home-page.png)
+![Home Page](Screenshots/home-page.jpg)
 
 ### 🔐 Login Page
 
-![Login Page](Screenshots/login-page.png)
+![Login Page](Screenshots/login-page.jpg)
 
 ### 👨‍💼 Admin Dashboard
 
-![Admin Dashboard](Screenshots/admin-dashboard.png)
+![Admin Dashboard](Screenshots/admin-dashboard.jpg)
 
 ### 👨‍💼 Supervisor Dashboard
 
-![Supervisor Dashboard](Screenshots/supervisor-dashboard.png)
+![Supervisor Dashboard](Screenshots/supervisor-dashboard.jpg)
 
 ### 🏦 Teller Dashboard
 
-![Teller Dashboard](Screenshots/teller-dashboard.png)
+![Teller Dashboard](Screenshots/teller-dashboard.jpg)
 
 ### 👤 User Dashboard
 
-![User Dashboard](Screenshots/user-dashboard.png)
+![User Dashboard](Screenshots/user-dashboard.jpg)
 
 ```text
 React Frontend
