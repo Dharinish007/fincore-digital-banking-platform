@@ -131,17 +131,7 @@ The application follows a layered architecture with a React frontend, Spring Boo
 
 ![User Dashboard](Screenshots/user-dashboard.jpg)
 
-```text
-React Frontend
-      ↓
-JWT Authentication
-      ↓
-Spring Boot REST APIs
-      ↓
-Business & Role Validation
-      ↓
-MySQL Database
-```
+
 ## 📂 Project Structure
 
 ```text
