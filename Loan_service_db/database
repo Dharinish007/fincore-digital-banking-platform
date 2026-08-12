@@ -1,0 +1,547 @@
+-- =====================================================================
+-- FinCore Digital Banking Platform — Loan Service Database Schema v2
+-- Milestone 2: Loan Origination & Servicing (PostgreSQL)
+--
+-- Matches the FinCore Nexus milestone-2 requirements:
+--   Loan Service | Origination workflow | Credit assessment |
+--   EMI calculation | Disbursement | Collections
+--
+-- Runs against the SAME shared database as the account-service script
+-- (fincore_database_postgres.sql):
+--   spring.datasource.url=jdbc:postgresql://localhost:5432/BankingApp
+--   spring.datasource.username=postgres
+--   spring.datasource.password=1998
+--
+-- PREREQUISITE: run fincore_database_postgres.sql first (customers,
+-- accounts tables must already exist).
+--
+-- SETUP:
+--   psql -U postgres -d BankingApp -f fincore_loan_service_v2_postgres.sql
+--
+-- DESIGN NOTE: each of the 5 workflow stages gets its OWN table instead
+-- of being flattened into a single loans.status column. This is what
+-- lets you show "where is this loan in its lifecycle right now" and
+-- keep a full history of every stage/assessment/disbursement/collection
+-- event, instead of overwriting a single status field each time.
+-- =====================================================================
+
+-- ─────────────────────────────
+-- 1. LOANS — core loan record
+-- ─────────────────────────────
+CREATE TABLE loans (
+    loan_id            BIGSERIAL PRIMARY KEY,
+    loan_reference      VARCHAR(30)    NOT NULL UNIQUE,   -- e.g. HL-2024-1247 (type prefix + year + seq)
+    customer_id         BIGINT         NOT NULL,
+    loan_type           VARCHAR(20)    NOT NULL,          -- HOME, PERSONAL, AUTO, EDUCATION, BUSINESS
+    purpose             VARCHAR(40)    NOT NULL,
+    principal_amount     DECIMAL(15,2)  NOT NULL,
+    interest_rate        DECIMAL(5,2)   NOT NULL,          -- annual %
+    tenure_months        INT            NOT NULL,
+    application_date      TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    loan_status          VARCHAR(20)    NOT NULL DEFAULT 'APPLIED',
+    created_at            TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at            TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_loans_customer  FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    CONSTRAINT chk_loan_type      CHECK (loan_type IN ('HOME','PERSONAL','AUTO','EDUCATION','BUSINESS')),
+    CONSTRAINT chk_loan_status    CHECK (loan_status IN ('APPLIED','IN_REVIEW','APPROVED','REJECTED','ACTIVE','CLOSED','DEFAULTED')),
+    CONSTRAINT chk_principal_pos  CHECK (principal_amount > 0),
+    CONSTRAINT chk_tenure_pos     CHECK (tenure_months > 0)
+);
+
+CREATE INDEX idx_loans_customer_status ON loans(customer_id, loan_status);
+CREATE INDEX idx_loans_app_date        ON loans(application_date);
+
+-- ─────────────────────────────
+-- 2. LOAN ORIGINATION STAGES — origination workflow (one row per stage per loan)
+-- ─────────────────────────────
+CREATE TABLE loan_origination_stages (
+    stage_id      BIGSERIAL PRIMARY KEY,
+    loan_id        BIGINT         NOT NULL,
+    stage_name     VARCHAR(30)    NOT NULL,   -- APPLICATION_RECEIVED, DOCUMENT_VERIFICATION, CREDIT_ASSESSMENT,
+                                                -- UNDERWRITING_REVIEW, APPROVED, REJECTED, DISBURSED
+    stage_status   VARCHAR(20)    NOT NULL DEFAULT 'PENDING',  -- PENDING, IN_PROGRESS, COMPLETED, FAILED
+    started_at     TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at   TIMESTAMP,
+    remarks        VARCHAR(255),
+    handled_by     VARCHAR(100),                                -- 'SYSTEM' or officer name
+
+    CONSTRAINT fk_stage_loan     FOREIGN KEY (loan_id) REFERENCES loans(loan_id),
+    CONSTRAINT chk_stage_name    CHECK (stage_name IN ('APPLICATION_RECEIVED','DOCUMENT_VERIFICATION','CREDIT_ASSESSMENT','UNDERWRITING_REVIEW','APPROVED','REJECTED','DISBURSED')),
+    CONSTRAINT chk_stage_status  CHECK (stage_status IN ('PENDING','IN_PROGRESS','COMPLETED','FAILED'))
+);
+
+CREATE INDEX idx_stages_loan_id ON loan_origination_stages(loan_id);
+
+-- ─────────────────────────────
+-- 3. CREDIT ASSESSMENTS — credit assessment
+-- ─────────────────────────────
+CREATE TABLE credit_assessments (
+    assessment_id     BIGSERIAL PRIMARY KEY,
+    loan_id            BIGINT         NOT NULL,
+    credit_score        INT            NOT NULL,    -- internal score, 300-900 scale
+    cibil_score          INT            NOT NULL,    -- external bureau score, 300-900 scale
+    annual_income        DECIMAL(15,2)  NOT NULL,
+    dti_ratio            DECIMAL(5,2)   NOT NULL,    -- debt-to-income %
+    employment_status    VARCHAR(20)    NOT NULL,
+    risk_grade           VARCHAR(2)     NOT NULL,    -- A-E, derived from credit_score
+    assessment_result     VARCHAR(20)    NOT NULL,   -- APPROVED, REJECTED, MANUAL_REVIEW
+    assessed_at           TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    assessed_by            VARCHAR(50)    NOT NULL DEFAULT 'SYSTEM',
+
+    CONSTRAINT fk_assessment_loan   FOREIGN KEY (loan_id) REFERENCES loans(loan_id),
+    CONSTRAINT chk_employment2      CHECK (employment_status IN ('SALARIED','SELF_EMPLOYED','BUSINESS_OWNER','UNEMPLOYED')),
+    CONSTRAINT chk_grade2           CHECK (risk_grade IN ('A','B','C','D','E')),
+    CONSTRAINT chk_assess_result    CHECK (assessment_result IN ('APPROVED','REJECTED','MANUAL_REVIEW')),
+    CONSTRAINT chk_credit_score2    CHECK (credit_score BETWEEN 300 AND 900),
+    CONSTRAINT chk_cibil_score      CHECK (cibil_score BETWEEN 300 AND 900)
+);
+
+CREATE INDEX idx_assessment_loan_id ON credit_assessments(loan_id);
+
+-- ─────────────────────────────
+-- 4. EMI SCHEDULE — EMI calculation (full amortization breakdown per installment)
+-- ─────────────────────────────
+CREATE TABLE emi_schedule (
+    schedule_id            BIGSERIAL PRIMARY KEY,
+    loan_id                  BIGINT         NOT NULL,
+    installment_no           INT            NOT NULL,
+    due_date                 DATE           NOT NULL,
+    emi_amount                DECIMAL(15,2)  NOT NULL,
+    principal_component       DECIMAL(15,2)  NOT NULL,
+    interest_component        DECIMAL(15,2)  NOT NULL,
+    outstanding_balance        DECIMAL(15,2)  NOT NULL,
+    payment_status             VARCHAR(20)    NOT NULL DEFAULT 'PENDING', -- PAID, PENDING, OVERDUE, MISSED
+    paid_amount                 DECIMAL(15,2)  NOT NULL DEFAULT 0.00,
+    paid_date                   DATE,
+
+    CONSTRAINT fk_schedule_loan     FOREIGN KEY (loan_id) REFERENCES loans(loan_id),
+    CONSTRAINT chk_payment_status   CHECK (payment_status IN ('PAID','PENDING','OVERDUE','MISSED')),
+    CONSTRAINT chk_emi_pos2         CHECK (emi_amount > 0),
+    CONSTRAINT uq_loan_installment2 UNIQUE (loan_id, installment_no)
+);
+
+CREATE INDEX idx_schedule_loan_id  ON emi_schedule(loan_id);
+CREATE INDEX idx_schedule_due_date ON emi_schedule(due_date);
+CREATE INDEX idx_schedule_status   ON emi_schedule(payment_status);
+
+-- ─────────────────────────────
+-- 5. DISBURSEMENTS — disbursement (funds released to customer's account)
+-- ─────────────────────────────
+CREATE TABLE disbursements (
+    disbursement_id      BIGSERIAL PRIMARY KEY,
+    loan_id                BIGINT         NOT NULL,
+    account_id              BIGINT         NOT NULL,   -- FK to accounts (where funds landed)
+    disbursed_amount         DECIMAL(15,2)  NOT NULL,
+    disbursement_date         TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    disbursement_mode          VARCHAR(20)    NOT NULL DEFAULT 'FULL',  -- FULL, PARTIAL, TRANCHE
+    reference_number             VARCHAR(30)    NOT NULL UNIQUE,          -- e.g. DSB-HL-2024-1247
+    status                       VARCHAR(20)    NOT NULL DEFAULT 'INITIATED', -- INITIATED, COMPLETED, FAILED
+
+    CONSTRAINT fk_disb_loan      FOREIGN KEY (loan_id) REFERENCES loans(loan_id),
+    CONSTRAINT fk_disb_account   FOREIGN KEY (account_id) REFERENCES accounts(account_id),
+    CONSTRAINT chk_disb_mode     CHECK (disbursement_mode IN ('FULL','PARTIAL','TRANCHE')),
+    CONSTRAINT chk_disb_status   CHECK (status IN ('INITIATED','COMPLETED','FAILED')),
+    CONSTRAINT chk_disb_amt_pos  CHECK (disbursed_amount > 0)
+);
+
+CREATE INDEX idx_disb_loan_id ON disbursements(loan_id);
+
+-- ─────────────────────────────
+-- 6. COLLECTIONS — collections (overdue installment follow-up tracking)
+-- ─────────────────────────────
+CREATE TABLE collections (
+    collection_id          BIGSERIAL PRIMARY KEY,
+    loan_id                  BIGINT         NOT NULL,
+    schedule_id               BIGINT         NOT NULL,   -- FK to the overdue emi_schedule row
+    overdue_days               INT            NOT NULL,
+    collection_status           VARCHAR(20)    NOT NULL DEFAULT 'FOLLOWUP_SCHEDULED',
+                                                -- FOLLOWUP_SCHEDULED, CONTACTED, PROMISE_TO_PAY, ESCALATED, WRITTEN_OFF, RESOLVED
+    assigned_agent               VARCHAR(100),
+    last_contact_date             TIMESTAMP,
+    promise_to_pay_date            DATE,
+    remarks                        VARCHAR(255),
+    created_at                     TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_collection_loan     FOREIGN KEY (loan_id) REFERENCES loans(loan_id),
+    CONSTRAINT fk_collection_schedule FOREIGN KEY (schedule_id) REFERENCES emi_schedule(schedule_id),
+    CONSTRAINT chk_collection_status  CHECK (collection_status IN ('FOLLOWUP_SCHEDULED','CONTACTED','PROMISE_TO_PAY','ESCALATED','WRITTEN_OFF','RESOLVED')),
+    CONSTRAINT chk_overdue_nonneg     CHECK (overdue_days >= 0)
+);
+
+CREATE INDEX idx_collection_loan_id ON collections(loan_id);
+CREATE INDEX idx_collection_status  ON collections(collection_status);
+
+-- ───────────────────────────── SEED DATA ─────────────────────────────
+-- Row 1 in every table below is the demo loan matching the FinCore Nexus
+-- mockup: HL-2024-1247, Home Loan, $240,000 principal, $1,847 EMI,
+-- next EMI due 05-Jul-2026, status Active.
+
+-- 1. LOANS
+INSERT INTO loans (loan_id, loan_reference, customer_id, loan_type, purpose, principal_amount, interest_rate, tenure_months, application_date, loan_status, created_at) VALUES
+(1, 'HL-2024-1247', 2, 'HOME', 'home_purchase', 240000.0, 6.2, 240, '2025-06-10 09:00:00', 'ACTIVE', '2025-06-10 09:00:00'),
+(2, 'AL-2025-1202', 7, 'AUTO', 'car_purchase', 640649.36, 6.6, 24, '2026-01-10 18:03:00', 'DEFAULTED', '2026-01-10 18:03:00'),
+(3, 'HL-2026-1203', 21, 'HOME', 'home_improvement', 673804.45, 9.01, 180, '2025-03-02 18:07:00', 'REJECTED', '2025-03-02 18:07:00'),
+(4, 'BL-2025-1204', 10, 'BUSINESS', 'business_expansion', 899486.19, 10.96, 60, '2025-02-17 17:54:00', 'APPROVED', '2025-02-17 17:54:00'),
+(5, 'PL-2025-1205', 12, 'PERSONAL', 'debt_consolidation', 890697.44, 13.0, 36, '2025-04-16 18:36:00', 'REJECTED', '2025-04-16 18:36:00'),
+(6, 'BL-2025-1206', 15, 'BUSINESS', 'equipment_purchase', 881402.98, 13.74, 240, '2026-06-29 13:49:00', 'ACTIVE', '2026-06-29 13:49:00'),
+(7, 'EL-2026-1207', 16, 'EDUCATION', 'study_abroad', 505669.14, 15.93, 60, '2025-03-25 18:19:00', 'DEFAULTED', '2025-03-25 18:19:00'),
+(8, 'EL-2026-1208', 14, 'EDUCATION', 'tuition_fees', 944721.81, 6.92, 180, '2025-06-18 10:09:00', 'CLOSED', '2025-06-18 10:09:00'),
+(9, 'HL-2026-1209', 9, 'HOME', 'home_renovation', 562973.75, 10.38, 240, '2026-04-13 02:53:00', 'IN_REVIEW', '2026-04-13 02:53:00'),
+(10, 'HL-2025-1210', 1, 'HOME', 'home_renovation', 1118246.26, 9.87, 240, '2025-10-19 22:24:00', 'ACTIVE', '2025-10-19 22:24:00'),
+(11, 'AL-2025-1211', 13, 'AUTO', 'vehicle_refinance', 947505.75, 12.17, 60, '2025-10-22 04:47:00', 'REJECTED', '2025-10-22 04:47:00'),
+(12, 'EL-2025-1212', 9, 'EDUCATION', 'study_abroad', 316240.12, 11.02, 84, '2025-05-21 13:55:00', 'DEFAULTED', '2025-05-21 13:55:00'),
+(13, 'AL-2026-1213', 1, 'AUTO', 'vehicle_refinance', 1439978.31, 7.89, 36, '2025-06-04 07:42:00', 'REJECTED', '2025-06-04 07:42:00'),
+(14, 'BL-2025-1214', 5, 'BUSINESS', 'equipment_purchase', 453100.2, 6.05, 180, '2026-07-02 11:39:00', 'ACTIVE', '2026-07-02 11:39:00'),
+(15, 'BL-2025-1215', 16, 'BUSINESS', 'equipment_purchase', 728434.09, 16.89, 180, '2026-02-12 12:25:00', 'IN_REVIEW', '2026-02-12 12:25:00'),
+(16, 'EL-2025-1216', 4, 'EDUCATION', 'tuition_fees', 350665.54, 18.31, 240, '2025-06-16 03:21:00', 'APPLIED', '2025-06-16 03:21:00'),
+(17, 'BL-2025-1217', 5, 'BUSINESS', 'equipment_purchase', 841998.54, 17.86, 12, '2025-03-14 06:39:00', 'ACTIVE', '2025-03-14 06:39:00'),
+(18, 'AL-2026-1218', 10, 'AUTO', 'car_purchase', 935236.45, 11.93, 24, '2026-05-15 14:30:00', 'CLOSED', '2026-05-15 14:30:00'),
+(19, 'PL-2025-1219', 17, 'PERSONAL', 'wedding', 1144536.97, 15.25, 240, '2025-06-15 16:01:00', 'REJECTED', '2025-06-15 16:01:00'),
+(20, 'PL-2025-1220', 12, 'PERSONAL', 'medical_expenses', 1156563.0, 9.73, 24, '2025-09-25 16:23:00', 'APPROVED', '2025-09-25 16:23:00'),
+(21, 'BL-2026-1221', 7, 'BUSINESS', 'equipment_purchase', 983747.53, 13.67, 60, '2025-09-03 12:47:00', 'REJECTED', '2025-09-03 12:47:00'),
+(22, 'EL-2026-1222', 15, 'EDUCATION', 'study_abroad', 1118025.67, 18.37, 84, '2026-04-29 08:12:00', 'ACTIVE', '2026-04-29 08:12:00'),
+(23, 'AL-2025-1223', 16, 'AUTO', 'vehicle_refinance', 393056.5, 8.84, 60, '2025-12-12 06:30:00', 'APPLIED', '2025-12-12 06:30:00'),
+(24, 'HL-2025-1224', 3, 'HOME', 'home_improvement', 1371883.54, 15.78, 60, '2026-05-05 05:27:00', 'ACTIVE', '2026-05-05 05:27:00'),
+(25, 'EL-2026-1225', 19, 'EDUCATION', 'study_abroad', 649969.28, 17.83, 36, '2025-06-24 04:01:00', 'APPROVED', '2025-06-24 04:01:00');
+
+-- 2. LOAN ORIGINATION STAGES
+INSERT INTO loan_origination_stages (stage_id, loan_id, stage_name, stage_status, started_at, completed_at, remarks, handled_by) VALUES
+(1, 1, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-06-10 14:00:00', '2025-06-11 01:00:00', 'Application submitted via portal', 'SYSTEM'),
+(2, 1, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-06-12 13:00:00', '2025-06-14 05:00:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(3, 1, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-06-14 14:00:00', '2025-06-15 14:00:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(4, 1, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-06-16 10:00:00', '2025-06-17 23:00:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(5, 1, 'APPROVED', 'COMPLETED', '2025-06-18 10:00:00', '2025-06-18 13:00:00', 'Loan approved, pending disbursement', 'SYSTEM'),
+(6, 1, 'DISBURSED', 'COMPLETED', '2025-06-20 14:00:00', '2025-06-22 09:00:00', 'Funds disbursed to customer account', 'SYSTEM'),
+(7, 2, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-01-10 22:03:00', '2026-01-11 08:03:00', 'Application submitted via portal', 'SYSTEM'),
+(8, 2, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-01-12 21:03:00', '2026-01-13 11:03:00', 'KYC and income documents verified', 'SYSTEM'),
+(9, 2, 'CREDIT_ASSESSMENT', 'COMPLETED', '2026-01-14 18:03:00', '2026-01-15 12:03:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(10, 2, 'UNDERWRITING_REVIEW', 'COMPLETED', '2026-01-16 19:03:00', '2026-01-17 15:03:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(11, 2, 'APPROVED', 'COMPLETED', '2026-01-18 19:03:00', '2026-01-20 10:03:00', 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(12, 2, 'DISBURSED', 'COMPLETED', '2026-01-20 20:03:00', '2026-01-22 08:03:00', 'Funds disbursed to customer account', 'Loan Officer - R. Iyer'),
+(13, 3, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-03-02 19:07:00', '2025-03-03 00:07:00', 'Application submitted via portal', 'SYSTEM'),
+(14, 3, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-03-04 23:07:00', '2025-03-05 23:07:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(15, 3, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-03-06 23:07:00', '2025-03-08 14:07:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(16, 3, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-03-08 22:07:00', '2025-03-10 02:07:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(17, 3, 'REJECTED', 'COMPLETED', '2025-03-10 20:07:00', '2025-03-10 21:07:00', 'Application rejected - risk criteria not met', 'Loan Officer - R. Iyer'),
+(18, 4, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-02-17 18:54:00', '2025-02-19 06:54:00', 'Application submitted via portal', 'SYSTEM'),
+(19, 4, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-02-19 18:54:00', '2025-02-21 05:54:00', 'KYC and income documents verified', 'Loan Officer - S. Menon'),
+(20, 4, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-02-21 17:54:00', '2025-02-22 23:54:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(21, 4, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-02-23 18:54:00', '2025-02-25 10:54:00', 'Manual underwriting review completed', 'SYSTEM'),
+(22, 4, 'APPROVED', 'IN_PROGRESS', '2025-02-25 18:54:00', NULL, 'Loan approved, pending disbursement', 'SYSTEM'),
+(23, 5, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-04-16 19:36:00', '2025-04-18 03:36:00', 'Application submitted via portal', 'SYSTEM'),
+(24, 5, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-04-18 22:36:00', '2025-04-20 22:36:00', 'KYC and income documents verified', 'SYSTEM'),
+(25, 5, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-04-20 22:36:00', '2025-04-21 03:36:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(26, 5, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-04-22 20:36:00', '2025-04-24 17:36:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(27, 5, 'REJECTED', 'COMPLETED', '2025-04-24 20:36:00', '2025-04-24 21:36:00', 'Application rejected - risk criteria not met', 'Loan Officer - R. Iyer'),
+(28, 6, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-06-29 17:49:00', '2026-07-01 06:49:00', 'Application submitted via portal', 'SYSTEM'),
+(29, 6, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-07-01 16:49:00', '2026-07-02 00:49:00', 'KYC and income documents verified', 'Loan Officer - S. Menon'),
+(30, 6, 'CREDIT_ASSESSMENT', 'COMPLETED', '2026-07-03 13:49:00', '2026-07-04 06:49:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(31, 6, 'UNDERWRITING_REVIEW', 'COMPLETED', '2026-07-05 14:49:00', '2026-07-06 09:49:00', 'Manual underwriting review completed', 'SYSTEM'),
+(32, 6, 'APPROVED', 'COMPLETED', '2026-07-07 13:49:00', '2026-07-08 23:49:00', 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(33, 6, 'DISBURSED', 'COMPLETED', '2026-07-09 17:49:00', '2026-07-09 20:49:00', 'Funds disbursed to customer account', 'SYSTEM'),
+(34, 7, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-03-25 21:19:00', '2025-03-26 19:19:00', 'Application submitted via portal', 'SYSTEM'),
+(35, 7, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-03-27 22:19:00', '2025-03-29 08:19:00', 'KYC and income documents verified', 'Loan Officer - S. Menon'),
+(36, 7, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-03-29 22:19:00', '2025-03-30 12:19:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(37, 7, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-03-31 23:19:00', '2025-04-01 18:19:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(38, 7, 'APPROVED', 'COMPLETED', '2025-04-02 22:19:00', '2025-04-04 10:19:00', 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(39, 7, 'DISBURSED', 'COMPLETED', '2025-04-04 22:19:00', '2025-04-05 15:19:00', 'Funds disbursed to customer account', 'Loan Officer - S. Menon'),
+(40, 8, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-06-18 14:09:00', '2025-06-19 08:09:00', 'Application submitted via portal', 'SYSTEM'),
+(41, 8, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-06-20 14:09:00', '2025-06-21 04:09:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(42, 8, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-06-22 11:09:00', '2025-06-23 15:09:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(43, 8, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-06-24 10:09:00', '2025-06-25 13:09:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(44, 8, 'APPROVED', 'COMPLETED', '2025-06-26 12:09:00', '2025-06-26 18:09:00', 'Loan approved, pending disbursement', 'Loan Officer - S. Menon'),
+(45, 8, 'DISBURSED', 'COMPLETED', '2025-06-28 11:09:00', '2025-06-29 16:09:00', 'Funds disbursed to customer account', 'SYSTEM'),
+(46, 9, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-04-13 03:53:00', '2026-04-14 23:53:00', 'Application submitted via portal', 'SYSTEM'),
+(47, 9, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-04-15 04:53:00', '2026-04-15 13:53:00', 'KYC and income documents verified', 'SYSTEM'),
+(48, 9, 'CREDIT_ASSESSMENT', 'IN_PROGRESS', '2026-04-17 07:53:00', NULL, 'Credit bureau report pulled and scored', 'SYSTEM'),
+(49, 10, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-10-20 03:24:00', '2025-10-21 23:24:00', 'Application submitted via portal', 'SYSTEM'),
+(50, 10, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-10-22 00:24:00', '2025-10-22 11:24:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(51, 10, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-10-23 23:24:00', '2025-10-25 06:24:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(52, 10, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-10-25 23:24:00', '2025-10-26 07:24:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(53, 10, 'APPROVED', 'COMPLETED', '2025-10-28 01:24:00', '2025-10-28 13:24:00', 'Loan approved, pending disbursement', 'Loan Officer - S. Menon'),
+(54, 10, 'DISBURSED', 'COMPLETED', '2025-10-29 23:24:00', '2025-10-30 11:24:00', 'Funds disbursed to customer account', 'Loan Officer - S. Menon'),
+(55, 11, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-10-22 07:47:00', '2025-10-23 17:47:00', 'Application submitted via portal', 'SYSTEM'),
+(56, 11, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-10-24 07:47:00', '2025-10-25 06:47:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(57, 11, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-10-26 05:47:00', '2025-10-27 05:47:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(58, 11, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-10-28 06:47:00', '2025-10-28 13:47:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(59, 11, 'REJECTED', 'COMPLETED', '2025-10-30 06:47:00', '2025-10-30 07:47:00', 'Application rejected - risk criteria not met', 'Loan Officer - R. Iyer'),
+(60, 12, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-05-21 15:55:00', '2025-05-21 18:55:00', 'Application submitted via portal', 'SYSTEM'),
+(61, 12, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-05-23 15:55:00', '2025-05-25 04:55:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(62, 12, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-05-25 16:55:00', '2025-05-27 15:55:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(63, 12, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-05-27 13:55:00', '2025-05-28 15:55:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(64, 12, 'APPROVED', 'COMPLETED', '2025-05-29 17:55:00', '2025-05-31 10:55:00', 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(65, 12, 'DISBURSED', 'COMPLETED', '2025-05-31 17:55:00', '2025-05-31 23:55:00', 'Funds disbursed to customer account', 'SYSTEM'),
+(66, 13, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-06-04 08:42:00', '2025-06-04 16:42:00', 'Application submitted via portal', 'SYSTEM'),
+(67, 13, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-06-06 07:42:00', '2025-06-07 01:42:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(68, 13, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-06-08 07:42:00', '2025-06-08 20:42:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(69, 13, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-06-10 09:42:00', '2025-06-10 19:42:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(70, 13, 'REJECTED', 'COMPLETED', '2025-06-12 09:42:00', '2025-06-12 10:42:00', 'Application rejected - risk criteria not met', 'Loan Officer - R. Iyer'),
+(71, 14, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-07-02 16:39:00', '2026-07-03 10:39:00', 'Application submitted via portal', 'SYSTEM'),
+(72, 14, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-07-04 14:39:00', '2026-07-05 01:39:00', 'KYC and income documents verified', 'Loan Officer - S. Menon'),
+(73, 14, 'CREDIT_ASSESSMENT', 'COMPLETED', '2026-07-06 15:39:00', '2026-07-08 05:39:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(74, 14, 'UNDERWRITING_REVIEW', 'COMPLETED', '2026-07-08 14:39:00', '2026-07-10 12:39:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(75, 14, 'APPROVED', 'COMPLETED', '2026-07-10 11:39:00', '2026-07-11 06:39:00', 'Loan approved, pending disbursement', 'SYSTEM'),
+(76, 14, 'DISBURSED', 'COMPLETED', '2026-07-12 16:39:00', '2026-07-13 05:39:00', 'Funds disbursed to customer account', 'Loan Officer - R. Iyer'),
+(77, 15, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-02-12 12:25:00', '2026-02-13 07:25:00', 'Application submitted via portal', 'SYSTEM'),
+(78, 15, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-02-14 12:25:00', '2026-02-16 06:25:00', 'KYC and income documents verified', 'SYSTEM'),
+(79, 15, 'CREDIT_ASSESSMENT', 'IN_PROGRESS', '2026-02-16 14:25:00', NULL, 'Credit bureau report pulled and scored', 'SYSTEM'),
+(80, 16, 'APPLICATION_RECEIVED', 'IN_PROGRESS', '2025-06-16 03:21:00', NULL, 'Application submitted via portal', 'SYSTEM'),
+(81, 17, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-03-14 10:39:00', '2025-03-15 02:39:00', 'Application submitted via portal', 'SYSTEM'),
+(82, 17, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-03-16 06:39:00', '2025-03-17 00:39:00', 'KYC and income documents verified', 'SYSTEM'),
+(83, 17, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-03-18 09:39:00', '2025-03-18 11:39:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(84, 17, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-03-20 08:39:00', '2025-03-21 21:39:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(85, 17, 'APPROVED', 'COMPLETED', '2025-03-22 08:39:00', '2025-03-24 01:39:00', 'Loan approved, pending disbursement', 'SYSTEM'),
+(86, 17, 'DISBURSED', 'COMPLETED', '2025-03-24 06:39:00', '2025-03-25 17:39:00', 'Funds disbursed to customer account', 'Loan Officer - S. Menon'),
+(87, 18, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-05-15 15:30:00', '2026-05-16 00:30:00', 'Application submitted via portal', 'SYSTEM'),
+(88, 18, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-05-17 15:30:00', '2026-05-18 09:30:00', 'KYC and income documents verified', 'SYSTEM'),
+(89, 18, 'CREDIT_ASSESSMENT', 'COMPLETED', '2026-05-19 15:30:00', '2026-05-20 05:30:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(90, 18, 'UNDERWRITING_REVIEW', 'COMPLETED', '2026-05-21 16:30:00', '2026-05-23 10:30:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(91, 18, 'APPROVED', 'COMPLETED', '2026-05-23 18:30:00', '2026-05-24 09:30:00', 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(92, 18, 'DISBURSED', 'COMPLETED', '2026-05-25 17:30:00', '2026-05-27 03:30:00', 'Funds disbursed to customer account', 'Loan Officer - S. Menon'),
+(93, 19, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-06-15 17:01:00', '2025-06-16 12:01:00', 'Application submitted via portal', 'SYSTEM'),
+(94, 19, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-06-17 18:01:00', '2025-06-17 21:01:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(95, 19, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-06-19 16:01:00', '2025-06-19 18:01:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(96, 19, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-06-21 16:01:00', '2025-06-23 16:01:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(97, 19, 'REJECTED', 'COMPLETED', '2025-06-23 18:01:00', '2025-06-23 19:01:00', 'Application rejected - risk criteria not met', 'Loan Officer - R. Iyer'),
+(98, 20, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-09-25 20:23:00', '2025-09-26 10:23:00', 'Application submitted via portal', 'SYSTEM'),
+(99, 20, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-09-27 20:23:00', '2025-09-29 04:23:00', 'KYC and income documents verified', 'SYSTEM'),
+(100, 20, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-09-29 19:23:00', '2025-09-30 03:23:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(101, 20, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-10-01 21:23:00', '2025-10-03 16:23:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(102, 20, 'APPROVED', 'IN_PROGRESS', '2025-10-03 21:23:00', NULL, 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(103, 21, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-09-03 16:47:00', '2025-09-04 19:47:00', 'Application submitted via portal', 'SYSTEM'),
+(104, 21, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-09-05 16:47:00', '2025-09-06 13:47:00', 'KYC and income documents verified', 'Loan Officer - S. Menon'),
+(105, 21, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-09-07 13:47:00', '2025-09-08 05:47:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(106, 21, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-09-09 14:47:00', '2025-09-10 04:47:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(107, 21, 'REJECTED', 'COMPLETED', '2025-09-11 14:47:00', '2025-09-11 15:47:00', 'Application rejected - risk criteria not met', 'Loan Officer - R. Iyer'),
+(108, 22, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-04-29 13:12:00', '2026-05-01 07:12:00', 'Application submitted via portal', 'SYSTEM'),
+(109, 22, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-05-01 09:12:00', '2026-05-02 12:12:00', 'KYC and income documents verified', 'Loan Officer - R. Iyer'),
+(110, 22, 'CREDIT_ASSESSMENT', 'COMPLETED', '2026-05-03 08:12:00', '2026-05-03 18:12:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(111, 22, 'UNDERWRITING_REVIEW', 'COMPLETED', '2026-05-05 08:12:00', '2026-05-05 14:12:00', 'Manual underwriting review completed', 'Loan Officer - S. Menon'),
+(112, 22, 'APPROVED', 'COMPLETED', '2026-05-07 13:12:00', '2026-05-08 07:12:00', 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(113, 22, 'DISBURSED', 'COMPLETED', '2026-05-09 09:12:00', '2026-05-09 14:12:00', 'Funds disbursed to customer account', 'SYSTEM'),
+(114, 23, 'APPLICATION_RECEIVED', 'IN_PROGRESS', '2025-12-12 11:30:00', NULL, 'Application submitted via portal', 'SYSTEM'),
+(115, 24, 'APPLICATION_RECEIVED', 'COMPLETED', '2026-05-05 08:27:00', '2026-05-06 18:27:00', 'Application submitted via portal', 'SYSTEM'),
+(116, 24, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2026-05-07 10:27:00', '2026-05-08 06:27:00', 'KYC and income documents verified', 'Loan Officer - S. Menon'),
+(117, 24, 'CREDIT_ASSESSMENT', 'COMPLETED', '2026-05-09 06:27:00', '2026-05-11 04:27:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(118, 24, 'UNDERWRITING_REVIEW', 'COMPLETED', '2026-05-11 07:27:00', '2026-05-11 11:27:00', 'Manual underwriting review completed', 'Loan Officer - R. Iyer'),
+(119, 24, 'APPROVED', 'COMPLETED', '2026-05-13 06:27:00', '2026-05-13 18:27:00', 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer'),
+(120, 24, 'DISBURSED', 'COMPLETED', '2026-05-15 08:27:00', '2026-05-15 10:27:00', 'Funds disbursed to customer account', 'Loan Officer - R. Iyer'),
+(121, 25, 'APPLICATION_RECEIVED', 'COMPLETED', '2025-06-24 06:01:00', '2025-06-25 05:01:00', 'Application submitted via portal', 'SYSTEM'),
+(122, 25, 'DOCUMENT_VERIFICATION', 'COMPLETED', '2025-06-26 08:01:00', '2025-06-27 06:01:00', 'KYC and income documents verified', 'SYSTEM'),
+(123, 25, 'CREDIT_ASSESSMENT', 'COMPLETED', '2025-06-28 04:01:00', '2025-06-29 01:01:00', 'Credit bureau report pulled and scored', 'SYSTEM'),
+(124, 25, 'UNDERWRITING_REVIEW', 'COMPLETED', '2025-06-30 05:01:00', '2025-07-01 05:01:00', 'Manual underwriting review completed', 'SYSTEM'),
+(125, 25, 'APPROVED', 'IN_PROGRESS', '2025-07-02 04:01:00', NULL, 'Loan approved, pending disbursement', 'Loan Officer - R. Iyer');
+
+-- 3. CREDIT ASSESSMENTS
+INSERT INTO credit_assessments (assessment_id, loan_id, credit_score, cibil_score, annual_income, dti_ratio, employment_status, risk_grade, assessment_result, assessed_at, assessed_by) VALUES
+(1, 1, 752, 812, 1344215.98, 25.11, 'SELF_EMPLOYED', 'A', 'APPROVED', '2025-06-12 12:00:00', 'SYSTEM'),
+(2, 2, 818, 305, 499873.73, 37.68, 'SELF_EMPLOYED', 'A', 'APPROVED', '2026-01-13 00:03:00', 'SYSTEM'),
+(3, 3, 581, 703, 349487.12, 17.17, 'SELF_EMPLOYED', 'E', 'REJECTED', '2025-03-04 19:07:00', 'SYSTEM'),
+(4, 4, 830, 458, 1746596.08, 33.64, 'UNEMPLOYED', 'A', 'APPROVED', '2025-02-19 22:54:00', 'SYSTEM'),
+(5, 5, 813, 453, 925188.47, 29.75, 'SELF_EMPLOYED', 'A', 'REJECTED', '2025-04-18 18:36:00', 'SYSTEM'),
+(6, 6, 822, 739, 1914474.67, 37.49, 'SELF_EMPLOYED', 'A', 'APPROVED', '2026-07-01 21:49:00', 'SYSTEM'),
+(7, 7, 818, 882, 2136862.71, 37.19, 'SELF_EMPLOYED', 'A', 'APPROVED', '2025-03-27 19:19:00', 'SYSTEM'),
+(8, 8, 575, 342, 592805.04, 19.43, 'SALARIED', 'E', 'APPROVED', '2025-06-20 16:09:00', 'SYSTEM'),
+(9, 9, 791, 871, 411716.69, 5.75, 'SELF_EMPLOYED', 'A', 'MANUAL_REVIEW', '2026-04-15 09:53:00', 'Underwriter - K. Pillai'),
+(10, 10, 695, 303, 1305286.75, 7.8, 'SALARIED', 'C', 'APPROVED', '2025-10-22 08:24:00', 'SYSTEM'),
+(11, 11, 829, 367, 1940601.4, 23.95, 'SALARIED', 'A', 'REJECTED', '2025-10-24 08:47:00', 'SYSTEM'),
+(12, 12, 680, 510, 807619.48, 31.0, 'UNEMPLOYED', 'C', 'APPROVED', '2025-05-23 20:55:00', 'SYSTEM'),
+(13, 13, 755, 378, 1353822.36, 32.35, 'SALARIED', 'A', 'REJECTED', '2025-06-06 16:42:00', 'SYSTEM'),
+(14, 14, 661, 379, 1619351.6, 18.27, 'BUSINESS_OWNER', 'C', 'APPROVED', '2026-07-04 20:39:00', 'SYSTEM'),
+(15, 15, 628, 312, 1361325.54, 24.43, 'SALARIED', 'D', 'MANUAL_REVIEW', '2026-02-14 15:25:00', 'Underwriter - K. Pillai'),
+(16, 17, 810, 597, 1859516.03, 16.42, 'UNEMPLOYED', 'A', 'APPROVED', '2025-03-16 13:39:00', 'SYSTEM'),
+(17, 18, 620, 862, 738350.07, 44.13, 'UNEMPLOYED', 'D', 'APPROVED', '2026-05-17 14:30:00', 'SYSTEM'),
+(18, 19, 708, 769, 468221.33, 25.26, 'UNEMPLOYED', 'B', 'REJECTED', '2025-06-17 20:01:00', 'SYSTEM'),
+(19, 20, 758, 514, 2316420.51, 42.22, 'SALARIED', 'A', 'APPROVED', '2025-09-28 01:23:00', 'SYSTEM'),
+(20, 21, 606, 445, 1944469.59, 15.47, 'BUSINESS_OWNER', 'D', 'REJECTED', '2025-09-05 14:47:00', 'SYSTEM'),
+(21, 22, 820, 586, 2251096.75, 33.13, 'SELF_EMPLOYED', 'A', 'APPROVED', '2026-05-01 15:12:00', 'SYSTEM'),
+(22, 24, 808, 703, 354635.69, 5.14, 'UNEMPLOYED', 'A', 'APPROVED', '2026-05-07 15:27:00', 'SYSTEM'),
+(23, 25, 790, 715, 964292.29, 10.63, 'BUSINESS_OWNER', 'A', 'APPROVED', '2025-06-26 10:01:00', 'SYSTEM');
+
+-- 4. EMI SCHEDULE
+INSERT INTO emi_schedule (schedule_id, loan_id, installment_no, due_date, emi_amount, principal_component, interest_component, outstanding_balance, payment_status, paid_amount, paid_date) VALUES
+(1, 1, 1, '2025-07-10', 1847.0, 507.24, 1240.0, 239492.76, 'PAID', 1847.0, '2025-07-10'),
+(2, 1, 2, '2025-08-09', 1847.0, 509.86, 1237.38, 238982.9, 'PAID', 1847.0, '2025-08-09'),
+(3, 1, 3, '2025-09-08', 1847.0, 512.5, 1234.74, 238470.4, 'PAID', 1847.0, '2025-09-06'),
+(4, 1, 4, '2025-10-08', 1847.0, 515.14, 1232.1, 237955.26, 'OVERDUE', 0, NULL),
+(5, 1, 5, '2025-11-07', 1847.0, 517.8, 1229.44, 237437.46, 'PAID', 1847.0, '2025-11-06'),
+(6, 1, 6, '2026-07-05', 1847.0, 520.48, 1226.76, 236916.98, 'PENDING', 0, NULL),
+(7, 2, 1, '2026-02-09', 28567.49, 25043.92, 3523.57, 615605.44, 'OVERDUE', 0, NULL),
+(8, 2, 2, '2026-03-11', 28567.49, 25181.66, 3385.83, 590423.78, 'MISSED', 0, NULL),
+(9, 2, 3, '2026-04-10', 28567.49, 25320.16, 3247.33, 565103.62, 'OVERDUE', 0, NULL),
+(10, 2, 4, '2026-05-10', 28567.49, 25459.42, 3108.07, 539644.2, 'OVERDUE', 0, NULL),
+(11, 2, 5, '2026-06-09', 28567.49, 25599.45, 2968.04, 514044.75, 'PAID', 28567.49, '2026-06-09'),
+(12, 2, 6, '2026-07-09', 28567.49, 25740.24, 2827.25, 488304.51, 'OVERDUE', 0, NULL),
+(13, 6, 1, '2026-07-29', 10794.39, 702.33, 10092.06, 880700.65, 'PAID', 10794.39, '2026-07-29'),
+(14, 6, 2, '2026-08-28', 10794.39, 710.37, 10084.02, 879990.28, 'PENDING', 0, NULL),
+(15, 6, 3, '2026-09-27', 10794.39, 718.5, 10075.89, 879271.78, 'PENDING', 0, NULL),
+(16, 6, 4, '2026-10-27', 10794.39, 726.73, 10067.66, 878545.05, 'PENDING', 0, NULL),
+(17, 6, 5, '2026-11-26', 10794.39, 735.05, 10059.34, 877810.0, 'PENDING', 0, NULL),
+(18, 6, 6, '2026-12-26', 10794.39, 743.47, 10050.92, 877066.53, 'PENDING', 0, NULL),
+(19, 6, 7, '2027-01-25', 10794.39, 751.98, 10042.41, 876314.55, 'PENDING', 0, NULL),
+(20, 7, 1, '2025-04-24', 12278.09, 5565.33, 6712.76, 500103.81, 'MISSED', 0, NULL),
+(21, 7, 2, '2025-05-24', 12278.09, 5639.21, 6638.88, 494464.6, 'MISSED', 0, NULL),
+(22, 7, 3, '2025-06-23', 12278.09, 5714.07, 6564.02, 488750.53, 'PAID', 12278.09, '2025-06-21'),
+(23, 7, 4, '2025-07-23', 12278.09, 5789.93, 6488.16, 482960.6, 'PAID', 12278.09, '2025-07-22'),
+(24, 7, 5, '2025-08-22', 12278.09, 5866.79, 6411.3, 477093.81, 'MISSED', 0, NULL),
+(25, 7, 6, '2025-09-21', 12278.09, 5944.67, 6333.42, 471149.14, 'OVERDUE', 0, NULL),
+(26, 8, 1, '2025-07-18', 8449.23, 3001.33, 5447.9, 941720.48, 'PAID', 8449.23, '2025-07-14'),
+(27, 8, 2, '2025-08-17', 8449.23, 3018.64, 5430.59, 938701.84, 'PAID', 8449.23, '2025-08-15'),
+(28, 8, 3, '2025-09-16', 8449.23, 3036.05, 5413.18, 935665.79, 'PAID', 8449.23, '2025-09-15'),
+(29, 8, 4, '2025-10-16', 8449.23, 3053.56, 5395.67, 932612.23, 'PAID', 8449.23, '2025-10-14'),
+(30, 8, 5, '2025-11-15', 8449.23, 3071.17, 5378.06, 929541.06, 'PAID', 8449.23, '2025-11-12'),
+(31, 8, 6, '2025-12-15', 8449.23, 3088.88, 5360.35, 926452.18, 'PAID', 8449.23, '2025-12-15'),
+(32, 8, 7, '2026-01-14', 8449.23, 3106.69, 5342.54, 923345.49, 'PAID', 8449.23, '2026-01-11'),
+(33, 10, 1, '2025-11-18', 10695.18, 1497.6, 9197.58, 1116748.66, 'PAID', 10695.18, '2025-11-18'),
+(34, 10, 2, '2025-12-18', 10695.18, 1509.92, 9185.26, 1115238.74, 'PAID', 10695.18, '2025-12-15'),
+(35, 10, 3, '2026-01-17', 10695.18, 1522.34, 9172.84, 1113716.4, 'OVERDUE', 0, NULL),
+(36, 10, 4, '2026-02-16', 10695.18, 1534.86, 9160.32, 1112181.54, 'PAID', 10695.18, '2026-02-14'),
+(37, 10, 5, '2026-03-18', 10695.18, 1547.49, 9147.69, 1110634.05, 'OVERDUE', 0, NULL),
+(38, 10, 6, '2026-04-17', 10695.18, 1560.21, 9134.97, 1109073.84, 'PAID', 10695.18, '2026-04-13'),
+(39, 10, 7, '2026-05-17', 10695.18, 1573.05, 9122.13, 1107500.79, 'PAID', 10695.18, '2026-05-16'),
+(40, 10, 8, '2026-06-16', 10695.18, 1585.99, 9109.19, 1105914.8, 'OVERDUE', 0, NULL),
+(41, 12, 1, '2025-06-20', 5418.13, 2513.99, 2904.14, 313726.13, 'OVERDUE', 0, NULL),
+(42, 12, 2, '2025-07-20', 5418.13, 2537.08, 2881.05, 311189.05, 'OVERDUE', 0, NULL),
+(43, 12, 3, '2025-08-19', 5418.13, 2560.38, 2857.75, 308628.67, 'OVERDUE', 0, NULL),
+(44, 12, 4, '2025-09-18', 5418.13, 2583.89, 2834.24, 306044.78, 'OVERDUE', 0, NULL),
+(45, 12, 5, '2025-10-18', 5418.13, 2607.62, 2810.51, 303437.16, 'PAID', 5418.13, '2025-10-16'),
+(46, 12, 6, '2025-11-17', 5418.13, 2631.57, 2786.56, 300805.59, 'OVERDUE', 0, NULL),
+(47, 12, 7, '2025-12-17', 5418.13, 2655.73, 2762.4, 298149.86, 'PAID', 5418.13, '2025-12-16'),
+(48, 14, 1, '2026-08-01', 3835.77, 1551.39, 2284.38, 451548.81, 'OVERDUE', 0, NULL),
+(49, 14, 2, '2026-08-31', 3835.77, 1559.21, 2276.56, 449989.6, 'PENDING', 0, NULL),
+(50, 14, 3, '2026-09-30', 3835.77, 1567.07, 2268.7, 448422.53, 'PENDING', 0, NULL),
+(51, 14, 4, '2026-10-30', 3835.77, 1574.97, 2260.8, 446847.56, 'PENDING', 0, NULL),
+(52, 14, 5, '2026-11-29', 3835.77, 1582.91, 2252.86, 445264.65, 'PENDING', 0, NULL),
+(53, 14, 6, '2026-12-29', 3835.77, 1590.89, 2244.88, 443673.76, 'PENDING', 0, NULL),
+(54, 17, 1, '2025-04-13', 77138.33, 64606.59, 12531.74, 777391.95, 'OVERDUE', 0, NULL),
+(55, 17, 2, '2025-05-13', 77138.33, 65568.15, 11570.18, 711823.8, 'PAID', 77138.33, '2025-05-12'),
+(56, 17, 3, '2025-06-12', 77138.33, 66544.02, 10594.31, 645279.78, 'PAID', 77138.33, '2025-06-12'),
+(57, 17, 4, '2025-07-12', 77138.33, 67534.42, 9603.91, 577745.36, 'PAID', 77138.33, '2025-07-08'),
+(58, 17, 5, '2025-08-11', 77138.33, 68539.55, 8598.78, 509205.81, 'OVERDUE', 0, NULL),
+(59, 17, 6, '2025-09-10', 77138.33, 69559.65, 7578.68, 439646.16, 'PAID', 77138.33, '2025-09-07'),
+(60, 17, 7, '2025-10-10', 77138.33, 70594.93, 6543.4, 369051.23, 'PAID', 77138.33, '2025-10-07'),
+(61, 17, 8, '2025-11-09', 77138.33, 71645.62, 5492.71, 297405.61, 'OVERDUE', 0, NULL),
+(62, 18, 1, '2026-06-14', 43994.26, 34696.45, 9297.81, 900540.0, 'PAID', 43994.26, '2026-06-10'),
+(63, 18, 2, '2026-07-14', 43994.26, 35041.39, 8952.87, 865498.61, 'PAID', 43994.26, '2026-07-13'),
+(64, 18, 3, '2026-08-13', 43994.26, 35389.76, 8604.5, 830108.85, 'PAID', 43994.26, '2026-08-12'),
+(65, 18, 4, '2026-09-12', 43994.26, 35741.59, 8252.67, 794367.26, 'PAID', 43994.26, '2026-09-12'),
+(66, 18, 5, '2026-10-12', 43994.26, 36096.93, 7897.33, 758270.33, 'PAID', 43994.26, '2026-10-11'),
+(67, 22, 1, '2026-05-29', 23741.57, 6626.46, 17115.11, 1111399.21, 'PAID', 23741.57, '2026-05-27'),
+(68, 22, 2, '2026-06-28', 23741.57, 6727.9, 17013.67, 1104671.31, 'PAID', 23741.57, '2026-06-26'),
+(69, 22, 3, '2026-07-28', 23741.57, 6830.89, 16910.68, 1097840.42, 'PAID', 23741.57, '2026-07-24'),
+(70, 22, 4, '2026-08-27', 23741.57, 6935.46, 16806.11, 1090904.96, 'PENDING', 0, NULL),
+(71, 22, 5, '2026-09-26', 23741.57, 7041.63, 16699.94, 1083863.33, 'PENDING', 0, NULL),
+(72, 22, 6, '2026-10-26', 23741.57, 7149.43, 16592.14, 1076713.9, 'PENDING', 0, NULL),
+(73, 24, 1, '2026-06-04', 33201.39, 15161.12, 18040.27, 1356722.42, 'PAID', 33201.39, '2026-06-01'),
+(74, 24, 2, '2026-07-04', 33201.39, 15360.49, 17840.9, 1341361.93, 'OVERDUE', 0, NULL),
+(75, 24, 3, '2026-08-03', 33201.39, 15562.48, 17638.91, 1325799.45, 'OVERDUE', 0, NULL),
+(76, 24, 4, '2026-09-02', 33201.39, 15767.13, 17434.26, 1310032.32, 'PENDING', 0, NULL),
+(77, 24, 5, '2026-10-02', 33201.39, 15974.46, 17226.93, 1294057.86, 'PENDING', 0, NULL);
+
+-- 5. DISBURSEMENTS
+INSERT INTO disbursements (disbursement_id, loan_id, account_id, disbursed_amount, disbursement_date, disbursement_mode, reference_number, status) VALUES
+(1, 1, 4, 240000.0, '2025-06-20 10:30:00', 'FULL', 'DSB-HL-2024-1247', 'COMPLETED'),
+(2, 2, 18, 640649.36, '2026-01-21 00:03:00', 'FULL', 'DSB-AL-2025-1202', 'COMPLETED'),
+(3, 6, 4, 881402.98, '2026-07-09 18:49:00', 'FULL', 'DSB-BL-2025-1206', 'COMPLETED'),
+(4, 7, 18, 505669.14, '2025-04-05 01:19:00', 'FULL', 'DSB-EL-2026-1207', 'COMPLETED'),
+(5, 8, 24, 944721.81, '2025-06-28 19:09:00', 'FULL', 'DSB-EL-2026-1208', 'COMPLETED'),
+(6, 10, 33, 1118246.26, '2025-10-30 00:24:00', 'FULL', 'DSB-HL-2025-1210', 'COMPLETED'),
+(7, 12, 14, 316240.12, '2025-05-31 21:55:00', 'FULL', 'DSB-EL-2025-1212', 'COMPLETED'),
+(8, 14, 18, 453100.2, '2026-07-12 12:39:00', 'FULL', 'DSB-BL-2025-1214', 'COMPLETED'),
+(9, 17, 25, 841998.54, '2025-03-24 09:39:00', 'FULL', 'DSB-BL-2025-1217', 'COMPLETED'),
+(10, 18, 29, 935236.45, '2026-05-25 20:30:00', 'FULL', 'DSB-AL-2026-1218', 'COMPLETED'),
+(11, 22, 20, 1118025.67, '2026-05-09 14:12:00', 'FULL', 'DSB-EL-2026-1222', 'COMPLETED'),
+(12, 24, 9, 1371883.54, '2026-05-15 05:27:00', 'FULL', 'DSB-HL-2025-1224', 'COMPLETED');
+
+-- 6. COLLECTIONS
+INSERT INTO collections (collection_id, loan_id, schedule_id, overdue_days, collection_status, assigned_agent, last_contact_date, promise_to_pay_date, remarks, created_at) VALUES
+(1, 1, 4, 7, 'ESCALATED', 'Agent - M. Fernandes', '2025-10-16 00:00:00', NULL, 'Escalated to recovery team after repeated non-response', '2025-10-16 00:00:00'),
+(2, 2, 7, 65, 'FOLLOWUP_SCHEDULED', 'Agent - T. Suresh', '2026-02-11 00:00:00', NULL, 'Initial reminder call scheduled', '2026-02-11 00:00:00'),
+(3, 2, 8, 70, 'ESCALATED', 'Agent - P. Nambiar', '2026-03-19 00:00:00', NULL, 'Escalated to recovery team after repeated non-response', '2026-03-19 00:00:00'),
+(4, 2, 9, 16, 'CONTACTED', 'Agent - P. Nambiar', '2026-04-13 00:00:00', NULL, 'Customer contacted, cited temporary cash flow issue', '2026-04-13 00:00:00'),
+(5, 2, 10, 69, 'FOLLOWUP_SCHEDULED', 'Agent - P. Nambiar', '2026-05-18 00:00:00', NULL, 'Initial reminder call scheduled', '2026-05-18 00:00:00'),
+(6, 2, 12, 73, 'FOLLOWUP_SCHEDULED', 'Agent - P. Nambiar', '2026-07-10 00:00:00', NULL, 'Initial reminder call scheduled', '2026-07-10 00:00:00'),
+(7, 7, 20, 32, 'FOLLOWUP_SCHEDULED', 'Agent - P. Nambiar', '2025-04-29 00:00:00', NULL, 'Initial reminder call scheduled', '2025-04-29 00:00:00'),
+(8, 7, 21, 83, 'PROMISE_TO_PAY', 'Agent - T. Suresh', '2025-06-02 00:00:00', '2025-06-15', 'Customer committed to pay by promise date', '2025-06-02 00:00:00'),
+(9, 7, 24, 92, 'FOLLOWUP_SCHEDULED', 'Agent - P. Nambiar', '2025-08-24 00:00:00', NULL, 'Initial reminder call scheduled', '2025-08-24 00:00:00'),
+(10, 7, 25, 41, 'CONTACTED', 'Agent - T. Suresh', '2025-09-28 00:00:00', NULL, 'Customer contacted, cited temporary cash flow issue', '2025-09-28 00:00:00'),
+(11, 10, 35, 31, 'FOLLOWUP_SCHEDULED', 'Agent - M. Fernandes', '2026-01-18 00:00:00', NULL, 'Initial reminder call scheduled', '2026-01-18 00:00:00'),
+(12, 10, 37, 41, 'ESCALATED', 'Agent - T. Suresh', '2026-03-23 00:00:00', NULL, 'Escalated to recovery team after repeated non-response', '2026-03-23 00:00:00'),
+(13, 10, 40, 85, 'CONTACTED', 'Agent - M. Fernandes', '2026-06-24 00:00:00', NULL, 'Customer contacted, cited temporary cash flow issue', '2026-06-24 00:00:00'),
+(14, 12, 41, 33, 'CONTACTED', 'Agent - T. Suresh', '2025-06-21 00:00:00', NULL, 'Customer contacted, cited temporary cash flow issue', '2025-06-21 00:00:00'),
+(15, 12, 42, 93, 'PROMISE_TO_PAY', 'Agent - P. Nambiar', '2025-07-21 00:00:00', '2025-07-24', 'Customer committed to pay by promise date', '2025-07-21 00:00:00'),
+(16, 12, 43, 66, 'ESCALATED', 'Agent - T. Suresh', '2025-08-21 00:00:00', NULL, 'Escalated to recovery team after repeated non-response', '2025-08-21 00:00:00'),
+(17, 12, 44, 32, 'ESCALATED', 'Agent - P. Nambiar', '2025-09-24 00:00:00', NULL, 'Escalated to recovery team after repeated non-response', '2025-09-24 00:00:00'),
+(18, 12, 46, 66, 'FOLLOWUP_SCHEDULED', 'Agent - M. Fernandes', '2025-11-23 00:00:00', NULL, 'Initial reminder call scheduled', '2025-11-23 00:00:00'),
+(19, 14, 48, 56, 'PROMISE_TO_PAY', 'Agent - P. Nambiar', '2026-08-08 00:00:00', '2026-08-14', 'Customer committed to pay by promise date', '2026-08-08 00:00:00'),
+(20, 17, 54, 40, 'FOLLOWUP_SCHEDULED', 'Agent - T. Suresh', '2025-04-17 00:00:00', NULL, 'Initial reminder call scheduled', '2025-04-17 00:00:00'),
+(21, 17, 58, 28, 'PROMISE_TO_PAY', 'Agent - T. Suresh', '2025-08-15 00:00:00', '2025-08-21', 'Customer committed to pay by promise date', '2025-08-15 00:00:00'),
+(22, 17, 61, 31, 'PROMISE_TO_PAY', 'Agent - M. Fernandes', '2025-11-14 00:00:00', '2025-11-18', 'Customer committed to pay by promise date', '2025-11-14 00:00:00'),
+(23, 24, 74, 66, 'CONTACTED', 'Agent - T. Suresh', '2026-07-08 00:00:00', NULL, 'Customer contacted, cited temporary cash flow issue', '2026-07-08 00:00:00'),
+(24, 24, 75, 56, 'FOLLOWUP_SCHEDULED', 'Agent - P. Nambiar', '2026-08-13 00:00:00', NULL, 'Initial reminder call scheduled', '2026-08-13 00:00:00');
+
+-- ───────────────────────────── RESET SEQUENCES (Postgres) ─────────────────────────────
+SELECT setval('loans_loan_id_seq', 25, true);
+SELECT setval('loan_origination_stages_stage_id_seq', 125, true);
+SELECT setval('credit_assessments_assessment_id_seq', 23, true);
+SELECT setval('emi_schedule_schedule_id_seq', 77, true);
+SELECT setval('disbursements_disbursement_id_seq', 12, true);
+SELECT setval('collections_collection_id_seq', 24, true);
+
+-- ───────────────────────────── SAMPLE QUERY: reproduce the demo screen ─────────────────────────────
+-- This is the exact query your "Loan Origination & Servicing" screen would run
+-- for loan HL-2024-1247 to populate the mockup fields (principal, EMI, status,
+-- next due date, disbursement info) in a single call.
+--
+-- SELECT
+--     l.loan_reference, l.loan_type, l.principal_amount, l.loan_status,
+--     ca.credit_score, ca.risk_grade,
+--     d.reference_number AS disbursement_ref, d.status AS disbursement_status,
+--     es.due_date AS next_emi_due, es.emi_amount AS next_emi_amount
+-- FROM loans l
+-- LEFT JOIN credit_assessments ca ON ca.loan_id = l.loan_id
+-- LEFT JOIN disbursements d ON d.loan_id = l.loan_id
+-- LEFT JOIN emi_schedule es ON es.loan_id = l.loan_id AND es.payment_status = 'PENDING'
+-- WHERE l.loan_reference = 'HL-2024-1247'
+-- ORDER BY es.due_date ASC
+-- LIMIT 1;
+
+-- ───────────────────────────── NOTES ─────────────────────────────
+-- 1. Application-layer rules (enforce in the Spring Boot service layer,
+--    same pattern as account-service and loan-service v1):
+--      - A loan can only move to 'ACTIVE' once its DISBURSED stage row
+--        in loan_origination_stages is COMPLETED and a matching row
+--        exists in disbursements with status = 'COMPLETED'.
+--      - A loan can only move to 'REJECTED' if its latest
+--        credit_assessments.assessment_result = 'REJECTED'.
+--      - emi_schedule rows should be generated in a batch job right
+--        after disbursement, not materialized upfront for the full
+--        tenure (e.g. don't pre-create all 240 rows for a 20-year home
+--        loan at disbursement time) — generate a rolling window (e.g.
+--        next 12 months) and top it up monthly instead.
+-- 2. A collections row should only exist for emi_schedule rows where
+--    payment_status IN ('OVERDUE','MISSED') — enforce this in the
+--    collections-worker job, not the DB (Postgres CHECK constraints
+--    can't reference another table's row state).
+-- 3. grade / risk_grade is derived from credit_score — recompute it in
+--    application code on every new assessment rather than trusting a
+--    stale stored value.
+-- 4. loans.updated_at should be bumped by the app (or a trigger) on
+--    every status change, stage completion, or new assessment — this
+--    script only seeds the initial value.
+-- 5. Sample data is synthetic, generated to resemble realistic loan
+--    origination/servicing patterns — not real applicant or transaction
+--    data.
+-- 6. INTEGRATION CHECKLIST for the backend team:
+--    a) Confirm JPA @Entity classes map to table names exactly as
+--       created here: loans, loan_origination_stages,
+--       credit_assessments, emi_schedule, disbursements, collections.
+--    b) Confirm every enum class (LoanType, LoanStatus, StageName,
+--       StageStatus, AssessmentResult, PaymentStatus, DisbursementMode,
+--       CollectionStatus) matches the CHECK constraint values above
+--       exactly, case-sensitive.
+--    c) This script assumes loan-service still shares the BankingApp
+--       DB with account-service. If it's split into its own DB later,
+--       the FK to customers/accounts becomes a cross-service API call
+--       instead — flag this decision with the team now.
