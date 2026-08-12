@@ -1,489 +1,100 @@
-# FinCore – Digital Banking Management Platform
+# FinCore Digital Banking Platform — Milestone 1 (Database)
 
-> A secure, modular, and scalable digital banking platform designed to manage core banking operations through a centralized digital system.
+**Role:** Database Design & Management
+**Branch:** team-a
+**Database engine:** PostgreSQL
 
-## 📌 Project Overview
+## Overview
 
-**FinCore – Digital Banking Management Platform** is a full-stack banking application designed to provide essential digital banking services through a secure and user-friendly platform.
+This milestone covers the design, creation, and seeding of the FinCore database
+that the backend microservices (account-service, and eventually
+customer-service, payment-service, loan-service) connect to.
 
-The system aims to bring multiple banking operations together in one centralized platform, including customer management, account management, transactions, payments, beneficiaries, loans, KYC verification, notifications, and audit tracking.
+## What was built
 
-The project follows a **layered enterprise architecture** to provide separation of concerns, maintainability, security, and scalability.
+### 1. Schema — `fincore_database_postgres.sql`
 
----
+Four tables covering the core banking domain used by the frontend and
+account-service:
 
-## 🎯 Objectives
+| Table | Purpose |
+|---|---|
+| `customers` | Customer profile and KYC/risk data |
+| `accounts` | Bank accounts linked to a customer |
+| `transactions` | Deposits, withdrawals, and transfers between accounts |
+| `audit_log` | System event trail (info/success/warn/error) for compliance and debugging |
 
-The main objectives of FinCore are:
+**Key design decisions:**
+- Primary keys use `BIGSERIAL` (Postgres auto-incrementing identity)
+- Foreign keys enforce referential integrity within the database:
+  `accounts.customer_id → customers.customer_id`,
+  `transactions.from_account_id / to_account_id → accounts.account_id`
+- `CHECK` constraints restrict enum-style columns to valid values
+  (e.g. `kyc_status IN ('PENDING','VERIFIED','REJECTED')`), so invalid
+  data can't be inserted even by mistake or by a buggy client
+- Indexes added on foreign-key and frequently-filtered columns
+  (`customer_id`, `from_account_id`, `to_account_id`, `transaction_date`,
+  `transaction_status`) to keep lookups fast as data grows
+- `balance >= 0` and `amount > 0` constraints prevent invalid financial data
+  at the database level, not just in application code
 
-* Provide a centralized digital banking platform
-* Manage customer and account information efficiently
-* Enable secure banking transactions
-* Manage beneficiaries and payments
-* Support loan management
-* Manage KYC verification
-* Maintain transaction and activity records
-* Provide notifications for important banking activities
-* Maintain audit logs for security and accountability
-* Build a modular and scalable banking architecture
+### 2. Seed data
 
----
+Realistic sample data for development and demo purposes:
+- 25 customers (varied KYC status and risk level)
+- 35 accounts (savings, current, fixed deposit; varied status)
+- 60 transactions (transfers, deposits, withdrawals; success/pending/failed/reversed)
+- 40 audit log entries
 
-## 🚀 Key Features
+This lets the backend and frontend teams test against real-shaped data
+immediately, without needing to manually create records first.
 
-### 👤 Customer Management
+### 3. Database connection setup
 
-* Customer registration
-* Customer profile management
-* Customer information retrieval
-* Customer status management
-
-### 🏦 Account Management
-
-* Account creation
-* Account information management
-* Balance management
-* Account status management
-* Account details viewing
-
-### 💸 Transaction Management
-
-* Fund transfers
-* Deposit and withdrawal operations
-* Transaction validation
-* Transaction history
-* Transaction status tracking
-
-### 💳 Payment Management
-
-* Digital payments
-* Payment processing
-* Payment status tracking
-* Payment history
-
-### 👥 Beneficiary Management
-
-* Add beneficiary
-* View beneficiaries
-* Update beneficiary details
-* Delete beneficiary
-
-### 🏠 Loan Management
-
-* Loan application
-* Loan status tracking
-* Loan approval/rejection
-* Loan information management
-
-### 🪪 KYC Management
-
-* KYC submission
-* Document information management
-* KYC verification
-* KYC status tracking
-
-### 🔔 Notification Management
-
-* Transaction notifications
-* Account notifications
-* Important banking alerts
-* Read/unread notification status
-
-### 🔐 Security & Audit
-
-* User authentication
-* Role-based authorization
-* Secure API access
-* Audit logging
-* Activity tracking
-
----
-
-## 🏗️ System Architecture
-
-FinCore follows a layered architecture consisting of the following major components:
-
-```text
-┌──────────────────────────────────────────────┐
-│             Presentation Layer               │
-│        Web UI / Customer / Admin             │
-└──────────────────────┬───────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────┐
-│              Application Layer               │
-│       Application Flow & API Handling        │
-└──────────────────────┬───────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────┐
-│                 API Gateway                  │
-│       Routing / API Access / Validation      │
-└──────────────────────┬───────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────┐
-│              Business Services               │
-│ Customer / Account / Transaction / Loan      │
-│ Payment / Beneficiary / KYC Services         │
-└──────────────────────┬───────────────────────┘
-                       │
-┌──────────────────────▼───────────────────────┐
-│            Core / Domain Services            │
-│          Core Banking Business Rules         │
-└──────────────────────┬───────────────────────┘
-                       │
-              ┌────────┴────────┐
-              ▼                 ▼
-┌─────────────────────┐ ┌─────────────────────┐
-│     Event Layer     │ │      Data Layer     │
-│ Events / Alerts /   │ │ PostgreSQL Database │
-│ Notifications       │ │                     │
-└─────────────────────┘ └─────────────────────┘
-
-        ┌─────────────────────────────────┐
-        │          Security Layer         │
-        │ Authentication / Authorization  │
-        │ RBAC / Audit / Data Protection  │
-        └─────────────────────────────────┘
-
-        ┌─────────────────────────────────┐
-        │       Infrastructure Layer      │
-        │ Deployment / Cloud / Docker /   │
-        │ Monitoring / CI-CD / Networking │
-        └─────────────────────────────────┘
+Configured to match the account-service's `application.properties`:
+```
+jdbc:postgresql://localhost:5432/BankingApp
 ```
 
----
-
-## 🗄️ Database Design
-
-FinCore uses **PostgreSQL** for relational data management.
-
-### Main Database Tables
-
-| Table           | Purpose                                         |
-| --------------- | ----------------------------------------------- |
-| `customers`     | Stores customer information                     |
-| `users`         | Stores user authentication and role information |
-| `accounts`      | Stores bank account details                     |
-| `transactions`  | Stores banking transactions                     |
-| `loans`         | Stores loan information                         |
-| `payments`      | Stores payment records                          |
-| `beneficiaries` | Stores beneficiary information                  |
-| `kyc`           | Stores KYC verification information             |
-| `notifications` | Stores customer notifications                   |
-| `audit_logs`    | Stores important system activities              |
-
-### Database Relationships
-
-```text
-Customer
-   │
-   ├── Accounts
-   │
-   ├── Loans
-   │
-   ├── KYC
-   │
-   └── Beneficiaries
-          │
-          ▼
-     Transactions
-          │
-          ▼
-      Payments
-
-User
- │
- ├── Notifications
- │
- └── Audit Logs
-```
-
-The database uses:
-
-* Primary Keys
-* Foreign Keys
-* Unique Constraints
-* Not Null Constraints
-* Check Constraints
-* Indexes
-* Database Transactions
-
----
-
-## 🔄 Transaction Workflow
-
-Example: A customer transfers ₹5,000 to another account.
-
-```text
-Customer
-   │
-   ▼
-Login
-   │
-   ▼
-Fund Transfer
-   │
-   ▼
-Validate Sender
-   │
-   ▼
-Validate Receiver
-   │
-   ▼
-Check Available Balance
-   │
-   ▼
-Debit Sender Account
-   │
-   ▼
-Credit Receiver Account
-   │
-   ▼
-Create Transaction Record
-   │
-   ▼
-Generate Notification
-   │
-   ▼
-Create Audit Record
-   │
-   ▼
-Transfer Completed
-```
-
-Database transactions are used to ensure that the debit and credit operations remain consistent.
-
----
-
-## 🛠️ Technology Stack
-
-### Frontend
-
-* React.js
-* HTML5
-* CSS3
-* JavaScript
-
-### Backend
-
-* Java
-* Spring Boot
-* REST APIs
-
-### Database
-
-* PostgreSQL
-* SQL
-
-### Development Tools
-
-* Git
-* GitHub
-* Visual Studio Code
-* Postman
-
-### Planned Infrastructure
-
-* Docker
-* Cloud deployment
-* CI/CD
-* Application monitoring
-
----
-
-## 📁 Project Structure
-
-```text
-fincore-digital-banking-platform/
-│
-├── frontend/
-│
-├── backend/
-│   ├── account-service/
-│   ├── customer-service/
-│   ├── transaction-service/
-│   ├── loan-service/
-│   ├── payment-service/
-│   ├── beneficiary-service/
-│   ├── kyc-service/
-│   ├── notification-service/
-│   └── audit-service/
-│
-├── database/
-│   └── fincore_database_postgres.sql
-│
-├── docs/
-│
-├── screenshots/
-│
-└── README.md
-```
-
----
-
-## 🔌 Application Communication
-
-The frontend does not directly connect to the database.
-
-The communication follows:
-
-```text
-Frontend
-   │
-   │ REST API / HTTP
-   ▼
-Backend Services
-   │
-   │ SQL / JPA
-   ▼
-PostgreSQL
-```
-
-This approach improves security and keeps the application layers separated.
-
----
-
-## 🔐 Security
-
-Security is treated as a cross-cutting concern throughout the platform.
-
-Planned security mechanisms include:
-
-* Authentication
-* Authorization
-* Role-Based Access Control (RBAC)
-* Password hashing
-* Secure API endpoints
-* Input validation
-* Audit logging
-* Transaction validation
-* Database constraints
-
----
-
-## 📊 Current Project Status
-
-### Completed
-
-* [x] Project concept and requirements
-* [x] High-level architecture design
-* [x] Core module identification
-* [x] Database schema design
-* [x] PostgreSQL database script
-* [x] Initial frontend development
-
-### In Progress
-
-* [ ] Backend service implementation
-* [ ] REST API development
-* [ ] PostgreSQL integration
-* [ ] Authentication and authorization
-* [ ] Customer management
-* [ ] Account management
-* [ ] Transaction processing
-
-### Planned
-
-* [ ] Loan management
-* [ ] Payment services
-* [ ] Beneficiary management
-* [ ] KYC workflow
-* [ ] Notification service
-* [ ] Audit service
-* [ ] Testing
-* [ ] Dockerization
-* [ ] Deployment
-
----
-
-## 🔮 Future Enhancements
-
-Future versions of FinCore may include:
-
-* AI-powered banking assistant
-* Fraud and transaction anomaly detection
-* Spending analytics
-* Real-time transaction notifications
-* Advanced financial dashboards
-* Automated loan assessment
-* Microservices-based deployment
-* Cloud-native infrastructure
-* Advanced monitoring and observability
-
----
-
-## 💾 Database Setup
-
-The PostgreSQL database script is available at:
-
-```text
-database/fincore_database_postgres.sql
-```
-
-### Create the database
-
-```sql
-CREATE DATABASE BankingApp;
-```
-
-### Execute the schema
-
+Setup steps:
 ```bash
-psql -U postgres -d BankingApp -f database/fincore_database_postgres.sql
+psql -U postgres -c "CREATE DATABASE \"BankingApp\";"
+psql -U postgres -d BankingApp -f fincore_database_postgres.sql
 ```
 
-Update the database configuration in the backend application according to your local PostgreSQL credentials.
+## Integration review
 
----
+As part of this milestone, the existing `account-service` code was reviewed
+against this schema to confirm the backend and database actually line up.
+Four mismatches were found and documented for the backend team to resolve:
 
-## ▶️ Getting Started
+| # | Issue | Impact |
+|---|---|---|
+| 1 | `Account.java` maps to table `account_service`, but the schema creates `accounts` | Hibernate creates a second, empty table — API returns no data even though seed data exists |
+| 2 | `AccountType` enum missing `FIXED_DEPOSIT` (present in schema + frontend) | Selecting that account type in the UI fails |
+| 3 | `AccountStatus` enum uses `BLOCKED`, schema/frontend use `SUSPENDED` | Same status, different names — mismatch on write/read |
+| 4 | Controller serves `/accounts`, frontend calls `/api/accounts` | 404s on every account API call until a context path or frontend base URL is fixed |
 
-### 1. Clone the repository
+These are documented as inline comments at the bottom of
+`fincore_database_postgres.sql` as well, so they stay visible in the repo.
 
-```bash
-git clone https://github.com/Dharinish007/fincore-digital-banking-platform.git
+## Files in this milestone
+
+```
+fincore_database_postgres.sql   -- schema + seed data, ready to run
+README.md                        -- this file
 ```
 
-### 2. Navigate to the project
+## Next steps (Milestone 2)
 
-```bash
-cd fincore-digital-banking-platform
-```
-
-### 3. Configure PostgreSQL
-
-Create the database and execute the SQL script located in the `database` folder.
-
-### 4. Configure the backend
-
-Update the PostgreSQL connection properties in the backend configuration.
-
-### 5. Start the backend
-
-Run the Spring Boot application from the backend service.
-
-### 6. Start the frontend
-
-Install dependencies and start the frontend application.
-
----
-
-## 📌 Project Status
-
-**Development Stage:** Initial Development
-
-The project architecture and database design have been established, and frontend development is currently in progress. Backend services and complete end-to-end integration will be implemented progressively.
-
----
-
-## 👨‍💻 Project
-
-**FinCore – Digital Banking Management Platform**
-
-Developed as part of an **Infosys Internship Project**.
-
----
-
-## 📄 License
-
-This project is developed for educational and internship purposes.
+- [ ] Backend team resolves the 4 integration issues above
+- [ ] Extend schema for `customer-service` once its entities are written
+      (currently an empty module in the repo)
+- [ ] Add schemas for `payment-service` and `loan-service` when those
+      modules are created
+- [ ] Add database views for common reports (active account balances,
+      overdue EMIs, failed transactions)
+- [ ] Add a stored procedure for atomic fund transfers (debit + credit +
+      audit log insert in one transaction)
+- [ ] Create per-service database users with least-privilege access
+      instead of everything connecting as the `postgres` superuser
