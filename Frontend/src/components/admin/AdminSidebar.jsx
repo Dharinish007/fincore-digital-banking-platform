@@ -5,15 +5,18 @@ import {
   FaUserShield,
   FaClipboardList,
   FaChartBar,
-  FaCog,
   FaUserCircle,
   FaSignOutAlt,
   FaUniversity,
+  FaExclamationTriangle,
 } from "react-icons/fa";
 
 import "./AdminSidebar.css";
+import { useNavigate } from "react-router-dom";
 
 function AdminSidebar() {
+
+  const navigate = useNavigate();
   return (
     <aside className="admin-sidebar">
 
@@ -46,10 +49,10 @@ function AdminSidebar() {
           <span>Dashboard</span>
         </li>
 
-        <li>
-          <FaUserCog />
-          <span>Employee Management</span>
-        </li>
+      <li onClick={() => navigate("/admin/employees")}>
+        <FaUserCog />
+        <span>Employee Management</span>
+      </li>
 
         <li>
           <FaUserFriends />
@@ -71,10 +74,11 @@ function AdminSidebar() {
           <span>Reports</span>
         </li>
 
-        <li>
-          <FaCog />
-          <span>Settings</span>
+        <li onClick={() => navigate("/admin/npa-classification")}>
+          <FaExclamationTriangle />
+          <span>NPA Classification</span>
         </li>
+
 
         <li>
           <FaUserCircle />

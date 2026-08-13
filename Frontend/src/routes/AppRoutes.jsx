@@ -9,6 +9,9 @@ import CustomerDashboard from "../pages/customer/CustomerDashboard";
 import ManagerDashboard from "../pages/Manager/ManagerDashboard";
 import TellerDashboard from "../pages/Teller/TellerDashboard";
 
+import NpaClassification from "../pages/npa/NpaClassification";
+import EmployeeManagement from "../pages/employee/EmployeeManagement";
+
 
 
 const NotFound = () => (
@@ -36,6 +39,10 @@ function AppRoutes() {
       <Route path="/manager/dashboard" element={<ManagerDashboard />} />
       <Route path="/teller/dashboard" element={<TellerDashboard />} />
       <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+
+      <Route path="/admin/npa-classification" element={<NpaClassification />} />
+      <Route path="/admin/employees" element={<EmployeeManagement />} />
+
       {/* Redirect */}
       <Route path="/home" element={<Navigate to="/" replace />} />
 

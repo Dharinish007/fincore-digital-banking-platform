@@ -1,0 +1,284 @@
+/* ==========================================
+   NPA Result
+========================================== */
+
+.npa-result-card {
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 18px;
+
+  padding: 25px;
+
+  box-sizing: border-box;
+
+  transition: all 0.3s ease;
+}
+
+
+/* ==========================================
+   Result Header
+========================================== */
+
+.npa-result-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 20px;
+
+  padding-bottom: 20px;
+
+  border-bottom: 1px solid #1f2937;
+}
+
+.npa-result-header span {
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.npa-result-header h2 {
+  margin: 7px 0 0;
+
+  color: #ffffff;
+
+  font-size: 23px;
+}
+
+.npa-result-icon {
+  width: 50px;
+
+  height: 50px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+}
+
+
+/* ==========================================
+   Status Colors
+========================================== */
+
+.npa-result-card.standard {
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.npa-result-card.standard .npa-result-icon {
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #4ade80;
+}
+
+.npa-result-card.substandard {
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+.npa-result-card.substandard .npa-result-icon {
+  background: rgba(245, 158, 11, 0.12);
+
+  color: #fbbf24;
+}
+
+.npa-result-card.doubtful {
+  border-color: rgba(249, 115, 22, 0.35);
+}
+
+.npa-result-card.doubtful .npa-result-icon {
+  background: rgba(249, 115, 22, 0.12);
+
+  color: #fb923c;
+}
+
+.npa-result-card.loss {
+  border-color: rgba(239, 68, 68, 0.35);
+}
+
+.npa-result-card.loss .npa-result-icon {
+  background: rgba(239, 68, 68, 0.12);
+
+  color: #f87171;
+}
+
+
+/* ==========================================
+   Status
+========================================== */
+
+.npa-result-status {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  padding: 18px 0;
+}
+
+.npa-status-label {
+  color: #9ca3af;
+
+  font-size: 13px;
+}
+
+.npa-result-status strong {
+  color: #ffffff;
+
+  background: #1f2937;
+
+  padding: 7px 12px;
+
+  border-radius: 8px;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================
+   Details
+========================================== */
+
+.npa-result-details {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 12px;
+}
+
+.npa-detail-item {
+  background: #1f2937;
+
+  border-radius: 10px;
+
+  padding: 14px;
+}
+
+.npa-detail-item span {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 11px;
+
+  margin-bottom: 7px;
+}
+
+.npa-detail-item strong {
+  color: #e5e7eb;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   Message
+========================================== */
+
+.npa-result-message {
+  margin-top: 18px;
+
+  padding: 15px;
+
+  background: #0f172a;
+
+  border-radius: 10px;
+
+  border: 1px solid #1f2937;
+}
+
+.npa-result-message strong {
+  color: #cbd5e1;
+
+  font-size: 12px;
+}
+
+.npa-result-message p {
+  margin: 7px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   Empty State
+========================================== */
+
+.npa-result-empty {
+  min-height: 280px;
+
+  background: #111827;
+
+  border: 1px dashed #374151;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+}
+
+.npa-result-empty > svg {
+  color: #2563eb;
+
+  font-size: 38px;
+
+  margin-bottom: 15px;
+}
+
+.npa-result-empty h3 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 17px;
+}
+
+.npa-result-empty p {
+  margin: 8px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+
+  max-width: 300px;
+
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+  .npa-result-details {
+    grid-template-columns: 1fr;
+  }
+
+}
