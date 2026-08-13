@@ -1,0 +1,1045 @@
+# FinCore — Digital Banking Management Platform
+
+> A full-stack digital banking management platform built with Angular and Spring Boot microservices for managing customers, accounts, transactions, and operational dashboard analytics.
+
+![Angular](https://img.shields.io/badge/Angular-21-red?logo=angular)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-brightgreen?logo=springboot)
+![Java](https://img.shields.io/badge/Java-17%2B-orange?logo=openjdk)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791?logo=postgresql)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?logo=typescript)
+![License](https://img.shields.io/badge/License-Educational-lightgrey)
+
+---
+
+## 📌 Overview
+
+**FinCore** is a modular digital banking management platform designed around a microservices architecture.
+
+The system separates core banking responsibilities into independent services:
+
+- 👤 Customer management
+- 💳 Account management
+- 💸 Transaction processing
+- 📊 Dashboard and banking statistics
+
+The frontend is an Angular application that communicates with the backend services through an Angular development proxy.
+
+The project is designed to demonstrate practical full-stack engineering concepts including:
+
+- REST API design
+- Spring Boot microservices
+- Angular feature-based architecture
+- JPA/Hibernate persistence
+- PostgreSQL integration
+- DTO-based API communication
+- OpenFeign service-to-service communication
+- Form validation
+- Role/permission-aware frontend routing
+- Dashboard analytics
+- Transaction workflows
+- API health monitoring
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                         ┌──────────────────────────┐
+                         │      Angular Frontend    │
+                         │       Port: 4200         │
+                         └────────────┬─────────────┘
+                                      │
+                              Angular Proxy
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          │                           │                           │
+          ▼                           ▼                           ▼
+ ┌─────────────────┐         ┌─────────────────┐        ┌─────────────────┐
+ │ Customer Service│         │ Account Service │        │Transaction       │
+ │    Port 8081    │         │    Port 8082    │        │Service Port 8083│
+ └────────┬────────┘         └────────┬────────┘        └────────┬────────┘
+          │                           │                           │
+          └───────────────────────────┼───────────────────────────┘
+                                      │
+                                      ▼
+                              ┌─────────────────┐
+                              │ PostgreSQL      │
+                              │    fincore      │
+                              └─────────────────┘
+
+
+                         ┌──────────────────────────┐
+                         │    Dashboard Service    │
+                         │       Port: 8084        │
+                         └────────────┬─────────────┘
+                                      │
+                           OpenFeign REST Clients
+                                      │
+                 ┌────────────────────┼────────────────────┐
+                 ▼                    ▼                    ▼
+          Customer Service     Account Service      Transaction Service
+              :8081                :8082                 :8083
+```
+
+### Service responsibilities
+
+| Service | Port | Responsibility |
+|---|---:|---|
+| Customer Service | `8081` | Customer CRUD, search, KYC status, customer statistics |
+| Account Service | `8082` | Account management, account lookup, status, statistics, credit/debit |
+| Transaction Service | `8083` | Deposits, withdrawals, transfers, history, transaction statistics |
+| Dashboard Service | `8084` | Aggregates customer, account and transaction information |
+| Angular Frontend | `4200` | Banking management UI |
+
+---
+
+# ✨ Features
+
+## 👤 Customer Management
+
+The customer module provides:
+
+- Customer listing
+- Customer search
+- Customer details
+- Customer creation
+- Customer update
+- Customer deletion
+- Customer number lookup
+- KYC status filtering
+- KYC status updates
+- Customer statistics
+- Loading and empty states
+- Validation and notifications
+
+### Customer API
+
+Base URL:
+
+```text
+http://localhost:8081/api/v1/customers
+```
+
+Available operations include:
+
+```text
+GET     /api/v1/customers
+GET     /api/v1/customers/{id}
+GET     /api/v1/customers/number/{customerNumber}
+GET     /api/v1/customers/kyc-status/{kycStatus}
+GET     /api/v1/customers/search
+GET     /api/v1/customers/statistics
+PUT     /api/v1/customers/{id}
+PATCH   /api/v1/customers/{id}/kyc-status
+DELETE  /api/v1/customers/{id}
+```
+
+---
+
+# 💳 Account Management
+
+The account module provides:
+
+- Account listing
+- Account details
+- Account lookup by account number
+- Account update
+- Account status management
+- Account deletion
+- Account statistics
+- Credit operation
+- Debit operation
+- Account filtering
+- Account summary cards
+- Account status indicators
+
+### Account API
+
+Base URL:
+
+```text
+http://localhost:8082/api/v1/accounts
+```
+
+Available operations include:
+
+```text
+GET     /api/v1/accounts
+GET     /api/v1/accounts/statistics
+GET     /api/v1/accounts/{id}
+GET     /api/v1/accounts/number/{accountNumber}
+PUT     /api/v1/accounts/{id}
+PATCH   /api/v1/accounts/{id}/status
+DELETE  /api/v1/accounts/{id}
+POST    /api/v1/accounts/{accountNumber}/credit
+POST    /api/v1/accounts/{accountNumber}/debit
+```
+
+---
+
+# 💸 Transaction Management
+
+The transaction module supports banking operations such as:
+
+- Deposit
+- Withdrawal
+- Transfer
+- Recent transactions
+- Transaction history by account
+- Transaction statistics
+- Transaction filtering
+- Transaction details
+- Transaction status display
+- Transaction summary information
+
+### Transaction API
+
+Base URL:
+
+```text
+http://localhost:8083/api/v1/transactions
+```
+
+Available operations include:
+
+```text
+POST    /api/v1/transactions/deposit
+POST    /api/v1/transactions/withdraw
+POST    /api/v1/transactions/transfer
+GET     /api/v1/transactions/statistics
+GET     /api/v1/transactions/recent
+GET     /api/v1/transactions/history/{accountNumber}
+```
+
+---
+
+# 📊 Dashboard
+
+The Dashboard Service aggregates information from the other backend services.
+
+It uses **Spring Cloud OpenFeign** to communicate with:
+
+- Customer Service
+- Account Service
+- Transaction Service
+
+### Dashboard API
+
+Base URL:
+
+```text
+http://localhost:8084/api/v1/dashboard
+```
+
+Available operations:
+
+```text
+GET /api/v1/dashboard/summary
+GET /api/v1/dashboard/customer-statistics
+GET /api/v1/dashboard/account-statistics
+GET /api/v1/dashboard/transaction-statistics
+GET /api/v1/dashboard/recent-transactions
+```
+
+The Angular dashboard provides UI components for:
+
+- Welcome banner
+- Statistics
+- Quick actions
+- Charts
+- Recent transactions
+- Activity timeline
+- Notifications
+
+---
+
+# 🖥️ Frontend Architecture
+
+The frontend is built using **Angular 21** and follows a feature-based structure.
+
+```text
+for-ai/
+├── public/
+├── src/
+│   ├── app/
+│   │   ├── core/
+│   │   │   ├── constants/
+│   │   │   ├── guards/
+│   │   │   ├── interceptors/
+│   │   │   ├── models/
+│   │   │   ├── services/
+│   │   │   └── utils/
+│   │   │
+│   │   ├── features/
+│   │   │   ├── authentication/
+│   │   │   ├── dashboard/
+│   │   │   ├── customer/
+│   │   │   ├── account/
+│   │   │   ├── transaction/
+│   │   │   └── errors/
+│   │   │
+│   │   ├── layout/
+│   │   │   ├── auth-layout/
+│   │   │   └── main-layout/
+│   │   │
+│   │   ├── shared/
+│   │   │   ├── components/
+│   │   │   ├── directives/
+│   │   │   ├── forms/
+│   │   │   ├── services/
+│   │   │   └── styles/
+│   │   │
+│   │   ├── app.ts
+│   │   ├── app.config.ts
+│   │   └── app.routes.ts
+│   │
+│   └── environments/
+│
+├── proxy.conf.json
+├── angular.json
+├── package.json
+└── tsconfig.json
+```
+
+---
+
+# 🔐 Frontend Authentication
+
+The frontend contains:
+
+- Authentication UI
+- Authentication service
+- Auth guard
+- Role guard
+- Authentication interceptor
+- Local storage utilities
+- Unauthorized page
+- Login flow
+
+> **Important:** The supplied backend does not currently expose a dedicated authentication `/auth/login` microservice. The frontend authentication layer therefore represents the current application/demo authentication mechanism rather than a complete production-grade identity platform.
+
+For production deployment, authentication should be implemented using a dedicated identity/authentication service with secure token/session handling.
+
+---
+
+# 🔄 Frontend → Backend Communication
+
+The frontend does not hardcode each backend service URL into application components.
+
+Instead, Angular uses:
+
+```text
+/api
+```
+
+and the development proxy routes requests to the appropriate Spring Boot service.
+
+### `proxy.conf.json`
+
+```text
+/api/customers    → http://localhost:8081
+/api/accounts     → http://localhost:8082
+/api/transactions → http://localhost:8083
+/api/dashboard   → http://localhost:8084
+/actuator         → http://localhost:8081
+```
+
+This provides a cleaner development setup and avoids unnecessary frontend CORS configuration.
+
+---
+
+# 🧰 Technology Stack
+
+## Frontend
+
+| Technology | Purpose |
+|---|---|
+| Angular 21 | Frontend framework |
+| TypeScript 5.9 | Application language |
+| Angular Material | UI components |
+| RxJS | Reactive programming |
+| Chart.js | Charts |
+| ng2-charts | Angular Chart.js integration |
+| Angular Router | Application routing |
+| Reactive Forms | Form handling and validation |
+
+## Backend
+
+| Technology | Purpose |
+|---|---|
+| Java | Backend language |
+| Spring Boot | REST microservices |
+| Spring Web | REST APIs |
+| Spring Data JPA | Persistence |
+| Hibernate | ORM |
+| Spring Validation | Request validation |
+| Spring Security | Security infrastructure |
+| Spring Actuator | Health monitoring |
+| SpringDoc OpenAPI | API documentation |
+| MapStruct | DTO mapping |
+| Lombok | Boilerplate reduction |
+| Spring Cloud OpenFeign | Service-to-service communication |
+
+## Database
+
+```text
+PostgreSQL
+Database: fincore
+```
+
+The customer and transaction services also contain H2 dependencies for local/testing scenarios, while the supplied default configuration points to PostgreSQL.
+
+---
+
+# ⚙️ Prerequisites
+
+Install the following before running the project.
+
+### Required
+
+- Java 17 or newer
+- Apache Maven
+- Node.js
+- npm
+- PostgreSQL
+- Git
+
+The backend parent POM targets Java 17. Running the project with a newer compatible JDK such as Java 21 is possible, provided the Maven/compiler configuration succeeds.
+
+Check your environment:
+
+```bash
+java -version
+mvn -version
+node -v
+npm -v
+psql --version
+```
+
+---
+
+# 🗄️ PostgreSQL Setup
+
+The backend expects a PostgreSQL database named:
+
+```text
+fincore
+```
+
+Create it with:
+
+```sql
+CREATE DATABASE fincore;
+```
+
+The supplied backend configuration currently uses:
+
+```text
+Host: localhost
+Port: 5432
+Database: fincore
+Username: postgres
+```
+
+The account and transaction services currently contain a configured PostgreSQL password in their local properties.
+
+For a real deployment, **do not commit database credentials to GitHub**. Move them to environment variables or an external secret/configuration system.
+
+Example production-style configuration:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/fincore
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+```
+
+---
+
+# 🚀 Running the Backend
+
+The backend contains four independent services.
+
+```text
+backend/
+├── customer-service/
+├── account-service/
+├── transaction-service/
+└── dashboard-service/
+```
+
+Because the repository does not include a Maven Wrapper, Maven must be installed and available through PATH.
+
+Verify:
+
+```bash
+mvn -version
+```
+
+---
+
+## 1. Start Customer Service
+
+```powershell
+cd customer-service
+mvn spring-boot:run
+```
+
+Runs on:
+
+```text
+http://localhost:8081
+```
+
+Health endpoint:
+
+```text
+http://localhost:8081/actuator/health
+```
+
+Swagger UI:
+
+```text
+http://localhost:8081/swagger-ui.html
+```
+
+---
+
+## 2. Start Account Service
+
+Open another terminal:
+
+```powershell
+cd account-service
+mvn spring-boot:run
+```
+
+Runs on:
+
+```text
+http://localhost:8082
+```
+
+---
+
+## 3. Start Transaction Service
+
+Open another terminal:
+
+```powershell
+cd transaction-service
+mvn spring-boot:run
+```
+
+Runs on:
+
+```text
+http://localhost:8083
+```
+
+---
+
+## 4. Start Dashboard Service
+
+Open another terminal:
+
+```powershell
+cd dashboard-service
+mvn spring-boot:run
+```
+
+Runs on:
+
+```text
+http://localhost:8084
+```
+
+---
+
+# 🌐 Running the Angular Frontend
+
+Go to the frontend directory:
+
+```powershell
+cd for-ai
+```
+
+Install dependencies:
+
+```powershell
+npm install
+```
+
+Start the Angular development server:
+
+```powershell
+npm start
+```
+
+or:
+
+```powershell
+ng serve --proxy-config proxy.conf.json
+```
+
+Open:
+
+```text
+http://localhost:4200
+```
+
+---
+
+# 🔗 Complete Startup Order
+
+For a clean local startup:
+
+```text
+1. PostgreSQL
+      ↓
+2. Customer Service :8081
+      ↓
+3. Account Service :8082
+      ↓
+4. Transaction Service :8083
+      ↓
+5. Dashboard Service :8084
+      ↓
+6. Angular Frontend :4200
+```
+
+The dashboard should be started after the services it aggregates are available.
+
+---
+
+# 🧪 Testing the Backend
+
+You can test APIs using:
+
+- Postman
+- Insomnia
+- Swagger UI
+- Browser for GET endpoints
+- Angular frontend
+
+Example customer endpoint:
+
+```http
+GET http://localhost:8081/api/v1/customers
+```
+
+Example account endpoint:
+
+```http
+GET http://localhost:8082/api/v1/accounts
+```
+
+Example transaction endpoint:
+
+```http
+GET http://localhost:8083/api/v1/transactions/recent
+```
+
+Example dashboard endpoint:
+
+```http
+GET http://localhost:8084/api/v1/dashboard/summary
+```
+
+---
+
+# 🩺 Troubleshooting
+
+## `mvn is not recognized`
+
+If PowerShell shows:
+
+```text
+mvn : The term 'mvn' is not recognized
+```
+
+Maven is not installed or is missing from PATH.
+
+Verify:
+
+```powershell
+where.exe mvn
+mvn -version
+```
+
+Install Apache Maven and add its `bin` directory to the Windows PATH.
+
+Example:
+
+```text
+C:\Program Files\Apache\maven\bin
+```
+
+Then completely close PowerShell and open a new terminal.
+
+---
+
+## `java is not recognized`
+
+Install a JDK and configure `JAVA_HOME`.
+
+Verify:
+
+```powershell
+java -version
+```
+
+---
+
+## PostgreSQL connection failure
+
+Typical causes:
+
+- PostgreSQL is not running
+- Database `fincore` does not exist
+- Incorrect username/password
+- PostgreSQL is running on a different port
+- Local firewall/network configuration
+
+Check:
+
+```text
+localhost:5432
+```
+
+and verify the database exists.
+
+---
+
+## Port already in use
+
+If a service reports that its port is already occupied, find the process:
+
+```powershell
+netstat -ano | findstr :8081
+```
+
+Replace `8081` with the relevant port.
+
+---
+
+## Frontend API returns 404
+
+Verify all backend services are running:
+
+```text
+8081
+8082
+8083
+8084
+```
+
+Then verify the frontend proxy configuration:
+
+```text
+for-ai/proxy.conf.json
+```
+
+The frontend expects:
+
+```text
+/api/customers
+/api/accounts
+/api/transactions
+/api/dashboard
+```
+
+---
+
+## Dashboard data is unavailable
+
+The Dashboard Service depends on the other three services.
+
+Check:
+
+```text
+Customer Service → 8081
+Account Service → 8082
+Transaction Service → 8083
+Dashboard Service → 8084
+```
+
+Start the dependent services before testing dashboard APIs.
+
+---
+
+# 📁 Backend Structure
+
+```text
+fin-backend-for-ai/
+└── bacjend/
+    ├── pom.xml
+    │
+    ├── customer-service/
+    │   ├── src/
+    │   ├── pom.xml
+    │   └── ...
+    │
+    ├── account-service/
+    │   ├── src/
+    │   ├── pom.xml
+    │   └── ...
+    │
+    ├── transaction-service/
+    │   ├── src/
+    │   ├── pom.xml
+    │   └── ...
+    │
+    └── dashboard-service/
+        ├── src/
+        ├── pom.xml
+        └── ...
+```
+
+---
+
+# 🧠 Architectural Highlights
+
+### 1. Microservice separation
+
+Each core banking domain is isolated into its own service.
+
+This provides:
+
+- Independent deployment
+- Independent scaling
+- Clear domain boundaries
+- Easier maintenance
+- Reduced coupling
+
+### 2. RESTful APIs
+
+Each service exposes domain-specific REST endpoints.
+
+### 3. DTO-based communication
+
+The backend uses DTOs and mapping layers to separate API contracts from persistence entities.
+
+### 4. Service-to-service communication
+
+Dashboard Service uses **OpenFeign** clients to aggregate data from the other services.
+
+### 5. Angular feature architecture
+
+The frontend separates functionality into:
+
+```text
+Authentication
+Dashboard
+Customers
+Accounts
+Transactions
+Errors
+```
+
+This makes the frontend easier to extend and maintain.
+
+---
+
+# 🔒 Production Security Considerations
+
+This repository is suitable as a development/learning/full-stack project, but additional work is required before production banking deployment.
+
+Recommended production improvements:
+
+- Implement a dedicated authentication service
+- Use OAuth 2.0 / OpenID Connect
+- Use JWT or secure session management
+- Store secrets outside source control
+- Use HTTPS everywhere
+- Add centralized API gateway
+- Add service discovery where appropriate
+- Add rate limiting
+- Add audit logging
+- Add centralized observability
+- Add distributed tracing
+- Add database migrations with Flyway or Liquibase
+- Add automated integration tests
+- Add CI/CD
+- Add containerization with Docker
+- Add Kubernetes deployment for larger environments
+- Implement proper transaction consistency for financial operations
+- Add idempotency for transaction APIs
+- Add concurrency controls and transactional guarantees
+- Add comprehensive authorization policies
+
+> **Important:** This project should not be treated as production banking infrastructure without implementing the security, compliance, reliability, audit, and financial-consistency controls expected from a real banking system.
+
+---
+
+# 🛣️ Future Improvements
+
+Potential next steps:
+
+- [ ] Dedicated authentication/identity service
+- [ ] JWT/OAuth2 security
+- [ ] API Gateway
+- [ ] Centralized configuration
+- [ ] Docker Compose environment
+- [ ] Database migration scripts
+- [ ] Automated integration testing
+- [ ] CI/CD pipeline
+- [ ] Redis caching
+- [ ] Kafka/event-driven transaction processing
+- [ ] Centralized logging
+- [ ] Distributed tracing
+- [ ] Enhanced audit trail
+- [ ] Role-based backend authorization
+- [ ] Production-grade secret management
+- [ ] Cloud deployment
+
+---
+
+# 🎯 Learning Outcomes
+
+This project demonstrates practical experience with:
+
+- Full-stack application development
+- Angular architecture
+- TypeScript
+- REST API integration
+- Spring Boot
+- Spring Data JPA
+- Hibernate
+- PostgreSQL
+- Microservices
+- OpenFeign
+- DTOs
+- API validation
+- Frontend routing and guards
+- Reactive programming with RxJS
+- Dashboard visualization
+- Service-to-service communication
+- Application health monitoring
+
+---
+
+# 👨‍💻 Development Workflow
+
+A typical development workflow is:
+
+```text
+Requirement
+    ↓
+Frontend Feature
+    ↓
+Angular Service
+    ↓
+REST API
+    ↓
+Spring Boot Controller
+    ↓
+Service Layer
+    ↓
+Repository
+    ↓
+PostgreSQL
+```
+
+For dashboard aggregation:
+
+```text
+Angular Dashboard
+        ↓
+Dashboard Service
+        ↓
+ ┌──────┼────────┐
+ ↓      ↓        ↓
+Customer Account Transaction
+Service  Service   Service
+```
+
+---
+
+# 📌 Important Configuration Files
+
+### Frontend
+
+```text
+for-ai/package.json
+for-ai/angular.json
+for-ai/proxy.conf.json
+for-ai/src/environments/environment.ts
+for-ai/src/environments/environment.prod.ts
+```
+
+### Backend
+
+```text
+bacjend/pom.xml
+
+customer-service/pom.xml
+customer-service/src/main/resources/application.yml
+
+account-service/pom.xml
+account-service/src/main/resources/application.properties
+
+transaction-service/pom.xml
+transaction-service/src/main/resources/application.properties
+
+dashboard-service/pom.xml
+dashboard-service/src/main/resources/application.yml
+```
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+Recommended workflow:
+
+```bash
+git checkout -b feature/your-feature
+```
+
+Make your changes, test them locally, then commit:
+
+```bash
+git add .
+git commit -m "feat: add your feature"
+git push origin feature/your-feature
+```
+
+Open a Pull Request with:
+
+- What changed
+- Why it changed
+- How it was tested
+- Screenshots for UI changes where appropriate
+
+---
+
+# 📄 License
+
+This project is currently intended for educational, development, and portfolio purposes.
+
+Add an explicit open-source license such as MIT if you intend to permit reuse and redistribution.
+
+---
+
+# ⭐ Project Summary
+
+**FinCore Digital Banking Management Platform** is a full-stack banking application demonstrating how a modern Angular frontend can communicate with multiple Spring Boot microservices.
+
+The architecture separates customer, account, transaction, and dashboard responsibilities while using REST APIs, PostgreSQL, JPA/Hibernate, and OpenFeign to create a modular banking management system.
+
+```text
+Angular 21
+    +
+Spring Boot Microservices
+    +
+PostgreSQL
+    +
+REST APIs
+    +
+OpenFeign
+    =
+FinCore Digital Banking Platform
+```
+
+If you find the project useful, consider giving the repository a ⭐.
