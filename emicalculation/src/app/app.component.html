@@ -1,0 +1,162 @@
+<!-- Top Navigation Bar - FinCore Enterprise Style -->
+<header class="app-header">
+  <div class="header-left">
+    <div class="brand">
+      <div class="logo-icon">
+        <span class="material-icons">account_balance</span>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">FinCore <span class="accent">Nexus</span></span>
+        <span class="brand-tag">Core Banking System</span>
+      </div>
+    </div>
+    <div class="header-divider"></div>
+    <div class="module-title">
+      <span class="material-icons module-icon">calculate</span>
+      <span>EMI Calculation Module</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="system-status">
+      <span class="pulse-dot"></span>
+      <span class="status-text">Core Ledger Sync: Active</span>
+    </div>
+  </div>
+</header>
+
+<!-- Main Application Content -->
+<main class="main-container">
+  <!-- Page Header -->
+  <div class="page-header">
+    <h1 class="page-title">EMI Calculator</h1>
+    <p class="page-subtitle">Calculate your monthly loan repayment</p>
+  </div>
+
+  <!-- FinCore Dark Card -->
+  <div class="emi-card fade-in">
+    <form [formGroup]="emiForm" (ngSubmit)="calculateEmi()" novalidate>
+      
+      <!-- Field 1: Loan Amount -->
+      <div class="form-group">
+        <label for="loanAmount" class="form-label">
+          Loan Amount
+        </label>
+        <div class="input-wrapper" [class.input-error]="f['loanAmount'].invalid && (f['loanAmount'].touched || isSubmitted)">
+          <span class="currency-symbol">₹</span>
+          <input
+            id="loanAmount"
+            type="number"
+            formControlName="loanAmount"
+            class="form-control"
+            placeholder="e.g. 500000"
+            min="1"
+            step="any"
+          />
+        </div>
+        <div class="error-container" *ngIf="f['loanAmount'].invalid && (f['loanAmount'].touched || isSubmitted)">
+          <span class="error-msg" *ngIf="f['loanAmount'].errors?.['required']">
+            <span class="material-icons error-icon">error_outline</span>
+            Loan Amount is required.
+          </span>
+          <span class="error-msg" *ngIf="f['loanAmount'].errors?.['greaterThanZero'] && !f['loanAmount'].errors?.['required']">
+            <span class="material-icons error-icon">error_outline</span>
+            Loan Amount must be greater than 0.
+          </span>
+        </div>
+      </div>
+
+      <!-- Field 2: Interest Rate -->
+      <div class="form-group">
+        <label for="interestRate" class="form-label">
+          Interest Rate (%)
+        </label>
+        <div class="input-wrapper" [class.input-error]="f['interestRate'].invalid && (f['interestRate'].touched || isSubmitted)">
+          <input
+            id="interestRate"
+            type="number"
+            formControlName="interestRate"
+            class="form-control"
+            placeholder="e.g. 8.5"
+            min="0"
+            step="any"
+          />
+          <span class="input-suffix">%</span>
+        </div>
+        <div class="error-container" *ngIf="f['interestRate'].invalid && (f['interestRate'].touched || isSubmitted)">
+          <span class="error-msg" *ngIf="f['interestRate'].errors?.['required']">
+            <span class="material-icons error-icon">error_outline</span>
+            Interest Rate is required.
+          </span>
+          <span class="error-msg" *ngIf="f['interestRate'].errors?.['greaterThanOrEqualToZero'] && !f['interestRate'].errors?.['required']">
+            <span class="material-icons error-icon">error_outline</span>
+            Interest Rate must be 0 or greater.
+          </span>
+        </div>
+      </div>
+
+      <!-- Field 3: Loan Tenure -->
+      <div class="form-group">
+        <label for="loanTenure" class="form-label">
+          Loan Tenure (Months)
+        </label>
+        <div class="input-wrapper" [class.input-error]="f['loanTenure'].invalid && (f['loanTenure'].touched || isSubmitted)">
+          <input
+            id="loanTenure"
+            type="number"
+            formControlName="loanTenure"
+            class="form-control"
+            placeholder="e.g. 24"
+            min="1"
+            step="1"
+          />
+          <span class="input-suffix">Months</span>
+        </div>
+        <div class="error-container" *ngIf="f['loanTenure'].invalid && (f['loanTenure'].touched || isSubmitted)">
+          <span class="error-msg" *ngIf="f['loanTenure'].errors?.['required']">
+            <span class="material-icons error-icon">error_outline</span>
+            Loan Tenure is required.
+          </span>
+          <span class="error-msg" *ngIf="f['loanTenure'].errors?.['greaterThanZero'] && !f['loanTenure'].errors?.['required']">
+            <span class="material-icons error-icon">error_outline</span>
+            Loan Tenure must be greater than 0.
+          </span>
+        </div>
+      </div>
+
+      <!-- Calculate EMI Button -->
+      <button type="submit" class="btn-calculate">
+        <span class="material-icons">calculate</span>
+        Calculate EMI
+      </button>
+
+    </form>
+
+    <!-- Calculation Results Breakdown -->
+    <div class="result-container fade-in" *ngIf="result">
+      <div class="result-divider"></div>
+
+      <div class="result-cards">
+        <!-- Monthly EMI -->
+        <div class="result-card primary-result">
+          <div class="result-label">Monthly EMI</div>
+          <div class="result-value">{{ formatCurrency(result.monthlyEmi) }}</div>
+        </div>
+
+        <!-- Total Interest & Total Payment -->
+        <div class="result-grid">
+          <div class="result-card">
+            <div class="result-label">Total Interest</div>
+            <div class="result-value interest-val">{{ formatCurrency(result.totalInterest) }}</div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-label">Total Payment</div>
+            <div class="result-value payment-val">{{ formatCurrency(result.totalPayment) }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
