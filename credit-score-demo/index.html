@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FinCore Credit Assessment Demo</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <div>
+          <p class="eyebrow">FinCore Digital Banking</p>
+          <h1>Credit Assessment Demo</h1>
+        </div>
+        <div class="badge">Loan Risk Evaluation</div>
+      </header>
+
+      <main class="layout">
+        <section class="panel form-panel">
+          <h2>Applicant Details</h2>
+
+          <form id="credit-form">
+            <div class="field-grid">
+              <label>
+                Monthly Income (INR)
+                <input type="number" id="income" value="75000" min="0" step="1000" />
+              </label>
+
+              <label>
+                Age
+                <input type="number" id="age" value="32" min="18" max="75" />
+              </label>
+
+              <label>
+                Employment Type
+                <select id="employment">
+                  <option value="fulltime" selected>Full Time</option>
+                  <option value="selfemployed">Self Employed</option>
+                  <option value="contract">Contract</option>
+                  <option value="unemployed">Unemployed</option>
+                </select>
+              </label>
+
+              <label>
+                Existing EMI / Debt (%)
+                <input type="number" id="debtRatio" value="22" min="0" max="100" />
+              </label>
+
+              <label>
+                Credit History (Years)
+                <input type="number" id="creditHistory" value="5" min="0" max="20" />
+              </label>
+
+              <label>
+                Savings Ratio (%)
+                <input type="number" id="savingsRatio" value="28" min="0" max="100" />
+              </label>
+
+              <label>
+                Existing Loans
+                <input type="number" id="existingLoans" value="1" min="0" max="10" />
+              </label>
+
+              <label>
+                Previous Default History
+                <select id="defaultHistory">
+                  <option value="no" selected>No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </label>
+            </div>
+
+            <button type="submit">Assess Credit</button>
+          </form>
+        </section>
+
+        <section class="panel result-panel">
+          <h2>Assessment Result</h2>
+
+          <div class="score-box">
+            <div class="score-label">Credit Score</div>
+            <div id="scoreValue" class="score-value">0</div>
+            <div id="scoreBand" class="score-band">Pending</div>
+          </div>
+
+          <div class="result-grid">
+            <div>
+              <span class="meta-label">Decision</span>
+              <strong id="decision">-</strong>
+            </div>
+            <div>
+              <span class="meta-label">Eligible Amount</span>
+              <strong id="loanAmount">₹0</strong>
+            </div>
+            <div>
+              <span class="meta-label">Suggested Rate</span>
+              <strong id="interestRate">-</strong>
+            </div>
+            <div>
+              <span class="meta-label">Risk Level</span>
+              <strong id="riskLevel">-</strong>
+            </div>
+          </div>
+
+          <div class="summary" id="summary">
+            Fill in the form and click assess to evaluate the applicant.
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
