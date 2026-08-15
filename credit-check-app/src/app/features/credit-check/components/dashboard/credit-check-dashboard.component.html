@@ -1,0 +1,214 @@
+<div class="dashboard-layout">
+  <!-- Top Header Bar -->
+  <app-header
+    moduleTitle="Credit Check"
+    moduleIcon="credit_score"
+    (toggleSidebar)="onToggleSidebar()"
+  ></app-header>
+
+  <div class="main-container">
+    <!-- Left Navigation Sidebar -->
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>Credit Check Dashboard</h1>
+          <p class="subtitle">FinCore Nexus Loan Eligibility &amp; Credit Risk Assessment</p>
+        </div>
+        <div class="header-actions">
+          <a class="btn primary" routerLink="/credit-check/new">
+            <span class="material-icons">add</span> New Credit Check
+          </a>
+          <div class="live-indicator-badge">
+            <span class="live-pulse"></span>
+            <span>Automated Batch: Online</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat cards -->
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">TOTAL APPLICATIONS</span>
+            <span class="stat-icon blue"><span class="material-icons">description</span></span>
+          </div>
+          <div class="stat-value">{{ creditCheckService.summaryStats().total }}</div>
+          <div class="stat-sub positive">
+            <span class="material-icons">trending_up</span> +8.2% vs last cycle
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">TOTAL LOAN AMOUNT</span>
+            <span class="stat-icon green"><span class="material-icons">payments</span></span>
+          </div>
+          <div class="stat-value">{{ formatCurrency(creditCheckService.summaryStats().totalLoanAmount) }}</div>
+          <div class="stat-sub muted">Across 6 loan types</div>
+        </div>
+
+        <div class="stat-card danger">
+          <div class="stat-top">
+            <span class="stat-label">NEEDS REVIEW</span>
+            <span class="stat-icon red"><span class="material-icons">warning</span></span>
+          </div>
+          <div class="stat-value">{{ creditCheckService.summaryStats().needsReview }}</div>
+          <div class="stat-sub danger-text">
+            <span class="material-icons">error</span> Requires Auditor Review
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-top">
+            <span class="stat-label">APPROVAL RATE</span>
+            <span class="stat-icon purple"><span class="material-icons">fact_check</span></span>
+          </div>
+          <div class="stat-value gold">{{ creditCheckService.summaryStats().approvalRate }}%</div>
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="creditCheckService.summaryStats().approvalRate"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter & search -->
+      <div class="panel">
+        <div class="panel-header-row">
+          <div class="panel-title"><span class="material-icons">tune</span> Filter &amp; Search Credit Records</div>
+          <div class="panel-actions">
+            <button type="button" class="btn excel" (click)="exportExcel()">
+              <span class="material-icons">grid_on</span> Export Excel
+            </button>
+            <button type="button" class="btn pdf" (click)="exportPdf()">
+              <span class="material-icons">picture_as_pdf</span> Export PDF
+            </button>
+          </div>
+        </div>
+
+        <div class="filter-grid">
+          <div class="filter-field">
+            <label>Start Date</label>
+            <div class="input-with-icon">
+              <input type="date" [(ngModel)]="startDate" />
+              <span class="material-icons">calendar_today</span>
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>End Date</label>
+            <div class="input-with-icon">
+              <input type="date" [(ngModel)]="endDate" />
+              <span class="material-icons">calendar_today</span>
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>Loan Type</label>
+            <select [(ngModel)]="loanType">
+              <option *ngFor="let t of loanTypeOptions" [value]="t">{{ t }}</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>Credit Status</label>
+            <select [(ngModel)]="creditStatus">
+              <option *ngFor="let s of creditStatusOptions" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+          <div class="filter-field">
+            <label>Application Status</label>
+            <select [(ngModel)]="applicationStatus">
+              <option *ngFor="let s of applicationStatusOptions" [value]="s">{{ s }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filter-grid second-row">
+          <div class="filter-field">
+            <label>&nbsp;</label>
+            <div class="input-with-icon">
+              <input type="text" placeholder="Search Customer" [(ngModel)]="customerSearch" />
+              <span class="material-icons">person_search</span>
+            </div>
+          </div>
+          <div class="filter-field">
+            <label>&nbsp;</label>
+            <div class="input-with-icon">
+              <input type="text" placeholder="Search Loan ID" [(ngModel)]="loanIdSearch" />
+              <span class="material-icons">tag</span>
+            </div>
+          </div>
+          <div class="filter-buttons">
+            <button type="button" class="btn primary" (click)="applyFilters()">
+              <span class="material-icons">search</span> Search
+            </button>
+            <button type="button" class="btn ghost" (click)="resetFilters()">
+              <span class="material-icons">restart_alt</span> Reset
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Records table -->
+      <div class="panel">
+        <div class="panel-header-row">
+          <div class="panel-title">
+            <span class="material-icons">table_rows</span> Live Credit Check Records
+            <span class="count-pill">{{ creditCheckService.filteredRecords().length }} Records</span>
+          </div>
+          <button type="button" class="btn ghost small" (click)="onRefresh()">
+            <span class="material-icons">refresh</span> Refresh
+          </button>
+        </div>
+
+        <div class="table-scroll">
+          <table class="records-table">
+            <thead>
+              <tr>
+                <th>Credit Check ID</th>
+                <th>Loan ID</th>
+                <th>Customer Name</th>
+                <th>Credit Score</th>
+                <th>Monthly Income</th>
+                <th>Existing Loans</th>
+                <th>Credit Status</th>
+                <th>Remarks</th>
+                <th>Checked At</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let r of creditCheckService.filteredRecords()">
+                <td class="mono">{{ r.credit.creditCheckId }}</td>
+                <td class="mono link">LN{{ r.application.loanId }}</td>
+                <td class="bold">{{ r.application.customerName }}</td>
+                <td>{{ r.credit.creditScore }}</td>
+                <td>{{ formatCurrency(r.credit.monthlyIncome) }}</td>
+                <td>{{ r.credit.existingLoanCount }}</td>
+                <td>
+                  <span
+                    class="pill"
+                    [ngClass]="{
+                      'pill-green': r.credit.creditStatus === 'Pass',
+                      'pill-amber': r.credit.creditStatus === 'Review',
+                      'pill-red': r.credit.creditStatus === 'Fail'
+                    }"
+                    >{{ r.credit.creditStatus }}</span
+                  >
+                </td>
+                <td>{{ r.credit.remarks }}</td>
+                <td>{{ r.credit.checkedAt | slice:0:10 }}</td>
+                <td class="actions">
+                  <button type="button" class="link-btn" (click)="approve(r.application.loanId)">Approve</button>
+                  <button type="button" class="link-btn danger" (click)="reject(r.application.loanId)">Reject</button>
+                </td>
+              </tr>
+              <tr *ngIf="creditCheckService.filteredRecords().length === 0">
+                <td colspan="10" class="no-results">No credit check records match your filters.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

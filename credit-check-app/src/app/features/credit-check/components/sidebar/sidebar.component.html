@@ -1,0 +1,40 @@
+<aside class="app-sidebar" [class.collapsed]="collapsed">
+  <div class="sidebar-section-title" *ngIf="!collapsed">Main Navigation</div>
+
+  <nav class="nav-list">
+    <ng-container *ngFor="let item of navItems">
+      <a
+        *ngIf="item.route; else staticNav"
+        class="nav-item"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: !!item.exact }"
+        [matTooltip]="collapsed ? item.label : ''"
+        matTooltipPosition="right"
+      >
+        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+        <span class="nav-badge" *ngIf="item.badge && !collapsed">{{ item.badge }}</span>
+      </a>
+      <ng-template #staticNav>
+        <a
+          class="nav-item"
+          [class.active]="item.active"
+          [matTooltip]="collapsed ? item.label : ''"
+          matTooltipPosition="right"
+        >
+          <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+          <span class="nav-label" *ngIf="!collapsed">{{ item.label }}</span>
+          <span class="nav-badge" *ngIf="item.badge && !collapsed">{{ item.badge }}</span>
+        </a>
+      </ng-template>
+    </ng-container>
+  </nav>
+
+  <div class="sidebar-footer" *ngIf="!collapsed">
+    <div class="version-info">
+      <span class="v-title">FinCore Platform</span>
+      <span class="v-number">v2.4.0 • Enterprise Build</span>
+    </div>
+  </div>
+</aside>

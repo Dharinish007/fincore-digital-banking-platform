@@ -1,0 +1,257 @@
+<div class="dashboard-layout">
+  <!-- Top Header Bar -->
+  <app-header
+    moduleTitle="New Credit Check"
+    moduleIcon="fact_check"
+    (toggleSidebar)="onToggleSidebar()"
+  ></app-header>
+
+  <div class="main-container">
+    <!-- Left Navigation Sidebar -->
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>New Credit Check</h1>
+          <p class="subtitle">Look up a customer, review their loan history and run an eligibility check</p>
+        </div>
+        <button type="button" class="btn ghost small" (click)="goToDashboard()">
+          <span class="material-icons">arrow_back</span> Back to Dashboard
+        </button>
+      </div>
+
+      <!-- Step 1: Customer lookup -->
+      <div class="panel">
+        <div class="panel-header-row">
+          <div class="panel-title"><span class="material-icons">person_search</span> Customer</div>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label>Customer ID <span class="req">*</span></label>
+            <div class="input-with-icon">
+              <input
+                type="number"
+                placeholder="e.g. 5003"
+                [(ngModel)]="customerId"
+                (keyup.enter)="searchCustomer()"
+              />
+              <span class="material-icons">tag</span>
+            </div>
+          </div>
+          <div class="form-field search-btn-field">
+            <label>&nbsp;</label>
+            <button type="button" class="btn primary" (click)="searchCustomer()" [disabled]="lookupState === 'loading'">
+              <span class="material-icons">{{ lookupState === 'loading' ? 'hourglass_top' : 'search' }}</span>
+              {{ lookupState === 'loading' ? 'Searching...' : 'Search Customer' }}
+            </button>
+          </div>
+        </div>
+
+        <div class="lookup-message error" *ngIf="lookupState === 'not-found'">
+          <span class="material-icons">error_outline</span>
+          No customer / loan application found for this Customer ID. Try 5000-5011 from the demo dataset.
+        </div>
+      </div>
+
+      <ng-container *ngIf="lookupState === 'found'">
+        <!-- Auto-filled application details -->
+        <div class="panel">
+          <div class="panel-header-row">
+            <div class="panel-title"><span class="material-icons">description</span> Application Details</div>
+            <span class="count-pill subtle">Auto-filled</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Customer Name</label>
+              <input type="text" [value]="customerName" disabled />
+            </div>
+            <div class="form-field">
+              <label>Loan Type</label>
+              <select [ngModel]="loanType" disabled>
+                <option *ngFor="let t of loanTypeOptions" [value]="t">{{ t }}</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Loan Amount</label>
+              <input type="text" [value]="formatCurrency(loanAmount)" disabled />
+            </div>
+          </div>
+        </div>
+
+        <!-- Financial input -->
+        <div class="panel">
+          <div class="panel-header-row">
+            <div class="panel-title"><span class="material-icons">payments</span> Financial Details</div>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Salary (\u20B9) <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <input type="number" placeholder="e.g. 45000" [(ngModel)]="monthlyIncome" min="0" />
+                <span class="material-icons">currency_rupee</span>
+              </div>
+              <span class="field-error" *ngIf="checkRun && (monthlyIncome == null || monthlyIncome <= 0)">
+                Salary is required.
+              </span>
+            </div>
+            <div class="form-field">
+              <label>Credit Score <span class="req">*</span></label>
+              <div class="input-with-icon">
+                <input
+                  type="number"
+                  placeholder="300 - 900"
+                  [(ngModel)]="creditScore"
+                  min="300"
+                  max="900"
+                />
+                <span class="material-icons">speed</span>
+              </div>
+              <button
+                type="button"
+                class="link-btn fetch-score-btn"
+                (click)="fetchCreditScoreFromBureau()"
+                [disabled]="fetchingScore"
+              >
+                <span class="material-icons">{{ fetchingScore ? 'hourglass_top' : 'sync' }}</span>
+                {{ fetchingScore ? 'Fetching from bureau...' : 'Fetch from Credit System' }}
+              </button>
+              <span class="field-error" *ngIf="checkRun && (creditScore == null || creditScore < 300 || creditScore > 900)">
+                Enter a valid credit score between 300 and 900.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Auto-calculated loan history -->
+        <div class="panel">
+          <div class="panel-header-row">
+            <div class="panel-title"><span class="material-icons">history</span> Loan History</div>
+            <span class="count-pill subtle">Auto-calculated</span>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field">
+              <label>Existing Loan Count</label>
+              <input type="text" [value]="existingLoanCount" disabled />
+            </div>
+            <div class="form-field">
+              <label>Previous Loan</label>
+              <input type="text" [value]="hasPreviousLoan ? 'Yes' : 'No'" disabled />
+            </div>
+            <div class="form-field" *ngIf="hasPreviousLoan">
+              <label>Outstanding Amount</label>
+              <input type="text" [value]="formatCurrency(outstandingAmount)" disabled />
+            </div>
+          </div>
+
+          <div class="prev-loans" *ngIf="hasPreviousLoan">
+            <div class="prev-loans-title">Previous Loan Details</div>
+            <div class="table-scroll">
+              <table class="records-table compact">
+                <thead>
+                  <tr>
+                    <th>Loan ID</th>
+                    <th>Loan Type</th>
+                    <th>Original Amount</th>
+                    <th>Outstanding</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let loan of previousLoans">
+                    <td class="mono">LN{{ loan.loanId }}</td>
+                    <td>{{ loan.loanType }}</td>
+                    <td>{{ formatCurrency(loan.amount) }}</td>
+                    <td>{{ formatCurrency(loan.outstandingAmount) }}</td>
+                    <td>
+                      <span
+                        class="pill"
+                        [ngClass]="{
+                          'pill-green': loan.status === 'Closed',
+                          'pill-amber': loan.status === 'Active',
+                          'pill-red': loan.status === 'Defaulted'
+                        }"
+                        >{{ loan.status }}</span
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="no-prev-loan" *ngIf="!hasPreviousLoan">
+            <span class="material-icons">check_circle</span>
+            No previous loan history found for this customer.
+          </div>
+        </div>
+
+        <!-- Eligibility result -->
+        <div class="panel">
+          <div class="panel-header-row">
+            <div class="panel-title"><span class="material-icons">fact_check</span> Eligibility Check</div>
+            <span class="count-pill subtle">System-generated</span>
+          </div>
+
+          <button type="button" class="btn primary" (click)="runEligibilityCheck()" [disabled]="!canRunCheck">
+            <span class="material-icons">rule</span> Run Eligibility Check
+          </button>
+          <span class="field-error" *ngIf="!canRunCheck">
+            Enter Salary and Credit Score above to run the check.
+          </span>
+
+          <div class="eligibility-result" *ngIf="checkRun && creditStatus">
+            <div class="form-grid">
+              <div class="form-field">
+                <label>Credit Status</label>
+                <div>
+                  <span
+                    class="pill large"
+                    [ngClass]="{
+                      'pill-green': creditStatus === 'Pass',
+                      'pill-amber': creditStatus === 'Review',
+                      'pill-red': creditStatus === 'Fail'
+                    }"
+                    >{{ creditStatus }}</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="form-field full-width">
+              <label>Remarks (optional &mdash; editable)</label>
+              <textarea rows="3" [(ngModel)]="remarks"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="panel actions-panel">
+          <div class="save-success" *ngIf="saved">
+            <span class="material-icons">check_circle</span>
+            Credit check saved. It now appears on the dashboard.
+          </div>
+          <div class="actions-row">
+            <button type="button" class="btn primary" (click)="saveCreditCheck()" [disabled]="!canSave">
+              <span class="material-icons">save</span> Save Credit Check
+            </button>
+            <button type="button" class="btn ghost" (click)="startNewCheck()">
+              <span class="material-icons">restart_alt</span> Start New Check
+            </button>
+            <button type="button" class="btn ghost" (click)="goToDashboard()" *ngIf="saved">
+              <span class="material-icons">list_alt</span> View in Dashboard
+            </button>
+          </div>
+          <span class="field-error" *ngIf="submitted && !canSave">
+            Run the eligibility check before saving.
+          </span>
+        </div>
+      </ng-container>
+    </main>
+  </div>
+</div>
