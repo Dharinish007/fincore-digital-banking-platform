@@ -22,7 +22,6 @@ export class LoanApplicationPageComponent {
 
   constructor() {
     this.form = this.fb.group({
-      customerId: [5001, [Validators.required, Validators.min(1)]],
       fullName: ['Aarav Sharma', Validators.required],
       dateOfBirth: ['1990-05-14', Validators.required],
       gender: ['Male', Validators.required],
@@ -56,7 +55,6 @@ export class LoanApplicationPageComponent {
 
     this.loading = true;
     this.loanService.createLoanApplication({
-      customerId: Number(this.form.value.customerId),
       customerName: this.form.value.fullName,
       loanType: this.form.value.loanType,
       loanAmount: Number(this.form.value.requestedLoanAmount),
@@ -89,7 +87,6 @@ export class LoanApplicationPageComponent {
 
     this.loading = true;
     this.loanService.createLoanApplication({
-      customerId: Number(this.form.value.customerId),
       customerName: this.form.value.fullName,
       loanType: this.form.value.loanType,
       loanAmount: Number(this.form.value.requestedLoanAmount),

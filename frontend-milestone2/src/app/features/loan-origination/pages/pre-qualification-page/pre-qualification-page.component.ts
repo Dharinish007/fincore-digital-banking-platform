@@ -20,7 +20,6 @@ export class PreQualificationPageComponent {
 
   constructor() {
     this.form = this.fb.group({
-      customerId: ['5001', [Validators.required, Validators.min(1)]],
       fullName: ['Aarav Sharma', Validators.required],
       dateOfBirth: ['1990-05-14', Validators.required],
       mobile: ['+91 98765 43210', [Validators.required, Validators.pattern('^\\+?[0-9\\s-]{10,15}$')]],
@@ -59,7 +58,6 @@ export class PreQualificationPageComponent {
   continueToApplication() {
     if (this.form.valid) {
       this.loanService.createLoanApplication({
-        customerId: Number(this.form.value.customerId),
         customerName: this.form.value.fullName,
         loanType: this.form.value.loanType,
         loanAmount: Number(this.form.value.requestedLoanAmount),

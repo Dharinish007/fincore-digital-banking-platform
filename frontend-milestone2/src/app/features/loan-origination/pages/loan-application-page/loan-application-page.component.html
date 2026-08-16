@@ -14,14 +14,6 @@
     </h3>
     <div class="form-grid">
       <div class="form-group">
-        <label>Customer ID <span class="req">*</span></label>
-        <input formControlName="customerId" placeholder="e.g. 5001" type="number" />
-        <div *ngIf="form.get('customerId')?.invalid && form.get('customerId')?.touched" class="form-error">
-          Customer ID is required
-        </div>
-      </div>
-
-      <div class="form-group">
         <label>Full Name <span class="req">*</span></label>
         <input formControlName="fullName" placeholder="Borrower full name" />
         <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="form-error">

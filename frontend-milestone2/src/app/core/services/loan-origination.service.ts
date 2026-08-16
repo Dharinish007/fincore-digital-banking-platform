@@ -9,7 +9,7 @@ export type ApplicationStatus = 'Pending' | 'Approved' | 'Rejected' | 'Draft' | 
 
 export interface LoanApplicationPayload {
   loanId?: number;
-  customerId: number;
+  customerId?: number;
   customerName?: string;
   loanType: LoanType;
   loanAmount: number;
@@ -70,8 +70,9 @@ export class LoanOriginationService {
 
   /** POST /api/loan-origination */
   createLoanApplication(data: LoanApplicationPayload): Observable<LoanApplicationPayload> {
+    const internalCustomerId = Number(data.customerId) || Math.floor(5000 + Math.random() * 4000);
     const payload = {
-      customerId: Number(data.customerId),
+      customerId: internalCustomerId,
       loanType: data.loanType || 'Personal',
       loanAmount: Number(data.loanAmount),
       tenureMonths: Number(data.tenureMonths || 36),
