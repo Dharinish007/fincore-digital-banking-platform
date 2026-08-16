@@ -16,7 +16,7 @@ type LookupState = 'idle' | 'loading' | 'found' | 'not-found';
 @Component({
   selector: 'app-credit-check-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent, SidebarComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './credit-check-form.component.html',
   styleUrls: ['./credit-check-form.component.scss'],
 })

@@ -1,4 +1,5 @@
 <div class="fincore-layout">
+  <!-- Top Header Bar -->
   <header class="fincore-topbar">
     <div class="topbar-brand">
       <div class="logo-icon">🏦</div>
@@ -8,20 +9,80 @@
       </div>
     </div>
 
-    <nav class="topbar-nav">
-      <a routerLink="/loan-origination" routerLinkActive="active" class="nav-btn">
-        <span class="nav-icon">📄</span> Loan Origination
-      </a>
-      <a routerLink="/credit-check" routerLinkActive="active" class="nav-btn">
-        <span class="nav-icon">💳</span> Credit Check
-      </a>
-      <a routerLink="/emi-calculator" routerLinkActive="active" class="nav-btn">
-        <span class="nav-icon">🧮</span> EMI Calculator
-      </a>
-    </nav>
+    <div class="topbar-right">
+      <div class="sync-status">
+        <span class="sync-dot"></span>
+        Core Ledger Sync: Active
+      </div>
+      <div class="user-chip">
+        <div class="avatar">AM</div>
+        <div class="user-info">
+          <span class="user-name">Alex Mercer</span>
+          <span class="user-role">Senior Loan Officer</span>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <main class="fincore-content">
-    <router-outlet></router-outlet>
-  </main>
+  <div class="fincore-body">
+    <!-- Left Navigation Sidebar -->
+    <aside class="fincore-sidebar">
+      <div class="sidebar-nav-container">
+        <!-- Section 1: Loan Origination -->
+        <div class="nav-section">
+          <div class="nav-section-title">LOAN ORIGINATION</div>
+          <nav class="nav-list">
+            <a routerLink="/loan-origination" [routerLinkActiveOptions]="{ exact: true }" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">🏠</span> <span class="nav-text">Dashboard</span>
+            </a>
+            <a routerLink="/loan-origination/pre-qualification" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">🧾</span> <span class="nav-text">Pre-Qualification</span>
+            </a>
+            <a routerLink="/loan-origination/loan-application" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">✍️</span> <span class="nav-text">New Application</span>
+            </a>
+            <a routerLink="/loan-origination/applications" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">📂</span> <span class="nav-text">Applications</span>
+            </a>
+            <a routerLink="/loan-origination/processing" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">⚙️</span> <span class="nav-text">Application Processing</span>
+            </a>
+            <a routerLink="/loan-origination/underwriting" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">🔍</span> <span class="nav-text">Underwriting</span>
+            </a>
+            <a routerLink="/loan-origination/quality-control" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">✔️</span> <span class="nav-text">Quality Control</span>
+            </a>
+            <a routerLink="/loan-origination/loan-funding" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">💰</span> <span class="nav-text">Loan Funding</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Section 2: Modules -->
+        <div class="nav-section">
+          <div class="nav-section-title">MODULES</div>
+          <nav class="nav-list">
+            <a routerLink="/credit-check" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">💳</span> <span class="nav-text">Credit Check</span>
+            </a>
+            <a routerLink="/emi-calculator" routerLinkActive="active" class="nav-link">
+              <span class="nav-icon">🧮</span> <span class="nav-text">EMI Calculator</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="footer-title">FinCore Platform</div>
+        <div class="footer-sub">v2.4.0 • Enterprise Build</div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="fincore-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>
+

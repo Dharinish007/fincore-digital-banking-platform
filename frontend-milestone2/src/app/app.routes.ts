@@ -28,6 +28,11 @@ export const routes: Routes = [
       ).then((m) => m.CreditCheckFormComponent)
   },
   {
+    path: 'credit-check/new',
+    redirectTo: 'credit-check/new-check',
+    pathMatch: 'full'
+  },
+  {
     path: 'emi-calculator',
     loadComponent: () =>
       import('./features/emi-calculator/emi-calculator.component').then(

@@ -1,25 +1,11 @@
-.dashboard-layout {
+.credit-check-form-container {
+  padding: 24px;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  background-color: var(--bg-primary);
 
-  .main-container {
+  .dashboard-header {
     display: flex;
-    flex: 1;
-    height: calc(100vh - 64px);
-    overflow: hidden;
-
-    .content-area {
-      flex: 1;
-      overflow-y: auto;
-      padding: 24px;
-
-      .dashboard-header {
-        display: flex;
-        align-items: center;
+    align-items: center;
         justify-content: space-between;
         margin-bottom: 24px;
         flex-wrap: wrap;
@@ -39,8 +25,6 @@
           }
         }
       }
-    }
-  }
 }
 
 /* Panels */

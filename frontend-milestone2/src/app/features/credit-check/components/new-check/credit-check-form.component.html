@@ -1,26 +1,13 @@
-<div class="dashboard-layout">
-  <!-- Top Header Bar -->
-  <app-header
-    moduleTitle="New Credit Check"
-    moduleIcon="fact_check"
-    (toggleSidebar)="onToggleSidebar()"
-  ></app-header>
-
-  <div class="main-container">
-    <!-- Left Navigation Sidebar -->
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <!-- Main Content Area -->
-    <main class="content-area">
-      <div class="dashboard-header">
-        <div class="title-group">
-          <h1>New Credit Check</h1>
-          <p class="subtitle">Look up a customer, review their loan history and run an eligibility check</p>
-        </div>
-        <button type="button" class="btn ghost small" (click)="goToDashboard()">
-          <span class="material-icons">arrow_back</span> Back to Dashboard
-        </button>
-      </div>
+<div class="credit-check-form-container">
+  <div class="dashboard-header">
+    <div class="title-group">
+      <h1>New Credit Check</h1>
+      <p class="subtitle">Look up a customer, review their loan history and run an eligibility check</p>
+    </div>
+    <button type="button" class="btn ghost small" (click)="goToDashboard()">
+      <span class="material-icons">arrow_back</span> Back to Dashboard
+    </button>
+  </div>
 
       <!-- Step 1: Customer lookup -->
       <div class="panel">
@@ -245,6 +232,4 @@
           </span>
         </div>
       </ng-container>
-    </main>
-  </div>
 </div>

@@ -16,8 +16,6 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
     CommonModule,
     FormsModule,
     RouterLink,
-    HeaderComponent,
-    SidebarComponent,
   ],
   templateUrl: './credit-check-dashboard.component.html',
   styleUrls: ['./credit-check-dashboard.component.scss'],

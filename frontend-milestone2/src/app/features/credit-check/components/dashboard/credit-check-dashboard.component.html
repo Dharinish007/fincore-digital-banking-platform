@@ -1,32 +1,19 @@
-<div class="dashboard-layout">
-  <!-- Top Header Bar -->
-  <app-header
-    moduleTitle="Credit Check"
-    moduleIcon="credit_score"
-    (toggleSidebar)="onToggleSidebar()"
-  ></app-header>
-
-  <div class="main-container">
-    <!-- Left Navigation Sidebar -->
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <!-- Main Content Area -->
-    <main class="content-area">
-      <div class="dashboard-header">
-        <div class="title-group">
-          <h1>Credit Check Dashboard</h1>
-          <p class="subtitle">FinCore Nexus Loan Eligibility &amp; Credit Risk Assessment</p>
-        </div>
-        <div class="header-actions">
-          <a class="btn primary" routerLink="/credit-check/new">
-            <span class="material-icons">add</span> New Credit Check
-          </a>
-          <div class="live-indicator-badge">
-            <span class="live-pulse"></span>
-            <span>Automated Batch: Online</span>
-          </div>
-        </div>
+<div class="credit-check-dashboard-container">
+  <div class="dashboard-header">
+    <div class="title-group">
+      <h1>Credit Check Dashboard</h1>
+      <p class="subtitle">FinCore Nexus Loan Eligibility &amp; Credit Risk Assessment</p>
+    </div>
+    <div class="header-actions">
+      <a class="btn primary" routerLink="/credit-check/new">
+        <span class="material-icons">add</span> New Credit Check
+      </a>
+      <div class="live-indicator-badge">
+        <span class="live-pulse"></span>
+        <span>Automated Batch: Online</span>
       </div>
+    </div>
+  </div>
 
       <!-- Stat cards -->
       <div class="stat-row">
@@ -221,6 +208,4 @@
           </table>
         </div>
       </div>
-    </main>
-  </div>
 </div>
