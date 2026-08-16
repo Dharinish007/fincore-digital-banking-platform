@@ -1,0 +1,9 @@
+<div class="quality-checklist card">
+  <h3>Quality Control Checklist</h3>
+  <div class="checklist-grid">
+    <div class="checklist-item" *ngFor="let item of items">
+      <div>{{ item.label }}</div>
+      <span class="badge {{ item.status | statusClass }}">{{ item.status }}</span>
+    </div>
+  </div>
+</div>

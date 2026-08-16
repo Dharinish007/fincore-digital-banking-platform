@@ -1,0 +1,34 @@
+<div class="page-header">
+  <div>
+    <p class="page-subtitle">Loan Funding</p>
+    <h2 class="page-title">Complete the funding process</h2>
+  </div>
+</div>
+
+<div *ngIf="application" class="grid grid-2">
+  <div class="card">
+    <h3>Funding overview</h3>
+    <p><strong>Application ID:</strong> {{ application.id }}</p>
+    <p><strong>Customer Name:</strong> {{ application.fullName }}</p>
+    <p><strong>Loan Type:</strong> {{ application.loanType }}</p>
+    <p><strong>Approved Amount:</strong> ₹{{ application.approvedAmount | number }}</p>
+    <p><strong>Approved Tenure:</strong> {{ application.approvedTenure }}</p>
+    <p><strong>Interest Rate:</strong> {{ application.interestRate }}</p>
+    <p><strong>Funding Account:</strong> {{ application.fundingAccount }}</p>
+    <p><strong>Funding Status:</strong> <span class="badge {{ application.fundingStatus | statusClass }}">{{ application.fundingStatus }}</span></p>
+  </div>
+  <div class="card form-actions">
+    <button class="primary-button" (click)="confirmFunding()">Confirm Funding</button>
+    <button class="secondary-button" (click)="cancel()">Cancel</button>
+    <button class="ghost-button">View Application</button>
+  </div>
+</div>
+
+<div *ngIf="fundingConfirmed" class="alert success">
+  <h3>Loan Funding Successful</h3>
+  <p><strong>Application ID:</strong> {{ application?.id }}</p>
+  <p><strong>Customer:</strong> {{ application?.fullName }}</p>
+  <p><strong>Approved Amount:</strong> ₹{{ application?.approvedAmount | number }}</p>
+  <p><strong>Funding Date:</strong> {{ today }}</p>
+  <p><strong>Status:</strong> Funded</p>
+</div>

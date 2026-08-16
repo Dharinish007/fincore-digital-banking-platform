@@ -1,0 +1,20 @@
+.progress-tracker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+  transition: background 0.2s ease;
+}
+
+.step.active {
+  background: var(--primary);
+  color: white;
+}

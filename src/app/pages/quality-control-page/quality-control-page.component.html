@@ -1,0 +1,22 @@
+<div class="page-header">
+  <div>
+    <p class="page-subtitle">Quality Control</p>
+    <h2 class="page-title">Validate final loan quality checkpoints</h2>
+  </div>
+</div>
+
+<app-quality-checklist [items]="checklist"></app-quality-checklist>
+
+<div class="form-card">
+  <div class="form-group">
+    <label>Add Remarks</label>
+    <textarea [(ngModel)]="remarks" rows="4" placeholder="Enter remarks"></textarea>
+  </div>
+  <div class="form-actions">
+    <button class="primary-button" (click)="passQualityControl()">Pass Quality Control</button>
+    <button class="secondary-button" (click)="sendBack()">Send Back for Correction</button>
+  </div>
+  <div *ngIf="summary" class="alert info">
+    {{ summary }}
+  </div>
+</div>
