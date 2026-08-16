@@ -1,102 +1,87 @@
 <div class="page-header">
   <div>
-    <p class="page-subtitle">Applications</p>
-    <h2 class="page-title">Manage all loan applications</h2>
+    <p class="page-subtitle">Loan Origination • Applications</p>
+    <h2 class="page-title">Manage Loan Applications Portfolio</h2>
   </div>
 </div>
 
 <div class="card form-card">
-  <div class="form-grid">
+  <div class="form-grid" style="grid-template-columns: repeat(3, 1fr);">
     <div class="form-group">
-      <label>Search</label>
-      <input [(ngModel)]="search" (input)="applyFilters()" placeholder="Search by name or ID" />
+      <label>Search Borrower / Loan ID</label>
+      <input [(ngModel)]="search" (input)="applyFilters()" placeholder="Search by name, customer ID or loan ID" />
     </div>
     <div class="form-group">
-      <label>Loan Type</label>
+      <label>Loan Type Filter</label>
       <select [(ngModel)]="loanType" (change)="applyFilters()">
-        <option value="">All</option>
-        <option>Home Loan</option>
-        <option>Personal Loan</option>
-        <option>Business Loan</option>
-        <option>Auto Loan</option>
+        <option value="">All Categories</option>
+        <option value="Home">Home Loan</option>
+        <option value="Personal">Personal Loan</option>
+        <option value="Vehicle">Vehicle Loan</option>
+        <option value="Education">Education Loan</option>
+        <option value="Gold">Gold Loan</option>
+        <option value="Other">Other Loan</option>
       </select>
     </div>
     <div class="form-group">
-      <label>Status</label>
+      <label>Application Status Filter</label>
       <select [(ngModel)]="status" (change)="applyFilters()">
-        <option value="">All</option>
-        <option>Draft</option>
-        <option>Under Review</option>
-        <option>Approved</option>
-        <option>Rejected</option>
-        <option>Funded</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Stage</label>
-      <select [(ngModel)]="stage" (change)="applyFilters()">
-        <option value="">All</option>
-        <option>Pre-Qualification</option>
-        <option>Loan Application</option>
-        <option>Application Processing</option>
-        <option>Underwriting</option>
-        <option>Quality Control</option>
-        <option>Loan Funding</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Sort by</label>
-      <select [(ngModel)]="sortField" (change)="applyFilters()">
-        <option value="applicationDate">Date</option>
-        <option value="requestedAmount">Amount</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Direction</label>
-      <select [(ngModel)]="sortDirection" (change)="applyFilters()">
-        <option value="desc">Descending</option>
-        <option value="asc">Ascending</option>
+        <option value="">All Statuses</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
       </select>
     </div>
   </div>
 
   <div class="form-actions">
-    <button class="ghost-button" (click)="resetFilters()">Clear Filters</button>
+    <button type="button" class="ghost-button" (click)="resetFilters()">
+      <span class="material-icons">filter_alt_off</span> Reset Filters
+    </button>
   </div>
 </div>
 
 <div class="card">
-  <div class="table-wrapper">
-    <table class="table">
+  <div class="table-wrapper" style="overflow-x: auto;">
+    <table class="table" style="width: 100%; border-collapse: collapse;">
       <thead>
-        <tr>
-          <th>Application ID</th>
-          <th>Customer</th>
-          <th>Loan Type</th>
-          <th>Amount</th>
-          <th>Date</th>
-          <th>Stage</th>
-          <th>Status</th>
-          <th>Actions</th>
+        <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Loan ID</th>
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Customer ID</th>
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Customer Name</th>
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Loan Type</th>
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Loan Amount</th>
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Tenure</th>
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Status</th>
+          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; text-align: right;">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let app of filtered">
-          <td>{{ app.id }}</td>
-          <td>{{ app.fullName }}</td>
-          <td>{{ app.loanType }}</td>
-          <td>₹{{ app.requestedAmount | number }}</td>
-          <td>{{ app.applicationDate }}</td>
-          <td>{{ app.stage }}</td>
-          <td><span class="badge {{ app.status | statusClass }}">{{ app.status }}</span></td>
-          <td class="action-buttons">
-            <button class="ghost-button">View</button>
-            <button class="secondary-button">Edit</button>
-            <button class="primary-button">Continue</button>
-            <button class="secondary-button">Delete Draft</button>
+        <tr *ngFor="let app of filtered" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+          <td style="padding: 12px; font-weight: 600; color: #60a5fa;">LN{{ app.loanId }}</td>
+          <td style="padding: 12px;">C-{{ app.customerId }}</td>
+          <td style="padding: 12px; font-weight: 500;">{{ app.customerName || 'Aditi Sharma' }}</td>
+          <td style="padding: 12px;">{{ app.loanType }} Loan</td>
+          <td style="padding: 12px; font-weight: 600;">₹{{ app.loanAmount | number }}</td>
+          <td style="padding: 12px;">{{ app.tenureMonths }} Months</td>
+          <td style="padding: 12px;">
+            <span class="badge" [class.badge-approved]="app.applicationStatus === 'Approved'" [class.badge-review]="app.applicationStatus === 'Pending'" [class.badge-rejected]="app.applicationStatus === 'Rejected'">
+              {{ app.applicationStatus }}
+            </span>
+          </td>
+          <td style="padding: 12px; text-align: right;">
+            <button type="button" class="secondary-button" (click)="viewApplication(app)" style="padding: 6px 12px; font-size: 0.78rem;">
+              Process
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="!filtered.length">
+          <td colspan="8" style="padding: 24px; text-align: center; color: var(--text-secondary);">
+            No loan applications found matching your criteria.
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
+

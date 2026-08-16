@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MockDataService } from '../../services/mock-data.service';
-import { LoanApplication } from '../../models/application.model';
+import { Component, OnInit, inject } from '@angular/core';
+import { LoanOriginationService, LoanApplicationPayload } from '../../../../core/services/loan-origination.service';
 
 @Component({
   selector: 'app-dashboard-page',
@@ -9,27 +8,28 @@ import { LoanApplication } from '../../models/application.model';
   styleUrls: ['./dashboard-page.component.scss']
 })
 export class DashboardPageComponent implements OnInit {
-  applications: LoanApplication[] = [];
+  private loanService = inject(LoanOriginationService);
+
+  applications: LoanApplicationPayload[] = [];
   total = 0;
-  draft = 0;
-  underReview = 0;
+  pending = 0;
   approved = 0;
   rejected = 0;
-  funded = 0;
-  recentApplications: LoanApplication[] = [];
-
-  constructor(private mockData: MockDataService) {}
+  recentApplications: LoanApplicationPayload[] = [];
 
   ngOnInit() {
-    this.mockData.getApplications().subscribe((apps) => {
-      this.applications = apps;
-      this.total = apps.length;
-      this.draft = apps.filter((x) => x.status === 'Draft').length;
-      this.underReview = apps.filter((x) => x.status === 'Under Review').length;
-      this.approved = apps.filter((x) => x.status === 'Approved').length;
-      this.rejected = apps.filter((x) => x.status === 'Rejected').length;
-      this.funded = apps.filter((x) => x.status === 'Funded').length;
-      this.recentApplications = apps.slice(0, 5);
+    this.refreshData();
+  }
+
+  refreshData() {
+    this.loanService.getAllLoanApplications().subscribe((apps) => {
+      this.applications = apps || [];
+      this.total = this.applications.length;
+      this.pending = this.applications.filter((x) => x.applicationStatus === 'Pending').length;
+      this.approved = this.applications.filter((x) => x.applicationStatus === 'Approved').length;
+      this.rejected = this.applications.filter((x) => x.applicationStatus === 'Rejected').length;
+      this.recentApplications = this.applications.slice(0, 5);
     });
   }
 }
+

@@ -1,134 +1,205 @@
 <div class="page-header">
   <div>
-    <p class="page-subtitle">Loan Application</p>
-    <h2 class="page-title">Complete borrower application</h2>
+    <p class="page-subtitle">Loan Origination • New Application</p>
+    <h2 class="page-title">Create Borrower Loan Application</h2>
   </div>
 </div>
 
-<div class="form-card">
-  <h3>Personal Details</h3>
-  <div class="form-grid">
-    <div class="form-group">
-      <label>Customer ID</label>
-      <input formControlName="customerId" placeholder="C-XXXXX" />
-    </div>
-    <div class="form-group">
-      <label>Full Name</label>
-      <input formControlName="fullName" placeholder="Enter full name" />
-    </div>
-    <div class="form-group">
-      <label>Date of Birth</label>
-      <input type="date" formControlName="dateOfBirth" />
-    </div>
-    <div class="form-group">
-      <label>Gender</label>
-      <select formControlName="gender">
-        <option value="">Select</option>
-        <option value="Female">Female</option>
-        <option value="Male">Male</option>
-        <option value="Non-binary">Non-binary</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Mobile Number</label>
-      <input formControlName="mobile" placeholder="+91 98765 43210" />
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" formControlName="email" placeholder="example@mail.com" />
-    </div>
-    <div class="form-group">
-      <label>Address</label>
-      <input formControlName="address" placeholder="Enter full address" />
-    </div>
-    <div class="form-group">
-      <label>City</label>
-      <input formControlName="city" placeholder="City" />
-    </div>
-    <div class="form-group">
-      <label>State</label>
-      <input formControlName="state" placeholder="State" />
-    </div>
-    <div class="form-group">
-      <label>Pincode</label>
-      <input formControlName="pincode" placeholder="Postal code" />
-    </div>
-  </div>
+<div class="card form-card">
+  <form [formGroup]="form">
+    
+    <!-- Section 1: Personal Profile Details -->
+    <h3 class="section-title">
+      <span class="material-icons">person_outline</span> Personal &amp; Contact Information
+    </h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Customer ID <span class="req">*</span></label>
+        <input formControlName="customerId" placeholder="e.g. 5001" type="number" />
+        <div *ngIf="form.get('customerId')?.invalid && form.get('customerId')?.touched" class="form-error">
+          Customer ID is required
+        </div>
+      </div>
 
-  <h3>Employment Details</h3>
-  <div class="form-grid">
-    <div class="form-group">
-      <label>Employment Type</label>
-      <select formControlName="employmentType">
-        <option value="">Select</option>
-        <option value="Salaried">Salaried</option>
-        <option value="Self-Employed">Self-Employed</option>
-        <option value="Freelancer">Freelancer</option>
-        <option value="Retired">Retired</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Employer Name</label>
-      <input formControlName="employerName" placeholder="Employer name" />
-    </div>
-    <div class="form-group">
-      <label>Job Title</label>
-      <input formControlName="jobTitle" placeholder="Job title" />
-    </div>
-    <div class="form-group">
-      <label>Work Experience</label>
-      <input formControlName="workExperience" placeholder="e.g. 5 years" />
-    </div>
-    <div class="form-group">
-      <label>Monthly Income</label>
-      <input type="number" formControlName="monthlyIncome" placeholder="Monthly salary" />
-    </div>
-    <div class="form-group">
-      <label>Other Income</label>
-      <input type="number" formControlName="otherIncome" placeholder="Other monthly income" />
-    </div>
-  </div>
+      <div class="form-group">
+        <label>Full Name <span class="req">*</span></label>
+        <input formControlName="fullName" placeholder="Borrower full name" />
+        <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="form-error">
+          Full Name is required
+        </div>
+      </div>
 
-  <h3>Loan Details</h3>
-  <div class="form-grid">
-    <div class="form-group">
-      <label>Loan Type</label>
-      <select formControlName="loanType">
-        <option value="">Select</option>
-        <option value="Home Loan">Home Loan</option>
-        <option value="Personal Loan">Personal Loan</option>
-        <option value="Business Loan">Business Loan</option>
-        <option value="Auto Loan">Auto Loan</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Requested Loan Amount</label>
-      <input type="number" formControlName="requestedLoanAmount" placeholder="Enter amount" />
-    </div>
-    <div class="form-group">
-      <label>Loan Tenure</label>
-      <select formControlName="tenure">
-        <option value="">Select</option>
-        <option value="5 years">5 years</option>
-        <option value="10 years">10 years</option>
-        <option value="15 years">15 years</option>
-        <option value="20 years">20 years</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Loan Purpose</label>
-      <input formControlName="purpose" placeholder="Enter purpose" />
-    </div>
-  </div>
+      <div class="form-group">
+        <label>Date of Birth <span class="req">*</span></label>
+        <input type="date" formControlName="dateOfBirth" />
+        <div *ngIf="form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched" class="form-error">
+          Date of Birth is required
+        </div>
+      </div>
 
-  <div class="form-actions">
-    <button class="secondary-button" (click)="saveDraft()">Save Draft</button>
-    <button class="primary-button" (click)="submitApplication()">Submit Application</button>
-    <button class="ghost-button" (click)="reset()">Reset</button>
-    <button class="secondary-button" (click)="cancel()">Cancel</button>
-  </div>
+      <div class="form-group">
+        <label>Gender <span class="req">*</span></label>
+        <select formControlName="gender">
+          <option value="">Select Gender</option>
+          <option value="Female">Female</option>
+          <option value="Male">Male</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
 
-  <div *ngIf="submitted" class="alert success">
-    Application submitted successfully! Application ID: {{ applicationId }}
-  </div>
+      <div class="form-group">
+        <label>Mobile Number <span class="req">*</span></label>
+        <input formControlName="mobile" placeholder="+91 98765 43210" />
+        <div *ngIf="form.get('mobile')?.invalid && form.get('mobile')?.touched" class="form-error">
+          Valid mobile number required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" formControlName="email" placeholder="example@mail.com" />
+        <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="form-error">
+          Valid email required
+        </div>
+      </div>
+
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Address <span class="req">*</span></label>
+        <input formControlName="address" placeholder="Residential street address" />
+      </div>
+
+      <div class="form-group">
+        <label>City <span class="req">*</span></label>
+        <input formControlName="city" placeholder="City" />
+      </div>
+
+      <div class="form-group">
+        <label>State <span class="req">*</span></label>
+        <input formControlName="state" placeholder="State" />
+      </div>
+
+      <div class="form-group">
+        <label>Pincode <span class="req">*</span></label>
+        <input formControlName="pincode" placeholder="Postal pincode" />
+      </div>
+    </div>
+
+    <!-- Section 2: Employment & Income -->
+    <h3 class="section-title" style="margin-top: 28px;">
+      <span class="material-icons">work_outline</span> Employment &amp; Income Details
+    </h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Employment Type <span class="req">*</span></label>
+        <select formControlName="employmentType">
+          <option value="">Select Employment Type</option>
+          <option value="Salaried">Salaried</option>
+          <option value="Self-Employed">Self-Employed</option>
+          <option value="Freelancer">Freelancer</option>
+          <option value="Retired">Retired</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Employer / Business Name <span class="req">*</span></label>
+        <input formControlName="employerName" placeholder="Organization name" />
+      </div>
+
+      <div class="form-group">
+        <label>Job Designation <span class="req">*</span></label>
+        <input formControlName="jobTitle" placeholder="Title / Designation" />
+      </div>
+
+      <div class="form-group">
+        <label>Work Experience</label>
+        <input formControlName="workExperience" placeholder="e.g. 5 years" />
+      </div>
+
+      <div class="form-group">
+        <label>Gross Monthly Income (₹) <span class="req">*</span></label>
+        <input type="number" formControlName="monthlyIncome" placeholder="Monthly income" />
+        <div *ngIf="form.get('monthlyIncome')?.invalid && form.get('monthlyIncome')?.touched" class="form-error">
+          Valid monthly income is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Other Monthly Income (₹)</label>
+        <input type="number" formControlName="otherIncome" placeholder="Other income (optional)" />
+      </div>
+    </div>
+
+    <!-- Section 3: Loan Requirement Details -->
+    <h3 class="section-title" style="margin-top: 28px;">
+      <span class="material-icons">monetization_on</span> Backend-Aligned Loan Specifications
+    </h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Loan Type <span class="req">*</span></label>
+        <select formControlName="loanType">
+          <option value="">Select Category</option>
+          <option value="Personal">Personal Loan</option>
+          <option value="Home">Home Loan</option>
+          <option value="Vehicle">Vehicle Loan</option>
+          <option value="Education">Education Loan</option>
+          <option value="Gold">Gold Loan</option>
+          <option value="Other">Other Loan</option>
+        </select>
+        <div *ngIf="form.get('loanType')?.invalid && form.get('loanType')?.touched" class="form-error">
+          Loan type selection is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Requested Loan Amount (₹) <span class="req">*</span></label>
+        <input type="number" formControlName="requestedLoanAmount" placeholder="e.g. 500000" />
+        <div *ngIf="form.get('requestedLoanAmount')?.invalid && form.get('requestedLoanAmount')?.touched" class="form-error">
+          Requested loan amount is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Tenure (Months) <span class="req">*</span></label>
+        <select formControlName="tenureMonths">
+          <option value="">Select Tenure</option>
+          <option value="12">12 Months (1 Year)</option>
+          <option value="24">24 Months (2 Years)</option>
+          <option value="36">36 Months (3 Years)</option>
+          <option value="60">60 Months (5 Years)</option>
+          <option value="120">120 Months (10 Years)</option>
+          <option value="180">180 Months (15 Years)</option>
+          <option value="240">240 Months (20 Years)</option>
+        </select>
+        <div *ngIf="form.get('tenureMonths')?.invalid && form.get('tenureMonths')?.touched" class="form-error">
+          Tenure is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Interest Rate (% p.a.) <span class="req">*</span></label>
+        <input type="number" step="0.1" formControlName="interestRate" placeholder="e.g. 10.5" />
+      </div>
+
+      <div class="form-group" style="grid-column: 1 / -1;">
+        <label>Loan Purpose</label>
+        <input formControlName="purpose" placeholder="e.g. Home renovation / Debt consolidation" />
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="button" class="primary-button" (click)="submitApplication()" [disabled]="loading">
+        <span class="material-icons">send</span> Submit Loan Application
+      </button>
+      <button type="button" class="secondary-button" (click)="saveDraft()">
+        <span class="material-icons">save</span> Save Draft
+      </button>
+      <button type="button" class="ghost-button" (click)="reset()">Reset</button>
+    </div>
+
+    <div *ngIf="statusMessage" class="alert" [class.success]="statusType === 'success'" [class.error]="statusType === 'error'" [class.info]="statusType === 'info'">
+      {{ statusMessage }}
+    </div>
+  </form>
 </div>
+

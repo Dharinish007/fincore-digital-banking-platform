@@ -1,35 +1,51 @@
 <div class="page-header">
   <div>
-    <p class="page-subtitle">Application Processing</p>
-    <h2 class="page-title">Review documents and application status</h2>
+    <p class="page-subtitle">Loan Origination • Application Processing</p>
+    <h2 class="page-title">Application Processing &amp; Verification Stage</h2>
   </div>
 </div>
 
-<div class="summary-grid">
+<div class="grid-2">
+  <!-- Left Card: Borrower & Application Specifications -->
   <div class="card overview-card">
-    <h3>Application overview</h3>
+    <h3><span class="material-icons">description</span> Application Overview</h3>
     <div *ngIf="application" class="detail-list">
-      <div class="detail-item"><span>Application ID</span><strong>{{ application.id }}</strong></div>
-      <div class="detail-item"><span>Customer Name</span><strong>{{ application.fullName }}</strong></div>
-      <div class="detail-item"><span>Loan Type</span><strong>{{ application.loanType }}</strong></div>
-      <div class="detail-item"><span>Amount</span><strong>₹{{ application.requestedAmount | number }}</strong></div>
-      <div class="detail-item"><span>Application Date</span><strong>{{ application.applicationDate }}</strong></div>
-      <div class="detail-item"><span>Current Status</span><strong class="badge {{ application.status | statusClass }}">{{ application.status }}</strong></div>
+      <div class="detail-item"><span>Application Reference ID</span><strong>LN{{ application.loanId || 1001 }}</strong></div>
+      <div class="detail-item"><span>Customer ID</span><strong>C-{{ application.customerId }}</strong></div>
+      <div class="detail-item"><span>Customer Name</span><strong>{{ application.customerName || 'Aditi Sharma' }}</strong></div>
+      <div class="detail-item"><span>Loan Category</span><strong>{{ application.loanType }}</strong></div>
+      <div class="detail-item"><span>Requested Loan Amount</span><strong>₹{{ application.loanAmount | number }}</strong></div>
+      <div class="detail-item"><span>Tenure</span><strong>{{ application.tenureMonths }} Months</strong></div>
+      <div class="detail-item"><span>Interest Rate</span><strong>{{ application.interestRate }}% p.a.</strong></div>
+      <div class="detail-item"><span>Application Status</span><strong class="badge status-review">{{ application.applicationStatus || 'Pending' }}</strong></div>
     </div>
   </div>
 
-  <div class="card document-card">
-    <h3>Document status</h3>
-    <div class="document-grid">
-      <app-document-status-card *ngFor="let doc of documents" [document]="doc"></app-document-status-card>
+  <!-- Right Card: Processing Checklist & Underwriting Actions -->
+  <div class="card processing-actions-card">
+    <h3><span class="material-icons">fact_check</span> Processing Verification &amp; Routing</h3>
+    <div class="detail-list" style="margin-bottom: 20px;">
+      <div class="detail-item"><span>Identity &amp; KYC Verification</span><strong style="color: #10b981;">Passed</strong></div>
+      <div class="detail-item"><span>Income &amp; Bank Statement Validation</span><strong style="color: #10b981;">Verified</strong></div>
+      <div class="detail-item"><span>Credit Score Rating</span><strong style="color: #f59e0b;">745 (Eligible)</strong></div>
+      <div class="detail-item"><span>Processing Stage</span><strong>Application Processing</strong></div>
+    </div>
+
+    <div class="form-actions" style="margin-top: 16px;">
+      <button type="button" class="primary-button" (click)="sendForUnderwriting()">
+        <span class="material-icons">send</span> Send for Underwriting
+      </button>
+      <button type="button" class="secondary-button" (click)="verifyApplication()">
+        <span class="material-icons">task_alt</span> Mark Verified
+      </button>
+      <button type="button" class="ghost-button" (click)="requestAdditionalInfo()">
+        <span class="material-icons">help_outline</span> Request Info
+      </button>
     </div>
   </div>
 </div>
 
-<div class="card action-card">
-  <div class="action-row">
-    <button class="secondary-button" (click)="verifyApplication()">Verify Application</button>
-    <button class="ghost-button" (click)="requestAdditionalInfo()">Request Additional Information</button>
-    <button class="primary-button" (click)="sendForUnderwriting()">Send for Underwriting</button>
-  </div>
+<div *ngIf="actionMessage" class="alert info">
+  {{ actionMessage }}
 </div>
+

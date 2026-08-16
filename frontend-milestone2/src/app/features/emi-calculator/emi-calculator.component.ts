@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { EmiService } from '../../core/services/emi.service';
 
 export interface EmiResult {
   monthlyEmi: number;
@@ -34,12 +35,15 @@ function greaterThanOrEqualToZeroValidator(control: AbstractControl): Validation
   styleUrls: ['./emi-calculator.component.scss']
 })
 export class EmiCalculatorComponent {
+  private emiService = inject(EmiService);
+  private fb = inject(FormBuilder);
+
   title = 'EMI Calculator';
   emiForm: FormGroup;
   result: EmiResult | null = null;
   isSubmitted = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor() {
     this.emiForm = this.fb.group({
       loanAmount: [null, [Validators.required, greaterThanZeroValidator]],
       interestRate: [null, [Validators.required, greaterThanOrEqualToZeroValidator]],
@@ -60,27 +64,20 @@ export class EmiCalculatorComponent {
     }
 
     const loanAmount = Number(this.emiForm.get('loanAmount')?.value);
-    const annualInterestRate = Number(this.emiForm.get('interestRate')?.value);
+    const interestRate = Number(this.emiForm.get('interestRate')?.value);
     const tenureMonths = Number(this.emiForm.get('loanTenure')?.value);
 
-    let monthlyEmi = 0;
-
-    if (annualInterestRate === 0) {
-      monthlyEmi = loanAmount / tenureMonths;
-    } else {
-      const monthlyRate = annualInterestRate / 12 / 100;
-      const compoundFactor = Math.pow(1 + monthlyRate, tenureMonths);
-      monthlyEmi = (loanAmount * monthlyRate * compoundFactor) / (compoundFactor - 1);
-    }
-
-    const totalPayment = monthlyEmi * tenureMonths;
-    const totalInterest = totalPayment - loanAmount;
-
-    this.result = {
-      monthlyEmi: Number(monthlyEmi.toFixed(2)),
-      totalInterest: Number(totalInterest.toFixed(2)),
-      totalPayment: Number(totalPayment.toFixed(2))
-    };
+    this.emiService.calculateEMI({
+      principalAmount: loanAmount,
+      interestRate,
+      tenureMonths
+    }).subscribe((res) => {
+      this.result = {
+        monthlyEmi: res.monthlyEMI,
+        totalInterest: res.totalInterest,
+        totalPayment: res.totalPayment
+      };
+    });
   }
 
   formatCurrency(value: number): string {
@@ -92,3 +89,4 @@ export class EmiCalculatorComponent {
     }).format(value);
   }
 }
+

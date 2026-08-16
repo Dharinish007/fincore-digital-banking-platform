@@ -1,34 +1,52 @@
 <div class="page-header">
   <div>
-    <p class="page-subtitle">Loan Funding</p>
-    <h2 class="page-title">Complete the funding process</h2>
+    <p class="page-subtitle">Loan Origination • Loan Funding</p>
+    <h2 class="page-title">Final Loan Disbursal &amp; Funding Execution</h2>
   </div>
 </div>
 
-<div *ngIf="application" class="grid grid-2">
+<div *ngIf="application" class="grid-2">
   <div class="card">
-    <h3>Funding overview</h3>
-    <p><strong>Application ID:</strong> {{ application.id }}</p>
-    <p><strong>Customer Name:</strong> {{ application.fullName }}</p>
-    <p><strong>Loan Type:</strong> {{ application.loanType }}</p>
-    <p><strong>Approved Amount:</strong> ₹{{ application.approvedAmount | number }}</p>
-    <p><strong>Approved Tenure:</strong> {{ application.approvedTenure }}</p>
-    <p><strong>Interest Rate:</strong> {{ application.interestRate }}</p>
-    <p><strong>Funding Account:</strong> {{ application.fundingAccount }}</p>
-    <p><strong>Funding Status:</strong> <span class="badge {{ application.fundingStatus | statusClass }}">{{ application.fundingStatus }}</span></p>
+    <h3><span class="material-icons">account_balance_wallet</span> Disbursal Overview</h3>
+    <div class="detail-list">
+      <div class="detail-item"><span>Application Reference ID</span><strong>LN{{ application.loanId || 1001 }}</strong></div>
+      <div class="detail-item"><span>Customer Name</span><strong>{{ application.customerName || 'Rohan Mehta' }}</strong></div>
+      <div class="detail-item"><span>Loan Category</span><strong>{{ application.loanType }} Loan</strong></div>
+      <div class="detail-item"><span>Sanctioned Amount</span><strong>₹{{ application.loanAmount | number }}</strong></div>
+      <div class="detail-item"><span>Tenure</span><strong>{{ application.tenureMonths }} Months</strong></div>
+      <div class="detail-item"><span>Interest Rate</span><strong>{{ application.interestRate }}% p.a.</strong></div>
+      <div class="detail-item"><span>Funding Account</span><strong>HDFC Bank **** 3421</strong></div>
+      <div class="detail-item"><span>Funding Status</span><strong class="badge status-pass">Ready for Funding</strong></div>
+    </div>
   </div>
-  <div class="card form-actions">
-    <button class="primary-button" (click)="confirmFunding()">Confirm Funding</button>
-    <button class="secondary-button" (click)="cancel()">Cancel</button>
-    <button class="ghost-button">View Application</button>
+
+  <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+    <div>
+      <h3><span class="material-icons">payments</span> Funding Confirmation</h3>
+      <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5; margin-bottom: 20px;">
+        Review final sanction parameters before initiating direct credit to the borrower's account. This action completes loan origination.
+      </p>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="primary-button" (click)="confirmFunding()">
+        <span class="material-icons">check_circle</span> Disburse &amp; Confirm Funding
+      </button>
+      <button type="button" class="ghost-button" (click)="cancel()">Cancel Disbursal</button>
+    </div>
   </div>
 </div>
 
-<div *ngIf="fundingConfirmed" class="alert success">
-  <h3>Loan Funding Successful</h3>
-  <p><strong>Application ID:</strong> {{ application?.id }}</p>
-  <p><strong>Customer:</strong> {{ application?.fullName }}</p>
-  <p><strong>Approved Amount:</strong> ₹{{ application?.approvedAmount | number }}</p>
-  <p><strong>Funding Date:</strong> {{ today }}</p>
-  <p><strong>Status:</strong> Funded</p>
+<div *ngIf="fundingConfirmed" class="alert success" style="margin-top: 20px;">
+  <h3 style="color: #10b981; margin-bottom: 8px; font-size: 1.1rem;">
+    <span class="material-icons" style="vertical-align: middle;">task_alt</span> Loan Funding Successfully Executed
+  </h3>
+  <div class="detail-list">
+    <div class="detail-item"><span>Loan ID</span><strong>LN{{ application?.loanId }}</strong></div>
+    <div class="detail-item"><span>Borrower</span><strong>{{ application?.customerName }}</strong></div>
+    <div class="detail-item"><span>Disbursed Amount</span><strong>₹{{ application?.loanAmount | number }}</strong></div>
+    <div class="detail-item"><span>Disbursal Date</span><strong>{{ today }}</strong></div>
+    <div class="detail-item"><span>Final Status</span><strong class="badge badge-approved">Funded</strong></div>
+  </div>
 </div>
+

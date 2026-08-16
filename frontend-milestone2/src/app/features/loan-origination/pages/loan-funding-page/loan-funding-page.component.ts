@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MockDataService } from '../../services/mock-data.service';
-import { LoanApplication } from '../../models/application.model';
+import { Component, OnInit, inject } from '@angular/core';
+import { LoanOriginationService, LoanApplicationPayload } from '../../../../core/services/loan-origination.service';
 
 @Component({
   selector: 'app-loan-funding-page',
@@ -9,21 +8,32 @@ import { LoanApplication } from '../../models/application.model';
   styleUrls: ['./loan-funding-page.component.scss']
 })
 export class LoanFundingPageComponent implements OnInit {
-  application?: LoanApplication;
+  private loanService = inject(LoanOriginationService);
+
+  application?: LoanApplicationPayload;
   fundingConfirmed = false;
   today = new Date().toLocaleDateString();
 
-  constructor(private mockData: MockDataService) {}
-
   ngOnInit() {
-    this.application = this.mockData.getApplicationById('LO-1002');
+    this.loanService.getAllLoanApplications().subscribe((apps) => {
+      if (apps && apps.length) {
+        this.application = apps[0];
+      }
+    });
   }
 
   confirmFunding() {
-    this.fundingConfirmed = true;
+    if (this.application?.loanId) {
+      this.loanService.updateLoanStatus(this.application.loanId, 'Approved').subscribe(() => {
+        this.fundingConfirmed = true;
+      });
+    } else {
+      this.fundingConfirmed = true;
+    }
   }
 
   cancel() {
-    alert('Funding process cancelled.');
+    this.fundingConfirmed = false;
   }
 }
+

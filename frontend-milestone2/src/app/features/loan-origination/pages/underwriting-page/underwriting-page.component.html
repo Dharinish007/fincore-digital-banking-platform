@@ -1,58 +1,79 @@
 <div class="page-header">
   <div>
-    <p class="page-subtitle">Underwriting</p>
-    <h2 class="page-title">Finalize the credit decision</h2>
+    <p class="page-subtitle">Loan Origination • Underwriting</p>
+    <h2 class="page-title">Credit Decision &amp; Underwriting Risk Analysis</h2>
   </div>
 </div>
 
-<div class="summary-grid">
+<div class="grid-2">
   <div class="card summary-card">
-    <h3>Applicant Summary</h3>
+    <h3><span class="material-icons">person</span> Borrower Financial Profile</h3>
     <div *ngIf="application" class="detail-list">
-      <div class="detail-item"><span>Customer Name</span><strong>{{ application.fullName }}</strong></div>
-      <div class="detail-item"><span>Employment</span><strong>{{ application.employmentType }} / {{ application.jobTitle }}</strong></div>
-      <div class="detail-item"><span>Income</span><strong>₹{{ application.monthlyIncome | number }}</strong></div>
-      <div class="detail-item"><span>Existing Obligations</span><strong>₹{{ application.otherIncome | number }}</strong></div>
-      <div class="detail-item"><span>Email</span><strong>{{ application.email }}</strong></div>
-      <div class="detail-item"><span>Mobile</span><strong>{{ application.mobile }}</strong></div>
+      <div class="detail-item"><span>Loan Reference ID</span><strong>LN{{ application.loanId || 1001 }}</strong></div>
+      <div class="detail-item"><span>Customer ID</span><strong>C-{{ application.customerId }}</strong></div>
+      <div class="detail-item"><span>Borrower Name</span><strong>{{ application.customerName || 'Aditi Sharma' }}</strong></div>
+      <div class="detail-item"><span>Loan Category</span><strong>{{ application.loanType }} Loan</strong></div>
+      <div class="detail-item"><span>Tenure</span><strong>{{ application.tenureMonths }} Months</strong></div>
     </div>
   </div>
 
   <div class="card summary-card">
-    <h3>Loan Summary</h3>
+    <h3><span class="material-icons">account_balance</span> Requested Loan Parameters</h3>
     <div *ngIf="application" class="detail-list">
-      <div class="detail-item"><span>Loan Type</span><strong>{{ application.loanType }}</strong></div>
-      <div class="detail-item"><span>Requested Amount</span><strong>₹{{ application.requestedAmount | number }}</strong></div>
-      <div class="detail-item"><span>Tenure</span><strong>{{ application.tenure }}</strong></div>
-      <div class="detail-item"><span>Purpose</span><strong>{{ application.purpose }}</strong></div>
+      <div class="detail-item"><span>Requested Amount</span><strong>₹{{ application.loanAmount | number }}</strong></div>
+      <div class="detail-item"><span>Interest Rate</span><strong>{{ application.interestRate }}% p.a.</strong></div>
+      <div class="detail-item"><span>Purpose</span><strong>{{ application.purpose || 'Home purchase' }}</strong></div>
+      <div class="detail-item"><span>Current Status</span><strong class="badge status-review">{{ application.applicationStatus }}</strong></div>
     </div>
   </div>
 </div>
 
-<div class="result-grid">
-  <div class="card metric-card"><h3>Credit Check Result</h3><p>Placeholder for backend result.</p></div>
-  <div class="card metric-card"><h3>Eligibility Result</h3><p>Placeholder for eligibility status.</p></div>
-  <div class="card metric-card"><h3>Risk Category</h3><p>Placeholder for risk evaluation.</p></div>
+<div class="grid-3">
+  <div class="card metric-card" style="border-top: 3px solid #10b981;">
+    <p style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">Credit Score</p>
+    <h2 style="font-size: 1.6rem; color: #10b981; margin: 6px 0;">765 / 900</h2>
+    <p style="font-size: 0.8rem; color: #94a3b8;">Bureau Record: Excellent</p>
+  </div>
+  <div class="card metric-card" style="border-top: 3px solid #60a5fa;">
+    <p style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">Debt-to-Income (DTI)</p>
+    <h2 style="font-size: 1.6rem; color: #60a5fa; margin: 6px 0;">34.2%</h2>
+    <p style="font-size: 0.8rem; color: #94a3b8;">Limit: Max 55.0%</p>
+  </div>
+  <div class="card metric-card" style="border-top: 3px solid #f59e0b;">
+    <p style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 600;">Risk Category</p>
+    <h2 style="font-size: 1.6rem; color: #f59e0b; margin: 6px 0;">Low Risk (A+)</h2>
+    <p style="font-size: 0.8rem; color: #94a3b8;">Automated Underwriting Pass</p>
+  </div>
 </div>
 
 <div class="card decision-card">
-  <h3>Decision</h3>
-  <div class="decision-grid">
-    <button class="secondary-button" (click)="selectDecision('Approve')">Approve</button>
-    <button class="secondary-button" (click)="selectDecision('Reject')">Reject</button>
-    <button class="secondary-button" (click)="selectDecision('Request More Information')">Request More Information</button>
+  <h3><span class="material-icons">gavel</span> Underwriting Decision</h3>
+  
+  <div class="form-actions" style="margin-bottom: 20px;">
+    <button type="button" class="primary-button" [style.background]="decision === 'Approved' ? 'linear-gradient(135deg, #10b981, #059669)' : ''" (click)="selectDecision('Approved')">
+      <span class="material-icons">check_circle</span> Approve Application
+    </button>
+    <button type="button" class="secondary-button" [style.background]="decision === 'Rejected' ? '#ef4444' : ''" (click)="selectDecision('Rejected')">
+      <span class="material-icons">cancel</span> Reject Application
+    </button>
+    <button type="button" class="ghost-button" (click)="selectDecision('Pending')">
+      <span class="material-icons">schedule</span> Keep Pending
+    </button>
   </div>
 
-  <div *ngIf="decision === 'Reject'" class="form-group rejection-panel">
-    <label>Rejection Reason</label>
-    <textarea [(ngModel)]="rejectionReason" rows="3" placeholder="Enter reason"></textarea>
+  <div *ngIf="decision === 'Rejected'" class="form-group" style="margin-bottom: 16px;">
+    <label>Rejection Reason Notes <span class="req">*</span></label>
+    <textarea [(ngModel)]="rejectionReason" rows="3" placeholder="Specify underwriting rejection justification..."></textarea>
   </div>
 
   <div class="form-actions">
-    <button class="primary-button" (click)="submitDecision()">Submit Decision</button>
+    <button type="button" class="primary-button" (click)="submitDecision()">
+      <span class="material-icons">send</span> Confirm &amp; Save Credit Decision
+    </button>
   </div>
 
-  <div *ngIf="submitted" class="alert success">
-    Decision submitted: {{ decision }}
+  <div *ngIf="submitted" class="alert" [class.success]="decision === 'Approved'" [class.error]="decision === 'Rejected'" [class.info]="decision === 'Pending'">
+    Underwriting Decision Recorded: <strong>{{ decision }}</strong>. Updated status sent to backend API.
   </div>
 </div>
+

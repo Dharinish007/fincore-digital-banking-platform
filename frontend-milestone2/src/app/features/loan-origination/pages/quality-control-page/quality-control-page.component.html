@@ -1,22 +1,33 @@
 <div class="page-header">
   <div>
-    <p class="page-subtitle">Quality Control</p>
-    <h2 class="page-title">Validate final loan quality checkpoints</h2>
+    <p class="page-subtitle">Loan Origination • Quality Control</p>
+    <h2 class="page-title">Validate Final Quality &amp; Compliance Checkpoints</h2>
   </div>
 </div>
 
-<app-quality-checklist [items]="checklist"></app-quality-checklist>
+<div class="card">
+  <h3><span class="material-icons">fact_check</span> Quality Audit Checklist</h3>
+  <app-quality-checklist [items]="checklist"></app-quality-checklist>
+</div>
 
-<div class="form-card">
+<div class="card form-card">
+  <h3><span class="material-icons">rate_review</span> Quality Auditor Remarks</h3>
   <div class="form-group">
-    <label>Add Remarks</label>
-    <textarea [(ngModel)]="remarks" rows="4" placeholder="Enter remarks"></textarea>
+    <label>Audit Notes &amp; Compliance Observations</label>
+    <textarea [(ngModel)]="remarks" rows="4" placeholder="Enter auditor observations or specific remarks..."></textarea>
   </div>
+
   <div class="form-actions">
-    <button class="primary-button" (click)="passQualityControl()">Pass Quality Control</button>
-    <button class="secondary-button" (click)="sendBack()">Send Back for Correction</button>
+    <button type="button" class="primary-button" (click)="passQualityControl()">
+      <span class="material-icons">verified</span> Pass Quality Control
+    </button>
+    <button type="button" class="secondary-button" (click)="sendBack()">
+      <span class="material-icons">undo</span> Send Back for Correction
+    </button>
   </div>
-  <div *ngIf="summary" class="alert info">
+
+  <div *ngIf="summary" class="alert" [class.success]="summary.includes('passed')" [class.error]="summary.includes('sent back')">
     {{ summary }}
   </div>
 </div>
+

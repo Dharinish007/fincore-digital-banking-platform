@@ -1,94 +1,151 @@
 <div class="page-header">
   <div>
-    <p class="page-subtitle">Pre-Qualification</p>
-    <h2 class="page-title">Evaluate borrower readiness</h2>
+    <p class="page-subtitle">Loan Origination • Pre-Qualification</p>
+    <h2 class="page-title">Borrower Readiness &amp; Eligibility Check</h2>
   </div>
 </div>
 
 <div class="card form-card">
-  <div class="form-grid">
-    <div class="form-group">
-      <label>Customer ID</label>
-      <input formControlName="customerId" placeholder="C-XXXXX" />
-      <div *ngIf="form.get('customerId')?.invalid && form.get('customerId')?.touched" class="form-error">Required</div>
-    </div>
-    <div class="form-group">
-      <label>Full Name</label>
-      <input formControlName="fullName" placeholder="Enter full name" />
-      <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="form-error">Required</div>
-    </div>
-    <div class="form-group">
-      <label>Date of Birth</label>
-      <input type="date" formControlName="dateOfBirth" />
-      <div *ngIf="form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched" class="form-error">Required</div>
-    </div>
-    <div class="form-group">
-      <label>Mobile Number</label>
-      <input formControlName="mobile" placeholder="+91 98765 43210" />
-      <div *ngIf="form.get('mobile')?.invalid && form.get('mobile')?.touched" class="form-error">Enter valid mobile</div>
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" formControlName="email" placeholder="example@mail.com" />
-      <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="form-error">Enter valid email</div>
-    </div>
-    <div class="form-group">
-      <label>Employment Type</label>
-      <select formControlName="employmentType">
-        <option value="">Select</option>
-        <option value="Salaried">Salaried</option>
-        <option value="Self-Employed">Self-Employed</option>
-        <option value="Freelancer">Freelancer</option>
-        <option value="Retired">Retired</option>
-      </select>
-      <div *ngIf="form.get('employmentType')?.invalid && form.get('employmentType')?.touched" class="form-error">Required</div>
-    </div>
-    <div class="form-group">
-      <label>Monthly Income</label>
-      <input type="number" formControlName="monthlyIncome" placeholder="Enter monthly income" />
-      <div *ngIf="form.get('monthlyIncome')?.invalid && form.get('monthlyIncome')?.touched" class="form-error">Enter a valid income</div>
-    </div>
-    <div class="form-group">
-      <label>Existing Monthly Obligations</label>
-      <input type="number" formControlName="existingObligations" placeholder="Enter obligations" />
-      <div *ngIf="form.get('existingObligations')?.invalid && form.get('existingObligations')?.touched" class="form-error">Enter a valid amount</div>
-    </div>
-    <div class="form-group">
-      <label>Loan Type</label>
-      <select formControlName="loanType">
-        <option value="">Select</option>
-        <option value="Home Loan">Home Loan</option>
-        <option value="Personal Loan">Personal Loan</option>
-        <option value="Business Loan">Business Loan</option>
-        <option value="Auto Loan">Auto Loan</option>
-      </select>
-      <div *ngIf="form.get('loanType')?.invalid && form.get('loanType')?.touched" class="form-error">Required</div>
-    </div>
-    <div class="form-group">
-      <label>Requested Loan Amount</label>
-      <input type="number" formControlName="requestedLoanAmount" placeholder="Enter loan amount" />
-      <div *ngIf="form.get('requestedLoanAmount')?.invalid && form.get('requestedLoanAmount')?.touched" class="form-error">Enter a valid amount</div>
-    </div>
-    <div class="form-group">
-      <label>Preferred Tenure</label>
-      <select formControlName="preferredTenure">
-        <option value="">Select</option>
-        <option value="5 years">5 years</option>
-        <option value="10 years">10 years</option>
-        <option value="15 years">15 years</option>
-        <option value="20 years">20 years</option>
-      </select>
-      <div *ngIf="form.get('preferredTenure')?.invalid && form.get('preferredTenure')?.touched" class="form-error">Required</div>
-    </div>
-  </div>
+  <form [formGroup]="form" (ngSubmit)="checkQualification()">
+    
+    <!-- Section 1: Personal Details -->
+    <h3 class="section-title">
+      <span class="material-icons">person</span> Borrower Profile Information
+    </h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Customer ID <span class="req">*</span></label>
+        <input formControlName="customerId" placeholder="e.g. 5001" />
+        <div *ngIf="form.get('customerId')?.invalid && form.get('customerId')?.touched" class="form-error">
+          Customer ID is required
+        </div>
+      </div>
 
-  <div class="form-actions">
-    <button class="secondary-button" (click)="checkQualification()">Check Pre-Qualification</button>
-    <button class="ghost-button" (click)="reset()">Reset</button>
-    <button class="primary-button" (click)="continue()">Continue</button>
-  </div>
+      <div class="form-group">
+        <label>Full Name <span class="req">*</span></label>
+        <input formControlName="fullName" placeholder="Borrower full name" />
+        <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="form-error">
+          Full Name is required
+        </div>
+      </div>
 
-  <div class="alert" [class.success]="statusType === 'success'" [class.error]="statusType === 'error'" [class.info]="statusType === 'info'">
-    {{ statusMessage }}
-  </div>
+      <div class="form-group">
+        <label>Date of Birth <span class="req">*</span></label>
+        <input type="date" formControlName="dateOfBirth" />
+        <div *ngIf="form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched" class="form-error">
+          Date of Birth is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Mobile Number <span class="req">*</span></label>
+        <input formControlName="mobile" placeholder="+91 98765 43210" />
+        <div *ngIf="form.get('mobile')?.invalid && form.get('mobile')?.touched" class="form-error">
+          Valid 10-digit mobile number required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" formControlName="email" placeholder="borrower@example.com" />
+        <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="form-error">
+          Valid email address required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Employment Type <span class="req">*</span></label>
+        <select formControlName="employmentType">
+          <option value="">Select Employment Type</option>
+          <option value="Salaried">Salaried</option>
+          <option value="Self-Employed">Self-Employed</option>
+          <option value="Freelancer">Freelancer</option>
+          <option value="Retired">Retired</option>
+        </select>
+        <div *ngIf="form.get('employmentType')?.invalid && form.get('employmentType')?.touched" class="form-error">
+          Employment type is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Financial Details & Loan Requirements -->
+    <h3 class="section-title" style="margin-top: 28px;">
+      <span class="material-icons">account_balance_wallet</span> Financials &amp; Loan Requirement
+    </h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Gross Monthly Income (₹) <span class="req">*</span></label>
+        <input type="number" formControlName="monthlyIncome" placeholder="e.g. 85000" />
+        <div *ngIf="form.get('monthlyIncome')?.invalid && form.get('monthlyIncome')?.touched" class="form-error">
+          Enter a valid positive monthly income
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Existing Monthly Obligations (₹)</label>
+        <input type="number" formControlName="existingObligations" placeholder="e.g. 15000" />
+        <div *ngIf="form.get('existingObligations')?.invalid && form.get('existingObligations')?.touched" class="form-error">
+          Enter a valid amount
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Loan Type <span class="req">*</span></label>
+        <select formControlName="loanType">
+          <option value="">Select Loan Category</option>
+          <option value="Home">Home Loan</option>
+          <option value="Personal">Personal Loan</option>
+          <option value="Vehicle">Vehicle Loan</option>
+          <option value="Education">Education Loan</option>
+          <option value="Gold">Gold Loan</option>
+          <option value="Other">Other Loan</option>
+        </select>
+        <div *ngIf="form.get('loanType')?.invalid && form.get('loanType')?.touched" class="form-error">
+          Loan type selection is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Requested Loan Amount (₹) <span class="req">*</span></label>
+        <input type="number" formControlName="requestedLoanAmount" placeholder="e.g. 3500000" />
+        <div *ngIf="form.get('requestedLoanAmount')?.invalid && form.get('requestedLoanAmount')?.touched" class="form-error">
+          Requested loan amount is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Preferred Tenure (Months) <span class="req">*</span></label>
+        <select formControlName="preferredTenure">
+          <option value="">Select Tenure</option>
+          <option value="12">12 Months (1 Year)</option>
+          <option value="24">24 Months (2 Years)</option>
+          <option value="36">36 Months (3 Years)</option>
+          <option value="60">60 Months (5 Years)</option>
+          <option value="120">120 Months (10 Years)</option>
+          <option value="180">180 Months (15 Years)</option>
+          <option value="240">240 Months (20 Years)</option>
+        </select>
+        <div *ngIf="form.get('preferredTenure')?.invalid && form.get('preferredTenure')?.touched" class="form-error">
+          Tenure is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button type="button" class="primary-button" (click)="checkQualification()">
+        <span class="material-icons">fact_check</span> Evaluate Pre-Qualification
+      </button>
+      <button type="button" class="secondary-button" (click)="continueToApplication()">
+        <span class="material-icons">arrow_forward</span> Continue to Application
+      </button>
+      <button type="button" class="ghost-button" (click)="reset()">Reset Form</button>
+    </div>
+
+    <div *ngIf="statusMessage" class="alert" [class.success]="statusType === 'success'" [class.error]="statusType === 'error'" [class.info]="statusType === 'info'">
+      {{ statusMessage }}
+    </div>
+
+  </form>
 </div>
+

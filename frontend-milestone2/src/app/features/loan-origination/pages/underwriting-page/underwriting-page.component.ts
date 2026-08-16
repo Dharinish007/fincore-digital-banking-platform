@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MockDataService } from '../../services/mock-data.service';
-import { LoanApplication } from '../../models/application.model';
+import { Component, OnInit, inject } from '@angular/core';
+import { LoanOriginationService, LoanApplicationPayload, ApplicationStatus } from '../../../../core/services/loan-origination.service';
 
 @Component({
   selector: 'app-underwriting-page',
@@ -9,27 +8,42 @@ import { LoanApplication } from '../../models/application.model';
   styleUrls: ['./underwriting-page.component.scss']
 })
 export class UnderwritingPageComponent implements OnInit {
-  application?: LoanApplication;
-  decision: 'Approve' | 'Reject' | 'Request More Information' | '' = '';
+  private loanService = inject(LoanOriginationService);
+
+  application?: LoanApplicationPayload;
+  decision: ApplicationStatus = 'Approved';
   rejectionReason = '';
   submitted = false;
 
-  constructor(private mockData: MockDataService) {}
-
   ngOnInit() {
-    this.application = this.mockData.getApplicationById('LO-1002');
+    this.loanService.getAllLoanApplications().subscribe((apps) => {
+      if (apps && apps.length) {
+        this.application = apps[0];
+      }
+    });
   }
 
-  selectDecision(value: 'Approve' | 'Reject' | 'Request More Information') {
+  selectDecision(value: ApplicationStatus) {
     this.decision = value;
     this.submitted = false;
   }
 
   submitDecision() {
-    if (this.decision === 'Reject' && !this.rejectionReason) {
-      alert('Please provide a rejection reason.');
+    if (this.decision === 'Rejected' && !this.rejectionReason) {
+      alert('Please provide a rejection reason note.');
       return;
     }
-    this.submitted = true;
+
+    if (this.application?.loanId) {
+      this.loanService.updateLoanStatus(this.application.loanId, this.decision).subscribe(() => {
+        this.submitted = true;
+        if (this.application) {
+          this.application.applicationStatus = this.decision;
+        }
+      });
+    } else {
+      this.submitted = true;
+    }
   }
 }
+

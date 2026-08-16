@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { MockDataService } from '../../services/mock-data.service';
-import { LoanApplication } from '../../models/application.model';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { LoanOriginationService, LoanApplicationPayload } from '../../../../core/services/loan-origination.service';
 
 @Component({
   selector: 'app-applications-page',
@@ -9,20 +9,18 @@ import { LoanApplication } from '../../models/application.model';
   styleUrls: ['./applications-page.component.scss']
 })
 export class ApplicationsPageComponent implements OnInit {
-  applications: LoanApplication[] = [];
-  filtered: LoanApplication[] = [];
+  private loanService = inject(LoanOriginationService);
+  private router = inject(Router);
+
+  applications: LoanApplicationPayload[] = [];
+  filtered: LoanApplicationPayload[] = [];
   search = '';
   loanType = '';
   status = '';
-  stage = '';
-  sortField: 'applicationDate' | 'requestedAmount' = 'applicationDate';
-  sortDirection: 'asc' | 'desc' = 'desc';
-
-  constructor(private mockData: MockDataService) {}
 
   ngOnInit() {
-    this.mockData.getApplications().subscribe((apps) => {
-      this.applications = apps;
+    this.loanService.getAllLoanApplications().subscribe((apps) => {
+      this.applications = apps || [];
       this.applyFilters();
     });
   }
@@ -31,26 +29,24 @@ export class ApplicationsPageComponent implements OnInit {
     this.filtered = this.applications
       .filter((item) =>
         this.search
-          ? item.fullName.toLowerCase().includes(this.search.toLowerCase()) ||
-            item.id.toLowerCase().includes(this.search.toLowerCase())
+          ? (item.customerName || '').toLowerCase().includes(this.search.toLowerCase()) ||
+            String(item.customerId).includes(this.search) ||
+            String(item.loanId).includes(this.search)
           : true
       )
       .filter((item) => (this.loanType ? item.loanType === this.loanType : true))
-      .filter((item) => (this.status ? item.status === this.status : true))
-      .filter((item) => (this.stage ? item.stage === this.stage : true));
-
-    this.filtered.sort((a, b) => {
-      const fieldA = this.sortField === 'applicationDate' ? a.applicationDate : a.requestedAmount;
-      const fieldB = this.sortField === 'applicationDate' ? b.applicationDate : b.requestedAmount;
-      return this.sortDirection === 'asc' ? (fieldA > fieldB ? 1 : -1) : fieldA > fieldB ? -1 : 1;
-    });
+      .filter((item) => (this.status ? item.applicationStatus === this.status : true));
   }
 
   resetFilters() {
     this.search = '';
     this.loanType = '';
     this.status = '';
-    this.stage = '';
     this.applyFilters();
   }
+
+  viewApplication(app: LoanApplicationPayload) {
+    this.router.navigateByUrl('/loan-origination/processing');
+  }
 }
+

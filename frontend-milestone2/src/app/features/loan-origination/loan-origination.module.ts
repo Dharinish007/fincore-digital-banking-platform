@@ -16,7 +16,6 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { HeaderBarComponent } from './components/header-bar/header-bar.component';
 import { ProgressTrackerComponent } from './components/progress-tracker/progress-tracker.component';
 import { ApplicationCardComponent } from './components/application-card/application-card.component';
-import { DocumentStatusCardComponent } from './components/document-status-card/document-status-card.component';
 import { QualityChecklistComponent } from './components/quality-checklist/quality-checklist.component';
 import { FundingSummaryCardComponent } from './components/funding-summary-card/funding-summary-card.component';
 import { StatusClassPipe } from './pipes/status-class.pipe';
@@ -37,7 +36,6 @@ import { StatusClassPipe } from './pipes/status-class.pipe';
     LoanFundingPageComponent,
     CreditCheckPageComponent,
     ApplicationCardComponent,
-    DocumentStatusCardComponent,
     QualityChecklistComponent,
     FundingSummaryCardComponent,
     StatusClassPipe
