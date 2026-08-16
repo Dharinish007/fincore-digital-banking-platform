@@ -52,7 +52,7 @@
 
         <div class="lookup-message error" *ngIf="lookupState === 'not-found'">
           <span class="material-icons">error_outline</span>
-          No customer / loan application found for this Customer ID. Try 5000-5011 from the demo dataset.
+          Customer ID is not available in the database.
         </div>
       </div>
 
@@ -60,8 +60,8 @@
         <!-- Auto-filled application details -->
         <div class="panel">
           <div class="panel-header-row">
-            <div class="panel-title"><span class="material-icons">description</span> Application Details</div>
-            <span class="count-pill subtle">Auto-filled</span>
+            <div class="panel-title"><span class="material-icons">description</span> Loan Request Details</div>
+            <span class="count-pill subtle">{{ isNewLoanRequest ? 'New loan request' : 'Database record' }}</span>
           </div>
 
           <div class="form-grid">
@@ -71,13 +71,14 @@
             </div>
             <div class="form-field">
               <label>Loan Type</label>
-              <select [ngModel]="loanType" disabled>
+              <select [(ngModel)]="loanType" [disabled]="!isNewLoanRequest">
                 <option *ngFor="let t of loanTypeOptions" [value]="t">{{ t }}</option>
               </select>
             </div>
             <div class="form-field">
-              <label>Loan Amount</label>
-              <input type="text" [value]="formatCurrency(loanAmount)" disabled />
+              <label>Required Loan Amount <span class="req" *ngIf="isNewLoanRequest">*</span></label>
+              <input *ngIf="!isNewLoanRequest" type="text" [value]="formatCurrency(loanAmount)" disabled />
+              <input *ngIf="isNewLoanRequest" type="number" placeholder="e.g. 500000" [(ngModel)]="loanAmount" min="1" />
             </div>
           </div>
         </div>
@@ -111,15 +112,6 @@
                 />
                 <span class="material-icons">speed</span>
               </div>
-              <button
-                type="button"
-                class="link-btn fetch-score-btn"
-                (click)="fetchCreditScoreFromBureau()"
-                [disabled]="fetchingScore"
-              >
-                <span class="material-icons">{{ fetchingScore ? 'hourglass_top' : 'sync' }}</span>
-                {{ fetchingScore ? 'Fetching from bureau...' : 'Fetch from Credit System' }}
-              </button>
               <span class="field-error" *ngIf="checkRun && (creditScore == null || creditScore < 300 || creditScore > 900)">
                 Enter a valid credit score between 300 and 900.
               </span>
@@ -202,7 +194,7 @@
             <span class="material-icons">rule</span> Run Eligibility Check
           </button>
           <span class="field-error" *ngIf="!canRunCheck">
-            Enter Salary and Credit Score above to run the check.
+            Enter loan type, loan amount, salary, and credit score above to run the check.
           </span>
 
           <div class="eligibility-result" *ngIf="checkRun && creditStatus">
@@ -236,6 +228,7 @@
             <span class="material-icons">check_circle</span>
             Credit check saved. It now appears on the dashboard.
           </div>
+          <span class="field-error" *ngIf="submitError">{{ submitError }}</span>
           <div class="actions-row">
             <button type="button" class="btn primary" (click)="saveCreditCheck()" [disabled]="!canSave">
               <span class="material-icons">save</span> Save Credit Check
