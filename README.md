@@ -40,17 +40,43 @@ management of banking services.
 
 ## 📁 Project Structure
 
-├── frontend/       # Angular Application
+├── frontend-milestone2/
+│   ├── credit-check-app/
+│   ├── emicalculation/
+│   └── loan-origination/
+├── frontend/       # Balance Accuracy Application
 ├── backend/        # Spring Boot REST API
+├── backend-M2/     # Spring Boot Milestone 2 API
 ├── DB/             # SQL Scripts
 └── README.md
 
 ## 🚀 Quick Start
-* 🖥️ Frontend -
+* 🖥️ Frontend Applications (Milestone 2) -
+  - **Credit Check App**:
+    ```bash
+    cd frontend-milestone2/credit-check-app
+    npm install
+    npm start
+    ```
+  - **EMI Calculation App**:
+    ```bash
+    cd frontend-milestone2/emicalculation
+    npm install
+    npm start
+    ```
+  - **Loan Origination App**:
+    ```bash
+    cd frontend-milestone2/loan-origination
+    npm install
+    npm start
+    ```
+
+* 🖥️ Frontend (Balance Accuracy) -
+```bash
 cd frontend/balance-accuracy-app
 npm install
 npm start
-
+```
 Runs on: http://localhost:4200
 
 * ⚙️ Backend -

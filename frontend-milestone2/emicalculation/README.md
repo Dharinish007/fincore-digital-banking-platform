@@ -28,7 +28,7 @@ A standalone Angular 19 frontend application for calculating reducing-balance Eq
 Navigate to the `emicalculation` directory from the repository root:
 
 ```bash
-cd emicalculation
+cd frontend-milestone2/emicalculation
 ```
 
 Install dependencies:
