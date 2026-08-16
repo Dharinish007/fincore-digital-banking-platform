@@ -12,7 +12,13 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
 @Component({
   selector: 'app-credit-check-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, HeaderComponent, SidebarComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    HeaderComponent,
+    SidebarComponent,
+  ],
   templateUrl: './credit-check-dashboard.component.html',
   styleUrls: ['./credit-check-dashboard.component.scss'],
 })
@@ -31,7 +37,15 @@ export class CreditCheckDashboardComponent {
   public customerSearch = '';
   public loanIdSearch = '';
 
-  public loanTypeOptions = ['All', 'Personal', 'Home', 'Vehicle', 'Education', 'Gold', 'Other'];
+  public loanTypeOptions = [
+    'All',
+    'Personal',
+    'Home',
+    'Vehicle',
+    'Education',
+    'Gold',
+    'Other',
+  ];
   public creditStatusOptions = ['All', 'Pass', 'Review', 'Fail'];
   public applicationStatusOptions = ['All', 'Pending', 'Approved', 'Rejected'];
 
@@ -63,11 +77,15 @@ export class CreditCheckDashboardComponent {
   }
 
   public approve(loanId: number): void {
-    this.creditCheckService.updateApplicationStatus(loanId, 'Approved' as ApplicationStatus);
+    this.creditCheckService
+      .updateApplicationStatus(loanId, 'Approved' as ApplicationStatus)
+      .subscribe();
   }
 
   public reject(loanId: number): void {
-    this.creditCheckService.updateApplicationStatus(loanId, 'Rejected' as ApplicationStatus);
+    this.creditCheckService
+      .updateApplicationStatus(loanId, 'Rejected' as ApplicationStatus)
+      .subscribe();
   }
 
   public onRefresh(): void {

@@ -4,10 +4,21 @@ import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
-import { LoanApplication, LoanType, ApplicationStatus } from '../models/loan-application.model';
+import {
+  LoanApplication,
+  LoanType,
+  ApplicationStatus,
+} from '../models/loan-application.model';
 import { CreditCheck, CreditStatus } from '../models/credit-check.model';
-import { EmiCalculation, CreditCheckRecord } from '../models/emi-calculation.model';
-import { CustomerLookupResult, PreviousLoanRecord, PreviousLoanStatus } from '../models/customer-lookup.model';
+import {
+  EmiCalculation,
+  CreditCheckRecord,
+} from '../models/emi-calculation.model';
+import {
+  CustomerLookupResult,
+  PreviousLoanRecord,
+  PreviousLoanStatus,
+} from '../models/customer-lookup.model';
 
 export interface CreditCheckFilterCriteria {
   startDate: string | null;
@@ -37,22 +48,36 @@ export class CreditCheckService {
   private apiUrl = environment.apiUrl;
 
   private rawRecords = signal<CreditCheckRecord[]>([]);
-  public activeFilters = signal<CreditCheckFilterCriteria>({ ...EMPTY_FILTERS });
+  public activeFilters = signal<CreditCheckFilterCriteria>({
+    ...EMPTY_FILTERS,
+  });
 
   public filteredRecords = computed(() => {
     const f = this.activeFilters();
     return this.rawRecords().filter((r) => {
-      if (f.loanType !== 'All' && r.application.loanType !== f.loanType) return false;
-      if (f.creditStatus !== 'All' && r.credit.creditStatus !== f.creditStatus) return false;
-      if (f.applicationStatus !== 'All' && r.application.applicationStatus !== f.applicationStatus)
+      if (f.loanType !== 'All' && r.application.loanType !== f.loanType)
+        return false;
+      if (f.creditStatus !== 'All' && r.credit.creditStatus !== f.creditStatus)
+        return false;
+      if (
+        f.applicationStatus !== 'All' &&
+        r.application.applicationStatus !== f.applicationStatus
+      )
         return false;
       if (
         f.customerSearch &&
-        !r.application.customerName.toLowerCase().includes(f.customerSearch.toLowerCase())
+        !r.application.customerName
+          .toLowerCase()
+          .includes(f.customerSearch.toLowerCase())
       )
         return false;
-      if (f.loanIdSearch && !String(r.application.loanId).includes(f.loanIdSearch)) return false;
-      if (f.startDate && r.application.applicationDate < f.startDate) return false;
+      if (
+        f.loanIdSearch &&
+        !String(r.application.loanId).includes(f.loanIdSearch)
+      )
+        return false;
+      if (f.startDate && r.application.applicationDate < f.startDate)
+        return false;
       if (f.endDate && r.application.applicationDate > f.endDate) return false;
       return true;
     });
@@ -61,10 +86,18 @@ export class CreditCheckService {
   public summaryStats = computed(() => {
     const all = this.rawRecords();
     const total = all.length;
-    const totalLoanAmount = all.reduce((sum, r) => sum + r.application.loanAmount, 0);
-    const needsReview = all.filter((r) => r.credit.creditStatus !== 'Pass').length;
-    const approved = all.filter((r) => r.application.applicationStatus === 'Approved').length;
-    const approvalRate = total > 0 ? Math.round((approved / total) * 1000) / 10 : 0;
+    const totalLoanAmount = all.reduce(
+      (sum, r) => sum + r.application.loanAmount,
+      0,
+    );
+    const needsReview = all.filter(
+      (r) => r.credit.creditStatus !== 'Pass',
+    ).length;
+    const approved = all.filter(
+      (r) => r.application.applicationStatus === 'Approved',
+    ).length;
+    const approvalRate =
+      total > 0 ? Math.round((approved / total) * 1000) / 10 : 0;
 
     return { total, totalLoanAmount, needsReview, approvalRate };
   });
@@ -74,45 +107,86 @@ export class CreditCheckService {
   }
 
   /**
-   * Calls GET {apiUrl}/credit-checks. This endpoint likely does not exist
-   * yet on the backend (the loan_application / credit_check / emi_calculation
-   * tables were only added in the WEEK-2 schema), so on error this falls
-   * back to locally generated mock data purely so the dashboard has
-   * something to show before that backend endpoint exists. Once the real
-   * endpoint is live, the fallback can be removed.
+   * Calls the CreditCheck backend. Dashboard data always comes from the
+   * database; a failed request deliberately shows no records rather than mock data.
    */
   public fetchRecordsFromBackend(): Observable<CreditCheckRecord[]> {
-    return this.http.get<CreditCheckRecord[]>(`${this.apiUrl}/credit-checks`).pipe(
-      map((response) => response ?? []),
+    return this.http.get<any[]>(`${this.apiUrl}/credit-checks`).pipe(
+      map((response) =>
+        (response ?? []).map((item) => this.mapBackendCreditCheck(item)),
+      ),
       tap((records) => this.rawRecords.set(records)),
       catchError(() => {
-        const mock = this.generateMockRecords();
-        this.rawRecords.set(mock);
-        return of(mock);
+        this.rawRecords.set([]);
+        return of([]);
       }),
     );
   }
 
-  /**
-   * Looks up a customer by ID for the "New Credit Check" form. Attempts a
-   * real backend lookup first; falls back to deriving a result from the
-   * in-memory records (mock or real, whichever is currently loaded) plus a
-   * deterministic previous-loan history so the demo is repeatable per
-   * Customer ID.
-   */
-  public lookupCustomer(customerId: number): Observable<CustomerLookupResult | null> {
-    return this.http.get<CustomerLookupResult>(`${this.apiUrl}/customers/${customerId}/loan-summary`).pipe(
-      catchError(() => of(this.mockCustomerLookup(customerId))),
-    );
+  /** Looks up a customer and loan history from the CreditCheck database. */
+  public lookupCustomer(
+    customerId: number,
+  ): Observable<CustomerLookupResult | null> {
+    return this.http
+      .get<CustomerLookupResult>(
+        `${this.apiUrl}/credit-check/customer/${customerId}`,
+      )
+      .pipe(
+        map((response) => ({
+          customerId: Number(response.customerId),
+          customerName: response.customerName,
+          monthlyIncome:
+            response.monthlyIncome == null
+              ? null
+              : Number(response.monthlyIncome),
+          loanId: response.loanId == null ? null : Number(response.loanId),
+          loanType: response.loanType
+            ? this.normalizeLoanType(response.loanType)
+            : null,
+          loanAmount:
+            response.loanAmount == null ? null : Number(response.loanAmount),
+          previousLoans: (response.previousLoans ?? []).map((loan) => ({
+            loanId: Number(loan.loanId),
+            loanType: this.normalizeLoanType(loan.loanType),
+            amount: Number(loan.amount),
+            outstandingAmount: Number(loan.outstandingAmount ?? 0),
+            status: loan.status,
+          })),
+        })),
+        catchError(() => of(null)),
+      );
+  }
+
+  /** Runs the database-backed eligibility rules without saving a credit check. */
+  public evaluateEligibility(input: {
+    customerId: number;
+    loanId: number | null;
+    loanType: LoanType;
+    loanAmount: number;
+    monthlyIncome: number;
+    creditScore: number;
+  }): Observable<{
+    creditStatus: CreditStatus;
+    remarks: string;
+    existingLoanCount: number;
+  }> {
+    return this.http.post<{
+      creditStatus: CreditStatus;
+      remarks: string;
+      existingLoanCount: number;
+    }>(`${this.apiUrl}/credit-checks/evaluate`, input);
   }
 
   private mockCustomerLookup(customerId: number): CustomerLookupResult | null {
-    const record = this.rawRecords().find((r) => r.application.customerId === customerId);
+    const record = this.rawRecords().find(
+      (r) => r.application.customerId === customerId,
+    );
     if (!record) return null;
 
     return {
       customerId,
       customerName: record.application.customerName,
+      monthlyIncome: record.credit.monthlyIncome,
       loanId: record.application.loanId,
       loanType: record.application.loanType,
       loanAmount: record.application.loanAmount,
@@ -126,15 +200,26 @@ export class CreditCheckService {
     if (bucket === 0) return []; // this segment of customers has no loan history
 
     const count = (customerId % 3) + 1;
-    const loanTypes: LoanType[] = ['Personal', 'Home', 'Vehicle', 'Education', 'Gold', 'Other'];
+    const loanTypes: LoanType[] = [
+      'Personal',
+      'Home',
+      'Vehicle',
+      'Education',
+      'Gold',
+      'Other',
+    ];
     const loans: PreviousLoanRecord[] = [];
 
     for (let i = 0; i < count; i++) {
-      const amount = ((customerId * (i + 3)) % 40 + 5) * 10000;
+      const amount = (((customerId * (i + 3)) % 40) + 5) * 10000;
       const isOutstanding = (customerId + i) % 2 === 0;
       const outstandingAmount = isOutstanding ? Math.round(amount * 0.35) : 0;
       const status: PreviousLoanStatus =
-        outstandingAmount > 0 ? 'Active' : (customerId + i) % 7 === 0 ? 'Defaulted' : 'Closed';
+        outstandingAmount > 0
+          ? 'Active'
+          : (customerId + i) % 7 === 0
+            ? 'Defaulted'
+            : 'Closed';
 
       loans.push({
         loanId: 8000 + customerId * 10 + i,
@@ -149,11 +234,39 @@ export class CreditCheckService {
   }
 
   /**
-   * Saves a completed Credit Check (from the New Credit Check form) into
-   * local state so it immediately shows up in the dashboard table.
-   * Replace with a real POST {apiUrl}/credit-checks call once the backend
-   * endpoint exists.
+   * Sends a completed credit check to the backend and stores the server response in the state.
    */
+  public submitCreditCheck(input: {
+    customerId: number;
+    customerName: string;
+    loanId: number | null;
+    loanType: LoanType;
+    loanAmount: number;
+    monthlyIncome: number;
+    creditScore: number;
+    existingLoanCount: number;
+    creditStatus: CreditStatus;
+    remarks: string;
+  }): Observable<CreditCheckRecord> {
+    const payload = {
+      customerId: input.customerId,
+      customerName: input.customerName,
+      loanId: input.loanId,
+      loanType: input.loanType,
+      loanAmount: input.loanAmount,
+      monthlyIncome: input.monthlyIncome,
+      creditScore: input.creditScore,
+      existingLoanCount: input.existingLoanCount,
+      creditStatus: input.creditStatus,
+      remarks: input.remarks,
+    };
+
+    return this.http.post<any>(`${this.apiUrl}/credit-checks`, payload).pipe(
+      map((response) => this.mapBackendCreditCheck(response, input)),
+      tap((record) => this.addRecordToState(record)),
+    );
+  }
+
   public addManualCreditCheck(input: {
     customerId: number;
     customerName: string;
@@ -167,8 +280,11 @@ export class CreditCheckService {
     remarks: string;
   }): CreditCheckRecord {
     const now = new Date().toISOString();
-    const nextCreditCheckId = Math.max(2000, ...this.rawRecords().map((r) => r.credit.creditCheckId)) + 1;
-    const nextEmiId = Math.max(3000, ...this.rawRecords().map((r) => r.emi.emiId)) + 1;
+    const nextCreditCheckId =
+      Math.max(2000, ...this.rawRecords().map((r) => r.credit.creditCheckId)) +
+      1;
+    const nextEmiId =
+      Math.max(3000, ...this.rawRecords().map((r) => r.emi.emiId)) + 1;
 
     const application: LoanApplication = {
       loanId: input.loanId,
@@ -196,7 +312,9 @@ export class CreditCheckService {
 
     const r = 12 / 100 / 12;
     const n = 36;
-    const monthlyEmi = Math.round((input.loanAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+    const monthlyEmi = Math.round(
+      (input.loanAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1),
+    );
     const totalPayable = monthlyEmi * n;
 
     const emi: EmiCalculation = {
@@ -212,11 +330,7 @@ export class CreditCheckService {
     };
 
     const newRecord: CreditCheckRecord = { application, credit, emi };
-    this.rawRecords.update((records) => {
-      const withoutExisting = records.filter((rec) => rec.application.loanId !== input.loanId);
-      return [newRecord, ...withoutExisting];
-    });
-
+    this.addRecordToState(newRecord);
     return newRecord;
   }
 
@@ -228,19 +342,48 @@ export class CreditCheckService {
     this.activeFilters.set({ ...EMPTY_FILTERS });
   }
 
-  /**
-   * DEMO: updates local state only. Replace with a real
-   * PATCH {apiUrl}/loan-applications/{loanId}/status call once the backend
-   * endpoint exists.
-   */
-  public updateApplicationStatus(loanId: number, status: ApplicationStatus): void {
-    this.rawRecords.update((records) =>
-      records.map((r) =>
-        r.application.loanId === loanId
-          ? { ...r, application: { ...r.application, applicationStatus: status } }
-          : r,
-      ),
-    );
+  public updateApplicationStatus(
+    loanId: number,
+    status: ApplicationStatus,
+  ): Observable<void> {
+    return this.http
+      .put<void>(
+        `${this.apiUrl}/api/loan-origination/${loanId}/status?status=${status}`,
+        {},
+      )
+      .pipe(
+        tap(() => {
+          this.rawRecords.update((records) =>
+            records.map((r) =>
+              r.application.loanId === loanId
+                ? {
+                    ...r,
+                    application: {
+                      ...r.application,
+                      applicationStatus: status,
+                    },
+                  }
+                : r,
+            ),
+          );
+        }),
+        catchError(() => {
+          this.rawRecords.update((records) =>
+            records.map((r) =>
+              r.application.loanId === loanId
+                ? {
+                    ...r,
+                    application: {
+                      ...r.application,
+                      applicationStatus: status,
+                    },
+                  }
+                : r,
+            ),
+          );
+          return of(void 0);
+        }),
+      );
   }
 
   public exportToCSV(filename = 'FinCore_CreditCheck_Report.csv'): void {
@@ -248,8 +391,15 @@ export class CreditCheckService {
     if (!data.length) return;
 
     const headers = [
-      'Credit Check ID', 'Loan ID', 'Customer Name', 'Credit Score', 'Monthly Income (₹)',
-      'Existing Loans', 'Credit Status', 'Remarks', 'Checked At',
+      'Credit Check ID',
+      'Loan ID',
+      'Customer Name',
+      'Credit Score',
+      'Monthly Income (₹)',
+      'Existing Loans',
+      'Credit Status',
+      'Remarks',
+      'Checked At',
     ];
     const rows = data.map((r) => [
       r.credit.creditCheckId,
@@ -263,7 +413,10 @@ export class CreditCheckService {
       r.credit.checkedAt.slice(0, 10),
     ]);
 
-    const csvContent = [headers.join(','), ...rows.map((row) => row.join(','))].join('\n');
+    const csvContent = [
+      headers.join(','),
+      ...rows.map((row) => row.join(',')),
+    ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -322,27 +475,163 @@ export class CreditCheckService {
     printWindow.print();
   }
 
+  private addRecordToState(record: CreditCheckRecord): void {
+    this.rawRecords.update((records) => {
+      const withoutExisting = records.filter(
+        (rec) => rec.application.loanId !== record.application.loanId,
+      );
+      return [record, ...withoutExisting];
+    });
+  }
+
+  private mapBackendCreditCheck(
+    response: any,
+    fallback?: {
+      customerId: number;
+      customerName: string;
+      loanId: number | null;
+      loanType: LoanType;
+      loanAmount: number;
+      monthlyIncome: number;
+      creditScore: number;
+      existingLoanCount: number;
+      creditStatus: CreditStatus;
+      remarks: string;
+    },
+  ): CreditCheckRecord {
+    const payload = response ?? {};
+    const application: LoanApplication = {
+      loanId: Number(payload.loanId ?? fallback?.loanId ?? 0),
+      customerId: Number(payload.customerId ?? fallback?.customerId ?? 0),
+      customerName:
+        payload.customerName ?? fallback?.customerName ?? 'Customer',
+      loanType: this.normalizeLoanType(
+        payload.loanType ?? fallback?.loanType ?? 'Personal',
+      ),
+      loanAmount: Number(payload.loanAmount ?? fallback?.loanAmount ?? 0),
+      tenureMonths: 36,
+      interestRate: 12,
+      purpose: payload.loanType
+        ? `${payload.loanType} loan requirement`
+        : 'Loan requirement',
+      applicationStatus: payload.applicationStatus ?? 'Pending',
+      applicationDate:
+        payload.applicationDate ?? new Date().toISOString().slice(0, 10),
+    };
+
+    const credit: CreditCheck = {
+      creditCheckId: Number(payload.creditCheckId ?? 2000),
+      loanId: Number(payload.loanId ?? fallback?.loanId ?? 0),
+      creditScore: Number(payload.creditScore ?? fallback?.creditScore ?? 0),
+      monthlyIncome: Number(
+        payload.monthlyIncome ?? fallback?.monthlyIncome ?? 0,
+      ),
+      existingLoanCount: Number(
+        payload.existingLoanCount ?? fallback?.existingLoanCount ?? 0,
+      ),
+      creditStatus: (payload.creditStatus ??
+        fallback?.creditStatus ??
+        'Review') as CreditStatus,
+      remarks: payload.remarks ?? fallback?.remarks ?? '',
+      checkedAt: payload.checkedAt ?? new Date().toISOString(),
+    };
+
+    const emi: EmiCalculation = {
+      emiId: Number(payload.emiId ?? 3000),
+      loanId: Number(payload.loanId ?? fallback?.loanId ?? 0),
+      principalAmount: Number(payload.loanAmount ?? fallback?.loanAmount ?? 0),
+      interestRate: 12,
+      tenureMonths: 36,
+      monthlyEmi: Number(
+        payload.monthlyEmi ??
+          Math.round(
+            (((application.loanAmount * 0.12) / 12) *
+              Math.pow(1 + 0.12 / 12, 36)) /
+              (Math.pow(1 + 0.12 / 12, 36) - 1),
+          ),
+      ),
+      totalInterest: Number(payload.totalInterest ?? 0),
+      totalPayable: Number(payload.totalPayable ?? 0),
+      calculatedAt: payload.calculatedAt ?? new Date().toISOString(),
+    };
+
+    return { application, credit, emi };
+  }
+
+  private normalizeLoanType(value: string | undefined): LoanType {
+    const normalized = (value ?? 'Personal').toString().toLowerCase();
+    const map: Record<string, LoanType> = {
+      personal: 'Personal',
+      home: 'Home',
+      vehicle: 'Vehicle',
+      education: 'Education',
+      gold: 'Gold',
+      other: 'Other',
+    };
+    return map[normalized] ?? 'Personal';
+  }
+
+  private calculateOutstandingAmount(loan: any): number {
+    const amount = Number(loan?.loanAmount ?? 0);
+    const status =
+      `${loan?.applicationStatus ?? loan?.status ?? ''}`.toLowerCase();
+    if (status.includes('approved') || status.includes('active'))
+      return Math.max(0, Math.round(amount * 0.3));
+    return 0;
+  }
+
+  private getLoanStatus(loan: any): PreviousLoanRecord['status'] {
+    const status =
+      `${loan?.applicationStatus ?? loan?.status ?? 'Closed'}`.toLowerCase();
+    if (status.includes('rejected') || status.includes('closed'))
+      return 'Closed';
+    if (status.includes('default')) return 'Defaulted';
+    return 'Active';
+  }
+
   private generateMockRecords(): CreditCheckRecord[] {
     const names = [
-      'Sneha Patel', 'Rahul Mehta', 'Priya Nair', 'Marcus Chen', 'Fatima Sheikh',
-      'David Okafor', 'Elena Petrova', 'Aditi Verma', 'Arjun Rao', 'Kavya Iyer',
-      'John Smith', 'Meera Krishnan',
+      'Sneha Patel',
+      'Rahul Mehta',
+      'Priya Nair',
+      'Marcus Chen',
+      'Fatima Sheikh',
+      'David Okafor',
+      'Elena Petrova',
+      'Aditi Verma',
+      'Arjun Rao',
+      'Kavya Iyer',
+      'John Smith',
+      'Meera Krishnan',
     ];
-    const loanTypes: LoanType[] = ['Personal', 'Home', 'Vehicle', 'Education', 'Gold', 'Other'];
+    const loanTypes: LoanType[] = [
+      'Personal',
+      'Home',
+      'Vehicle',
+      'Education',
+      'Gold',
+      'Other',
+    ];
     const creditStatuses: CreditStatus[] = ['Pass', 'Review', 'Fail'];
-    const appStatuses: ApplicationStatus[] = ['Pending', 'Approved', 'Rejected'];
+    const appStatuses: ApplicationStatus[] = [
+      'Pending',
+      'Approved',
+      'Rejected',
+    ];
 
     const records: CreditCheckRecord[] = [];
 
     for (let i = 0; i < 12; i++) {
       const loanId = 1000 + i;
       const loanType = loanTypes[i % loanTypes.length];
-      const loanAmount = Math.round((Math.random() * 900000 + 50000) / 1000) * 1000;
+      const loanAmount =
+        Math.round((Math.random() * 900000 + 50000) / 1000) * 1000;
       const tenureMonths = [12, 24, 36, 60, 120, 240][i % 6];
       const interestRate = Math.round((Math.random() * 8 + 7) * 100) / 100;
       const creditScore = Math.round(550 + Math.random() * 300);
       const creditStatus = creditStatuses[i % creditStatuses.length];
-      const monthlyIncome = Math.round((Math.random() * 80000 + 25000) / 500) * 500;
+      const monthlyIncome =
+        Math.round((Math.random() * 80000 + 25000) / 500) * 500;
 
       const application: LoanApplication = {
         loanId,
@@ -375,7 +664,9 @@ export class CreditCheckService {
 
       const r = interestRate / 100 / 12;
       const n = tenureMonths;
-      const monthlyEmi = Math.round((loanAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
+      const monthlyEmi = Math.round(
+        (loanAmount * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1),
+      );
       const totalPayable = monthlyEmi * n;
       const totalInterest = totalPayable - loanAmount;
 

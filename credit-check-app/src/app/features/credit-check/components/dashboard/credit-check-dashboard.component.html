@@ -171,6 +171,7 @@
                 <th>Monthly Income</th>
                 <th>Existing Loans</th>
                 <th>Credit Status</th>
+                <th>Loan Status</th>
                 <th>Remarks</th>
                 <th>Checked At</th>
                 <th>Action</th>
@@ -192,7 +193,18 @@
                       'pill-amber': r.credit.creditStatus === 'Review',
                       'pill-red': r.credit.creditStatus === 'Fail'
                     }"
-                    >{{ r.credit.creditStatus }}</span
+                  >{{ r.credit.creditStatus }}</span
+                  >
+                </td>
+                <td>
+                  <span
+                    class="pill"
+                    [ngClass]="{
+                      'pill-green': r.application.applicationStatus === 'Approved',
+                      'pill-amber': r.application.applicationStatus === 'Pending',
+                      'pill-red': r.application.applicationStatus === 'Rejected'
+                    }"
+                    >{{ r.application.applicationStatus }}</span
                   >
                 </td>
                 <td>{{ r.credit.remarks }}</td>
@@ -203,7 +215,7 @@
                 </td>
               </tr>
               <tr *ngIf="creditCheckService.filteredRecords().length === 0">
-                <td colspan="10" class="no-results">No credit check records match your filters.</td>
+                <td colspan="11" class="no-results">No credit check records match your filters.</td>
               </tr>
             </tbody>
           </table>

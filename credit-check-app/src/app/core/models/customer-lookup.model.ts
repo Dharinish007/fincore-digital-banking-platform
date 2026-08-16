@@ -23,8 +23,11 @@ export interface PreviousLoanRecord {
 export interface CustomerLookupResult {
   customerId: number;
   customerName: string;
-  loanId: number;
-  loanType: LoanType;
-  loanAmount: number;
+  /** Salary saved for this customer in the database, if available. */
+  monthlyIncome: number | null;
+  /** Null means this customer is starting a new loan request. */
+  loanId: number | null;
+  loanType: LoanType | null;
+  loanAmount: number | null;
   previousLoans: PreviousLoanRecord[];
 }
