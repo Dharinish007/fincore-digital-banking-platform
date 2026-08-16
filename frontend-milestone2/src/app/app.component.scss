@@ -1,0 +1,95 @@
+.fincore-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #0f172a;
+  color: #f8fafc;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.fincore-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-bottom: 1px solid #334155;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .logo-icon {
+    font-size: 1.8rem;
+    background: #2563eb;
+    padding: 0.3rem 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+  }
+
+  .brand-text {
+    display: flex;
+    flex-direction: column;
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+    }
+
+    .brand-subtitle {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+  }
+}
+
+.topbar-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    color: #cbd5e1;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease-in-out;
+    border: 1px solid transparent;
+
+    .nav-icon {
+      font-size: 1.1rem;
+    }
+
+    &:hover {
+      background-color: #334155;
+      color: #ffffff;
+    }
+
+    &.active {
+      background-color: #2563eb;
+      color: #ffffff;
+      border-color: #3b82f6;
+      box-shadow: 0 0 10px rgba(37, 99, 235, 0.4);
+    }
+  }
+}
+
+.fincore-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

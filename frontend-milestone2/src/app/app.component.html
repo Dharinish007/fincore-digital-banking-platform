@@ -1,0 +1,27 @@
+<div class="fincore-layout">
+  <header class="fincore-topbar">
+    <div class="topbar-brand">
+      <div class="logo-icon">🏦</div>
+      <div class="brand-text">
+        <span class="brand-title">FinCore Banking</span>
+        <span class="brand-subtitle">Milestone 2 Platform</span>
+      </div>
+    </div>
+
+    <nav class="topbar-nav">
+      <a routerLink="/loan-origination" routerLinkActive="active" class="nav-btn">
+        <span class="nav-icon">📄</span> Loan Origination
+      </a>
+      <a routerLink="/credit-check" routerLinkActive="active" class="nav-btn">
+        <span class="nav-icon">💳</span> Credit Check
+      </a>
+      <a routerLink="/emi-calculator" routerLinkActive="active" class="nav-btn">
+        <span class="nav-icon">🧮</span> EMI Calculator
+      </a>
+    </nav>
+  </header>
+
+  <main class="fincore-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
