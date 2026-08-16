@@ -1,0 +1,12 @@
+<div class="funding-summary card">
+  <h3>Funding Summary</h3>
+  <div class="summary-grid">
+    <div><strong>Application ID</strong> {{ application.id }}</div>
+    <div><strong>Customer Name</strong> {{ application.fullName }}</div>
+    <div><strong>Approved Amount</strong> ₹{{ application.approvedAmount | number }}</div>
+    <div><strong>Approved Tenure</strong> {{ application.approvedTenure }}</div>
+    <div><strong>Interest Rate</strong> {{ application.interestRate }}</div>
+    <div><strong>Funding Account</strong> {{ application.fundingAccount }}</div>
+    <div><strong>Funding Status</strong> <span class="badge {{ application.fundingStatus | statusClass }}">{{ application.fundingStatus }}</span></div>
+  </div>
+</div>

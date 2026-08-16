@@ -1,0 +1,55 @@
+.application-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.application-card-body {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.application-card h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.badge.draft {
+  background: rgba(255,255,255,0.03);
+  color: var(--muted-2);
+}
+
+.badge.under-review {
+  background: rgba(255,176,32,0.12);
+  color: var(--accent-2);
+}
+
+.badge.pass {
+  background: rgba(0,200,83,0.12);
+  color: var(--accent);
+}
+
+.badge.fail {
+  background: rgba(255,92,108,0.12);
+  color: var(--danger);
+}
+
+.application-card {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+.application-card:hover {
+  transform: translateY(-4px);
+}

@@ -1,0 +1,58 @@
+<div class="page-header">
+  <div>
+    <p class="page-subtitle">Underwriting</p>
+    <h2 class="page-title">Finalize the credit decision</h2>
+  </div>
+</div>
+
+<div class="summary-grid">
+  <div class="card summary-card">
+    <h3>Applicant Summary</h3>
+    <div *ngIf="application" class="detail-list">
+      <div class="detail-item"><span>Customer Name</span><strong>{{ application.fullName }}</strong></div>
+      <div class="detail-item"><span>Employment</span><strong>{{ application.employmentType }} / {{ application.jobTitle }}</strong></div>
+      <div class="detail-item"><span>Income</span><strong>₹{{ application.monthlyIncome | number }}</strong></div>
+      <div class="detail-item"><span>Existing Obligations</span><strong>₹{{ application.otherIncome | number }}</strong></div>
+      <div class="detail-item"><span>Email</span><strong>{{ application.email }}</strong></div>
+      <div class="detail-item"><span>Mobile</span><strong>{{ application.mobile }}</strong></div>
+    </div>
+  </div>
+
+  <div class="card summary-card">
+    <h3>Loan Summary</h3>
+    <div *ngIf="application" class="detail-list">
+      <div class="detail-item"><span>Loan Type</span><strong>{{ application.loanType }}</strong></div>
+      <div class="detail-item"><span>Requested Amount</span><strong>₹{{ application.requestedAmount | number }}</strong></div>
+      <div class="detail-item"><span>Tenure</span><strong>{{ application.tenure }}</strong></div>
+      <div class="detail-item"><span>Purpose</span><strong>{{ application.purpose }}</strong></div>
+    </div>
+  </div>
+</div>
+
+<div class="result-grid">
+  <div class="card metric-card"><h3>Credit Check Result</h3><p>Placeholder for backend result.</p></div>
+  <div class="card metric-card"><h3>Eligibility Result</h3><p>Placeholder for eligibility status.</p></div>
+  <div class="card metric-card"><h3>Risk Category</h3><p>Placeholder for risk evaluation.</p></div>
+</div>
+
+<div class="card decision-card">
+  <h3>Decision</h3>
+  <div class="decision-grid">
+    <button class="secondary-button" (click)="selectDecision('Approve')">Approve</button>
+    <button class="secondary-button" (click)="selectDecision('Reject')">Reject</button>
+    <button class="secondary-button" (click)="selectDecision('Request More Information')">Request More Information</button>
+  </div>
+
+  <div *ngIf="decision === 'Reject'" class="form-group rejection-panel">
+    <label>Rejection Reason</label>
+    <textarea [(ngModel)]="rejectionReason" rows="3" placeholder="Enter reason"></textarea>
+  </div>
+
+  <div class="form-actions">
+    <button class="primary-button" (click)="submitDecision()">Submit Decision</button>
+  </div>
+
+  <div *ngIf="submitted" class="alert success">
+    Decision submitted: {{ decision }}
+  </div>
+</div>

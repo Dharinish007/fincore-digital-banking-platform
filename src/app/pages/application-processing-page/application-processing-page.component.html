@@ -1,0 +1,35 @@
+<div class="page-header">
+  <div>
+    <p class="page-subtitle">Application Processing</p>
+    <h2 class="page-title">Review documents and application status</h2>
+  </div>
+</div>
+
+<div class="summary-grid">
+  <div class="card overview-card">
+    <h3>Application overview</h3>
+    <div *ngIf="application" class="detail-list">
+      <div class="detail-item"><span>Application ID</span><strong>{{ application.id }}</strong></div>
+      <div class="detail-item"><span>Customer Name</span><strong>{{ application.fullName }}</strong></div>
+      <div class="detail-item"><span>Loan Type</span><strong>{{ application.loanType }}</strong></div>
+      <div class="detail-item"><span>Amount</span><strong>₹{{ application.requestedAmount | number }}</strong></div>
+      <div class="detail-item"><span>Application Date</span><strong>{{ application.applicationDate }}</strong></div>
+      <div class="detail-item"><span>Current Status</span><strong class="badge {{ application.status | statusClass }}">{{ application.status }}</strong></div>
+    </div>
+  </div>
+
+  <div class="card document-card">
+    <h3>Document status</h3>
+    <div class="document-grid">
+      <app-document-status-card *ngFor="let doc of documents" [document]="doc"></app-document-status-card>
+    </div>
+  </div>
+</div>
+
+<div class="card action-card">
+  <div class="action-row">
+    <button class="secondary-button" (click)="verifyApplication()">Verify Application</button>
+    <button class="ghost-button" (click)="requestAdditionalInfo()">Request Additional Information</button>
+    <button class="primary-button" (click)="sendForUnderwriting()">Send for Underwriting</button>
+  </div>
+</div>

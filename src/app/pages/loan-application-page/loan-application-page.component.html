@@ -1,0 +1,134 @@
+<div class="page-header">
+  <div>
+    <p class="page-subtitle">Loan Application</p>
+    <h2 class="page-title">Complete borrower application</h2>
+  </div>
+</div>
+
+<div class="form-card">
+  <h3>Personal Details</h3>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Customer ID</label>
+      <input formControlName="customerId" placeholder="C-XXXXX" />
+    </div>
+    <div class="form-group">
+      <label>Full Name</label>
+      <input formControlName="fullName" placeholder="Enter full name" />
+    </div>
+    <div class="form-group">
+      <label>Date of Birth</label>
+      <input type="date" formControlName="dateOfBirth" />
+    </div>
+    <div class="form-group">
+      <label>Gender</label>
+      <select formControlName="gender">
+        <option value="">Select</option>
+        <option value="Female">Female</option>
+        <option value="Male">Male</option>
+        <option value="Non-binary">Non-binary</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Mobile Number</label>
+      <input formControlName="mobile" placeholder="+91 98765 43210" />
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" formControlName="email" placeholder="example@mail.com" />
+    </div>
+    <div class="form-group">
+      <label>Address</label>
+      <input formControlName="address" placeholder="Enter full address" />
+    </div>
+    <div class="form-group">
+      <label>City</label>
+      <input formControlName="city" placeholder="City" />
+    </div>
+    <div class="form-group">
+      <label>State</label>
+      <input formControlName="state" placeholder="State" />
+    </div>
+    <div class="form-group">
+      <label>Pincode</label>
+      <input formControlName="pincode" placeholder="Postal code" />
+    </div>
+  </div>
+
+  <h3>Employment Details</h3>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Employment Type</label>
+      <select formControlName="employmentType">
+        <option value="">Select</option>
+        <option value="Salaried">Salaried</option>
+        <option value="Self-Employed">Self-Employed</option>
+        <option value="Freelancer">Freelancer</option>
+        <option value="Retired">Retired</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Employer Name</label>
+      <input formControlName="employerName" placeholder="Employer name" />
+    </div>
+    <div class="form-group">
+      <label>Job Title</label>
+      <input formControlName="jobTitle" placeholder="Job title" />
+    </div>
+    <div class="form-group">
+      <label>Work Experience</label>
+      <input formControlName="workExperience" placeholder="e.g. 5 years" />
+    </div>
+    <div class="form-group">
+      <label>Monthly Income</label>
+      <input type="number" formControlName="monthlyIncome" placeholder="Monthly salary" />
+    </div>
+    <div class="form-group">
+      <label>Other Income</label>
+      <input type="number" formControlName="otherIncome" placeholder="Other monthly income" />
+    </div>
+  </div>
+
+  <h3>Loan Details</h3>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Loan Type</label>
+      <select formControlName="loanType">
+        <option value="">Select</option>
+        <option value="Home Loan">Home Loan</option>
+        <option value="Personal Loan">Personal Loan</option>
+        <option value="Business Loan">Business Loan</option>
+        <option value="Auto Loan">Auto Loan</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Requested Loan Amount</label>
+      <input type="number" formControlName="requestedLoanAmount" placeholder="Enter amount" />
+    </div>
+    <div class="form-group">
+      <label>Loan Tenure</label>
+      <select formControlName="tenure">
+        <option value="">Select</option>
+        <option value="5 years">5 years</option>
+        <option value="10 years">10 years</option>
+        <option value="15 years">15 years</option>
+        <option value="20 years">20 years</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Loan Purpose</label>
+      <input formControlName="purpose" placeholder="Enter purpose" />
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <button class="secondary-button" (click)="saveDraft()">Save Draft</button>
+    <button class="primary-button" (click)="submitApplication()">Submit Application</button>
+    <button class="ghost-button" (click)="reset()">Reset</button>
+    <button class="secondary-button" (click)="cancel()">Cancel</button>
+  </div>
+
+  <div *ngIf="submitted" class="alert success">
+    Application submitted successfully! Application ID: {{ applicationId }}
+  </div>
+</div>

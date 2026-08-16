@@ -1,0 +1,15 @@
+<div class="application-card card">
+  <div class="application-card-header">
+    <div>
+      <p class="text-muted">{{ application.loanType }}</p>
+      <h3>{{ application.fullName }}</h3>
+    </div>
+    <span class="badge {{ application.status | statusClass }}">{{ application.status }}</span>
+  </div>
+  <div class="application-card-body">
+    <div><strong>ID</strong> {{ application.id }}</div>
+    <div><strong>Amount</strong> ₹{{ application.requestedAmount | number }}</div>
+    <div><strong>Stage</strong> {{ application.stage }}</div>
+    <div><strong>Date</strong> {{ application.applicationDate }}</div>
+  </div>
+</div>
