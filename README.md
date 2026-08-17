@@ -1,312 +1,638 @@
-# 💳 FinCore Digital Banking Platform
+# Secure Digital Banking Platform with Transaction Management System
 
-## 📖 Overview
+## Project Title
 
-FinCore Digital Banking Platform is a full-stack digital banking application developed as part of Team D within the FinCore Nexus initiative. The project focuses on three core banking requirements: Role-Based Access Control (RBAC), KYC Verification, and Audit Trail Management.
+**Secure Digital Banking Platform with Transaction Management System**
 
-The application follows a layered architecture with a React frontend, Spring Boot backend, JWT-based authentication, REST APIs, and MySQL database. It provides role-aware banking operations for Admin, Supervisor, Teller, and Customer users while maintaining secure access and traceable system activity.
+### Team D
 
-## ✨ Features
+Team D is responsible for the following loan management and transaction-related modules:
 
-### 🔐 Secure Authentication
-
-* JWT-based authentication
-* Secure login and authorization
-* Role-based access control
-* Protected REST APIs
-* Failed login activity tracking
-
-### 👥 Role-Based Access Control
-
-* Admin role
-* Supervisor role
-* Teller role
-* Customer role
-* Role-specific dashboards and permissions
-* Backend-side authorization
-
-### 👤 User Management
-
-* Admin user management
-* User role management
-* Account status management
-* Role-aware navigation and operations
-
-### 🪪 KYC Verification
-
-* Customer information collection
-* KYC document management
-* Verification workflow
-* Liveness / verification stage
-* KYC status tracking
-* PENDING and APPROVED statuses
-* Dedicated KYC frontend module
-
-### 🏦 Teller Operations
-
-* View customer accounts
-* View account information
-* Statement operations
-* Transfer operations
-* View customer KYC records
-* Role-restricted banking operations
-
-### 📜 Audit Trail
-
-* Centralized audit logging
-* Login activity tracking
-* Failed login tracking
-* KYC activity tracking
-* Account operation tracking
-* Actor, action, entity, timestamp, and status tracking
-* Searchable and sortable audit records
-
-### 💻 User Interface
-
-* React-based frontend
-* Admin Dashboard
-* Teller Operations Console
-* User Management
-* Role Management
-* Audit Logs
-* KYC Records
-* Enterprise banking interface
-
-## 🛠 Tech Stack
-
-**Frontend**
-
-* React
-* JavaScript
-* HTML5
-* CSS3
-* Frontend-KYC
-
-**Backend**
-
-* Java
-* Spring Boot
-* Spring Security
-* REST APIs
-* JWT
-* Spring Data JPA
-
-**Database**
-
-* MySQL
-* XAMPP / phpMyAdmin
-
-**Development Tools**
-
-* Git
-* GitHub
-* Maven
-* npm
-* IntelliJ IDEA
-* Visual Studio Code
-
-## 📷 Application Screenshots
-
-### 🏠 Home Page
-
-![Home Page](Screenshots/home-page.jpg)
-
-### 🔐 Login Page
-
-![Login Page](Screenshots/login-page.jpg)
-
-### 👨‍💼 Admin Dashboard
-
-![Admin Dashboard](Screenshots/admin-dashboard.jpg)
-
-### 👨‍💼 Supervisor Dashboard
-
-![Supervisor Dashboard](Screenshots/supervisor-dashboard.jpg)
-
-### 🏦 Teller Dashboard
-
-![Teller Dashboard](Screenshots/teller-dashboard.jpg)
-
-### 👤 User Dashboard
-
-![User Dashboard](Screenshots/user-dashboard.jpg)
+* Repayment Tracking
+* Disbursement Saga
+* NPA Classification
 
 
-## 📂 Project Structure
+---
+
+## Project Overview
+
+The **Secure Digital Banking Platform with Transaction Management System** is a digital banking application designed to manage customers, accounts, loans, repayments, disbursements, transactions, and loan-risk classification.
+
+The system provides role-based access for:
+
+* Administrator
+* Bank Teller
+* Customer
+
+Customers can access only their own account, loan, repayment, transaction, and eligibility information, while authorized bank staff can access operational banking functions.
+
+The platform provides a centralized interface for managing loan servicing and transaction-related activities.
+
+### Team D Core Workflow
 
 ```text
-fincore-digital-banking-platform/
-│
-├── Frontend/
-│   └── Main React frontend
-│
-├── Frontend-KYC/
-│   └── KYC frontend module
-│
-├── audittrail/
-│   └── Audit Trail Spring Boot microservice
-│
-├── kyc-service/
-│   └── KYC Spring Boot microservice
-│
-├── database/
-│   ├── schema.sql
-│   ├── queries.sql
-│   └── sample_data.sql
-│
-├── Screenshots/
-│   └── Application screenshots
-│
-└── README.md
+Customer
+    |
+    v
+   Loan
+    |
+    +------------------+
+    |                  |
+    v                  v
+Disbursement       Repayment
+   Saga             Tracking
+    |                  |
+    +--------+---------+
+             |
+             v
+      NPA Classification
+             |
+             v
+       Transactions
+             |
+             v
+         Audit Trail
 ```
 
+---
 
-## ▶️ Running the Project
+## Team Contributions
 
-### Backend
+Team D developed the loan management and servicing components of the platform.
 
-**Audit Trail Microservice**
+### Frontend Contributions
+
+* Designed the banking dashboard interface.
+* Implemented role-based navigation.
+* Developed Repayment Tracking frontend.
+* Developed Disbursement Saga frontend.
+* Developed NPA Classification frontend.
+* Implemented customer-specific views.
+* Implemented loan, repayment, disbursement and NPA dashboards.
+* Added status indicators and data tables.
+* Added responsive and user-friendly UI.
+* Added logout and role-specific access.
+
+### Backend Contributions
+
+* Implemented backend services for Repayment Tracking.
+* Implemented backend services for Disbursement Saga.
+* Connected frontend operations with backend APIs.
+* Supported loan and repayment business workflows.
+
+### Database Contributions
+
+* Designed and implemented the common MySQL database.
+* Created relationships between customers, loans, repayments, disbursements, NPA classifications, accounts and transactions.
+* Added sample data and common SQL queries.
+* Created indexes and foreign-key relationships.
+* Integrated the database with the banking modules.
+
+---
+
+## Modules Developed
+
+### 1. Repayment Tracking
+
+The Repayment Tracking module manages loan EMI and repayment information.
+
+It provides:
+
+* Installment number
+* Due date
+* Amount due
+* Amount paid
+* Payment date
+* Payment status
+* Remaining amount
+* Loan-wise repayment schedule
+* Pending and overdue repayment tracking
+
+### Supported Payment Status
 
 ```text
-cd audittrail
-.\mvnw.cmd spring-boot:run
+PAID
+PARTIAL
+PENDING
+OVERDUE
 ```
 
-Runs on:
+### Repayment Workflow
 
 ```text
-http://localhost:8081
+Loan
+  |
+  v
+Repayment Schedule
+  |
+  +--> Paid
+  |
+  +--> Partial
+  |
+  +--> Pending
+  |
+  +--> Overdue
 ```
 
-**KYC Microservice**
+### 2. Disbursement Saga
+
+The Disbursement Saga module manages the loan disbursement process as a sequence of tracked steps.
+
+### Disbursement Workflow
 
 ```text
-cd kyc-service
-.\mvnw.cmd spring-boot:run
+Document Verification
+        |
+        v
+Loan Approval
+        |
+        v
+Account Credited
+        |
+        v
+Disbursement Completed
 ```
 
-Runs on:
+The module tracks:
+
+* Disbursement ID
+* Loan ID
+* Amount
+* Disbursement date
+* Status
+* Transaction reference
+* Current Saga step
+* Failure reason
+* Step status
+* Start and completion time
+* Error messages
+
+The `disbursement_steps` table maintains the individual Saga steps.
+
+### 3. NPA Classification
+
+The NPA Classification module monitors loan repayment risk and overdue conditions.
+
+It tracks:
+
+* Overdue days
+* Outstanding amount
+* Classification
+* Classification date
+* Reason
+* Status
+
+### Example Classifications
 
 ```text
-http://localhost:8080
+STANDARD
+SMA-1
+NPA
 ```
+
+### NPA Workflow
+
+```text
+Repayment
+    |
+    v
+Overdue Days
+    |
+    v
+Outstanding Amount
+    |
+    v
+NPA Evaluation
+    |
+    v
+Classification
+```
+
+### 4. Customer Access
+
+The platform provides a separate customer view.
+
+A customer can view only their own:
+
+* Profile
+* Accounts
+* Loan details
+* Repayment schedule
+* Outstanding amount
+* Transactions
+* Loan eligibility
+
+### Sample Customers
+
+```text
+CUST001 → Amit Patil
+CUST002 → Sneha Joshi
+CUST003 → Rahul Shinde
+```
+
+Customer access is restricted according to the logged-in customer's identity.
+
+### 5. Transaction Management
+
+The Transaction Management component records banking transactions associated with accounts and loans.
+
+It stores:
+
+* Transaction ID
+* Account ID
+* Loan ID
+* Transaction type
+* Amount
+* Transaction date
+* Reference number
+* Transaction status
+
+### Example Transaction Types
+
+```text
+LOAN_DISBURSEMENT
+LOAN_REPAYMENT
+TRANSFER
+```
+
+### 6. Audit Trail
+
+The Audit Trail provides traceability of important banking operations such as:
+
+* Login
+* Logout
+* Loan operations
+* Repayment operations
+* Disbursement operations
+* NPA classification changes
+* Account operations
+* Administrative actions
+
+---
+
+## Technology Stack
 
 ### Frontend
 
-**Main Frontend**
+* React.js
+* JSX
+* JavaScript
+* Vite
+* HTML5
+* CSS3
+
+### Backend
+
+* Java
+* Spring Boot
+* REST APIs
+* Maven
+
+### Database
+
+* MySQL 8
+* SQL
+* Foreign Keys
+* Indexes
+
+### Development Tools
+
+* Visual Studio Code
+* Git
+* GitHub
+* MySQL Workbench / MySQL Command Line
+* Node.js
+* npm
+
+---
+
+## Screenshots
+
+### 1. Login Page
+
+The login page provides role-based authentication for:
+
+* Administrator
+* Teller
+* Customer
+
+![Login Page](screenshots/login.jpg)
+
+### 2. Teller Dashboard
+
+The teller dashboard provides access to operational banking activities.
+
+![Teller Dashboard](screenshots/teller-dashboard.jpg)
+
+### 3. Customer Dashboard
+
+The customer dashboard displays only the logged-in customer's information.
+
+It includes:
+
+* Account details
+* Loan information
+* Repayment information
+* Transactions
+* Loan eligibility
+
+![Customer Dashboard](screenshots/customer-dashboard.jpg)
+
+### 4. Repayment Tracking
+
+The Repayment Tracking page displays:
+
+* Loan ID
+* Installment number
+* Due date
+* Amount due
+* Amount paid
+* Remaining amount
+* Payment status
+
+![Repayment Tracking](screenshots/repayment-tracking.jpg)
+
+### 5. Disbursement Saga
+
+The Disbursement Saga page displays:
+
+* Disbursement amount
+* Disbursement status
+* Transaction reference
+* Current Saga step
+* Saga step history
+* Completed/failed steps
+
+![Disbursement Saga](screenshots/disbursement-saga.jpg)
+
+### 6. NPA Classification
+
+The NPA Classification page displays:
+
+* Loan ID
+* Customer
+* Overdue days
+* Outstanding amount
+* Classification
+* Classification date
+* Reason
+* Status
+
+![NPA Classification](screenshots/npa-classification.jpg)
+
+
+
+## Backend / Database Components
+
+### Database Name
 
 ```text
-cd Frontend
+bank_loan_management
+```
+
+### Main Database Tables
+
+```text
+customers
+loans
+accounts
+repayments
+disbursements
+disbursement_steps
+npa_classifications
+transactions
+```
+
+### Database Files
+
+The database implementation contains:
+
+```text
+schema.sql
+sample_data.sql
+queries.sql
+```
+
+### schema.sql
+
+Creates:
+
+* Database
+* Customers table
+* Loans table
+* Accounts table
+* Repayments table
+* Disbursements table
+* Disbursement steps table
+* NPA classifications table
+* Transactions table
+* Foreign keys
+* Indexes
+
+### sample_data.sql
+
+Provides sample records for:
+
+* Customers
+* Accounts
+* Loans
+* Repayments
+* Disbursements
+* Disbursement Saga steps
+* NPA classifications
+* Transactions
+
+### queries.sql
+
+Contains common queries for:
+
+* Viewing customers
+* Viewing loans
+* Viewing repayment schedules
+* Finding pending/overdue repayments
+* Viewing disbursements
+* Viewing Saga steps
+* Viewing NPA classifications
+* Viewing transactions
+* Counting loans by status
+* Calculating total repayments
+* Calculating outstanding amounts
+
+---
+
+## Backend APIs
+
+The React frontend communicates with Spring Boot REST APIs.
+
+Example API structure:
+
+```text
+GET  /api/customers
+GET  /api/customers/{id}
+
+GET  /api/loans
+GET  /api/loans/{id}
+
+GET  /api/repayments
+GET  /api/repayments/loan/{loanId}
+
+GET  /api/disbursements
+GET  /api/disbursements/{id}
+GET  /api/disbursements/{id}/steps
+
+GET  /api/npa
+GET  /api/npa/loan/{loanId}
+
+GET  /api/accounts
+GET  /api/transactions
+GET  /api/audit
+```
+
+The exact endpoint names should match the Spring Boot controllers implemented in the project.
+
+---
+
+## How to Run (Commands)
+
+### Frontend
+
+Open the frontend directory:
+
+```bash
+cd SecureDigitalBanking-TeamD-Frontend
+```
+
+Install dependencies:
+
+```bash
 npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-Runs on:
+The application will normally be available at:
 
 ```text
 http://localhost:5173
 ```
 
-**KYC Frontend**
-
-```text
-cd Frontend-KYC
-npm install
-npm run dev
-```
-
-Runs on:
-
-```text
-http://localhost:5174
-```
-
 ### Database
 
-Make sure MySQL is running on:
+Open MySQL and execute:
 
-```text
-localhost:3306
+```sql
+SOURCE schema.sql;
+SOURCE sample_data.sql;
 ```
 
-Username:
+Or execute the SQL files using MySQL Workbench.
+
+The database name is:
 
 ```text
-root
+bank_loan_management
 ```
 
-Password:
+After creating the database and inserting the sample data, `queries.sql` can be executed to test the database operations.
+
+### Backend
+
+Open the Spring Boot backend directory:
+
+```bash
+cd backend
+```
+
+Build the project:
+
+```bash
+mvn clean install
+```
+
+Run the application:
+
+```bash
+mvn spring-boot:run
+```
+
+### Windows Maven Wrapper
+
+```bash
+mvnw.cmd spring-boot:run
+```
+
+### Linux/macOS Maven Wrapper
+
+```bash
+./mvnw spring-boot:run
+```
+
+The backend port depends on the project's `application.properties`.
+
+---
+
+## Demo Login Credentials
+
+### Administrator
 
 ```text
-root
+User ID: admin
+Password: admin123
 ```
 
-Keep all required services running while testing the complete application.
+### Bank Teller
 
-## 📌 Core Modules
+```text
+User ID: TELLER001
+Password: teller123
+```
 
-| Module                | Description                            |
-| --------------------- | -------------------------------------- |
-| 🔐 RBAC               | Controls access based on user roles    |
-| 🪪 KYC Verification   | Manages customer identity verification |
-| 📜 Audit Trail        | Records and tracks system activities   |
-| 👨‍💼 Admin Dashboard | Provides administrative management     |
-| 🏦 Teller Operations  | Provides restricted banking operations |
+### Customers
+
+| User ID | Password | Customer     |
+| ------- | -------- | ------------ |
+| CUST001 | cust123  | Amit Patil   |
+| CUST002 | cust123  | Sneha Joshi  |
+| CUST003 | cust123  | Rahul Shinde |
+
+### Customer Information
+
+| Customer ID | Customer Name | Account              | Loan          |
+| ----------- | ------------- | -------------------- | ------------- |
+| 1           | Amit Patil    | ACC100001, ACC100002 | Home Loan     |
+| 2           | Sneha Joshi   | ACC100003            | Personal Loan |
+| 3           | Rahul Shinde  | ACC100004            | Vehicle Loan  |
+
+> These credentials are for development/demo purposes only. Production authentication should be handled securely by the backend.
+
+---
 
 
 
-## 🔀 Version Control
+### Team Responsibility Summary
 
-Team D development is maintained in the shared **team-d** branch using Git and GitHub.
+| Module                 | Frontend               | Backend             | Database         |
+| ---------------------- | ---------------------- | ------------------- | ---------------- |
+| Repayment Tracking     | Thejashree B, Tharun M | Sathiya Priya T     | Vaishnavi Warkar |
+| Disbursement Saga      | Soumya Ranjan Puthal   | Sharvari Shalgar    | Vaishnavi Warkar |
+| NPA Classification     | Vaishnavi Mahadik      | —                   | Vaishnavi Warkar |
+| Transaction Management | Team D Frontend        | Backend Integration | Vaishnavi Warkar |
+| Customer Access        | Team D Frontend        | Backend Integration | Vaishnavi Warkar |
+| Database Management    | —                      | —                   | Vaishnavi Warkar |
 
-The branch contains:
+---
 
-* Frontend
-* Frontend-KYC
-* Audit Trail backend
-* KYC backend
-* Database
-* Screenshots
+## Conclusion
 
+The **Secure Digital Banking Platform with Transaction Management System** integrates customer banking operations with loan servicing and transaction management.
 
-## 📌 Project Information
+Team D specifically contributes the three core loan management modules:
 
-| Information    | Details                          |
-| -------------- | -------------------------------- |
-| Project        | FinCore Digital Banking Platform |
-| Team           | Team D                           |
-| Branch         | team-d                           |
-| Frontend       | React                            |
-| Backend        | Spring Boot                      |
-| Database       | MySQL                            |
-| Authentication | JWT                              |
-| Audit Trail    | localhost:8081                   |
-| KYC Service    | localhost:8080                   |
-| Main Frontend  | localhost:5173                   |
-| KYC Frontend   | localhost:5174                   |
-| MySQL          | localhost:3306                   |
+**Disbursement Saga, Repayment Tracking, and NPA Classification**
 
-## 👥 Team Contributions
-
-| Team Member          | Responsibility     |
-| -------------------- | ------------------ |
-| Soumya Ranjan Puthal | Frontend Developer |
-| Vaishnavi Mahadik    | Frontend Developer |
-| Thejashree B         | Frontend Developer |
-| Tharun M             | Frontend Developer |
-| Sathiya Priya T      | Backend Developer  |
-| Sharvari Shalgar     | Backend Developer  |
-| Vaishnavi Warkar     | Database Developer |
-
-## 📝 Conclusion
-
-Team D has implemented core digital banking capabilities covering **Role-Based Access Control, KYC Verification, and Audit Trail Management**.
-
-The platform provides separate experiences for administrative and Teller users, ensuring that users can access only the functionality permitted by their assigned roles.
-
-The KYC module provides a structured customer verification workflow with explicit status tracking, while the Audit Trail provides centralized visibility into important system activities.
-
-The modular frontend, backend, microservices, and database structure provides a strong foundation for further development and future production hardening.
-
-> **"Authenticate securely, act within role, and record everything."**
-
+The project combines a **React frontend, Spring Boot backend, and MySQL database** to provide a structured, role-based, secure, and maintainable digital banking platform.
