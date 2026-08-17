@@ -1,0 +1,201 @@
+/* ==========================================
+   Report Filters
+========================================== */
+
+.report-filters {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  padding: 24px;
+
+  margin-bottom: 25px;
+}
+
+
+/* ==========================================
+   Header
+========================================== */
+
+.report-filter-header {
+  margin-bottom: 22px;
+}
+
+.report-filter-title {
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  color: #60a5fa;
+}
+
+.report-filter-title > svg {
+  font-size: 18px;
+}
+
+.report-filter-title h3 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 17px;
+}
+
+.report-filter-title p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   Grid
+========================================== */
+
+.report-filter-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr 1fr auto;
+
+  gap: 18px;
+
+  align-items: end;
+}
+
+
+/* ==========================================
+   Filter Group
+========================================== */
+
+.report-filter-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+.report-filter-group label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.report-filter-group label svg {
+  color: #60a5fa;
+}
+
+.report-filter-group select {
+  width: 100%;
+
+  padding: 12px 14px;
+
+  border-radius: 10px;
+
+  border: 1px solid #374151;
+
+  background: #111827;
+
+  color: #e5e7eb;
+
+  outline: none;
+
+  font-size: 13px;
+
+  cursor: pointer;
+}
+
+.report-filter-group select:focus {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+
+/* ==========================================
+   Button
+========================================== */
+
+.report-filter-action button {
+  border: none;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 12px 20px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  transition: all 0.3s ease;
+}
+
+.report-filter-action button:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1100px) {
+
+  .report-filter-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .report-filter-action {
+    grid-column: span 2;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .report-filters {
+    padding: 18px;
+  }
+
+  .report-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-filter-action {
+    grid-column: span 1;
+  }
+
+  .report-filter-action button {
+    width: 100%;
+  }
+
+}

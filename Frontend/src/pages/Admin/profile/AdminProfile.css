@@ -1,0 +1,651 @@
+/* ==========================================
+   Admin Profile
+   Premium Dark Theme
+========================================== */
+
+.admin-profile-page {
+  min-height: 100vh;
+
+  background: #0f172a;
+
+  color: #e2e8f0;
+
+  font-family: "Inter", sans-serif;
+
+  display: flex;
+}
+
+
+/* ==========================================
+   Main Area
+========================================== */
+
+.admin-profile-main {
+  margin-left: 270px;
+
+  min-height: 100vh;
+
+  min-width: 0;
+
+  flex: 1;
+
+  background: #0f172a;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.admin-profile-content {
+  padding: 35px;
+}
+
+
+/* ==========================================
+   Page Header
+========================================== */
+
+.admin-profile-header {
+  margin-bottom: 30px;
+}
+
+.admin-profile-label {
+  display: inline-block;
+
+  margin-bottom: 8px;
+
+  color: #60a5fa;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.admin-profile-header h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 34px;
+
+  font-weight: 700;
+}
+
+.admin-profile-header p {
+  margin: 9px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+}
+
+
+/* ==========================================
+   Profile Grid
+========================================== */
+
+.admin-profile-grid {
+  display: grid;
+
+  grid-template-columns: 330px 1fr;
+
+  gap: 25px;
+
+  margin-bottom: 25px;
+}
+
+
+/* ==========================================
+   Common Card
+========================================== */
+
+.admin-profile-card {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25);
+
+  overflow: hidden;
+
+  transition: 0.3s;
+}
+
+.admin-profile-card:hover {
+  border-color: rgba(37, 99, 235, 0.35);
+
+  box-shadow:
+    0 15px 35px rgba(37, 99, 235, 0.1);
+}
+
+
+/* ==========================================
+   Profile Overview
+========================================== */
+
+.profile-overview {
+  position: relative;
+
+  text-align: center;
+
+  padding-bottom: 25px;
+}
+
+.profile-cover {
+  height: 110px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1d4ed8,
+      #2563eb,
+      #3b82f6
+    );
+}
+
+
+/* ==========================================
+   Avatar
+========================================== */
+
+.profile-avatar-wrapper {
+  position: relative;
+
+  width: 92px;
+
+  height: 92px;
+
+  margin: -46px auto 15px;
+}
+
+.profile-avatar {
+  width: 92px;
+
+  height: 92px;
+
+  border-radius: 50%;
+
+  background: #0f172a;
+
+  border: 5px solid #1e293b;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  font-size: 32px;
+
+  font-weight: 700;
+
+  box-sizing: border-box;
+}
+
+.profile-online-dot {
+  position: absolute;
+
+  right: 3px;
+
+  bottom: 5px;
+
+  width: 15px;
+
+  height: 15px;
+
+  background: #22c55e;
+
+  border-radius: 50%;
+
+  border: 3px solid #1e293b;
+}
+
+
+/* ==========================================
+   Profile Information
+========================================== */
+
+.profile-overview-content h2 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 21px;
+}
+
+.profile-role {
+  margin: 8px 0;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color: #60a5fa;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.profile-email {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   Edit Button
+========================================== */
+
+.edit-profile-btn {
+  margin-top: 20px;
+
+  border: none;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 10px 17px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.edit-profile-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+
+/* ==========================================
+   Card Header
+========================================== */
+
+.profile-card-header {
+  padding: 25px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.profile-card-header h2 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 19px;
+}
+
+.profile-card-header p {
+  margin: 6px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.profile-header-icon {
+  color: #60a5fa;
+
+  font-size: 20px;
+}
+
+
+/* ==========================================
+   Information Grid
+========================================== */
+
+.profile-info-grid {
+  padding: 25px;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 22px;
+}
+
+.profile-info-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+}
+
+.profile-info-icon {
+  width: 40px;
+
+  height: 40px;
+
+  border-radius: 10px;
+
+  background: rgba(37, 99, 235, 0.12);
+
+  color: #60a5fa;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+.profile-info-item span {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 10px;
+
+  margin-bottom: 4px;
+}
+
+.profile-info-item strong {
+  display: block;
+
+  color: #e2e8f0;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  word-break: break-word;
+}
+
+
+/* ==========================================
+   Active Status
+========================================== */
+
+.active-status {
+  color: #4ade80 !important;
+}
+
+
+/* ==========================================
+   Security
+========================================== */
+
+.security-card {
+  margin-bottom: 25px;
+}
+
+.security-options {
+  padding: 5px 25px;
+}
+
+.security-option {
+  padding: 20px 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.security-option:last-child {
+  border-bottom: none;
+}
+
+.security-option-left {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+}
+
+.security-icon {
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 11px;
+
+  background: rgba(37, 99, 235, 0.12);
+
+  color: #60a5fa;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.security-option h3 {
+  margin: 0 0 5px;
+
+  color: white;
+
+  font-size: 14px;
+}
+
+.security-option p {
+  margin: 0;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================
+   Security Button
+========================================== */
+
+.security-btn {
+  border: 1px solid #334155;
+
+  background: #111827;
+
+  color: #60a5fa;
+
+  padding: 9px 14px;
+
+  border-radius: 9px;
+
+  cursor: pointer;
+
+  font-size: 11px;
+
+  font-weight: 600;
+
+  transition: 0.3s;
+}
+
+.security-btn:hover {
+  background: #2563eb;
+
+  border-color: #2563eb;
+
+  color: white;
+}
+
+
+/* ==========================================
+   Permission Badge
+========================================== */
+
+.permission-badge {
+  padding: 6px 11px;
+
+  border-radius: 20px;
+
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #4ade80;
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   Login Details
+========================================== */
+
+.login-card {
+  margin-bottom: 25px;
+}
+
+.login-details {
+  padding: 25px;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+}
+
+.login-details div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.login-details span {
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+.login-details strong {
+  color: #e2e8f0;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1200px) {
+
+  .admin-profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-overview {
+    max-width: 500px;
+
+    width: 100%;
+
+    margin: 0 auto;
+  }
+
+}
+
+
+@media (max-width: 992px) {
+
+  .admin-profile-main {
+    margin-left: 0;
+  }
+
+  .admin-profile-content {
+    padding: 30px;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .admin-profile-content {
+    padding: 20px;
+  }
+
+  .admin-profile-header h1 {
+    font-size: 28px;
+  }
+
+  .profile-info-grid {
+    grid-template-columns: 1fr;
+
+    gap: 18px;
+  }
+
+  .security-option {
+    align-items: flex-start;
+
+    flex-direction: column;
+  }
+
+  .login-details {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .admin-profile-content {
+    padding: 15px;
+  }
+
+  .profile-card-header {
+    padding: 20px;
+  }
+
+  .profile-info-grid {
+    padding: 20px;
+  }
+
+  .security-options {
+    padding: 5px 20px;
+  }
+
+}
