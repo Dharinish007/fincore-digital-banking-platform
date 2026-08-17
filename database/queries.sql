@@ -1,50 +1,189 @@
--- Useful verification queries for FinCore
+-- Common queries for Bank Loan Management System
+USE bank_loan_management;
 
-USE kyc_db;
+-- 1. View all customers
+SELECT * FROM customers;
 
--- All users and roles
-SELECT id, username, email, role, status FROM users ORDER BY id;
+-- 2. View customers with their loans
+SELECT
+    c.customer_id,
+    c.name,
+    l.loan_id,
+    l.loan_type,
+    l.principal_amount,
+    l.interest_rate,
+    l.loan_status
+FROM customers c
+JOIN loans l ON c.customer_id = l.customer_id
+ORDER BY c.customer_id, l.loan_id;
 
--- Accounts with customer and KYC status
-SELECT a.account_number, a.account_type, a.balance, a.status,
-       c.first_name, c.last_name, c.kyc_status, c.risk_level
+-- 3. View loans with customer details
+SELECT
+    l.loan_id,
+    c.name AS customer_name,
+    l.loan_type,
+    l.principal_amount,
+    l.interest_rate,
+    l.tenure_months,
+    l.loan_status,
+    l.loan_start_date,
+    l.maturity_date
+FROM loans l
+JOIN customers c ON l.customer_id = c.customer_id;
+
+-- 4. View repayment schedule for a loan
+SELECT
+    repayment_id,
+    loan_id,
+    installment_number,
+    due_date,
+    amount_due,
+    amount_paid,
+    payment_date,
+    payment_status,
+    remaining_amount
+FROM repayments
+WHERE loan_id = 1
+ORDER BY installment_number;
+
+-- 5. Find pending/overdue repayments
+SELECT
+    r.repayment_id,
+    r.loan_id,
+    c.name AS customer_name,
+    r.installment_number,
+    r.due_date,
+    r.amount_due,
+    r.amount_paid,
+    r.remaining_amount,
+    r.payment_status
+FROM repayments r
+JOIN loans l ON r.loan_id = l.loan_id
+JOIN customers c ON l.customer_id = c.customer_id
+WHERE r.payment_status <> 'PAID';
+
+-- 6. View loan disbursements
+SELECT
+    d.disbursement_id,
+    d.loan_id,
+    c.name AS customer_name,
+    d.amount,
+    d.disbursement_date,
+    d.status,
+    d.transaction_reference,
+    d.current_step,
+    d.failure_reason
+FROM disbursements d
+JOIN loans l ON d.loan_id = l.loan_id
+JOIN customers c ON l.customer_id = c.customer_id;
+
+-- 7. View disbursement steps
+SELECT
+    ds.step_id,
+    ds.disbursement_id,
+    ds.step_name,
+    ds.step_status,
+    ds.started_at,
+    ds.completed_at,
+    ds.error_message
+FROM disbursement_steps ds
+WHERE ds.disbursement_id = 1
+ORDER BY ds.step_id;
+
+-- 8. View NPA classification for loans
+SELECT
+    n.npa_id,
+    n.loan_id,
+    c.name AS customer_name,
+    n.overdue_days,
+    n.outstanding_amount,
+    n.classification,
+    n.classification_date,
+    n.reason,
+    n.status
+FROM npa_classifications n
+JOIN loans l ON n.loan_id = l.loan_id
+JOIN customers c ON l.customer_id = c.customer_id;
+
+-- 9. View customer accounts
+SELECT
+    a.account_id,
+    a.account_number,
+    c.name AS customer_name,
+    a.account_type,
+    a.balance,
+    a.account_status
 FROM accounts a
-JOIN customers c ON c.id = a.customer_id
-ORDER BY a.id;
+JOIN customers c ON a.customer_id = c.customer_id;
 
--- Find account by number (transfer validation)
-SELECT * FROM accounts WHERE account_number = '1234-5678-9012';
-
--- Recent transactions
-SELECT t.transaction_reference, t.transaction_type, t.amount, t.status, t.performed_by, t.timestamp,
-       sa.account_number AS source_account,
-       ta.account_number AS target_account
+-- 10. View transactions with account and customer
+SELECT
+    t.transaction_id,
+    t.reference_number,
+    c.name AS customer_name,
+    a.account_number,
+    t.loan_id,
+    t.transaction_type,
+    t.amount,
+    t.transaction_date,
+    t.status
 FROM transactions t
-JOIN accounts sa ON sa.id = t.source_account_id
-LEFT JOIN accounts ta ON ta.id = t.target_account_id
-ORDER BY t.timestamp DESC
-LIMIT 50;
+JOIN accounts a ON t.account_id = a.account_id
+JOIN customers c ON a.customer_id = c.customer_id
+ORDER BY t.transaction_date DESC;
 
--- KYC queue
-SELECT kyc_id, first_name, last_name, email, status FROM kyc ORDER BY kyc_id;
+-- 11. View transactions related to a particular loan
+SELECT *
+FROM transactions
+WHERE loan_id = 1
+ORDER BY transaction_date;
 
--- Frozen accounts (should block transfer/withdraw)
-SELECT account_number, status, balance FROM accounts WHERE status = 'FROZEN';
+-- 12. Count loans by status
+SELECT loan_status, COUNT(*) AS total_loans
+FROM loans
+GROUP BY loan_status;
 
--- Balance check before/after transfer example
-SELECT account_number, balance, status FROM accounts
-WHERE account_number IN ('1234-5678-9012', '2231-9087-4410');
+-- 13. Total principal amount by loan type
+SELECT
+    loan_type,
+    COUNT(*) AS number_of_loans,
+    SUM(principal_amount) AS total_principal
+FROM loans
+GROUP BY loan_type;
 
-USE fincore_audit;
+-- 14. Customers having more than one account
+SELECT
+    c.customer_id,
+    c.name,
+    COUNT(a.account_id) AS account_count
+FROM customers c
+JOIN accounts a ON c.customer_id = a.customer_id
+GROUP BY c.customer_id, c.name
+HAVING COUNT(a.account_id) > 1;
 
--- Latest audit events
-SELECT id, entity_name, entity_id, action, performed_by, status, description, timestamp
-FROM audit_logs
-ORDER BY timestamp DESC
-LIMIT 100;
+-- 15. Loans currently classified as NPA/SMA
+SELECT
+    l.loan_id,
+    c.name AS customer_name,
+    n.classification,
+    n.overdue_days,
+    n.outstanding_amount,
+    n.classification_date
+FROM npa_classifications n
+JOIN loans l ON n.loan_id = l.loan_id
+JOIN customers c ON l.customer_id = c.customer_id
+WHERE n.classification <> 'STANDARD';
 
--- Audit by action
-SELECT action, COUNT(*) AS cnt
-FROM audit_logs
-GROUP BY action
-ORDER BY cnt DESC;
+-- 16. Total amount repaid for each loan
+SELECT
+    loan_id,
+    SUM(amount_paid) AS total_paid
+FROM repayments
+GROUP BY loan_id;
+
+-- 17. Outstanding repayment amount for each loan
+SELECT
+    loan_id,
+    SUM(remaining_amount) AS total_remaining
+FROM repayments
+GROUP BY loan_id;
