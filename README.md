@@ -339,7 +339,7 @@ It includes:
 - Settings
 - Logout
 
-![Administrator Dashboard](Screenshots/admin-dashboard.jpeg)
+![Administrator Dashboard](Screenshots_M2/admin-dashboard.jpeg)
 
 ---
 
@@ -357,7 +357,7 @@ It provides access to:
 - Transactions
 - Loan eligibility
 
-![Customer Dashboard](Screenshots/customer-dashboard.jpeg)
+![Customer Dashboard](Screenshots_M2/customer-dashboard.jpeg)
 
 ---
 
@@ -373,7 +373,7 @@ The Repayment Tracking module provides loan-wise repayment information including
 - Payment status
 - Pending and partial payments
 
-![Repayment Tracking](Screenshots/repayment-tracking.jpeg)
+![Repayment Tracking](Screenshots_M2/repayment-tracking.jpeg)
 
 ---
 
@@ -392,7 +392,7 @@ It displays:
 - Account credited
 - Step completion status
 
-![Disbursement Saga](Screenshots/disbursement-saga.jpeg)
+![Disbursement Saga](Screenshots_M2/disbursement-saga.jpeg)
 
 ---
 
@@ -411,7 +411,7 @@ It displays:
 - Reason
 - Status
 
-![NPA Classification](Screenshots/npa-classification.jpeg)
+![NPA Classification](Screenshots_M2/npa-classification.jpeg)
 ## Backend / Database Components
 
 ### Database Name
