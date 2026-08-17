@@ -317,7 +317,7 @@ The login page provides role-based authentication for:
 - Bank Teller
 - Customer
 
-![Login Page](Screenshots_M2/login-page.jpeg)
+![Login Page](Screenshots_M2/login-page.jpg)
 
 ---
 
@@ -339,7 +339,7 @@ It includes:
 - Settings
 - Logout
 
-![Administrator Dashboard](Screenshots_M2/admin-dashboard.jpeg)
+![Administrator Dashboard](Screenshots_M2/admin-dashboard.jpg)
 
 ---
 
@@ -357,7 +357,7 @@ It provides access to:
 - Transactions
 - Loan eligibility
 
-![Customer Dashboard](Screenshots_M2/customer-dashboard.jpeg)
+![Customer Dashboard](Screenshots_M2/customer-dashboard.jpg)
 
 ---
 
@@ -373,7 +373,7 @@ The Repayment Tracking module provides loan-wise repayment information including
 - Payment status
 - Pending and partial payments
 
-![Repayment Tracking](Screenshots_M2/repayment-tracking.jpeg)
+![Repayment Tracking](Screenshots_M2/repayment-tracking.jpg)
 
 ---
 
@@ -392,7 +392,7 @@ It displays:
 - Account credited
 - Step completion status
 
-![Disbursement Saga](Screenshots_M2/disbursement-saga.jpeg)
+![Disbursement Saga](Screenshots_M2/disbursement-saga.jpg)
 
 ---
 
@@ -411,7 +411,8 @@ It displays:
 - Reason
 - Status
 
-![NPA Classification](Screenshots_M2/npa-classification.jpeg)
+![NPA Classification](Screenshots_M2/npa-classification.jpg)
+
 ## Backend / Database Components
 
 ### Database Name
