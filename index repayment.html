@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Secure Digital Banking | Repayment Tracking</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">SB</div>
+      <div class="brand-text">
+        <span class="brand-title">Secure Digital Banking</span>
+        <span class="brand-sub">Enterprise Console</span>
+      </div>
+    </div>
+
+    <nav class="side-nav">
+      <a href="#" class="nav-item active" data-nav="repayment">
+        <span class="nav-icon">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-7 4 14 2-7h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span>Repayment Tracking</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="mode-switch">
+        <span>Dark Mode</span>
+        <label class="switch">
+          <input type="checkbox" id="darkModeToggle" checked />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <button class="logout-btn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN ===================== -->
+  <main class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>Repayment Tracking</h1>
+        <p>Monitor loan repayments, EMIs and transaction activity in real time</p>
+      </div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="notifBell" title="Notifications">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13.7 21a2 2 0 0 1-3.4 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <span class="notif-dot" id="notifDot"></span>
+        </button>
+        <div class="user-chip">
+          <div class="user-avatar">JS</div>
+          <div class="user-meta">
+            <span class="user-name">John Smith</span>
+            <span class="user-role">Customer</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Notification panel -->
+    <section class="notif-panel" id="notifPanel">
+      <div class="notif-panel-head">
+        <h3>Payment Notifications</h3>
+        <button class="link-btn" id="closeNotif">Close</button>
+      </div>
+      <div class="notif-list" id="notifList"></div>
+    </section>
+
+    <div class="content-scroll">
+
+      <!-- Loan Details -->
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Loan Details</h2>
+          <span class="badge badge-active" id="loanStatusBadge">Active Loan</span>
+        </div>
+        <div class="loan-detail-grid" id="loanDetailGrid"></div>
+      </section>
+
+      <!-- Summary Cards -->
+      <section class="summary-grid" id="summaryGrid"></section>
+
+      <!-- Progress + Risk + Analytics -->
+      <section class="mid-grid">
+
+        <div class="panel progress-panel">
+          <div class="panel-head">
+            <h2>Repayment Progress</h2>
+            <span id="progressPercentLabel" class="progress-pct">0%</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+          <div class="progress-legend">
+            <div><span class="dot dot-paid"></span> Paid</div>
+            <div><span class="dot dot-remaining"></span> Remaining</div>
+          </div>
+          <div class="progress-actions">
+            <button class="btn btn-primary" id="payEmiBtn">Pay EMI Now</button>
+            <button class="btn btn-ghost" id="downloadReportBtn">Download Report</button>
+          </div>
+        </div>
+
+        <div class="panel risk-panel">
+          <div class="panel-head">
+            <h2>Risk Indicator</h2>
+          </div>
+          <div class="risk-gauge" id="riskGauge">
+            <div class="risk-level-badge" id="riskLevelBadge">LOW</div>
+            <div class="risk-bar">
+              <span class="risk-seg seg-low"></span>
+              <span class="risk-seg seg-med"></span>
+              <span class="risk-seg seg-high"></span>
+              <div class="risk-marker" id="riskMarker"></div>
+            </div>
+            <p class="risk-desc" id="riskDesc">Based on payment punctuality and overdue history.</p>
+          </div>
+        </div>
+
+        <div class="panel analytics-panel">
+          <div class="panel-head">
+            <h2>Repayment Analytics</h2>
+          </div>
+          <div class="analytics-bars" id="analyticsBars"></div>
+          <div class="analytics-stats" id="analyticsStats"></div>
+        </div>
+
+      </section>
+
+      <!-- EMI Schedule -->
+      <section class="panel">
+        <div class="panel-head panel-head-row">
+          <h2>EMI Schedule</h2>
+          <div class="filter-row">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m21 21-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input type="text" id="emiSearch" placeholder="Search EMI number or date..." />
+            </div>
+            <select id="emiStatusFilter">
+              <option value="ALL">All Status</option>
+              <option value="PAID">Paid</option>
+              <option value="UPCOMING">Upcoming</option>
+              <option value="OVERDUE">Overdue</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>EMI No.</th>
+                <th>Due Date</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="emiTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Repayment History -->
+      <section class="panel">
+        <div class="panel-head panel-head-row">
+          <h2>Repayment History</h2>
+          <div class="filter-row">
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" fill="none" width="15" height="15"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m21 21-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              <input type="text" id="historySearch" placeholder="Search transaction ID..." />
+            </div>
+            <select id="historyMethodFilter">
+              <option value="ALL">All Methods</option>
+              <option value="UPI">UPI</option>
+              <option value="NET_BANKING">Net Banking</option>
+              <option value="DEBIT_CARD">Debit Card</option>
+              <option value="AUTO_DEBIT">Auto Debit</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>Payment Date</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <footer class="footer-note">
+        Secure Digital Banking · Repayment Tracking Module · All transactions are encrypted and monitored for fraud protection.
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<!-- Pay EMI Modal -->
+<div class="modal-overlay" id="payModalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Pay EMI</h3>
+      <button class="modal-close" id="payModalClose">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-row">
+        <label>EMI Number</label>
+        <select id="payEmiSelect"></select>
+      </div>
+      <div class="modal-row">
+        <label>Payment Type</label>
+        <div class="seg-control">
+          <button type="button" class="seg-btn active" data-type="FULL">Full EMI</button>
+          <button type="button" class="seg-btn" data-type="PARTIAL">Partial</button>
+          <button type="button" class="seg-btn" data-type="EARLY">Early Full Payoff</button>
+        </div>
+      </div>
+      <div class="modal-row" id="partialAmountRow" style="display:none;">
+        <label>Partial Amount (₹)</label>
+        <input type="number" id="partialAmountInput" placeholder="Enter amount" />
+      </div>
+      <div class="modal-row">
+        <label>Payment Method</label>
+        <select id="payMethodSelect">
+          <option value="UPI">UPI</option>
+          <option value="NET_BANKING">Net Banking</option>
+          <option value="DEBIT_CARD">Debit Card</option>
+          <option value="AUTO_DEBIT">Auto Debit</option>
+        </select>
+      </div>
+      <div class="modal-summary" id="modalSummary"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" id="payModalCancel">Cancel</button>
+      <button class="btn btn-primary" id="payModalConfirm">Proceed to Pay</button>
+    </div>
+  </div>
+</div>
+
+<!-- Secure Confirmation Modal -->
+<div class="modal-overlay" id="confirmModalOverlay">
+  <div class="modal modal-narrow">
+    <div class="confirm-icon-wrap">
+      <div class="confirm-icon success" id="confirmIcon">
+        <svg viewBox="0 0 24 24" fill="none" width="30" height="30"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+    <h3 class="confirm-title" id="confirmTitle">Payment Successful</h3>
+    <p class="confirm-sub" id="confirmSub">Your EMI payment has been processed securely.</p>
+    <div class="confirm-details" id="confirmDetails"></div>
+    <button class="btn btn-primary btn-block" id="confirmCloseBtn">Done</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
