@@ -1,0 +1,70 @@
+<div class="fincore-app">
+  <!-- Top Global Navigation Header -->
+  <app-header></app-header>
+
+  <div class="app-body">
+    <!-- Left Navigation Sidebar -->
+    <app-sidebar [activeNav]="activeSidebarNav" (navSelect)="onSidebarNavSelect($event)"></app-sidebar>
+
+    <!-- Main Content Workspace -->
+    <main class="main-content">
+      <div class="content-header">
+        <h1 class="workspace-title">Loan Origination & Servicing</h1>
+      </div>
+
+      <!-- Top Summary Metrics Header Cards -->
+      <app-metrics-header></app-metrics-header>
+
+      <!-- Milestone 2 Module Tabs -->
+      <div class="module-tab-bar">
+        <button 
+          class="tab-btn" 
+          [class.active]="activeModuleTab === 'SERVICING'"
+          (click)="setModuleTab('SERVICING')">
+          <span class="tab-icon">⚡</span> Loan Servicing Summary
+        </button>
+
+        <button 
+          class="tab-btn" 
+          [class.active]="activeModuleTab === 'EMI'"
+          (click)="setModuleTab('EMI')">
+          <span class="tab-icon">🧮</span> EMI Calculation
+        </button>
+
+        <button 
+          class="tab-btn" 
+          [class.active]="activeModuleTab === 'DISBURSEMENT'"
+          (click)="setModuleTab('DISBURSEMENT')">
+          <span class="tab-icon">💸</span> Loan Disbursement
+        </button>
+
+        <button 
+          class="tab-btn" 
+          [class.active]="activeModuleTab === 'COLLECTIONS'"
+          (click)="setModuleTab('COLLECTIONS')">
+          <span class="tab-icon">💳</span> Collections
+        </button>
+      </div>
+
+      <!-- Module Views -->
+      <div class="module-viewport">
+        <app-loan-servicing 
+          *ngIf="activeModuleTab === 'SERVICING'" 
+          (viewScheduleClicked)="setModuleTab('EMI')">
+        </app-loan-servicing>
+
+        <app-emi-calculator 
+          *ngIf="activeModuleTab === 'EMI'">
+        </app-emi-calculator>
+
+        <app-disbursement 
+          *ngIf="activeModuleTab === 'DISBURSEMENT'">
+        </app-disbursement>
+
+        <app-collections 
+          *ngIf="activeModuleTab === 'COLLECTIONS'">
+        </app-collections>
+      </div>
+    </main>
+  </div>
+</div>

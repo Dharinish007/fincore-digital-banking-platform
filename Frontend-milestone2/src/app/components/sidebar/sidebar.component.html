@@ -1,0 +1,13 @@
+<aside class="sidebar">
+  <nav class="nav-list">
+    <button 
+      *ngFor="let item of navItems" 
+      class="nav-item" 
+      [class.active]="item.label === activeNav"
+      (click)="selectNav(item.label)"
+      type="button">
+      <span class="nav-icon">{{ item.icon }}</span>
+      <span class="nav-label">{{ item.label }}</span>
+    </button>
+  </nav>
+</aside>
