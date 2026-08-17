@@ -1,58 +1,95 @@
--- FinCore sample / seed data
--- Passwords (BCrypt):
---   admin / Admin@123
---   teller / Teller@123
---   supervisor / Super@123
---   jsmith / Customer@123
+-- Sample data for Bank Loan Management System
+USE bank_loan_management;
 
-USE kyc_db;
+INSERT INTO customers
+(name, email, phone, address, date_of_birth, customer_status)
+VALUES
+('Amit Patil', 'amit.patil@example.com', '9876543210',
+ 'Kopargaon, Maharashtra', '1998-05-12', 'ACTIVE'),
+('Sneha Joshi', 'sneha.joshi@example.com', '9876543211',
+ 'Nashik, Maharashtra', '1997-09-21', 'ACTIVE'),
+('Rahul Shinde', 'rahul.shinde@example.com', '9876543212',
+ 'Pune, Maharashtra', '1995-02-15', 'ACTIVE');
 
--- Clear in FK-safe order (for re-runs during testing)
-SET FOREIGN_KEY_CHECKS = 0;
-TRUNCATE TABLE transactions;
-TRUNCATE TABLE accounts;
-TRUNCATE TABLE kyc;
-TRUNCATE TABLE customers;
-TRUNCATE TABLE users;
-SET FOREIGN_KEY_CHECKS = 1;
+INSERT INTO accounts
+(customer_id, account_number, account_type, balance, account_status)
+VALUES
+(1, 'ACC100001', 'SAVINGS', 125000.00, 'ACTIVE'),
+(1, 'ACC100002', 'CURRENT', 75000.00, 'ACTIVE'),
+(2, 'ACC100003', 'SAVINGS', 210000.00, 'ACTIVE'),
+(3, 'ACC100004', 'SAVINGS', 90000.00, 'ACTIVE');
 
-INSERT INTO users (id, username, password, full_name, email, role, status) VALUES
-(1, 'admin',      '$2b$10$.oxIHunrhbpRJWAxZFQXEOW2pM1OGj4OEC1fj882ORiUAnk4NyUay', 'System Admin',       'admin@fincore.com',      'ADMIN',      'ACTIVE'),
-(2, 'teller',     '$2b$10$F4sxOqEO2AWnXh7vD.eNMuIWuMGp71hd0Bsd5Po0gJVyfWw5aHnM2', 'Priya Raman',        'teller@fincore.com',     'TELLER',     'ACTIVE'),
-(3, 'supervisor', '$2b$10$HulVOKQQKRQoTOMjYOw5s.y5PeDw7PkATh40Y5n5lgimX3v0qT1PS', 'S. R. Puthal',       'supervisor@fincore.com', 'SUPERVISOR', 'ACTIVE'),
-(4, 'jsmith',     '$2b$10$WPaD/Sypnn2ZZMsw6k7fwOd5kLZccZMV5qugFVkbI4wWqeSuBzeG6', 'John Smith',         'john.smith@email.com',   'CUSTOMER',   'ACTIVE');
+INSERT INTO loans
+(customer_id, loan_type, principal_amount, interest_rate, tenure_months,
+ loan_status, loan_start_date, maturity_date)
+VALUES
+(1, 'HOME LOAN', 1500000.00, 8.50, 120,
+ 'ACTIVE', '2026-01-10', '2036-01-10'),
+(2, 'PERSONAL LOAN', 300000.00, 11.50, 36,
+ 'ACTIVE', '2026-02-15', '2029-02-15'),
+(3, 'VEHICLE LOAN', 600000.00, 9.25, 60,
+ 'PENDING', NULL, NULL);
 
-INSERT INTO customers (id, customer_number, first_name, last_name, email, phone, kyc_status, risk_level) VALUES
-(1, 'CUST-1001', 'John',      'Smith',   'john.smith@email.com',   '9876543210', 'VERIFIED', 'LOW'),
-(2, 'CUST-1002', 'Vaishnavi', 'Warkar',  'vaishnavi.w@email.com',  '9876543211', 'PENDING',  'MEDIUM'),
-(3, 'CUST-1003', 'Thejashree','K',       'thejashree@email.com',   '9876543212', 'PENDING',  'HIGH'),
-(4, 'CUST-1004', 'Sharvari',  'Shalgar', 'sharvari.s@email.com',   '9876543213', 'PENDING',  'LOW'),
-(5, 'CUST-1005', 'Vaishnavi', 'Mahadik', 'vaishnavi.m@email.com',  '9876543214', 'VERIFIED', 'LOW');
+INSERT INTO repayments
+(loan_id, installment_number, due_date, amount_due, amount_paid,
+ payment_date, payment_status, remaining_amount)
+VALUES
+(1, 1, '2026-02-10', 18500.00, 18500.00,
+ '2026-02-09', 'PAID', 0.00),
+(1, 2, '2026-03-10', 18500.00, 18500.00,
+ '2026-03-10', 'PAID', 0.00),
+(1, 3, '2026-04-10', 18500.00, 10000.00,
+ '2026-04-10', 'PARTIAL', 8500.00),
+(2, 1, '2026-03-15', 9900.00, 9900.00,
+ '2026-03-14', 'PAID', 0.00),
+(2, 2, '2026-04-15', 9900.00, 0.00,
+ NULL, 'PENDING', 9900.00);
 
-INSERT INTO accounts (id, account_number, account_type, balance, status, customer_id, created_at, updated_at) VALUES
-(1, '1234-5678-9012', 'SAVINGS', 12847.50, 'ACTIVE', 1, NOW(), NOW()),
-(2, '2231-9087-4410', 'CURRENT',  4210.00, 'ACTIVE', 2, NOW(), NOW()),
-(3, '3390-1122-7784', 'SAVINGS',   980.25, 'ACTIVE', 3, NOW(), NOW()),
-(4, '4471-3302-1128', 'SAVINGS', 22004.10, 'ACTIVE', 4, NOW(), NOW()),
-(5, '5518-6674-4402', 'CURRENT',  7650.75, 'ACTIVE', 5, NOW(), NOW()),
-(6, '7788-2201-3345', 'CURRENT',   980.25, 'FROZEN', 3, NOW(), NOW());
+INSERT INTO disbursements
+(loan_id, amount, disbursement_date, status, transaction_reference,
+ current_step, failure_reason)
+VALUES
+(1, 750000.00, '2026-01-12', 'COMPLETED',
+ 'DISB-2026-0001', 'ACCOUNT_CREDITED', NULL),
+(2, 300000.00, '2026-02-17', 'COMPLETED',
+ 'DISB-2026-0002', 'ACCOUNT_CREDITED', NULL);
 
-INSERT INTO kyc (kyc_id, first_name, last_name, date_of_birth, gender, government_id_type, government_id_number,
-                 address_line1, city, state, postal_code, country, occupation_status, annual_income_range,
-                 pep_declaration, email, status) VALUES
-(1, 'John',      'Smith',   '1990-05-12', 'Male',   'AADHAAR', '1234-5678-9012', '12 MG Road',     'Bengaluru', 'Karnataka', '560001', 'India', 'Employed',   '5-10 LPA',  FALSE, 'john.smith@email.com',  'APPROVED'),
-(2, 'Vaishnavi', 'Warkar',  '1995-08-20', 'Female', 'PAN',     'ABCDE1234F',      '45 FC Road',     'Pune',      'Maharashtra','411004', 'India', 'Employed',   '3-5 LPA',   FALSE, 'vaishnavi.w@email.com', 'PENDING'),
-(3, 'Thejashree','K',       '1992-01-03', 'Female', 'AADHAAR', '9988-7766-5544',  '78 Residency Rd','Mysuru',    'Karnataka', '570001', 'India', 'Self-Employed','1-3 LPA', FALSE, 'thejashree@email.com',  'PENDING'),
-(4, 'Sharvari',  'Shalgar', '1998-11-15', 'Female', 'AADHAAR', '1122-3344-5566',  '22 JM Road',     'Pune',      'Maharashtra','411005', 'India', 'Student',    '0-1 LPA',   FALSE, 'sharvari.s@email.com',  'PENDING'),
-(5, 'Vaishnavi', 'Mahadik', '1994-03-22', 'Female', 'PAN',     'XYZAB9876C',      '9 Link Road',    'Mumbai',    'Maharashtra','400001', 'India', 'Employed',   '5-10 LPA',  FALSE, 'vaishnavi.m@email.com', 'APPROVED');
+INSERT INTO disbursement_steps
+(disbursement_id, step_name, step_status, started_at, completed_at, error_message)
+VALUES
+(1, 'DOCUMENT_VERIFICATION', 'COMPLETED',
+ '2026-01-11 09:00:00', '2026-01-11 10:00:00', NULL),
+(1, 'LOAN_APPROVAL', 'COMPLETED',
+ '2026-01-11 10:30:00', '2026-01-11 12:00:00', NULL),
+(1, 'ACCOUNT_CREDITED', 'COMPLETED',
+ '2026-01-12 09:00:00', '2026-01-12 09:30:00', NULL),
+(2, 'DOCUMENT_VERIFICATION', 'COMPLETED',
+ '2026-02-16 09:00:00', '2026-02-16 10:00:00', NULL),
+(2, 'LOAN_APPROVAL', 'COMPLETED',
+ '2026-02-16 11:00:00', '2026-02-16 12:00:00', NULL),
+(2, 'ACCOUNT_CREDITED', 'COMPLETED',
+ '2026-02-17 09:00:00', '2026-02-17 09:30:00', NULL);
 
-INSERT INTO transactions (transaction_reference, source_account_id, target_account_id, transaction_type, amount, status, description, performed_by, timestamp) VALUES
-('TXN-SEED-001', 1, NULL, 'DEPOSIT',  2400.00, 'SUCCESS', 'Initial deposit', 'teller', NOW() - INTERVAL 5 DAY),
-('TXN-SEED-002', 4, NULL, 'DEPOSIT',   600.00, 'SUCCESS', 'Cash deposit',    'teller', NOW() - INTERVAL 2 DAY);
+INSERT INTO npa_classifications
+(loan_id, overdue_days, outstanding_amount, classification,
+ classification_date, reason, status)
+VALUES
+(1, 0, 1490000.00, 'STANDARD',
+ '2026-04-10', 'Regular repayment', 'ACTIVE'),
+(2, 15, 285000.00, 'SMA-1',
+ '2026-04-15', 'Installment overdue', 'ACTIVE');
 
-USE fincore_audit;
-
-TRUNCATE TABLE audit_logs;
-
-INSERT INTO audit_logs (entity_name, entity_id, action, performed_by, status, description, timestamp) VALUES
-('SYSTEM', '0', 'SEED', 'SYSTEM', 'SUCCESS', 'Sample audit seed loaded', NOW());
+INSERT INTO transactions
+(account_id, loan_id, transaction_type, amount, transaction_date,
+ reference_number, status)
+VALUES
+(1, 1, 'LOAN_DISBURSEMENT', 750000.00,
+ '2026-01-12 09:30:00', 'TXN100001', 'SUCCESS'),
+(3, 2, 'LOAN_DISBURSEMENT', 300000.00,
+ '2026-02-17 09:30:00', 'TXN100002', 'SUCCESS'),
+(1, 1, 'LOAN_REPAYMENT', 18500.00,
+ '2026-02-09 14:20:00', 'TXN100003', 'SUCCESS'),
+(1, 1, 'LOAN_REPAYMENT', 18500.00,
+ '2026-03-10 11:15:00', 'TXN100004', 'SUCCESS'),
+(3, 2, 'LOAN_REPAYMENT', 9900.00,
+ '2026-03-14 15:00:00', 'TXN100005', 'SUCCESS');
