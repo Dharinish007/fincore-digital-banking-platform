@@ -68,6 +68,7 @@ Frontend / Client
 src/main/java/com/example/milestone2loanmanagement
 |
 +-- EMI/
+|   +-- EMIDTOs
 |   +-- EMIController.java
 |   +-- EMIService.java
 |   +-- EMIRepository.java
@@ -78,20 +79,18 @@ src/main/java/com/example/milestone2loanmanagement
 |   +-- LoanRepository.java
 |
 +-- disbursement/
+|   +-- DTOs
 |   +-- DisbursementController.java
 |   +-- DisbursementService.java
 |   +-- DisbursementRepository.java
 |   +-- Disbursement.java
 |
 +-- collection/
+|   +-- CollectionDTOs
 |   +-- CollectionController.java
 |   +-- CollectionService.java
 |   +-- CollectionRepository.java
 |   +-- Collection.java
-|
-+-- dto/
-|
-+-- enums/
 |
 +-- Milestone2LoanManagementApplication.java
 |
@@ -369,25 +368,6 @@ Username: sa
 Password: [leave empty]
 ```
 
-## Dummy Data
-
-`src/main/resources/data.sql` is used to insert sample data when the
-application starts.
-
-The test data includes:
-
--   Sample loans
--   EMI records
--   Disbursements
--   Collections
-
-When manually inserting IDs into identity-generated tables, reset the
-identity sequence where required. For example:
-
-``` sql
-ALTER TABLE disbursements
-ALTER COLUMN id RESTART WITH 3;
-```
 
 ## API Testing
 
@@ -475,23 +455,6 @@ If JWT is not enabled in the final version, this section should be
 updated to describe it as planned functionality rather than implemented
 functionality.
 
-## Future Improvements
-
-Potential improvements include:
-
-1.  Centralized exception handling using `@ControllerAdvice`.
-2.  Bean validation using `@Valid`, `@NotNull`, and `@Positive`.
-3.  Transaction management using `@Transactional`.
-4.  A separate `CollectionPayment` entity for maintaining complete
-    payment history.
-5.  Stronger authorization using JWT and roles.
-6.  Validation to prevent total disbursement from exceeding the approved
-    loan amount.
-7.  Unit and integration testing.
-8.  Migration from H2 to PostgreSQL/MySQL for production deployment.
-9.  API documentation using OpenAPI/Swagger.
-10. Improved audit logging for financial transactions.
-
 ## Running the Project
 
 ### Prerequisites
@@ -536,10 +499,7 @@ The backend currently provides the core implementation for:
 -   Dummy data initialization
 -   REST API testing
 
-## Author
+## Contributor
 
 **Janhvi Pandey**
 
-## License
-
-This project is developed for academic/project purposes.
