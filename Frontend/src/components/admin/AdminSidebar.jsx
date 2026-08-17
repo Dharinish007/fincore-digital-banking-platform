@@ -1,28 +1,35 @@
+import { useNavigate, useLocation } from "react-router-dom";
+
 import {
   FaHome,
   FaUserCog,
   FaUserFriends,
   FaUserShield,
+  FaExclamationTriangle,
   FaClipboardList,
   FaChartBar,
   FaUserCircle,
   FaSignOutAlt,
   FaUniversity,
-  FaExclamationTriangle,
 } from "react-icons/fa";
 
 import "./AdminSidebar.css";
-import { useNavigate } from "react-router-dom";
 
 function AdminSidebar() {
-
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Check whether the current route is active
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
   return (
     <aside className="admin-sidebar">
 
-      {/* =========================
-          Logo
-      ========================= */}
+      {/* ==========================================
+          Sidebar Header
+      ========================================== */}
 
       <div className="admin-sidebar-header">
 
@@ -30,7 +37,7 @@ function AdminSidebar() {
           <FaUniversity />
         </div>
 
-        <div>
+        <div className="admin-brand-text">
           <h2>FinCore</h2>
           <span>Digital Banking</span>
         </div>
@@ -38,49 +45,135 @@ function AdminSidebar() {
       </div>
 
 
-      {/* =========================
+      {/* ==========================================
           Navigation
-      ========================= */}
+      ========================================== */}
 
       <ul className="admin-menu">
 
-        <li className="active">
+        {/* Dashboard */}
+
+        <li
+          className={
+            isActive("/admin/dashboard")
+              ? "active"
+              : ""
+          }
+          onClick={() => navigate("/admin/dashboard")}
+        >
           <FaHome />
           <span>Dashboard</span>
         </li>
 
-      <li onClick={() => navigate("/admin/employees")}>
-        <FaUserCog />
-        <span>Employee Management</span>
-      </li>
 
-        <li>
+        {/* Employee Management */}
+
+        <li
+          className={
+            isActive("/admin/employees")
+              ? "active"
+              : ""
+          }
+          onClick={() => navigate("/admin/employees")}
+        >
+          <FaUserCog />
+          <span>Employee Management</span>
+        </li>
+
+
+        {/* User Management */}
+
+        <li
+          className={
+            isActive("/admin/users")
+              ? "active"
+              : ""
+          }
+          onClick={() => navigate("/admin/users")}
+        >
           <FaUserFriends />
           <span>User Management</span>
         </li>
 
-        <li>
+
+        {/* Role Management */}
+
+        <li
+          className={
+            isActive("/admin/roles")
+              ? "active"
+              : ""
+          }
+          onClick={() => navigate("/admin/roles")}
+        >
           <FaUserShield />
           <span>Role Management</span>
         </li>
 
-        <li>
-          <FaClipboardList />
-          <span>Audit Logs</span>
-        </li>
 
-        <li>
-          <FaChartBar />
-          <span>Reports</span>
-        </li>
+        {/* NPA Classification */}
 
-        <li onClick={() => navigate("/admin/npa-classification")}>
+        <li
+          className={
+            isActive("/admin/npa-classification")
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            navigate("/admin/npa-classification")
+          }
+        >
           <FaExclamationTriangle />
           <span>NPA Classification</span>
         </li>
 
 
-        <li>
+        {/* Audit Logs */}
+
+        <li
+          className={
+            isActive("/admin/audit-logs")
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            navigate("/admin/audit-logs")
+          }
+        >
+          <FaClipboardList />
+          <span>Audit Logs</span>
+        </li>
+
+
+        {/* Reports */}
+
+        <li
+          className={
+            isActive("/admin/reports")
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            navigate("/admin/reports")
+          }
+        >
+          <FaChartBar />
+          <span>Reports</span>
+        </li>
+
+
+        {/* Profile */}
+
+        <li
+          className={
+            isActive("/admin/profile")
+              ? "active"
+              : ""
+          }
+          onClick={() =>
+            navigate("/admin/profile")
+          }
+        >
           <FaUserCircle />
           <span>Profile</span>
         </li>
@@ -88,16 +181,19 @@ function AdminSidebar() {
       </ul>
 
 
-      {/* =========================
+      {/* ==========================================
           Logout
-      ========================= */}
+      ========================================== */}
 
-      <button className="admin-logout">
-
+      <button
+        className="admin-logout"
+        onClick={() => {
+          // Logout functionality will be connected later
+          console.log("Admin logout clicked");
+        }}
+      >
         <FaSignOutAlt />
-
         <span>Logout</span>
-
       </button>
 
     </aside>

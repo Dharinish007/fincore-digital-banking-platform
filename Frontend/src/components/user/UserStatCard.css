@@ -1,0 +1,110 @@
+/* ==========================================
+   User Stat Card
+========================================== */
+
+.user-stat-card {
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  box-sizing: border-box;
+
+  transition: all 0.3s ease;
+}
+
+.user-stat-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.15);
+}
+
+
+/* ==========================================
+   Icon
+========================================== */
+
+.user-stat-icon {
+  min-width: 52px;
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  font-size: 21px;
+}
+
+
+/* ==========================================
+   Variants
+========================================== */
+
+.user-stat-icon.blue {
+  background: #2563eb;
+}
+
+.user-stat-icon.green {
+  background: #059669;
+}
+
+.user-stat-icon.orange {
+  background: #d97706;
+}
+
+.user-stat-icon.purple {
+  background: #7c3aed;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.user-stat-content p {
+  margin: 0 0 6px;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+}
+
+.user-stat-content h2 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 26px;
+
+  font-weight: 700;
+}
+
+.user-stat-content span {
+  display: block;
+
+  margin-top: 6px;
+
+  color: #64748b;
+
+  font-size: 11px;
+}

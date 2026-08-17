@@ -1,12 +1,15 @@
 /* ==========================================
    Admin Sidebar
+   Premium Dark Theme
 ========================================== */
 
 .admin-sidebar {
   width: 270px;
+
   height: 100vh;
 
   position: fixed;
+
   left: 0;
   top: 0;
 
@@ -19,6 +22,7 @@
   color: #ffffff;
 
   display: flex;
+
   flex-direction: column;
 
   padding: 25px;
@@ -50,7 +54,9 @@
 }
 
 
-/* Logo */
+/* ==========================================
+   Logo
+========================================== */
 
 .admin-logo-circle {
   width: 58px;
@@ -65,6 +71,7 @@
   display: flex;
 
   justify-content: center;
+
   align-items: center;
 
   font-size: 26px;
@@ -73,12 +80,23 @@
 
   box-shadow:
     0 0 25px rgba(37, 99, 235, 0.4);
+
+  transition: all 0.3s ease;
+}
+
+.admin-logo-circle:hover {
+  transform: scale(1.04);
+
+  box-shadow:
+    0 0 30px rgba(37, 99, 235, 0.55);
 }
 
 
-/* Logo Text */
+/* ==========================================
+   Brand Text
+========================================== */
 
-.admin-sidebar-header h2 {
+.admin-brand-text h2 {
   margin: 0;
 
   font-size: 25px;
@@ -88,7 +106,7 @@
   color: #ffffff;
 }
 
-.admin-sidebar-header span {
+.admin-brand-text span {
   display: block;
 
   margin-top: 4px;
@@ -112,11 +130,21 @@
 
   margin: 0;
 
-  overflow: hidden;
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  scrollbar-width: none;
+}
+
+.admin-menu::-webkit-scrollbar {
+  display: none;
 }
 
 
-/* Menu Item */
+/* ==========================================
+   Menu Item
+========================================== */
 
 .admin-menu li {
   display: flex;
@@ -133,26 +161,38 @@
 
   cursor: pointer;
 
-  transition: all 0.3s ease;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 
   font-size: 14px;
 
   font-weight: 500;
 
   color: #94a3b8;
+
+  user-select: none;
 }
 
 
-/* Icons */
+/* ==========================================
+   Menu Icons
+========================================== */
 
 .admin-menu li svg {
   font-size: 17px;
 
   flex-shrink: 0;
+
+  transition: transform 0.3s ease;
 }
 
 
-/* Hover */
+/* ==========================================
+   Hover
+========================================== */
 
 .admin-menu li:hover {
   background: rgba(37, 99, 235, 0.15);
@@ -162,8 +202,14 @@
   transform: translateX(5px);
 }
 
+.admin-menu li:hover svg {
+  transform: scale(1.08);
+}
 
-/* Active */
+
+/* ==========================================
+   Active Menu
+========================================== */
 
 .admin-menu li.active {
   background: #2563eb;
@@ -174,6 +220,16 @@
 
   box-shadow:
     0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.admin-menu li.active:hover {
+  background: #2563eb;
+
+  transform: translateX(3px);
+}
+
+.admin-menu li.active svg {
+  color: #ffffff;
 }
 
 
@@ -206,6 +262,8 @@
 
   transition: all 0.3s ease;
 
+  font-family: inherit;
+
   font-size: 14px;
 
   font-weight: 500;
@@ -218,6 +276,8 @@
 
 .admin-logout svg {
   font-size: 16px;
+
+  transition: transform 0.3s ease;
 }
 
 
@@ -231,6 +291,13 @@
   color: #ffffff;
 
   transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(220, 38, 38, 0.2);
+}
+
+.admin-logout:hover svg {
+  transform: translateX(-2px);
 }
 
 
@@ -246,51 +313,75 @@
     padding: 20px 12px;
   }
 
+
+  /* Header */
+
   .admin-sidebar-header {
     justify-content: center;
 
     margin-bottom: 35px;
   }
 
-  .admin-sidebar-header > div:last-child {
+
+  /* Hide Brand Text */
+
+  .admin-brand-text {
     display: none;
   }
 
+
+  /* Logo */
+
   .admin-logo-circle {
     width: 58px;
+
     height: 58px;
 
     font-size: 25px;
   }
 
+
+  /* Menu */
+
   .admin-menu li {
     justify-content: center;
 
     padding: 15px;
+
+    gap: 0;
   }
+
 
   .admin-menu li span {
     display: none;
   }
 
+
   .admin-menu li svg {
     font-size: 20px;
   }
+
+
+  /* Logout */
 
   .admin-logout {
     padding: 15px;
 
     justify-content: center;
+
+    gap: 0;
   }
+
 
   .admin-logout span {
     display: none;
   }
+
 }
 
 
 /* ==========================================
-   Mobile
+  Mobile
 ========================================== */
 
 @media (max-width: 768px) {

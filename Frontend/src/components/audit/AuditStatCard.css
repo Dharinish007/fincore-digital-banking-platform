@@ -1,0 +1,121 @@
+/* ==========================================
+   Audit Stat Card
+========================================== */
+
+.audit-stat-card {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 17px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.2);
+
+  transition: all 0.3s ease;
+}
+
+.audit-stat-card:hover {
+  transform: translateY(-4px);
+
+  border-color: rgba(37, 99, 235, 0.5);
+
+  box-shadow:
+    0 15px 35px rgba(37, 99, 235, 0.12);
+}
+
+
+/* ==========================================
+   Icon
+========================================== */
+
+.audit-stat-icon {
+  width: 52px;
+  height: 52px;
+
+  min-width: 52px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  font-size: 21px;
+}
+
+.audit-stat-icon.blue {
+  background: #2563eb;
+}
+
+.audit-stat-icon.green {
+  background: #059669;
+}
+
+.audit-stat-icon.red {
+  background: #dc2626;
+}
+
+.audit-stat-icon.purple {
+  background: #7c3aed;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.audit-stat-content {
+  min-width: 0;
+}
+
+.audit-stat-content p {
+  margin: 0 0 6px;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+}
+
+.audit-stat-content h2 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 25px;
+}
+
+.audit-stat-content span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 600px) {
+
+  .audit-stat-card {
+    padding: 18px;
+  }
+
+}
