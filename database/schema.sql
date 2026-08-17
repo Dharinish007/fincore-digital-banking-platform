@@ -1,152 +1,129 @@
--- FinCore Digital Banking Platform - Database Schema
--- MySQL 8.x
--- Databases: kyc_db (core banking + KYC + auth), fincore_audit (audit trail)
+-- Bank Loan Management System
+-- Database schema based strictly on the approved ER diagram.
 
-CREATE DATABASE IF NOT EXISTS kyc_db
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS bank_loan_management;
+USE bank_loan_management;
 
-CREATE DATABASE IF NOT EXISTS fincore_audit
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+-- 1. CUSTOMERS
+CREATE TABLE customers (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE,
+    phone VARCHAR(20),
+    address VARCHAR(255),
+    date_of_birth DATE,
+    customer_status VARCHAR(30) DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-USE kyc_db;
+-- 2. LOANS
+CREATE TABLE loans (
+    loan_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    loan_type VARCHAR(50) NOT NULL,
+    principal_amount DECIMAL(15,2) NOT NULL,
+    interest_rate DECIMAL(5,2) NOT NULL,
+    tenure_months INT NOT NULL,
+    loan_status VARCHAR(30) DEFAULT 'PENDING',
+    loan_start_date DATE,
+    maturity_date DATE,
+    CONSTRAINT fk_loans_customer
+        FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
 
--- -----------------------------------------------------
--- users (staff + customers for authentication / RBAC)
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS users (
-  id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-  username      VARCHAR(50)  NOT NULL UNIQUE,
-  password      VARCHAR(100) NOT NULL,
-  full_name     VARCHAR(100) NOT NULL,
-  email         VARCHAR(100) NOT NULL UNIQUE,
-  role          VARCHAR(20)  NOT NULL,
-  status        VARCHAR(20)  NOT NULL DEFAULT 'ACTIVE',
-  created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT chk_users_role CHECK (role IN ('ADMIN', 'SUPERVISOR', 'TELLER', 'CUSTOMER')),
-  CONSTRAINT chk_users_status CHECK (status IN ('ACTIVE', 'DISABLED'))
-) ENGINE=InnoDB;
+-- 3. ACCOUNTS
+CREATE TABLE accounts (
+    account_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    account_number VARCHAR(30) NOT NULL UNIQUE,
+    account_type VARCHAR(30) NOT NULL,
+    balance DECIMAL(15,2) DEFAULT 0.00,
+    account_status VARCHAR(30) DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_accounts_customer
+        FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);
 
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_users_status ON users(status);
+-- 4. REPAYMENTS
+CREATE TABLE repayments (
+    repayment_id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_id INT NOT NULL,
+    installment_number INT NOT NULL,
+    due_date DATE NOT NULL,
+    amount_due DECIMAL(15,2) NOT NULL,
+    amount_paid DECIMAL(15,2) DEFAULT 0.00,
+    payment_date DATE,
+    payment_status VARCHAR(30) DEFAULT 'PENDING',
+    remaining_amount DECIMAL(15,2) NOT NULL,
+    CONSTRAINT fk_repayments_loan
+        FOREIGN KEY (loan_id) REFERENCES loans(loan_id),
+    CONSTRAINT uq_repayment_installment
+        UNIQUE (loan_id, installment_number)
+);
 
--- -----------------------------------------------------
--- customers
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS customers (
-  id               BIGINT AUTO_INCREMENT PRIMARY KEY,
-  customer_number  VARCHAR(50)  NOT NULL UNIQUE,
-  first_name       VARCHAR(50)  NOT NULL,
-  last_name        VARCHAR(50)  NOT NULL,
-  email            VARCHAR(100) NOT NULL UNIQUE,
-  phone            VARCHAR(20)  NULL,
-  kyc_status       VARCHAR(20)  NOT NULL DEFAULT 'PENDING',
-  risk_level       VARCHAR(20)  NULL DEFAULT 'LOW',
-  user_id          BIGINT       NULL,
-  created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_customers_user FOREIGN KEY (user_id) REFERENCES users(id),
-  CONSTRAINT chk_customers_kyc CHECK (kyc_status IN ('PENDING', 'APPROVED', 'REJECTED', 'VERIFIED')),
-  CONSTRAINT chk_customers_risk CHECK (risk_level IS NULL OR risk_level IN ('LOW', 'MEDIUM', 'HIGH'))
-) ENGINE=InnoDB;
+-- 5. DISBURSEMENTS
+CREATE TABLE disbursements (
+    disbursement_id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_id INT NOT NULL,
+    amount DECIMAL(15,2) NOT NULL,
+    disbursement_date DATE,
+    status VARCHAR(30) DEFAULT 'PENDING',
+    transaction_reference VARCHAR(100) UNIQUE,
+    current_step VARCHAR(100),
+    failure_reason VARCHAR(255),
+    CONSTRAINT fk_disbursements_loan
+        FOREIGN KEY (loan_id) REFERENCES loans(loan_id)
+);
 
--- -----------------------------------------------------
--- accounts
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS accounts (
-  id              BIGINT AUTO_INCREMENT PRIMARY KEY,
-  account_number  VARCHAR(50)    NOT NULL UNIQUE,
-  account_type    VARCHAR(20)    NOT NULL,
-  balance         DECIMAL(15,2)  NOT NULL DEFAULT 0.00,
-  status          VARCHAR(20)    NOT NULL DEFAULT 'ACTIVE',
-  customer_id     BIGINT         NOT NULL,
-  created_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_accounts_customer FOREIGN KEY (customer_id) REFERENCES customers(id),
-  CONSTRAINT chk_accounts_type CHECK (account_type IN ('SAVINGS', 'CURRENT')),
-  CONSTRAINT chk_accounts_status CHECK (status IN ('ACTIVE', 'FROZEN', 'CLOSED', 'PENDING')),
-  CONSTRAINT chk_accounts_balance CHECK (balance >= 0)
-) ENGINE=InnoDB;
+-- 6. DISBURSEMENT_STEPS
+CREATE TABLE disbursement_steps (
+    step_id INT AUTO_INCREMENT PRIMARY KEY,
+    disbursement_id INT NOT NULL,
+    step_name VARCHAR(100) NOT NULL,
+    step_status VARCHAR(30) DEFAULT 'PENDING',
+    started_at DATETIME,
+    completed_at DATETIME,
+    error_message VARCHAR(255),
+    CONSTRAINT fk_disbursement_steps_disbursement
+        FOREIGN KEY (disbursement_id) REFERENCES disbursements(disbursement_id)
+);
 
-CREATE INDEX idx_accounts_customer ON accounts(customer_id);
-CREATE INDEX idx_accounts_status ON accounts(status);
+-- 7. NPA_CLASSIFICATIONS
+CREATE TABLE npa_classifications (
+    npa_id INT AUTO_INCREMENT PRIMARY KEY,
+    loan_id INT NOT NULL UNIQUE,
+    overdue_days INT DEFAULT 0,
+    outstanding_amount DECIMAL(15,2) DEFAULT 0.00,
+    classification VARCHAR(50),
+    classification_date DATE,
+    reason VARCHAR(255),
+    status VARCHAR(30) DEFAULT 'ACTIVE',
+    CONSTRAINT fk_npa_loan
+        FOREIGN KEY (loan_id) REFERENCES loans(loan_id)
+);
 
--- -----------------------------------------------------
--- transactions
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS transactions (
-  id                     BIGINT AUTO_INCREMENT PRIMARY KEY,
-  transaction_reference  VARCHAR(50)    NOT NULL UNIQUE,
-  source_account_id      BIGINT         NOT NULL,
-  target_account_id      BIGINT         NULL,
-  transaction_type       VARCHAR(20)    NOT NULL,
-  amount                 DECIMAL(15,2)  NOT NULL,
-  status                 VARCHAR(20)    NOT NULL,
-  description            VARCHAR(255)   NULL,
-  performed_by           VARCHAR(100)   NOT NULL,
-  timestamp              DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_txn_source FOREIGN KEY (source_account_id) REFERENCES accounts(id),
-  CONSTRAINT fk_txn_target FOREIGN KEY (target_account_id) REFERENCES accounts(id),
-  CONSTRAINT chk_txn_type CHECK (transaction_type IN ('TRANSFER', 'DEPOSIT', 'WITHDRAWAL', 'PAYMENT')),
-  CONSTRAINT chk_txn_status CHECK (status IN ('SUCCESS', 'FAILED', 'CANCELLED')),
-  CONSTRAINT chk_txn_amount CHECK (amount > 0)
-) ENGINE=InnoDB;
+-- 8. TRANSACTIONS
+CREATE TABLE transactions (
+    transaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    account_id INT NOT NULL,
+    loan_id INT,
+    transaction_type VARCHAR(50) NOT NULL,
+    amount DECIMAL(15,2) NOT NULL,
+    transaction_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    reference_number VARCHAR(100) UNIQUE,
+    status VARCHAR(30) DEFAULT 'SUCCESS',
+    CONSTRAINT fk_transactions_account
+        FOREIGN KEY (account_id) REFERENCES accounts(account_id),
+    CONSTRAINT fk_transactions_loan
+        FOREIGN KEY (loan_id) REFERENCES loans(loan_id)
+);
 
-CREATE INDEX idx_txn_source ON transactions(source_account_id);
-CREATE INDEX idx_txn_target ON transactions(target_account_id);
-CREATE INDEX idx_txn_time ON transactions(timestamp);
-
--- -----------------------------------------------------
--- kyc
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS kyc (
-  kyc_id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
-  first_name             VARCHAR(100) NOT NULL,
-  last_name              VARCHAR(100) NOT NULL,
-  date_of_birth          DATE         NULL,
-  gender                 VARCHAR(20)  NULL,
-  government_id_type     VARCHAR(50)  NULL,
-  government_id_number   VARCHAR(100) NULL,
-  address_line1          VARCHAR(255) NULL,
-  address_line2          VARCHAR(255) NULL,
-  city                   VARCHAR(100) NULL,
-  state                  VARCHAR(100) NULL,
-  postal_code            VARCHAR(20)  NULL,
-  country                VARCHAR(100) NULL,
-  occupation_status      VARCHAR(50)  NULL,
-  annual_income_range    VARCHAR(50)  NULL,
-  pep_declaration        BOOLEAN      NOT NULL DEFAULT FALSE,
-  email                  VARCHAR(100) NULL,
-  status                 VARCHAR(20)  NOT NULL DEFAULT 'PENDING',
-  customer_id            BIGINT       NULL,
-  created_at             DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at             DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_kyc_customer FOREIGN KEY (customer_id) REFERENCES customers(id),
-  CONSTRAINT chk_kyc_status CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'UNDER_REVIEW'))
-) ENGINE=InnoDB;
-
-CREATE INDEX idx_kyc_status ON kyc(status);
-CREATE INDEX idx_kyc_email ON kyc(email);
-
--- -----------------------------------------------------
--- Audit database
--- -----------------------------------------------------
-USE fincore_audit;
-
-CREATE TABLE IF NOT EXISTS audit_logs (
-  id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-  entity_name   VARCHAR(100) NOT NULL,
-  entity_id     VARCHAR(100) NULL,
-  action        VARCHAR(50)  NOT NULL,
-  performed_by  VARCHAR(100) NOT NULL,
-  status        VARCHAR(20)  NOT NULL,
-  description   VARCHAR(500) NULL,
-  timestamp     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
-
-CREATE INDEX idx_audit_entity ON audit_logs(entity_name, entity_id);
-CREATE INDEX idx_audit_user ON audit_logs(performed_by);
-CREATE INDEX idx_audit_action ON audit_logs(action);
-CREATE INDEX idx_audit_time ON audit_logs(timestamp);
+-- Helpful indexes for foreign-key lookups
+CREATE INDEX idx_loans_customer_id ON loans(customer_id);
+CREATE INDEX idx_accounts_customer_id ON accounts(customer_id);
+CREATE INDEX idx_repayments_loan_id ON repayments(loan_id);
+CREATE INDEX idx_disbursements_loan_id ON disbursements(loan_id);
+CREATE INDEX idx_disbursement_steps_disbursement_id
+    ON disbursement_steps(disbursement_id);
+CREATE INDEX idx_transactions_account_id ON transactions(account_id);
+CREATE INDEX idx_transactions_loan_id ON transactions(loan_id);
