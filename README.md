@@ -313,76 +313,105 @@ The Audit Trail provides traceability of important banking operations such as:
 
 The login page provides role-based authentication for:
 
-* Administrator
-* Teller
-* Customer
+- Administrator
+- Bank Teller
+- Customer
 
-![Login Page](screenshots/login.jpg)
+![Login Page](Screenshots/login-page.jpg)
 
-### 2. Teller Dashboard
+---
 
-The teller dashboard provides access to operational banking activities.
+### 2. Administrator Dashboard
 
-![Teller Dashboard](screenshots/teller-dashboard.jpg)
-
-### 3. Customer Dashboard
-
-The customer dashboard displays only the logged-in customer's information.
+The Administrator Dashboard provides an overview of Team D's loan management and banking operations.
 
 It includes:
 
-* Account details
-* Loan information
-* Repayment information
-* Transactions
-* Loan eligibility
+- Total customers
+- Active loans
+- Repayments
+- Disbursements
+- NPA/SMA loans
+- Team D core modules
+- Recent transactions
+- Customer access
+- Audit Trail
+- Settings
+- Logout
 
-![Customer Dashboard](screenshots/customer-dashboard.jpg)
+![Administrator Dashboard](Screenshots/admin-dashboard.jpg)
+
+---
+
+### 3. Customer Dashboard
+
+The Customer Dashboard displays information specific to the logged-in customer.
+
+It provides access to:
+
+- Customer profile
+- Account information
+- Loan details
+- Repayment schedule
+- Outstanding amount
+- Transactions
+- Loan eligibility
+
+![Customer Dashboard](Screenshots/customer-dashboard.jpg)
+
+---
 
 ### 4. Repayment Tracking
 
-The Repayment Tracking page displays:
+The Repayment Tracking module provides loan-wise repayment information including:
 
-* Loan ID
-* Installment number
-* Due date
-* Amount due
-* Amount paid
-* Remaining amount
-* Payment status
+- Installment number
+- Due date
+- Amount due
+- Amount paid
+- Remaining amount
+- Payment status
+- Pending and partial payments
 
-![Repayment Tracking](screenshots/repayment-tracking.jpg)
+![Repayment Tracking](Screenshots/repayment-tracking.jpg)
+
+---
 
 ### 5. Disbursement Saga
 
-The Disbursement Saga page displays:
+The Disbursement Saga module tracks the complete loan disbursement workflow.
 
-* Disbursement amount
-* Disbursement status
-* Transaction reference
-* Current Saga step
-* Saga step history
-* Completed/failed steps
+It displays:
 
-![Disbursement Saga](screenshots/disbursement-saga.jpg)
+- Disbursement amount
+- Disbursement status
+- Transaction reference
+- Current Saga step
+- Document verification
+- Loan approval
+- Account credited
+- Step completion status
+
+![Disbursement Saga](Screenshots/disbursement-saga.jpg)
+
+---
 
 ### 6. NPA Classification
 
-The NPA Classification page displays:
+The NPA Classification module monitors loan risk and overdue conditions.
 
-* Loan ID
-* Customer
-* Overdue days
-* Outstanding amount
-* Classification
-* Classification date
-* Reason
-* Status
+It displays:
 
-![NPA Classification](screenshots/npa-classification.jpg)
+- Loan ID
+- Customer
+- Overdue days
+- Outstanding amount
+- Classification
+- Classification date
+- Reason
+- Status
 
-
-
+![NPA Classification](Screenshots/npa-classification.jpg)
 ## Backend / Database Components
 
 ### Database Name
