@@ -1,112 +1,131 @@
-# 🏦 FinCore Digital Banking Platform
+# 🔐 Secure Digital Banking Management System
 
-> An enterprise-grade digital banking management platform built to support
-> secure banking operations, seamless financial transactions, accurate data
-> management, and scalable banking services.
+> A secure and scalable digital banking platform designed to manage essential banking operations with reliable workflows, structured data management, and secure transaction processing.
 
 ---
 
-## 📌 Introduction
+## 🎯 Milestone 2 — Loan Management
 
-FinCore is a comprehensive digital banking management platform designed to
-simplify and modernize core banking operations. It provides a centralized
-system for managing customer accounts, financial transactions, and banking
-data while focusing on security, accuracy, reliability, and scalability.
+Milestone 2 introduces the **Loan Management Module**, enabling the system to process loan applications through validation, credit assessment, previous-loan verification, and EMI calculation.
 
-The platform follows a modular architecture with dedicated frontend,
-backend, and database layers, enabling seamless integration and efficient
-management of banking services.
+### ✨ Key Components
 
----
-
-## ⚙️ Key Features
-
-- 🏦 **Account Creation**– Create and validate customer bank accounts.
-- 📊 **Balance Accuracy** – Monitor balances and identify discrepancies.
-- 🔄 **Transaction Atomicity** – Maintain consistent and reliable transactions.
-
----
-
-## 🛠️ Technology Stack
-
-| Layer | Technology |
+| Module | Description |
 |---|---|
-| 🖥️ Frontend | Angular 19/20 |
-| ⚙️ Backend | Java, Spring Boot, REST API |
+| 📝 **Loan Origination** | Captures and validates customer loan applications. |
+| 🔍 **Credit Check** | Evaluates credit score, income, previous loans, and active loans. |
+| 🧮 **EMI Calculation** | Calculates monthly EMI based on loan amount, interest rate, and tenure. |
+
+---
+
+## 🚀 Key Features
+
+- 📝 Secure loan application and origination
+- 🔍 Customer credit eligibility verification
+- 📊 Previous loan history checking
+- 💳 Existing active loan verification
+- 🧮 Automated EMI calculation
+- ✅ Loan application validation
+- 🗄️ Structured relational database management
+- 🔐 Secure and modular banking workflow
+
+---
+
+## 🛠️ Technology Used
+
+| Category | Technology |
+|---|---|
+| 🎨 Frontend | Angular |
+| ⚙️ Backend | Spring Boot / PHP |
 | 🗄️ Database | MySQL |
-| 🔧 DB Management | XAMPP, phpMyAdmin |
-| 📦 Build Tool | Maven |
+| 🧰 Database Management | XAMPP & phpMyAdmin |
 | 🔗 Version Control | Git & GitHub |
+| 🌐 API Testing | Postman |
 
-## 📁 Project Structure
+---
 
-├── frontend-milestone2/
-│   ├── credit-check-app/
-│   ├── emicalculation/
-│   └── loan-origination/
-├── frontend/       # Balance Accuracy Application
-├── backend/        # Spring Boot REST API
-├── backend-M2/     # Spring Boot Milestone 2 API
-├── DB/             # SQL Scripts
-└── README.md
+## 🗄️ Database Details
 
-## 🚀 Quick Start
-* 🖥️ Frontend Applications (Milestone 2) -
-  - **Credit Check App**:
-    ```bash
-    cd frontend-milestone2/credit-check-app
-    npm install
-    npm start
-    ```
-  - **EMI Calculation App**:
-    ```bash
-    cd frontend-milestone2/emicalculation
-    npm install
-    npm start
-    ```
-  - **Loan Origination App**:
-    ```bash
-    cd frontend-milestone2/loan-origination
-    npm install
-    npm start
-    ```
+**Database Name:** `digital_banking`
 
-* 🖥️ Frontend (Balance Accuracy) -
-```bash
-cd frontend/balance-accuracy-app
-npm install
-npm start
-```
-Runs on: http://localhost:4200
+### Core Loan Management Tables
 
-* ⚙️ Backend -
-cd backend
-./mvnw spring-boot:run
+| Table | Purpose |
+|---|---|
+| `loan_application` | Stores new loan application details. |
+| `loan_history` | Maintains previous and existing loan records. |
+| `credit_check` | Stores credit assessment and eligibility results. |
+| `emi_calculation` | Stores calculated EMI details. |
 
-Runs on: http://localhost:8080
+### 🔗 Database ER Diagram
 
-* 🗄️ Database -
-Database: MySQL
-Name: digital_banking
-Environment: XAMPP / phpMyAdmin
-Port: 3306
-
-## 🏦 Account Creation
-
-<img width="1600" height="829" alt="WhatsApp Image 2026-08-09 at 9 09 35 PM" src="https://github.com/user-attachments/assets/6841c68f-31a2-4f09-81d1-730731a79d00" />
-
-## 🔄 Transaction Atomicity
-
-<img width="1600" height="825" alt="WhatsApp Image 2026-08-09 at 9 09 34 PM" src="https://github.com/user-attachments/assets/d9d10ebf-a445-414f-81f3-5ca0597f76fc" />
+<img width="1536" height="1024" alt="DB ER Diagram M2" src="https://github.com/user-attachments/assets/e45f730c-0124-42c9-a5da-d18147d119bb" />
 
 
-## 📊 Balance Accuracy Dashboard
+---
 
-<img width="1600" height="832" alt="WhatsApp Image 2026-08-09 at 9 09 34 PM (1)" src="https://github.com/user-attachments/assets/59e11c70-fd63-48dc-a565-97af09a5d357" />
+## 🖥️ Application Screens
 
-## 🧩 Database ER Model
+### 📝 Loan Origination
 
-<img width="1264" height="843" alt="Gemini_Generated_Image_an2mdaan2mdaan2m" src="https://github.com/user-attachments/assets/ddafe67c-4830-4607-b77b-0283ca6c5ded" />
+> Customer loan application and validation screen.
+
+<img width="1050" height="484" alt="Loan Origination" src="https://github.com/user-attachments/assets/9d75a815-f0fb-48ec-9484-f996a633f0ec" />
+
+---
+
+### 🔍 Credit Check
+
+> Credit score, income, previous loan and eligibility verification.
+
+<img width="1050" height="519" alt="Credit check " src="https://github.com/user-attachments/assets/ad893541-4757-45a4-9583-4d404341c9cc" />
+
+
+---
+
+### 🧮 EMI Calculation
+
+> Automated EMI calculation based on loan amount, interest rate and tenure.
+
+<img width="1050" height="522" alt="emi calculator " src="https://github.com/user-attachments/assets/c3a16377-7d5d-45c4-a6dc-48340c549fe2" />
+
+
+---
+
+## 🔄 Loan Management Workflow
+
+```text
+                 👤 Customer
+                      │
+                      ▼
+              📝 Loan Origination
+                      │
+                      ▼
+                 🔍 Credit Check
+                      │
+             ┌────────┴────────┐
+             ▼                 ▼
+       Previous Loans      Active Loans
+             │                 │
+             └────────┬────────┘
+                      ▼
+              🧮 EMI Calculation
+                      │
+                      ▼
+               ✅ Loan Processing
+
+
+## 🌐 Port Details
+
+| Service                    | Port / URL                     | Purpose                       |
+| -------------------------- | ------------------------------ | ----------------------------- |
+| 🎨 **Angular Frontend**    | `http://localhost:4200`        | User Interface                |
+| ⚙️ **Spring Boot Backend** | `http://localhost:8080`        | REST APIs & Backend Services  |
+| 🐘 **XAMPP / PHP**         | `http://localhost/`            | PHP-based Database Operations |
+| 🗄️ **phpMyAdmin**         | `http://localhost/phpmyadmin/` | MySQL Database Management     |
+
+> 💡 **Note:** Make sure XAMPP (Apache & MySQL) and the Spring Boot/Angular services are running before accessing these URLs.
+
 
 ## 👥 Team Members
 
