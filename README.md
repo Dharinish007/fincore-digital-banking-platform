@@ -114,6 +114,8 @@ Milestone 2 introduces the **Loan Management Module**, enabling the system to pr
                       ▼
                ✅ Loan Processing
 
+```
+
 
 ## 🌐 Port Details
 
