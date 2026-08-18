@@ -317,7 +317,7 @@ The login page provides role-based authentication for:
 - Bank Teller
 - Customer
 
-![Login Page](Screenshots_M2\login.jpg)
+![Login Page](Screenshots_M2/login.jpg)
 
 ---
 
