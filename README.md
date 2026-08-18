@@ -70,7 +70,8 @@ Milestone 2 introduces the **Loan Management Module**, enabling the system to pr
 
 > Customer loan application and validation screen.
 
-<img width="1050" height="484" alt="Loan Origination" src="https://github.com/user-attachments/assets/9d75a815-f0fb-48ec-9484-f996a633f0ec" />
+<img width="1600" height="732" alt="Loan Origination Dashboard" src="https://github.com/user-attachments/assets/5f1f4c3e-6e02-4659-a7ce-551085f78348" />
+
 
 ---
 
