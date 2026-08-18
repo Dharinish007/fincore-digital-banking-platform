@@ -339,7 +339,7 @@ It includes:
 - Settings
 - Logout
 
-![Administrator Dashboard](Screenshots_M2/admin-dashboard.jpg)
+![Administrator Dashboard](Screenshots_M2/admin-dashboard.png)
 
 ---
 
