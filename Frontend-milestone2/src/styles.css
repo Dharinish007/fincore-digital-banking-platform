@@ -1,0 +1,198 @@
+/* FinCore Nexus Dark Theme Tokens */
+:root {
+  --bg-dark-app: #0b1329;
+  --bg-dark-header: #0d1629;
+  --bg-dark-sidebar: #0f172a;
+  --bg-dark-card: #1e293b;
+  --bg-dark-input: #0f172a;
+
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+
+  --accent-cyan: #38bdf8;
+  --accent-blue: #3b82f6;
+  --accent-purple: #c084fc;
+  --accent-amber: #fbbf24;
+  --accent-green: #4ade80;
+  --accent-red: #f87171;
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: #38bdf8;
+
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-dark-app);
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Custom Scrollbar for Dark Mode */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b1329;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Global Form Controls & Inputs */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.flex-1 { flex: 1; }
+
+.input-with-prefix, .input-with-suffix {
+  display: flex;
+  align-items: center;
+  background-color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.input-with-prefix:focus-within, .input-with-suffix:focus-within {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.prefix, .suffix {
+  padding: 10px 14px;
+  background-color: rgba(255, 255, 255, 0.04);
+  color: #94a3b8;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+input[type="number"], input[type="text"], input[type="date"], select {
+  width: 100%;
+  padding: 10px 14px;
+  background-color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #f8fafc;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.input-with-prefix input, .input-with-suffix input {
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+}
+
+input:focus, select:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+input.is-invalid, select.is-invalid {
+  border-color: #f87171 !important;
+}
+
+.error-msg {
+  color: #f87171;
+  font-size: 0.75rem;
+  margin-top: 2px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.btn-block {
+  width: 100%;
+  padding: 12px;
+}
+
+.text-right, .fincore-table th.text-right, .fincore-table td.text-right {
+  text-align: right !important;
+}

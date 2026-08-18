@@ -1,0 +1,225 @@
+<div class="module-container">
+  <div class="module-header">
+    <div class="module-title-group">
+      <h2>EMI Calculator & Amortization Engine</h2>
+      <p class="module-subtitle">Calculate monthly loan repayments, interest breakdown, and generate full amortization schedules.</p>
+    </div>
+  </div>
+
+  <div class="grid-2col">
+    <!-- EMI Calculation Form -->
+    <div class="card form-card">
+      <div class="card-header">
+        <span class="card-icon">🧮</span>
+        <h3>Loan Details</h3>
+      </div>
+
+      <form [formGroup]="emiForm" (ngSubmit)="calculate()" class="calculator-form">
+        <!-- Loan Amount -->
+        <div class="form-group">
+          <label for="loanAmount">Loan Amount (₹)</label>
+          <div class="input-with-prefix">
+            <span class="prefix">₹</span>
+            <input 
+              id="loanAmount" 
+              type="number" 
+              formControlName="loanAmount" 
+              placeholder="e.g. 500000"
+              [class.is-invalid]="emiForm.get('loanAmount')?.touched && emiForm.get('loanAmount')?.invalid"
+            />
+          </div>
+          <div *ngIf="emiForm.get('loanAmount')?.touched && emiForm.get('loanAmount')?.invalid" class="error-msg">
+            Valid loan amount (min ₹1,000) is required.
+          </div>
+        </div>
+
+        <!-- Interest Rate -->
+        <div class="form-group">
+          <label for="interestRate">Interest Rate (% p.a.)</label>
+          <div class="input-with-suffix">
+            <input 
+              id="interestRate" 
+              type="number" 
+              step="0.1" 
+              formControlName="interestRate" 
+              placeholder="e.g. 10.0"
+              [class.is-invalid]="emiForm.get('interestRate')?.touched && emiForm.get('interestRate')?.invalid"
+            />
+            <span class="suffix">%</span>
+          </div>
+          <div *ngIf="emiForm.get('interestRate')?.touched && emiForm.get('interestRate')?.invalid" class="error-msg">
+            Interest rate (0.1% to 50%) is required.
+          </div>
+        </div>
+
+        <!-- Loan Tenure & Type -->
+        <div class="form-row">
+          <div class="form-group flex-2">
+            <label for="tenure">Loan Tenure</label>
+            <input 
+              id="tenure" 
+              type="number" 
+              formControlName="tenure" 
+              placeholder="e.g. 5"
+              [class.is-invalid]="emiForm.get('tenure')?.touched && emiForm.get('tenure')?.invalid"
+            />
+          </div>
+          <div class="form-group flex-1">
+            <label for="tenureType">Tenure Unit</label>
+            <select id="tenureType" formControlName="tenureType">
+              <option value="YEARS">Years</option>
+              <option value="MONTHS">Months</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Repayment Frequency & Start Date -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="repaymentFrequency">Repayment Frequency</label>
+            <select id="repaymentFrequency" formControlName="repaymentFrequency">
+              <option value="MONTHLY">Monthly</option>
+              <option value="QUARTERLY">Quarterly</option>
+              <option value="ANNUALLY">Annually</option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label for="startDate">First EMI Date</label>
+            <input id="startDate" type="date" formControlName="startDate" />
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">
+            <span>⚡</span> Calculate EMI
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="resetForm()">
+            Reset
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- EMI Summary Display -->
+    <div class="card summary-card" *ngIf="summary">
+      <div class="card-header">
+        <span class="card-icon">📊</span>
+        <h3>EMI Summary Breakdown</h3>
+      </div>
+
+      <div class="summary-highlight-box">
+        <span class="summary-label">Monthly EMI</span>
+        <div class="highlight-value">{{ formatCurrency(summary.monthlyEmi) }}</div>
+        <span class="summary-sub">Fixed monthly payment over {{ summary.tenureMonths }} months</span>
+      </div>
+
+      <div class="summary-metrics-grid">
+        <div class="summary-metric">
+          <span class="sm-label">Principal Amount</span>
+          <span class="sm-val">{{ formatCurrency(summary.loanAmount) }}</span>
+        </div>
+
+        <div class="summary-metric">
+          <span class="sm-label">Interest Rate</span>
+          <span class="sm-val text-cyan">{{ summary.interestRate }}% p.a.</span>
+        </div>
+
+        <div class="summary-metric">
+          <span class="sm-label">Total Interest</span>
+          <span class="sm-val text-amber">{{ formatCurrency(summary.totalInterest) }}</span>
+        </div>
+
+        <div class="summary-metric">
+          <span class="sm-label">Total Repayment</span>
+          <span class="sm-val text-green">{{ formatCurrency(summary.totalRepayment) }}</span>
+        </div>
+      </div>
+
+      <!-- Interest vs Principal Visual Bar -->
+      <div class="visual-progress-section">
+        <div class="progress-labels">
+          <span class="principal-tag">Principal ({{ ((summary.loanAmount / summary.totalRepayment) * 100).toFixed(1) }}%)</span>
+          <span class="interest-tag">Interest ({{ ((summary.totalInterest / summary.totalRepayment) * 100).toFixed(1) }}%)</span>
+        </div>
+        <div class="progress-bar-container">
+          <div 
+            class="progress-principal" 
+            [style.width.%]="(summary.loanAmount / summary.totalRepayment) * 100">
+          </div>
+          <div 
+            class="progress-interest" 
+            [style.width.%]="(summary.totalInterest / summary.totalRepayment) * 100">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Amortization Schedule Table -->
+  <div class="card table-card" *ngIf="schedule.length > 0">
+    <div class="card-header table-header">
+      <div class="table-title-group">
+        <span class="card-icon">📅</span>
+        <h3>Amortization Schedule ({{ schedule.length }} Installments)</h3>
+      </div>
+
+      <div class="table-controls">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            placeholder="Search month or date..." 
+            [(ngModel)]="searchTerm" 
+            (input)="applyFilter()"
+          />
+        </div>
+        <button class="btn btn-outline" (click)="exportScheduleCsv()">
+          📥 Export CSV
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fincore-table">
+        <thead>
+          <tr>
+            <th>Installment #</th>
+            <th>Due Date</th>
+            <th class="text-right">EMI (₹)</th>
+            <th class="text-right">Principal (₹)</th>
+            <th class="text-right">Interest (₹)</th>
+            <th class="text-right">Remaining Balance (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of paginatedSchedule">
+            <td>
+              <span class="installment-badge">#{{ item.month }}</span>
+            </td>
+            <td class="text-secondary">{{ item.paymentDate }}</td>
+            <td class="text-right font-medium">{{ formatCurrency(item.emi) }}</td>
+            <td class="text-right text-blue">{{ formatCurrency(item.principal) }}</td>
+            <td class="text-right text-amber">{{ formatCurrency(item.interest) }}</td>
+            <td class="text-right font-bold">{{ formatCurrency(item.remainingBalance) }}</td>
+          </tr>
+          <tr *ngIf="paginatedSchedule.length === 0">
+            <td colspan="6" class="no-data">No installments match your search term.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table Pagination -->
+    <div class="pagination-bar" *ngIf="filteredSchedule.length > 0">
+      <span class="pagination-info">
+        Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, filteredSchedule.length) }} of {{ filteredSchedule.length }} entries
+      </span>
+      <div class="pagination-actions">
+        <button class="page-btn" [disabled]="currentPage === 1" (click)="prevPage()">◀ Prev</button>
+        <span class="page-current">{{ currentPage }} / {{ totalPages }}</span>
+        <button class="page-btn" [disabled]="currentPage === totalPages" (click)="nextPage()">Next ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
