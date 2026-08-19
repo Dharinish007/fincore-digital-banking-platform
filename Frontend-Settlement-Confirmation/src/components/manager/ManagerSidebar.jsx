@@ -39,7 +39,7 @@ function ManagerSidebar() {
 
         <li
           className="active"
-          onClick={() => navigate("/manager-dashboard")}
+          onClick={() => navigate("/manager/dashboard")}
         >
           <FaHome />
           Dashboard
