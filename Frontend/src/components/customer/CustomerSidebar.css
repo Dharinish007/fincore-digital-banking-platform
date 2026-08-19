@@ -1,0 +1,175 @@
+/* ==========================================
+   Customer Sidebar
+========================================== */
+
+.customer-sidebar {
+    width: 270px;
+    min-height: 100vh;
+    background: #111827;
+    border-right: 1px solid #1f2937;
+    color: #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 25px 20px;
+}
+
+/* ==========================================
+   Logo Section
+========================================== */
+
+.sidebar-logo {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.logo-icon {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 15px;
+    padding: 18px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 42px;
+}
+
+.sidebar-logo h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 6px;
+}
+
+.sidebar-logo p{
+    color:#9ca3af;
+    font-size:14px;
+    margin-top:6px;
+    letter-spacing:.5px;
+}
+
+/* ==========================================
+   Navigation Menu
+========================================== */
+
+.customer-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.customer-sidebar ul li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 18px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    color: #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.customer-sidebar ul li svg {
+    font-size: 18px;
+}
+
+/* Hover */
+
+.customer-sidebar ul li:hover {
+    background: #1f2937;
+    color: #ffffff;
+    transform: translateX(5px);
+}
+
+/* Active Menu */
+
+.customer-sidebar ul li.active {
+    background: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+}
+
+/* ==========================================
+   Logout Button
+========================================== */
+
+.logout-btn {
+    width: 100%;
+    border: none;
+    background: #1f2937;
+    border: 1px solid #374151;
+    color: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 992px) {
+
+    .customer-sidebar {
+        width: 85px;
+        padding: 20px 12px;
+    }
+
+    .sidebar-logo h2,
+    .sidebar-logo p,
+    .customer-sidebar ul li span,
+    .logout-btn span {
+        display: none;
+    }
+
+    .logo-icon {
+        width: 60px;
+        height: 60px;
+        padding: 12px;
+        font-size: 32px;
+        margin: 0 auto;
+    }
+
+    .customer-sidebar ul li {
+        justify-content: center;
+        padding: 16px;
+    }
+
+    .customer-sidebar ul li svg {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .logout-btn {
+        justify-content: center;
+        padding: 16px;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .customer-sidebar {
+        display: none;
+    }
+
+}
