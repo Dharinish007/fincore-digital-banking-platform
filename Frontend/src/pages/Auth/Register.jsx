@@ -24,7 +24,7 @@ function Register() {
       {/* Left Panel */}
       <div className="register-left">
         <div className="brand">
-          <FaUniversity />
+          <FaUniversity className="brand-icon" />
           <h1>FinCore</h1>
           <p>Digital Banking Management Platform</p>
         </div>

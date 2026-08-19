@@ -28,9 +28,20 @@
 
 .brand{
     margin-bottom: 50px;
-    font-size:100px;
 }
 
+.brand-icon{
+    font-size: 100px;
+    margin-bottom: 40px;
+    height: 200px;
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255,255,255,.08);
+    box-shadow: 0 0 30px rgba(37,99,235,.4);
+}
 
 .brand h1{
     font-size: 50px;

@@ -28,7 +28,7 @@ function Login() {
 
         <div className="brand">
 
-          <FaUniversity />
+          <FaUniversity className="brand-icon" />
 
           <h1>FinCore</h1>
 
