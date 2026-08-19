@@ -1,3 +1,5 @@
+import React from "react";
+
 import {
   FaUsers,
   FaUserTie,
@@ -131,6 +133,7 @@ function AdminDashboard() {
           <h1>
             Welcome Back, Admin 👋
           </h1>
+
           <p>
             Here's an overview of your digital banking platform.
           </p>

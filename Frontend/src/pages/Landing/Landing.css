@@ -25,7 +25,11 @@
     display:flex;
     align-items:center;
     gap:10px;
-    font-size: 45px;
+}
+
+.logo-icon{
+    font-size:30px;
+    color:#3b82f6;
 }
 
 .logo span{

@@ -1,3 +1,4 @@
+import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // Import Pages
@@ -5,7 +6,8 @@ import Landing from "../pages/Landing/Landing";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
 import AdminDashboard from "../pages/Admin/AdminDashboard";
-import CustomerDashboard from "../pages/customer/CustomerDashboard";
+
+
 
 const ManagerDashboard = () => (
   <div
@@ -30,6 +32,19 @@ const TellerDashboard = () => (
     }}
   >
     Teller Dashboard (Coming Soon)
+  </div>
+);
+
+const CustomerDashboard = () => (
+  <div
+    style={{
+      textAlign: "center",
+      marginTop: "100px",
+      fontSize: "32px",
+      fontWeight: "bold",
+    }}
+  >
+    Customer Dashboard (Coming Soon)
   </div>
 );
 
