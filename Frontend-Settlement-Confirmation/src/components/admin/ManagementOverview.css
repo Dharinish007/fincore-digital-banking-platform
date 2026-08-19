@@ -1,0 +1,253 @@
+/* ==========================================
+   Management Overview
+========================================== */
+
+.management-overview {
+  width: 100%;
+
+  margin-bottom: 35px;
+}
+
+
+/* ==========================================
+   Section Header
+========================================== */
+
+.management-header {
+  margin-bottom: 20px;
+}
+
+.management-header h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 21px;
+
+  font-weight: 700;
+}
+
+.management-header p {
+  margin: 6px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   Management Grid
+========================================== */
+
+.management-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+}
+
+
+/* ==========================================
+   Management Card
+========================================== */
+
+.management-card {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 17px;
+
+  box-sizing: border-box;
+
+  transition: all 0.3s ease;
+}
+
+
+/* ==========================================
+   Card Hover
+========================================== */
+
+.management-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #2563eb;
+
+  box-shadow:
+    0 12px 30px rgba(37, 99, 235, 0.12);
+}
+
+
+/* ==========================================
+   Management Icon
+========================================== */
+
+.management-icon {
+  min-width: 48px;
+
+  width: 48px;
+
+  height: 48px;
+
+  border-radius: 13px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: #ffffff;
+
+  font-size: 20px;
+}
+
+
+/* Icon Colors */
+
+.management-icon.blue {
+  background: #2563eb;
+}
+
+.management-icon.purple {
+  background: #7c3aed;
+}
+
+.management-icon.green {
+  background: #059669;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.management-content {
+  min-width: 0;
+}
+
+.management-content h3 {
+  margin: 0 0 7px;
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+.management-content p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 12px;
+
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.management-stats {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  margin-top: 15px;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+.management-stats span {
+  display: flex;
+
+  align-items: center;
+
+  gap: 4px;
+}
+
+.management-stats strong {
+  color: #cbd5e1;
+
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   Responsive - Tablet
+========================================== */
+
+@media (max-width: 1300px) {
+
+  .management-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+/* ==========================================
+   Responsive - Mobile
+========================================== */
+
+@media (max-width: 768px) {
+
+  .management-card {
+    padding: 20px;
+
+    gap: 14px;
+  }
+
+  .management-icon {
+    min-width: 44px;
+
+    width: 44px;
+
+    height: 44px;
+
+    font-size: 18px;
+  }
+
+}
+
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 480px) {
+
+  .management-card {
+    padding: 18px;
+  }
+
+  .management-content h3 {
+    font-size: 14px;
+  }
+
+  .management-content p {
+    font-size: 11px;
+  }
+
+  .management-stats {
+    gap: 10px;
+  }
+
+}

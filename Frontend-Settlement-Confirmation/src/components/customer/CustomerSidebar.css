@@ -1,0 +1,230 @@
+/* ==========================================
+   Customer Sidebar
+========================================== */
+
+.customer-sidebar {
+    width: 270px;
+    height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    background: linear-gradient(
+        180deg,
+        #020617,
+        #111827
+    );
+
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: #e5e7eb;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 25px 20px;
+
+    z-index: 1000;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Logo Section
+========================================== */
+
+.sidebar-logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo-icon {
+    font-size: 55px;
+    color: #2563eb;
+    margin-bottom: 12px;
+
+    filter: drop-shadow(0 0 12px rgba(37, 99, 235, 0.45));
+}
+
+.sidebar-logo h2 {
+    font-size: 28px;
+    color: #ffffff;
+    margin: 0;
+}
+
+.sidebar-logo p {
+    color: #9ca3af;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+
+/* ==========================================
+   Navigation Menu
+========================================== */
+
+.customer-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+
+.customer-sidebar ul li {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 15px 18px;
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    color: #d1d5db;
+
+    transition: all 0.3s ease;
+}
+
+.customer-sidebar ul li svg {
+    font-size: 18px;
+    min-width: 18px;
+}
+
+
+/* ==========================================
+   Hover
+========================================== */
+
+.customer-sidebar ul li:hover {
+    background: rgba(37, 99, 235, 0.15);
+    color: #ffffff;
+
+    transform: translateX(5px);
+}
+
+
+/* ==========================================
+   Active Menu
+========================================== */
+
+.customer-sidebar ul li.active {
+    background: #2563eb;
+    color: #ffffff;
+
+    font-weight: 600;
+
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.25);
+}
+
+
+/* ==========================================
+   Logout Button
+========================================== */
+
+.logout-btn {
+    width: 100%;
+
+    border: 1px solid #374151;
+
+    background: #1f2937;
+    color: #ffffff;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    transition: all 0.3s ease;
+
+    flex-shrink: 0;
+}
+
+.logout-btn:hover {
+    background: #dc2626;
+    border-color: #dc2626;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   Tablet
+========================================== */
+
+@media (max-width: 992px) {
+
+    .customer-sidebar {
+        width: 85px;
+        padding: 20px 12px;
+    }
+
+    .sidebar-logo {
+        margin-bottom: 35px;
+    }
+
+    .sidebar-logo h2,
+    .sidebar-logo p {
+        display: none;
+    }
+
+    .logo-icon {
+        width: 60px;
+        height: 60px;
+
+        padding: 12px;
+
+        font-size: 32px;
+
+        margin: 0 auto;
+    }
+
+    .customer-sidebar ul li {
+        justify-content: center;
+        padding: 16px;
+    }
+
+    .customer-sidebar ul li svg {
+        margin: 0;
+        font-size: 20px;
+    }
+
+    .logout-btn {
+        justify-content: center;
+        padding: 16px;
+    }
+
+}
+
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media (max-width: 768px) {
+
+    .customer-sidebar {
+        display: none;
+    }
+
+}

@@ -1,0 +1,95 @@
+/* ==========================================
+   Cash Summary
+========================================== */
+
+.cash-summary {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 18px;
+    padding: 25px;
+}
+
+/* Header */
+
+.cash-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.cash-summary-header h3 {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.cash-summary-header svg {
+    color: #60a5fa;
+    font-size: 22px;
+}
+
+/* Cash Items */
+
+.cash-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 0;
+    border-bottom: 1px solid #1f2937;
+}
+
+.cash-item-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+}
+
+.cash-item-icon.opening {
+    background: #2563eb;
+}
+
+.cash-item-icon.deposit {
+    background: #10b981;
+}
+
+.cash-item-icon.withdrawal {
+    background: #f59e0b;
+}
+
+.cash-item span {
+    display: block;
+    color: #9ca3af;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.cash-item strong {
+    color: #ffffff;
+    font-size: 16px;
+}
+
+/* Total */
+
+.cash-total {
+    margin-top: 22px;
+    padding: 18px;
+    background: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.25);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cash-total span {
+    color: #9ca3af;
+}
+
+.cash-total strong {
+    color: #60a5fa;
+    font-size: 18px;
+}
