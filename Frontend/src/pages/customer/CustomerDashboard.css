@@ -1,0 +1,146 @@
+/* ==========================================
+   Customer Dashboard
+========================================== */
+
+.customer-dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: #0b1020;
+    color: #e5e7eb;
+    font-family: "Inter", sans-serif;
+}
+
+.customer-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #0b1020;
+}
+
+.dashboard-content {
+    padding: 35px;
+}
+
+/* ==========================================
+   Dashboard Header
+========================================== */
+
+.dashboard-heading {
+    margin-bottom: 35px;
+}
+
+.dashboard-heading h1 {
+    font-size: 34px;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 10px;
+}
+
+.dashboard-heading p {
+    font-size: 16px;
+    color: #9ca3af;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   Statistics Section
+========================================== */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+/* ==========================================
+   Bottom Dashboard Section
+========================================== */
+
+.dashboard-bottom {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    align-items: flex-start;
+}
+
+.transactions-section,
+.actions-section {
+    width: 100%;
+}
+
+/* ==========================================
+   Shared Dashboard Card
+========================================== */
+
+.dashboard-card {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 18px;
+    padding: 24px;
+    transition: all 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-4px);
+    border-color: #2563eb;
+    box-shadow: 0 0 18px rgba(37, 99, 235, 0.25);
+}
+
+/* ==========================================
+   Custom Scrollbar
+========================================== */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #111827;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6;
+}
+
+/* ==========================================
+   Responsive Design
+========================================== */
+
+@media (max-width: 1200px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-bottom {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .dashboard-content {
+        padding: 20px;
+    }
+
+    .dashboard-heading h1 {
+        font-size: 28px;
+    }
+
+    .dashboard-heading p {
+        font-size: 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
