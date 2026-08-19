@@ -8,11 +8,16 @@ import {
   FaSignOutAlt,
   FaUniversity,
   FaExchangeAlt,
+  FaCheckCircle,
 } from "react-icons/fa";
+
+import { useNavigate } from "react-router-dom";
 
 import "./ManagerSidebar.css";
 
 function ManagerSidebar() {
+  const navigate = useNavigate();
+
   return (
     <aside className="manager-sidebar">
 
@@ -32,37 +37,61 @@ function ManagerSidebar() {
 
       <ul>
 
-        <li className="active">
+        <li
+          className="active"
+          onClick={() => navigate("/manager-dashboard")}
+        >
           <FaHome />
           Dashboard
         </li>
 
-        <li>
+        <li
+          onClick={() => navigate("/customer-management")}
+        >
           <FaUsers />
           Customer Management
         </li>
 
-        <li>
+        <li
+          onClick={() => navigate("/kyc-verification")}
+        >
           <FaIdCard />
           KYC Verification
         </li>
 
-        <li>
+        <li
+          onClick={() => navigate("/loan-approval")}
+        >
           <FaMoneyCheckAlt />
           Loan Approval
         </li>
 
-        <li>
+        <li
+          onClick={() => navigate("/transaction-monitoring")}
+        >
           <FaExchangeAlt />
           Transaction Monitoring
         </li>
 
-        <li>
+        {/* Settlement Confirmation */}
+
+        <li
+          onClick={() => navigate("/settlement-confirmation")}
+        >
+          <FaCheckCircle />
+          Settlement Confirmation
+        </li>
+
+        <li
+          onClick={() => navigate("/reports")}
+        >
           <FaChartBar />
           Reports
         </li>
 
-        <li>
+        <li
+          onClick={() => navigate("/profile")}
+        >
           <FaUser />
           Profile
         </li>
