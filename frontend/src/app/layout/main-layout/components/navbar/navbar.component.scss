@@ -1,0 +1,653 @@
+.navbar {
+  height: var(--navbar-height);
+  background-color: var(--color-surface-navbar);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--color-border-navbar);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: var(--z-navbar);
+  gap: 1.25rem;
+  transition: background-color var(--transition-normal), border-color var(--transition-normal);
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  flex-shrink: 0;
+}
+
+.navbar-center {
+  flex: 1;
+  max-width: 440px;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+// ── Hamburger & Icon Buttons ─────────────────────────────────
+.hamburger-btn {
+  position: relative;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+
+  .material-icons-round {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+  }
+
+  @media (max-width: 1024px) {
+    display: flex;
+  }
+}
+
+.icon-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+
+  .material-icons-round {
+    font-size: 20px;
+  }
+
+  &:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+  }
+}
+
+// ── Topbar Breadcrumb Trail ──────────────────────────────────
+.topbar-breadcrumbs {
+  display: flex;
+  align-items: center;
+
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 4px;
+  }
+
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .breadcrumb-link {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+
+    .breadcrumb-home-icon {
+      font-size: 16px;
+      color: var(--color-text-muted);
+    }
+
+    &:hover {
+      color: var(--color-primary);
+
+      .breadcrumb-home-icon {
+        color: var(--color-primary);
+      }
+    }
+  }
+
+  .breadcrumb-separator {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-muted);
+
+    .material-icons-round {
+      font-size: 14px;
+      line-height: 1;
+    }
+  }
+
+  .breadcrumb-current {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+}
+
+// ── Global Search Bar ────────────────────────────────────────
+.global-search {
+  display: flex;
+  align-items: center;
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 0.75rem;
+  width: 100%;
+  height: 38px;
+  transition: all var(--transition-fast);
+
+  .search-icon {
+    font-size: 18px;
+    color: var(--color-text-muted);
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    min-width: 0;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+      font-weight: 400;
+    }
+  }
+
+  .search-clear-btn {
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    .material-icons-round {
+      font-size: 14px;
+    }
+  }
+
+  .search-kbd-wrapper {
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .search-kbd {
+    font-family: var(--font-family-mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xs);
+    padding: 1px 5px;
+    line-height: 1.2;
+  }
+
+  &:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+    background-color: var(--color-surface);
+
+    .search-icon {
+      color: var(--color-primary);
+    }
+  }
+}
+
+// ── System Status Indicator ──────────────────────────────────
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--radius-full);
+  background-color: var(--color-success-bg);
+  border: 1px solid var(--color-success-border);
+  cursor: default;
+  flex-shrink: 0;
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-success);
+    box-shadow: 0 0 6px var(--color-success);
+    animation: status-pulse 2.5s ease-in-out infinite;
+  }
+
+  .status-label {
+    font-size: 0.725rem;
+    font-weight: 600;
+    color: var(--color-success);
+    letter-spacing: 0.2px;
+  }
+
+  &.offline {
+    background-color: var(--color-warning-bg);
+    border-color: var(--color-warning-border);
+
+    .status-dot {
+      background-color: var(--color-warning);
+      box-shadow: 0 0 6px var(--color-warning);
+    }
+
+    .status-label {
+      color: var(--color-warning);
+    }
+  }
+}
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
+}
+
+.navbar-divider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-border);
+}
+
+// ── Notification Badge & Panel ───────────────────────────────
+.notification-wrapper,
+.profile-menu-wrapper {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-danger);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 2px solid var(--color-surface);
+  line-height: 1;
+}
+
+.notification-dropdown,
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2xl);
+  z-index: var(--z-dropdown);
+  overflow: hidden;
+  animation: dropdown-fade-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: top right;
+}
+
+.notification-dropdown {
+  width: 340px;
+
+  .notification-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    background-color: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+
+    .header-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dropdown-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .text-action-btn {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+
+      &:hover {
+        color: var(--color-primary-hover);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .notification-dropdown-content {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    max-height: 360px;
+    overflow-y: auto;
+  }
+
+  .notification-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.65rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-surface-secondary);
+    border: 1px solid var(--color-border);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
+
+    &:hover {
+      background: var(--color-surface-hover);
+      border-color: var(--color-border-strong);
+    }
+
+    .notif-icon-box {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      .material-icons-round {
+        font-size: 18px;
+      }
+
+      &--info {
+        background: var(--color-info-bg);
+        color: var(--color-info);
+        border: 1px solid var(--color-info-border);
+      }
+
+      &--success {
+        background: var(--color-success-bg);
+        color: var(--color-success);
+        border: 1px solid var(--color-success-border);
+      }
+    }
+
+    .notif-body {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-width: 0;
+
+      .notif-title {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+      }
+
+      .notif-desc {
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        line-height: 1.35;
+        margin-top: 1px;
+      }
+
+      .notif-time {
+        font-size: 0.6875rem;
+        color: var(--color-text-muted);
+        margin-top: 3px;
+      }
+    }
+  }
+}
+
+// ── Profile Trigger & Dropdown ───────────────────────────────
+.profile-trigger {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+
+  &:hover {
+    background-color: var(--color-surface-hover);
+    border-color: var(--color-border);
+  }
+
+  .dropdown-caret {
+    font-size: 18px;
+    color: var(--color-text-muted);
+  }
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-active));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+
+  .avatar-initials {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #ffffff;
+  }
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  text-align: left;
+
+  .user-name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  .user-role {
+    font-size: 0.675rem;
+    color: var(--color-text-muted);
+  }
+}
+
+.profile-dropdown {
+  width: 250px;
+
+  .dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
+    background-color: var(--color-surface);
+
+    .dropdown-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-full);
+      background: linear-gradient(135deg, var(--color-primary), var(--color-primary-active));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: #ffffff;
+      flex-shrink: 0;
+    }
+
+    .dropdown-user-details {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+
+      .dropdown-user-name {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .dropdown-user-email {
+        font-size: 0.725rem;
+        color: var(--color-text-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .dropdown-user-role-tag {
+        font-size: 0.625rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--color-primary);
+        letter-spacing: 0.4px;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .dropdown-divider {
+    height: 1px;
+    background-color: var(--color-border);
+  }
+
+  .dropdown-menu-list {
+    padding: 0.35rem;
+    list-style: none;
+    margin: 0;
+  }
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  text-align: left;
+  border: none;
+  background: transparent;
+  transition: all var(--transition-fast);
+
+  .material-icons-round {
+    font-size: 18px;
+    color: var(--color-text-muted);
+  }
+
+  &:hover {
+    background-color: var(--color-surface-hover);
+    color: var(--color-text-primary);
+
+    .material-icons-round { color: var(--color-primary); }
+  }
+
+  &--danger {
+    margin: 0.35rem;
+    width: calc(100% - 0.7rem);
+
+    &:hover {
+      background-color: var(--color-danger-bg);
+      color: var(--color-danger);
+
+      .material-icons-round { color: var(--color-danger); }
+    }
+  }
+}
+
+@keyframes dropdown-fade-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+// ── Responsive Layout Rules ──────────────────────────────────
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 0 1rem;
+  }
+
+  .topbar-breadcrumbs {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-center {
+    display: none;
+  }
+
+  .system-status .status-label,
+  .user-info {
+    display: none;
+  }
+}

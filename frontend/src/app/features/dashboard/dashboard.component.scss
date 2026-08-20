@@ -1,0 +1,169 @@
+// ============================================================
+// Dashboard Component Styles - FinCore Enterprise
+// ============================================================
+
+.dashboard-page {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: var(--spacing-8);
+}
+
+.dashboard-section {
+  margin-bottom: var(--spacing-6);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// ── Error / Warning Banner ───────────────────────────────────
+.dashboard-error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background-color: var(--color-warning-bg);
+  border: 1px solid var(--color-warning-border);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1.25rem;
+  margin-bottom: var(--spacing-6);
+  flex-wrap: wrap;
+
+  .error-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .error-icon {
+    font-size: 22px;
+    color: var(--color-warning);
+    flex-shrink: 0;
+  }
+
+  .error-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .error-title {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+
+    .error-desc {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary);
+    }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    .material-icons-round {
+      font-size: 16px;
+    }
+  }
+}
+
+// ── 4-Card Primary KPI Metrics Grid ──────────────────────────
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--spacing-4);
+  margin-bottom: var(--spacing-6);
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ── Main Dashboard Operational Grid ──────────────────────────
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 2.1fr 1fr;
+  gap: var(--spacing-6);
+  align-items: start;
+
+  @media (max-width: 1080px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-main-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--spacing-6);
+}
+
+.dashboard-side-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: var(--spacing-6);
+}
+
+// ── Header Actions ───────────────────────────────────────────
+.view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-xs);
+  transition: all var(--transition-fast);
+
+  .material-icons-round {
+    font-size: 16px;
+    transition: transform var(--transition-fast);
+  }
+
+  &:hover {
+    color: var(--color-primary-hover);
+    background-color: var(--color-primary-light);
+
+    .material-icons-round {
+      transform: translateX(2px);
+    }
+  }
+}
+
+// ── Loading & Skeleton States ────────────────────────────────
+.loading-state,
+.chart-loading-state {
+  padding: var(--spacing-8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.skeleton-grid {
+  .skeleton-card {
+    height: 104px;
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-background-subtle) 50%, var(--color-surface) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

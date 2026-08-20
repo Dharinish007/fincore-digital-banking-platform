@@ -1,0 +1,197 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// ── History Container ────────────────────────────────────────
+.history-container {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+
+  .history-count {
+    font-size: 0.775rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+// ── Timeline ─────────────────────────────────────────────────
+.timeline {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1rem;
+  cursor: pointer;
+
+  &:hover .timeline-card {
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+.timeline-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.timeline-dot {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &.dot-credit   { background: var(--color-success-bg); border: 1px solid var(--color-success-border); mat-icon { color: var(--color-success); } }
+  &.dot-debit    { background: var(--color-danger-bg);  border: 1px solid var(--color-danger-border);  mat-icon { color: var(--color-danger); } }
+  &.dot-transfer { background: var(--color-primary-light); border: 1px solid var(--color-primary-subtle); mat-icon { color: var(--color-primary); } }
+
+  // default (fee)
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
+  mat-icon { color: var(--color-text-muted); }
+}
+
+.timeline-line {
+  width: 1.5px;
+  flex: 1;
+  background: var(--color-border);
+  margin: 4px 0;
+  min-height: 16px;
+}
+
+.timeline-item:last-child .timeline-line {
+  display: none;
+}
+
+// ── Timeline Card ────────────────────────────────────────────
+.timeline-card {
+  flex: 1;
+  background: var(--color-surface-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1rem;
+  margin-bottom: 10px;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.txn-ref {
+  font-family: var(--font-family-mono);
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.card-description {
+  font-size: 0.825rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 6px;
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.meta-account {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+}
+
+// ── Card Amount ──────────────────────────────────────────────
+.card-amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.amount-value {
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+
+  &.amount-credit { color: var(--color-success); }
+  &.amount-debit  { color: var(--color-text-primary); }
+}
+
+.amount-currency {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.amount-date {
+  font-size: 0.775rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.amount-time {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+// ── Responsive ───────────────────────────────────────────────
+@media (max-width: 600px) {
+  .card-top { flex-direction: column; }
+  .card-amount { align-items: flex-start; text-align: left; }
+}

@@ -1,0 +1,230 @@
+<header class="navbar" role="banner">
+
+  <!-- ── Left: Hamburger Toggle & Breadcrumb ─────────────── -->
+  <div class="navbar-left">
+    <button
+      class="hamburger-btn focus-ring"
+      (click)="toggleSidebar()"
+      aria-label="Toggle navigation sidebar"
+      type="button"
+    >
+      <span class="material-icons-round">menu</span>
+    </button>
+
+    <!-- Topbar Breadcrumb Navigation -->
+    <nav class="topbar-breadcrumbs" aria-label="Breadcrumb trail">
+      <ol class="breadcrumb-list" role="list">
+        <li class="breadcrumb-item">
+          <a routerLink="/dashboard" class="breadcrumb-link">
+            <span class="material-icons-round breadcrumb-home-icon">home</span>
+            <span class="breadcrumb-text">Home</span>
+          </a>
+        </li>
+
+        @for (crumb of (breadcrumbService.breadcrumbs$ | async); track crumb.url; let last = $last) {
+          <li class="breadcrumb-separator" aria-hidden="true">
+            <span class="material-icons-round">chevron_right</span>
+          </li>
+          <li class="breadcrumb-item" [class.active]="last">
+            @if (!last) {
+              <a [routerLink]="crumb.url" class="breadcrumb-link">{{ crumb.label }}</a>
+            } @else {
+              <span class="breadcrumb-current" aria-current="page">{{ crumb.label }}</span>
+            }
+          </li>
+        }
+      </ol>
+    </nav>
+  </div>
+
+  <!-- ── Center: Global Search Bar ────────────────────────── -->
+  <div class="navbar-center">
+    <form class="global-search" (submit)="onSearchSubmit($event)" role="search">
+      <span class="material-icons-round search-icon" aria-hidden="true">search</span>
+      <input
+        #searchInput
+        type="search"
+        class="search-input"
+        placeholder="Search accounts, customers, transactions..."
+        [(ngModel)]="searchQuery"
+        name="globalSearch"
+        autocomplete="off"
+        aria-label="Global search across banking platform"
+      />
+      @if (searchQuery) {
+        <button
+          type="button"
+          class="search-clear-btn"
+          (click)="clearSearch()"
+          aria-label="Clear search query"
+        >
+          <span class="material-icons-round">close</span>
+        </button>
+      } @else {
+        <div class="search-kbd-wrapper" aria-hidden="true">
+          <kbd class="search-kbd">⌘K</kbd>
+        </div>
+      }
+    </form>
+  </div>
+
+  <!-- ── Right: System Status, Notifications & Profile ───── -->
+  <div class="navbar-right">
+
+    <!-- System Status Indicator -->
+    <div
+      class="system-status"
+      [class.offline]="!isOnline()"
+      [attr.aria-label]="isOnline() ? 'Backend: Connected' : 'Backend: Disconnected'"
+      [attr.title]="isOnline() ? 'Backend API operational' : 'Backend API disconnected (localhost:8080)'"
+    >
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="status-label">{{ isOnline() ? 'Live' : 'Offline' }}</span>
+    </div>
+
+    <!-- Theme Toggle -->
+    <button 
+      class="icon-btn focus-ring theme-toggle" 
+      (click)="toggleTheme()" 
+      [attr.aria-label]="theme() === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'" 
+      type="button"
+    >
+      <span class="material-icons-round">
+        {{ theme() === 'dark' ? 'light_mode' : 'dark_mode' }}
+      </span>
+    </button>
+
+    <div class="navbar-divider" aria-hidden="true"></div>
+
+    <!-- Notification Bell Trigger & Dropdown -->
+    <div class="notification-wrapper">
+      <button 
+        class="icon-btn focus-ring notification-btn" 
+        (click)="toggleNotificationsMenu()"
+        [attr.aria-expanded]="showNotificationsMenu()"
+        aria-haspopup="true"
+        aria-label="View notifications ({{ notificationsCount() }} unread)" 
+        type="button"
+      >
+        <span class="material-icons-round">notifications</span>
+        @if (notificationsCount() > 0) {
+          <span class="notification-badge" aria-hidden="true">{{ notificationsCount() }}</span>
+        }
+      </button>
+
+      @if (showNotificationsMenu()) {
+        <div class="notification-dropdown" role="menu" aria-label="Notifications panel">
+          <div class="notification-dropdown-header">
+            <div class="header-title-group">
+              <span class="dropdown-title">System Alerts</span>
+              @if (notificationsCount() > 0) {
+                <span class="badge badge--info">{{ notificationsCount() }} new</span>
+              }
+            </div>
+            <button
+              class="text-action-btn"
+              type="button"
+              (click)="dismissNotification()"
+              aria-label="Mark all as read"
+            >
+              Mark all read
+            </button>
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="notification-dropdown-content">
+            <div class="notification-item">
+              <div class="notif-icon-box notif-icon-box--info">
+                <span class="material-icons-round">dns</span>
+              </div>
+              <div class="notif-body">
+                <span class="notif-title">Core Banking Engine</span>
+                <span class="notif-desc">{{ isOnline() ? 'Core services running normal at 99.98% uptime' : 'Core API service offline on localhost:8080' }}</span>
+                <span class="notif-time">Just now</span>
+              </div>
+            </div>
+            <div class="notification-item">
+              <div class="notif-icon-box notif-icon-box--success">
+                <span class="material-icons-round">verified_user</span>
+              </div>
+              <div class="notif-body">
+                <span class="notif-title">Security & Audit</span>
+                <span class="notif-desc">Multi-Factor Authentication protocol active</span>
+                <span class="notif-time">10m ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="navbar-divider" aria-hidden="true"></div>
+
+    <!-- User Profile Trigger & Menu -->
+    <div class="profile-menu-wrapper">
+      <button
+        class="profile-trigger focus-ring"
+        (click)="toggleProfileMenu()"
+        [attr.aria-expanded]="showProfileMenu()"
+        aria-haspopup="true"
+        aria-label="Open user profile menu"
+        type="button"
+      >
+        <div class="avatar" aria-hidden="true">
+          <span class="avatar-initials">{{ getInitials() }}</span>
+        </div>
+        <div class="user-info" aria-hidden="true">
+          <span class="user-name">{{ currentUser()?.fullName || 'Administrator' }}</span>
+          <span class="user-role">{{ currentUser()?.role || 'System Admin' }}</span>
+        </div>
+        <span class="material-icons-round dropdown-caret" aria-hidden="true">
+          {{ showProfileMenu() ? 'expand_less' : 'expand_more' }}
+        </span>
+      </button>
+
+      <!-- Dropdown -->
+      @if (showProfileMenu()) {
+        <div class="profile-dropdown" role="menu" aria-label="User account menu">
+          <div class="dropdown-header">
+            <div class="dropdown-avatar">{{ getInitials() }}</div>
+            <div class="dropdown-user-details">
+              <span class="dropdown-user-name">{{ currentUser()?.fullName || 'Administrator' }}</span>
+              <span class="dropdown-user-email">{{ currentUser()?.username || 'admin@fincore.bank' }}</span>
+              <span class="dropdown-user-role-tag">{{ currentUser()?.role || 'SYSTEM ADMIN' }}</span>
+            </div>
+          </div>
+
+          <div class="dropdown-divider"></div>
+
+          <ul class="dropdown-menu-list" role="list">
+            <li role="none">
+              <button class="dropdown-item" type="button" role="menuitem" (click)="onMenuAction('Profile')">
+                <span class="material-icons-round">person_outline</span>
+                My Profile
+              </button>
+            </li>
+            <li role="none">
+              <button class="dropdown-item" type="button" role="menuitem" (click)="onMenuAction('Security Preferences')">
+                <span class="material-icons-round">shield</span>
+                Security & Preferences
+              </button>
+            </li>
+            <li role="none">
+              <button class="dropdown-item" type="button" role="menuitem" (click)="onMenuAction('Help & Documentation')">
+                <span class="material-icons-round">help_outline</span>
+                Help & Documentation
+              </button>
+            </li>
+          </ul>
+
+          <div class="dropdown-divider"></div>
+
+          <button class="dropdown-item dropdown-item--danger" type="button" role="menuitem" (click)="logout()">
+            <span class="material-icons-round">logout</span>
+            Sign Out
+          </button>
+        </div>
+      }
+    </div>
+
+  </div>
+</header>

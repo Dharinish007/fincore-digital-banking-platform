@@ -1,0 +1,87 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "PATCH"
+              - "DELETE"
+              - "OPTIONS"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+            maxAge: 3600
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+
+      routes:
+        - id: customer-service-route
+          uri: ${services.customer-service.url:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/customers/**, /api/v1/auth/**
+
+        - id: account-service-route
+          uri: ${services.account-service.url:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/accounts/**
+
+        - id: transaction-service-route
+          uri: ${services.transaction-service.url:http://localhost:8083}
+          predicates:
+            - Path=/api/v1/transactions/**
+
+        - id: dashboard-service-route
+          uri: ${services.dashboard-service.url:http://localhost:8084}
+          predicates:
+            - Path=/api/v1/dashboard/**
+
+        - id: loan-service-route
+          uri: ${services.loan-service.url:http://localhost:8085}
+          predicates:
+            - Path=/api/v1/loans/**, /api/v1/loan-products/**, /api/v1/loan-applications/**
+
+# Configurable Downstream Service URLs
+services:
+  customer-service:
+    url: http://localhost:8081
+  account-service:
+    url: http://localhost:8082
+  transaction-service:
+    url: http://localhost:8083
+  dashboard-service:
+    url: http://localhost:8084
+  loan-service:
+    url: http://localhost:8085
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      cors:
+        allowed-origins:
+          - "http://localhost:4200"
+        allowed-methods:
+          - "GET"
+          - "OPTIONS"
+        allowed-headers:
+          - "*"
+        allow-credentials: true
+        max-age: 3600s
+  endpoint:
+    health:
+      show-details: always
