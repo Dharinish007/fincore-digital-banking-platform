@@ -1,0 +1,23 @@
+<div class="page">
+  <app-page-header
+    title="Account Management"
+    subtitle="Browse and manage all customer bank accounts"
+    icon="account_balance"
+    actionLabel="Open Account"
+    actionIcon="add"
+    (actionClicked)="onAddAccount()">
+  </app-page-header>
+
+  <app-account-filter
+    (filterChanged)="onFilterChanged($event)">
+  </app-account-filter>
+
+  <div class="results-summary">
+    <span>Showing <strong>{{ accounts().length }}</strong> account{{ accounts().length !== 1 ? 's' : '' }}</span>
+  </div>
+  <app-account-table
+    [accounts]="accounts()"
+    [isLoading]="isLoading()"
+    (addAccount)="onAddAccount()">
+  </app-account-table>
+</div>

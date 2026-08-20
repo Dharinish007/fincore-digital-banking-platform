@@ -1,0 +1,64 @@
+<div class="filter-card">
+  <form [formGroup]="filterForm" class="filter-form">
+    
+    <!-- Search Bar -->
+    <div class="search-field-wrapper">
+      <span class="material-icons-round search-icon" aria-hidden="true">search</span>
+      <input
+        type="search"
+        class="filter-search-input"
+        placeholder="Search by name, ID, or email..."
+        formControlName="search"
+        aria-label="Search customers"
+      />
+      @if (filterForm.get('search')?.value) {
+        <button
+          type="button"
+          class="clear-search-btn"
+          (click)="clearSearch()"
+          aria-label="Clear search input"
+        >
+          <span class="material-icons-round">close</span>
+        </button>
+      }
+    </div>
+
+    <div class="filter-controls">
+      <!-- Status Filter -->
+      <mat-form-field appearance="outline" class="select-field" subscriptSizing="dynamic">
+        <mat-label>Customer Status</mat-label>
+        <mat-select formControlName="status">
+          <mat-option [value]="null">All Statuses</mat-option>
+          @for (s of statuses; track s) {
+            <mat-option [value]="s">{{ s }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- KYC Filter -->
+      <mat-form-field appearance="outline" class="select-field" subscriptSizing="dynamic">
+        <mat-label>KYC Compliance</mat-label>
+        <mat-select formControlName="kycStatus">
+          <mat-option [value]="null">All KYC Statuses</mat-option>
+          @for (k of kycStatuses; track k) {
+            <mat-option [value]="k">{{ k }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+
+      <!-- Reset Action -->
+      @if (hasActiveFilters) {
+        <button
+          type="button"
+          class="btn btn--secondary btn--sm reset-btn"
+          (click)="reset()"
+          aria-label="Reset all active filters"
+        >
+          <span class="material-icons-round">filter_alt_off</span>
+          Reset Filters
+        </button>
+      }
+    </div>
+
+  </form>
+</div>

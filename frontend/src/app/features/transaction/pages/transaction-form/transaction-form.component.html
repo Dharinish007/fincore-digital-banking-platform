@@ -1,0 +1,151 @@
+<div class="page">
+  <div class="form-breadcrumb">
+    <a routerLink="/transaction">Transactions</a>
+    <mat-icon>chevron_right</mat-icon>
+    <span>New Transaction</span>
+  </div>
+
+  <app-page-header
+    title="Create Transaction"
+    subtitle="Record a new banking transaction in the system"
+    icon="add_card">
+  </app-page-header>
+
+  <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+
+    <!-- Source & Destination -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>account_balance_wallet</mat-icon> Account Details</div>
+      
+      @if (isLoadingAccounts) {
+        <div class="form-loading-indicator">
+          <mat-spinner diameter="18"></mat-spinner>
+          <span>Loading customer accounts...</span>
+        </div>
+      } @else if (accounts.length === 0) {
+        <div class="form-warning-msg">
+          No active accounts found in the system. Please open an account first.
+        </div>
+      }
+
+      <div class="form-grid">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Source Account</mat-label>
+          <mat-icon matPrefix>account_balance</mat-icon>
+          <mat-select formControlName="sourceAccountId">
+            @for (a of accounts; track a.accountNumber) {
+              <mat-option [value]="a.accountNumber">
+                {{ a.accountNumber }} ({{ a.accountType }}) – Bal: {{ a.balance | currency:'USD' }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (hasError('sourceAccountId', 'required')) {
+            <mat-error>Source account is required.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (needsDestination) {
+          <mat-form-field appearance="outline">
+            <mat-label>Destination Account</mat-label>
+            <mat-icon matPrefix>account_balance</mat-icon>
+            <mat-select formControlName="destinationAccountId">
+              <mat-option [value]="''">— None —</mat-option>
+              @for (a of accounts; track a.accountNumber) {
+                <mat-option [value]="a.accountNumber">
+                  {{ a.accountNumber }} ({{ a.accountType }}) – Bal: {{ a.balance | currency:'USD' }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        }
+
+      </div>
+    </div>
+
+    <!-- Transaction Configuration -->
+    <div class="form-card">
+      <div class="section-title"><mat-icon>swap_horiz</mat-icon> Transaction Configuration</div>
+      <div class="form-grid">
+
+        <mat-form-field appearance="outline">
+          <mat-label>Transaction Type</mat-label>
+          <mat-select formControlName="type">
+            @for (t of transactionTypes; track t) {
+              <mat-option [value]="t">{{ t }}</mat-option>
+            }
+          </mat-select>
+          @if (hasError('type', 'required')) {
+            <mat-error>Transaction type is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Amount</mat-label>
+          <mat-icon matPrefix>payments</mat-icon>
+          <input matInput type="number" formControlName="amount" min="0.01" step="0.01" placeholder="0.00">
+          @if (hasError('amount', 'required')) { <mat-error>Amount is required.</mat-error> }
+          @if (hasError('amount', 'min')) { <mat-error>Amount must be greater than zero.</mat-error> }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Currency</mat-label>
+          <mat-select formControlName="currency">
+            @for (c of currencies; track c) {
+              <mat-option [value]="c">{{ c }}</mat-option>
+            }
+          </mat-select>
+          @if (hasError('currency', 'required')) {
+            <mat-error>Currency is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Transaction Date</mat-label>
+          <input matInput [matDatepicker]="txnDatePicker" formControlName="transactionDate">
+          <mat-datepicker-toggle matSuffix [for]="txnDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #txnDatePicker></mat-datepicker>
+          @if (hasError('transactionDate', 'required')) {
+            <mat-error>Transaction date is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Reference Number</mat-label>
+          <mat-icon matPrefix>tag</mat-icon>
+          <input matInput formControlName="referenceNumber" placeholder="REF-...">
+          @if (hasError('referenceNumber', 'required')) {
+            <mat-error>Reference number is required.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"
+                    placeholder="e.g. Monthly salary credit, Vendor payment..."></textarea>
+          @if (hasError('description', 'required')) {
+            <mat-error>Description is required.</mat-error>
+          }
+        </mat-form-field>
+
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="form-actions">
+      <button mat-stroked-button type="button" (click)="cancel()">
+        <mat-icon>close</mat-icon> Cancel
+      </button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="isSaving">
+        @if (isSaving) {
+          <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+          <ng-container>
+            <mat-icon>add_card</mat-icon> Create Transaction
+          </ng-container>
+        }
+      </button>
+    </div>
+
+  </form>
+</div>
