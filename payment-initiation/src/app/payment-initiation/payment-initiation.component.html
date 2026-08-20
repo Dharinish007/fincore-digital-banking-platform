@@ -1,0 +1,335 @@
+<div class="dashboard-layout">
+  <!-- Top Navigation Header -->
+  <app-header
+    moduleTitle="Payment Initiation"
+    moduleIcon="payments"
+    (toggleSidebar)="toggleSidebar()"
+  >
+  </app-header>
+
+  <div class="main-container">
+    <!-- Left Navigation Sidebar -->
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      <!-- Title & Live Status Indicator -->
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>Payment Initiation</h1>
+          <p class="subtitle">
+            Initiate secure interbank & intra-bank payments with real-time risk validation
+          </p>
+        </div>
+        <div class="live-indicator-badge">
+          <span class="live-pulse"></span>
+          <span>Fraud Engine: Active</span>
+        </div>
+      </div>
+
+      <!-- STEP 1: PAYMENT INITIATION FORM -->
+      <div class="form-container-card" *ngIf="currentStep === 'FORM'">
+        <div class="card-header">
+          <div class="header-icon">
+            <mat-icon>send</mat-icon>
+          </div>
+          <div>
+            <h3>Initiate New Payment</h3>
+            <p class="muted">Enter payment parameters and select a verified beneficiary.</p>
+          </div>
+        </div>
+
+        <form [formGroup]="paymentForm" (ngSubmit)="goToReview()" class="payment-form">
+          <div class="form-grid">
+            <!-- From Account Selection -->
+            <div class="form-field">
+              <label for="fromAccount">From Account Number <span class="required">*</span></label>
+              <select
+                id="fromAccount"
+                formControlName="from_account_no"
+                [class.is-invalid]="f['from_account_no'].touched && f['from_account_no'].invalid"
+              >
+                <option value="" disabled>Select Account</option>
+                <option *ngFor="let acc of accounts" [value]="acc.account_no">
+                  {{ acc.display_label }}
+                </option>
+              </select>
+              <div class="error-msg" *ngIf="f['from_account_no'].touched && f['from_account_no'].invalid">
+                Please select an account.
+              </div>
+            </div>
+
+            <!-- Beneficiary Selection -->
+            <div class="form-field">
+              <label for="beneficiary">Beneficiary <span class="required">*</span></label>
+              <select
+                id="beneficiary"
+                formControlName="beneficiary_id"
+                [class.is-invalid]="f['beneficiary_id'].touched && f['beneficiary_id'].invalid"
+              >
+                <option value="" disabled>Select Beneficiary</option>
+                
+                <!-- Verified Beneficiaries (Selectable) -->
+                <optgroup label="Verified Beneficiaries">
+                  <option *ngFor="let b of verifiedBeneficiaries" [value]="b.beneficiary_id">
+                    {{ b.beneficiary_name }} - {{ b.account_no }} ({{ b.bank_name }})
+                  </option>
+                </optgroup>
+
+                <!-- Non-verified Beneficiaries (Disabled in select) -->
+                <optgroup label="Ineligible Beneficiaries" *ngIf="nonVerifiedBeneficiaries.length > 0">
+                  <option *ngFor="let b of nonVerifiedBeneficiaries" [value]="b.beneficiary_id" disabled>
+                    {{ b.beneficiary_name }} - {{ b.account_no }} [{{ b.status }} - Not Allowed]
+                  </option>
+                </optgroup>
+              </select>
+
+              <div class="error-msg" *ngIf="f['beneficiary_id'].touched && f['beneficiary_id'].invalid">
+                Please select a beneficiary.
+              </div>
+            </div>
+
+            <!-- To Account Number (Readonly & Auto-populated) -->
+            <div class="form-field">
+              <label for="toAccount">To Account Number <span class="required">*</span></label>
+              <input
+                id="toAccount"
+                type="text"
+                formControlName="to_account_no"
+                readonly
+                placeholder="Auto-populated from selected beneficiary"
+                class="readonly-input"
+              />
+              <div class="beneficiary-meta" *ngIf="selectedBeneficiary">
+                <span class="meta-chip"><mat-icon>account_balance</mat-icon> {{ selectedBeneficiary.bank_name }}</span>
+                <span class="meta-chip"><mat-icon>vpn_key</mat-icon> IFSC: {{ selectedBeneficiary.ifsc_code }}</span>
+                <span class="meta-chip status-tag" [ngClass]="selectedBeneficiary.status.toLowerCase()">
+                  ✓ {{ selectedBeneficiary.status }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Amount Input -->
+            <div class="form-field">
+              <label for="amount">Amount <span class="required">*</span></label>
+              <div class="currency-input-wrapper">
+                <span class="currency-symbol">₹</span>
+                <input
+                  id="amount"
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  placeholder="0.00"
+                  formControlName="amount"
+                  [class.is-invalid]="f['amount'].touched && f['amount'].invalid"
+                />
+              </div>
+              <div class="error-msg" *ngIf="f['amount'].touched && f['amount'].errors?.['required']">
+                Please enter a valid amount.
+              </div>
+              <div class="error-msg" *ngIf="f['amount'].touched && f['amount'].errors?.['min']">
+                Amount must be greater than ₹0.
+              </div>
+            </div>
+
+            <!-- Payment Type Dropdown -->
+            <div class="form-field">
+              <label for="paymentType">Payment Type <span class="required">*</span></label>
+              <select id="paymentType" formControlName="payment_type">
+                <option *ngFor="let type of paymentTypes" [value]="type">{{ type }}</option>
+              </select>
+            </div>
+
+            <!-- Payment Mode Dropdown -->
+            <div class="form-field">
+              <label for="paymentMode">Payment Mode <span class="required">*</span></label>
+              <select id="paymentMode" formControlName="payment_mode">
+                <option *ngFor="let mode of paymentModes" [value]="mode">{{ mode }}</option>
+              </select>
+            </div>
+
+            <!-- Description / Remarks (Optional) -->
+            <div class="form-field full-width">
+              <label for="description">Description / Payment Remarks (Optional)</label>
+              <input
+                id="description"
+                type="text"
+                formControlName="description"
+                placeholder="Enter transfer reference or remarks (e.g. Vendor Invoice Payment)"
+              />
+            </div>
+          </div>
+
+          <!-- Form Action Buttons -->
+          <div class="form-actions">
+            <button
+              type="submit"
+              class="btn-primary"
+              [disabled]="paymentForm.invalid"
+            >
+              <mat-icon>rate_review</mat-icon>
+              <span>Review Payment</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- STEP 2: REVIEW PAYMENT CONFIRMATION -->
+      <div class="form-container-card review-card" *ngIf="currentStep === 'REVIEW'">
+        <div class="card-header">
+          <div class="header-icon review-icon">
+            <mat-icon>fact_check</mat-icon>
+          </div>
+          <div>
+            <h3>Payment Review</h3>
+            <p class="muted">Verify details carefully before confirming payment authorization.</p>
+          </div>
+        </div>
+
+        <div class="review-details-grid">
+          <div class="review-item">
+            <span class="item-label">From Account</span>
+            <span class="item-value highlight">{{ f['from_account_no'].value }}</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">To Account</span>
+            <span class="item-value highlight">{{ f['to_account_no'].value }}</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">Beneficiary</span>
+            <span class="item-value">{{ selectedBeneficiary?.beneficiary_name }}</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">Bank Name</span>
+            <span class="item-value">{{ selectedBeneficiary?.bank_name }} (IFSC: {{ selectedBeneficiary?.ifsc_code }})</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">Amount</span>
+            <span class="item-value amount-text">₹{{ f['amount'].value | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">Payment Type</span>
+            <span class="item-value badge-pill">{{ f['payment_type'].value }}</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">Payment Mode</span>
+            <span class="item-value badge-pill mode-badge">{{ f['payment_mode'].value }}</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">Description</span>
+            <span class="item-value">{{ f['description'].value || 'None provided' }}</span>
+          </div>
+        </div>
+
+        <div class="review-notice">
+          <mat-icon>shield</mat-icon>
+          <span>This payment will undergo automated FinCore Nexus real-time fraud checking upon confirmation.</span>
+        </div>
+
+        <div class="form-actions split">
+          <button type="button" class="btn-secondary" (click)="editPayment()">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Back / Edit</span>
+          </button>
+          <button type="button" class="btn-primary btn-confirm" (click)="confirmPayment()">
+            <mat-icon>check_circle</mat-icon>
+            <span>Confirm Payment</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: PROCESSING STATE -->
+      <div class="form-container-card processing-card" *ngIf="currentStep === 'PROCESSING'">
+        <div class="processing-spinner-box">
+          <div class="spinner"></div>
+          <h2>Processing Payment...</h2>
+          <p class="processing-subtitle">{{ processingStage }}</p>
+
+          <div class="dots-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: SUCCESS RESULT SCREEN -->
+      <div class="form-container-card success-card" *ngIf="currentStep === 'SUCCESS'">
+        <div class="success-banner">
+          <div class="success-icon-ring">
+            <mat-icon>check</mat-icon>
+          </div>
+          <h2>Payment Initiated Successfully</h2>
+          <p class="success-subtitle">Transaction processed and recorded in FinCore Core Banking Ledger</p>
+        </div>
+
+        <div class="success-details-box">
+          <div class="detail-row amount-row">
+            <span class="row-label">Payment Amount</span>
+            <span class="row-value big-amount">₹{{ completedPayment?.amount | number:'1.2-2' }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="row-label">Transaction Reference</span>
+            <span class="row-value ref-code">{{ completedPayment?.transaction_ref }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="row-label">From Account</span>
+            <span class="row-value">{{ completedPayment?.from_account_no }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="row-label">To Account</span>
+            <span class="row-value">{{ completedPayment?.to_account_no }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="row-label">Beneficiary</span>
+            <span class="row-value">{{ selectedBeneficiary?.beneficiary_name }}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="row-label">Payment Mode</span>
+            <span class="row-value"><span class="badge-pill mode-badge">{{ completedPayment?.payment_mode }}</span></span>
+          </div>
+
+          <div class="detail-row">
+            <span class="row-label">Payment Type</span>
+            <span class="row-value"><span class="badge-pill">{{ completedPayment?.payment_type }}</span></span>
+          </div>
+
+          <div class="detail-row" *ngIf="fraudCheckResult">
+            <span class="row-label">Fraud Screening Status</span>
+            <span class="row-value safe-status">
+              <mat-icon>verified_user</mat-icon> {{ fraudCheckResult.fraud_status }} (Risk Score: {{ fraudCheckResult.risk_score }}/100)
+            </span>
+          </div>
+
+          <div class="detail-row">
+            <span class="row-label">Initiated At</span>
+            <span class="row-value">{{ completedPayment?.initiated_at }}</span>
+          </div>
+        </div>
+
+        <div class="form-actions center">
+          <button type="button" class="btn-secondary" (click)="resetForm()">
+            <mat-icon>check</mat-icon>
+            <span>Done</span>
+          </button>
+          <button type="button" class="btn-primary" (click)="resetForm()">
+            <mat-icon>add_circle</mat-icon>
+            <span>Make Another Payment</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+.app-header {
+  height: 64px;
+  background-color: var(--bg-header);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+
+  button[mat-icon-button] {
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-right: 16px;
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+
+      .logo-icon {
+        color: #93C5FD;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .brand-name {
+        display: flex;
+        flex-direction: column;
+
+        .main-title {
+          font-weight: 700;
+          font-size: 1.1rem;
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+        }
+
+        .sub-title {
+          font-size: 0.65rem;
+          letter-spacing: 0.12em;
+          color: rgba(255, 255, 255, 0.7);
+          font-weight: 600;
+        }
+      }
+    }
+
+    .module-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+
+      mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-color: #2563EB;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 0.875rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .user-details {
+        display: flex;
+        flex-direction: column;
+
+        .username {
+          font-size: 0.8125rem;
+          font-weight: 600;
+        }
+
+        .role {
+          font-size: 0.7rem;
+          color: rgba(255, 255, 255, 0.7);
+        }
+      }
+    }
+  }
+}
+
