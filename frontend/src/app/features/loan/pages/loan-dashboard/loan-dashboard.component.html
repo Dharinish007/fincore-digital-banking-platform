@@ -1,0 +1,238 @@
+<div class="page loan-dashboard-page">
+  <!-- Page Header -->
+  <app-page-header
+    title="Loan Portfolio & Financing"
+    subtitle="Manage active credit facilities, track submitted applications, and explore new financing options."
+    icon="payments"
+    actionLabel="Apply for Loan"
+    actionIcon="add_circle"
+    (actionClicked)="onApply()">
+  </app-page-header>
+
+  <!-- Metric Statistics Cards -->
+  <section class="stats-section" aria-label="Loan Portfolio Overview">
+    <div class="stats-grid">
+      <app-statistic-card
+        label="Active Loans"
+        [value]="activeLoansCount()"
+        icon="payments"
+        cardVariant="emerald"
+        iconColor="var(--color-primary)"
+        iconBgColor="var(--color-primary-light)">
+      </app-statistic-card>
+
+      <app-statistic-card
+        label="Total Outstanding"
+        [value]="(totalOutstanding() | currency:'USD':'symbol':'1.0-0') || '$0'"
+        icon="account_balance"
+        cardVariant="blue"
+        iconColor="var(--color-accent)"
+        iconBgColor="var(--color-accent-light)">
+      </app-statistic-card>
+
+      <app-statistic-card
+        label="Total Disbursed"
+        [value]="(totalDisbursed() | currency:'USD':'symbol':'1.0-0') || '$0'"
+        icon="trending_up"
+        cardVariant="blue"
+        iconColor="var(--color-accent)"
+        iconBgColor="var(--color-accent-light)">
+      </app-statistic-card>
+
+      <app-statistic-card
+        label="Pending Applications"
+        [value]="pendingApplicationsCount()"
+        icon="pending_actions"
+        cardVariant="amber"
+        iconColor="var(--color-warning)"
+        iconBgColor="var(--color-warning-bg)">
+      </app-statistic-card>
+    </div>
+  </section>
+
+  <!-- Error Banner -->
+  @if (hasError()) {
+    <div class="error-banner" role="alert">
+      <div class="error-content">
+        <mat-icon class="error-icon">sync_problem</mat-icon>
+        <span class="error-text">Failed to retrieve loan records from the server.</span>
+      </div>
+      <button mat-stroked-button color="warn" (click)="loadData()">
+        <mat-icon>refresh</mat-icon>
+        Retry
+      </button>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading loan portfolio data..."></app-loading-spinner>
+  } @else {
+    <!-- Main Content Layout -->
+    <div class="dashboard-grid">
+      <div class="main-column">
+        <!-- Tabs for Loans vs Applications -->
+        <mat-tab-group class="loan-tab-group" animationDuration="200ms">
+          <!-- Active Loans Tab -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">account_balance_wallet</mat-icon>
+              <span>Active Facilities ({{ loans().length }})</span>
+            </ng-template>
+
+            <div class="tab-content">
+              @if (loans().length === 0) {
+                <app-empty-state
+                  icon="account_balance_wallet"
+                  title="No active loans found"
+                  description="You do not have any active loans or credit facilities at this time."
+                  actionLabel="Apply for a Loan"
+                  (actionClicked)="onApply()">
+                </app-empty-state>
+              } @else {
+                <div class="table-container">
+                  <table mat-table [dataSource]="loans()" class="loan-table">
+                    <!-- Loan Number Column -->
+                    <ng-container matColumnDef="loanNumber">
+                      <th mat-header-cell *matHeaderCellDef>Loan #</th>
+                      <td mat-cell *matCellDef="let loan">
+                        <span class="font-bold text-primary">{{ loan.loanNumber }}</span>
+                      </td>
+                    </ng-container>
+
+                    <!-- Product Name Column -->
+                    <ng-container matColumnDef="productName">
+                      <th mat-header-cell *matHeaderCellDef>Product</th>
+                      <td mat-cell *matCellDef="let loan">{{ loan.loanProductName }}</td>
+                    </ng-container>
+
+                    <!-- Principal Amount Column -->
+                    <ng-container matColumnDef="principalAmount">
+                      <th mat-header-cell *matHeaderCellDef>Principal</th>
+                      <td mat-cell *matCellDef="let loan">{{ loan.principalAmount | currency:'USD':'symbol':'1.2-2' }}</td>
+                    </ng-container>
+
+                    <!-- Monthly EMI Column -->
+                    <ng-container matColumnDef="emiAmount">
+                      <th mat-header-cell *matHeaderCellDef>Monthly EMI</th>
+                      <td mat-cell *matCellDef="let loan" class="font-semibold">{{ loan.emiAmount | currency:'USD':'symbol':'1.2-2' }}</td>
+                    </ng-container>
+
+                    <!-- Outstanding Amount Column -->
+                    <ng-container matColumnDef="outstandingAmount">
+                      <th mat-header-cell *matHeaderCellDef>Outstanding</th>
+                      <td mat-cell *matCellDef="let loan">{{ loan.outstandingAmount | currency:'USD':'symbol':'1.2-2' }}</td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                      <th mat-header-cell *matHeaderCellDef>Status</th>
+                      <td mat-cell *matCellDef="let loan">
+                        <app-loan-status-badge [status]="loan.status"></app-loan-status-badge>
+                      </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>Action</th>
+                      <td mat-cell *matCellDef="let loan">
+                        <button mat-button color="primary" class="btn-action" (click)="viewLoan(loan)">
+                          View Details
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="loanColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: loanColumns;"></tr>
+                  </table>
+                </div>
+              }
+            </div>
+          </mat-tab>
+
+          <!-- Applications Tab -->
+          <mat-tab>
+            <ng-template mat-tab-label>
+              <mat-icon class="tab-icon">description</mat-icon>
+              <span>Submitted Applications ({{ applications().length }})</span>
+            </ng-template>
+
+            <div class="tab-content">
+              @if (applications().length === 0) {
+                <app-empty-state
+                  icon="description"
+                  title="No applications submitted"
+                  description="You have not submitted any loan applications recently."
+                  actionLabel="Start New Application"
+                  (actionClicked)="onApply()">
+                </app-empty-state>
+              } @else {
+                <div class="table-container">
+                  <table mat-table [dataSource]="applications()" class="loan-table">
+                    <!-- App Number Column -->
+                    <ng-container matColumnDef="applicationNumber">
+                      <th mat-header-cell *matHeaderCellDef>App #</th>
+                      <td mat-cell *matCellDef="let app">
+                        <span class="font-bold text-primary">{{ app.applicationNumber }}</span>
+                      </td>
+                    </ng-container>
+
+                    <!-- Product Name Column -->
+                    <ng-container matColumnDef="productName">
+                      <th mat-header-cell *matHeaderCellDef>Product</th>
+                      <td mat-cell *matCellDef="let app">{{ app.loanProduct?.name || 'Loan' }}</td>
+                    </ng-container>
+
+                    <!-- Requested Amount Column -->
+                    <ng-container matColumnDef="requestedAmount">
+                      <th mat-header-cell *matHeaderCellDef>Requested Amount</th>
+                      <td mat-cell *matCellDef="let app">{{ app.requestedAmount | currency:'USD':'symbol':'1.2-2' }}</td>
+                    </ng-container>
+
+                    <!-- Tenure Column -->
+                    <ng-container matColumnDef="tenure">
+                      <th mat-header-cell *matHeaderCellDef>Tenure</th>
+                      <td mat-cell *matCellDef="let app">{{ app.requestedTenureMonths }} Mo</td>
+                    </ng-container>
+
+                    <!-- Submitted Date Column -->
+                    <ng-container matColumnDef="submittedDate">
+                      <th mat-header-cell *matHeaderCellDef>Date</th>
+                      <td mat-cell *matCellDef="let app">{{ app.createdAt | date:'mediumDate' }}</td>
+                    </ng-container>
+
+                    <!-- Status Column -->
+                    <ng-container matColumnDef="status">
+                      <th mat-header-cell *matHeaderCellDef>Status</th>
+                      <td mat-cell *matCellDef="let app">
+                        <app-loan-status-badge [status]="app.status"></app-loan-status-badge>
+                      </td>
+                    </ng-container>
+
+                    <!-- Actions Column -->
+                    <ng-container matColumnDef="actions">
+                      <th mat-header-cell *matHeaderCellDef>Action</th>
+                      <td mat-cell *matCellDef="let app">
+                        <button mat-button color="primary" class="btn-action" (click)="viewApplication(app)">
+                          Track Status
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="applicationColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: applicationColumns;"></tr>
+                  </table>
+                </div>
+              }
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+
+      <!-- Sidebar Column: Quick Loan Calculator -->
+      <div class="sidebar-column">
+        <app-emi-calculator-widget></app-emi-calculator-widget>
+      </div>
+    </div>
+  }
+</div>

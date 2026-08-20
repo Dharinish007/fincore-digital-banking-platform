@@ -1,0 +1,373 @@
+.loan-review-page {
+  padding: 1.5rem 0;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-chips-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.filter-chip {
+  padding: 0.4rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.825rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border, #e2e8f0);
+  background: var(--color-bg-card, #ffffff);
+  color: var(--color-text-secondary, #64748b);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--color-bg-hover, #f1f5f9);
+    color: var(--color-text-primary, #0f172a);
+  }
+
+  &.active {
+    background: var(--color-primary, #0f766e);
+    color: #ffffff;
+    border-color: var(--color-primary, #0f766e);
+  }
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.fincore-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary, #64748b);
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border, #e2e8f0);
+  }
+
+  td {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--color-border, #f1f5f9);
+    color: var(--color-text-primary, #1e293b);
+  }
+
+  tr:hover td {
+    background-color: var(--color-bg-hover, #f8fafc);
+  }
+}
+
+.customer-tag {
+  background: var(--color-bg-secondary, #f1f5f9);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary, #475569);
+}
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.btn-sm {
+  font-size: 0.8rem !important;
+  padding: 0 0.75rem !important;
+  height: 32px !important;
+  line-height: 32px !important;
+}
+
+.btn-approve {
+  background-color: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.disburse-action-btn {
+  background-color: var(--color-primary, #0f766e) !important;
+  color: #ffffff !important;
+  font-size: 0.825rem !important;
+}
+
+// ── Modals & Dialogs ─────────────────────────────────────────
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.modal-content {
+  background: var(--color-bg-card, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  &.assessment-dialog {
+    max-width: 680px;
+  }
+
+  &.confirmation-dialog {
+    max-width: 480px;
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+
+  .header-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .modal-icon {
+      font-size: 28px;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--color-text-primary, #0f172a);
+    }
+
+    p {
+      margin: 0.15rem 0 0 0;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--color-border, #e2e8f0);
+  background: var(--color-bg-secondary, #f8fafc);
+  border-radius: 0 0 12px 12px;
+}
+
+// ── Score Card Banner ────────────────────────────────────────
+.score-card-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  background: var(--color-bg-secondary, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+
+  &.risk-low {
+    border-left: 5px solid #10b981;
+    background: #f0fdf4;
+  }
+  &.risk-medium {
+    border-left: 5px solid #f59e0b;
+    background: #fffbeb;
+  }
+  &.risk-high {
+    border-left: 5px solid #ef4444;
+    background: #fef2f2;
+  }
+
+  .score-dial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 0.75rem 1.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+
+    .score-value {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--color-text-primary, #0f172a);
+    }
+    .score-max {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary, #64748b);
+      margin-top: 0.25rem;
+    }
+  }
+
+  .score-details {
+    flex: 1;
+
+    .risk-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .decision-chip {
+      padding: 0.25rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+
+      &.decision-approved {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      &.decision-manual_review {
+        background: #fef3c7;
+        color: #b45309;
+      }
+      &.decision-rejected {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+    }
+
+    .risk-level-tag {
+      font-size: 0.825rem;
+      color: var(--color-text-secondary, #475569);
+    }
+
+    .assessment-summary-text {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--color-text-primary, #1e293b);
+      line-height: 1.4;
+    }
+  }
+}
+
+// ── Financial Metrics Grid ───────────────────────────────────
+.financial-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  .metric-box {
+    padding: 0.875rem;
+    background: var(--color-bg-secondary, #f8fafc);
+    border: 1px solid var(--color-border, #e2e8f0);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+
+    &.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      color: var(--color-text-secondary, #64748b);
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .metric-val {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-text-primary, #0f172a);
+    }
+  }
+}
+
+.factor-breakdown-card {
+  padding: 1rem;
+  background: var(--color-bg-secondary, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 8px;
+
+  h4 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text-primary, #0f172a);
+  }
+
+  .breakdown-text {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary, #475569);
+    line-height: 1.5;
+  }
+}
+
+.disburse-summary-card {
+  background: var(--color-bg-secondary, #f8fafc);
+  border: 1px solid var(--color-border, #e2e8f0);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.35rem 0;
+    font-size: 0.9rem;
+  }
+}
+
+.disburse-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary, #64748b);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.dialog-prompt {
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary, #334155);
+}
+
+.text-emerald {
+  color: #10b981 !important;
+}
+
+.text-danger {
+  color: #ef4444 !important;
+}
+
+.text-info {
+  color: #0284c7 !important;
+}
