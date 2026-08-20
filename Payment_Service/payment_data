@@ -16,6 +16,19 @@
 --   psql -U postgres -d BankingApp -f fincore_payment_service_postgres.sql
 
 -- =====================================================================
+-- Real account ownership used below (from your accounts seed data):
+--   account 1  -> customer 13 (Neha Gupta)      account 19 -> customer 8  (Amit Rao)
+--   account 2  -> customer 14 (Divya Menon)      account 20 -> customer 25 (Rohan Das)
+--   account 4  -> customer 14 (Divya Menon)      account 22 -> customer 4  (Sanjay Menon)
+--   account 5  -> customer 11 (Deepa Menon)      account 26 -> customer 25 (Rohan Das)
+--   account 6  -> customer 10 (Priya Gupta)      account 28 -> customer 15 (Rahul Gupta)
+--   account 7  -> customer 13 (Neha Gupta)      account 29 -> customer 11 (Deepa Menon)
+--   account 9  -> customer 6  (Rahul Menon)      account 30 -> customer 5  (Ritu Reddy)
+--   account 10 -> customer 1  (Manoj Nair)       account 31 -> customer 7  (Rohan Joshi)
+--   account 16 -> customer 7  (Rohan Joshi)      account 33 -> customer 25 (Rohan Das)
+--   account 19 -> customer 8  (Amit Rao)          account 35 -> customer 12 (John Verma)
+-- =====================================================================
+ 
 
 
 \c BankingApp
