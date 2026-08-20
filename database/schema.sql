@@ -1,152 +1,243 @@
--- FinCore Digital Banking Platform - Database Schema
--- MySQL 8.x
--- Databases: kyc_db (core banking + KYC + auth), fincore_audit (audit trail)
+-- ============================================================
+-- BANKING TRANSACTION WORKFLOW DATABASE
+-- TEAM D
+--
+-- MODULES:
+-- 1. Saga Execution
+-- 2. Settlement Confirmation
+-- 3. Notification Delivery
+--
+-- Database: MySQL 8.x
+-- ============================================================
 
-CREATE DATABASE IF NOT EXISTS kyc_db
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS banking_transaction_workflow;
 
-CREATE DATABASE IF NOT EXISTS fincore_audit
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
+USE banking_transaction_workflow;
 
-USE kyc_db;
 
--- -----------------------------------------------------
--- users (staff + customers for authentication / RBAC)
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS users (
-  id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-  username      VARCHAR(50)  NOT NULL UNIQUE,
-  password      VARCHAR(100) NOT NULL,
-  full_name     VARCHAR(100) NOT NULL,
-  email         VARCHAR(100) NOT NULL UNIQUE,
-  role          VARCHAR(20)  NOT NULL,
-  status        VARCHAR(20)  NOT NULL DEFAULT 'ACTIVE',
-  created_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT chk_users_role CHECK (role IN ('ADMIN', 'SUPERVISOR', 'TELLER', 'CUSTOMER')),
-  CONSTRAINT chk_users_status CHECK (status IN ('ACTIVE', 'DISABLED'))
+-- ============================================================
+-- MODULE 1: SAGA EXECUTION
+-- ============================================================
+
+-- Main Saga transaction
+CREATE TABLE saga_transaction (
+    saga_id VARCHAR(36) NOT NULL,
+    customer_id VARCHAR(36) NOT NULL,
+    saga_type VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    current_step INT NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (saga_id),
+
+    INDEX idx_saga_customer (customer_id),
+    INDEX idx_saga_status (status),
+    INDEX idx_saga_type (saga_type)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_users_role ON users(role);
-CREATE INDEX idx_users_status ON users(status);
 
--- -----------------------------------------------------
--- customers
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS customers (
-  id               BIGINT AUTO_INCREMENT PRIMARY KEY,
-  customer_number  VARCHAR(50)  NOT NULL UNIQUE,
-  first_name       VARCHAR(50)  NOT NULL,
-  last_name        VARCHAR(50)  NOT NULL,
-  email            VARCHAR(100) NOT NULL UNIQUE,
-  phone            VARCHAR(20)  NULL,
-  kyc_status       VARCHAR(20)  NOT NULL DEFAULT 'PENDING',
-  risk_level       VARCHAR(20)  NULL DEFAULT 'LOW',
-  user_id          BIGINT       NULL,
-  created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_customers_user FOREIGN KEY (user_id) REFERENCES users(id),
-  CONSTRAINT chk_customers_kyc CHECK (kyc_status IN ('PENDING', 'APPROVED', 'REJECTED', 'VERIFIED')),
-  CONSTRAINT chk_customers_risk CHECK (risk_level IS NULL OR risk_level IN ('LOW', 'MEDIUM', 'HIGH'))
+-- Individual Saga execution steps
+CREATE TABLE saga_step (
+    step_id VARCHAR(36) NOT NULL,
+    saga_id VARCHAR(36) NOT NULL,
+    step_order INT NOT NULL,
+    step_name VARCHAR(100) NOT NULL,
+    service_name VARCHAR(100) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    start_time DATETIME NULL,
+    end_time DATETIME NULL,
+    error_message TEXT NULL,
+
+    PRIMARY KEY (step_id),
+
+    CONSTRAINT fk_saga_step_saga
+        FOREIGN KEY (saga_id)
+        REFERENCES saga_transaction(saga_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    UNIQUE KEY uk_saga_step_order (saga_id, step_order),
+    INDEX idx_saga_step_status (status)
 ) ENGINE=InnoDB;
 
--- -----------------------------------------------------
--- accounts
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS accounts (
-  id              BIGINT AUTO_INCREMENT PRIMARY KEY,
-  account_number  VARCHAR(50)    NOT NULL UNIQUE,
-  account_type    VARCHAR(20)    NOT NULL,
-  balance         DECIMAL(15,2)  NOT NULL DEFAULT 0.00,
-  status          VARCHAR(20)    NOT NULL DEFAULT 'ACTIVE',
-  customer_id     BIGINT         NOT NULL,
-  created_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at      DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_accounts_customer FOREIGN KEY (customer_id) REFERENCES customers(id),
-  CONSTRAINT chk_accounts_type CHECK (account_type IN ('SAVINGS', 'CURRENT')),
-  CONSTRAINT chk_accounts_status CHECK (status IN ('ACTIVE', 'FROZEN', 'CLOSED', 'PENDING')),
-  CONSTRAINT chk_accounts_balance CHECK (balance >= 0)
+
+-- Compensating transactions when Saga fails
+CREATE TABLE saga_compensation (
+    compensation_id VARCHAR(36) NOT NULL,
+    saga_step_id VARCHAR(36) NOT NULL,
+    compensation_type VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    executed_at DATETIME NULL,
+    error_message TEXT NULL,
+
+    PRIMARY KEY (compensation_id),
+
+    CONSTRAINT fk_compensation_saga_step
+        FOREIGN KEY (saga_step_id)
+        REFERENCES saga_step(step_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    INDEX idx_compensation_status (status)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_accounts_customer ON accounts(customer_id);
-CREATE INDEX idx_accounts_status ON accounts(status);
 
--- -----------------------------------------------------
--- transactions
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS transactions (
-  id                     BIGINT AUTO_INCREMENT PRIMARY KEY,
-  transaction_reference  VARCHAR(50)    NOT NULL UNIQUE,
-  source_account_id      BIGINT         NOT NULL,
-  target_account_id      BIGINT         NULL,
-  transaction_type       VARCHAR(20)    NOT NULL,
-  amount                 DECIMAL(15,2)  NOT NULL,
-  status                 VARCHAR(20)    NOT NULL,
-  description            VARCHAR(255)   NULL,
-  performed_by           VARCHAR(100)   NOT NULL,
-  timestamp              DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  CONSTRAINT fk_txn_source FOREIGN KEY (source_account_id) REFERENCES accounts(id),
-  CONSTRAINT fk_txn_target FOREIGN KEY (target_account_id) REFERENCES accounts(id),
-  CONSTRAINT chk_txn_type CHECK (transaction_type IN ('TRANSFER', 'DEPOSIT', 'WITHDRAWAL', 'PAYMENT')),
-  CONSTRAINT chk_txn_status CHECK (status IN ('SUCCESS', 'FAILED', 'CANCELLED')),
-  CONSTRAINT chk_txn_amount CHECK (amount > 0)
+-- Saga audit/history
+CREATE TABLE saga_audit_log (
+    audit_id VARCHAR(36) NOT NULL,
+    saga_id VARCHAR(36) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    details TEXT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (audit_id),
+
+    CONSTRAINT fk_saga_audit
+        FOREIGN KEY (saga_id)
+        REFERENCES saga_transaction(saga_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    INDEX idx_saga_audit_created (created_at)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_txn_source ON transactions(source_account_id);
-CREATE INDEX idx_txn_target ON transactions(target_account_id);
-CREATE INDEX idx_txn_time ON transactions(timestamp);
 
--- -----------------------------------------------------
--- kyc
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS kyc (
-  kyc_id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
-  first_name             VARCHAR(100) NOT NULL,
-  last_name              VARCHAR(100) NOT NULL,
-  date_of_birth          DATE         NULL,
-  gender                 VARCHAR(20)  NULL,
-  government_id_type     VARCHAR(50)  NULL,
-  government_id_number   VARCHAR(100) NULL,
-  address_line1          VARCHAR(255) NULL,
-  address_line2          VARCHAR(255) NULL,
-  city                   VARCHAR(100) NULL,
-  state                  VARCHAR(100) NULL,
-  postal_code            VARCHAR(20)  NULL,
-  country                VARCHAR(100) NULL,
-  occupation_status      VARCHAR(50)  NULL,
-  annual_income_range    VARCHAR(50)  NULL,
-  pep_declaration        BOOLEAN      NOT NULL DEFAULT FALSE,
-  email                  VARCHAR(100) NULL,
-  status                 VARCHAR(20)  NOT NULL DEFAULT 'PENDING',
-  customer_id            BIGINT       NULL,
-  created_at             DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at             DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT fk_kyc_customer FOREIGN KEY (customer_id) REFERENCES customers(id),
-  CONSTRAINT chk_kyc_status CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'UNDER_REVIEW'))
+-- ============================================================
+-- MODULE 2: SETTLEMENT CONFIRMATION
+-- ============================================================
+
+-- Main settlement record
+CREATE TABLE settlement (
+    settlement_id VARCHAR(36) NOT NULL,
+    saga_id VARCHAR(36) NOT NULL,
+    transaction_ref_no VARCHAR(50) NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
+    currency VARCHAR(10) NOT NULL DEFAULT 'INR',
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    settlement_time DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (settlement_id),
+
+    CONSTRAINT fk_settlement_saga
+        FOREIGN KEY (saga_id)
+        REFERENCES saga_transaction(saga_id)
+        ON DELETE RESTRICT
+        ON UPDATE CASCADE,
+
+    UNIQUE KEY uk_settlement_transaction_ref (transaction_ref_no),
+    INDEX idx_settlement_status (status),
+    INDEX idx_settlement_saga (saga_id)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_kyc_status ON kyc(status);
-CREATE INDEX idx_kyc_email ON kyc(email);
 
--- -----------------------------------------------------
--- Audit database
--- -----------------------------------------------------
-USE fincore_audit;
+-- Debit and credit entries
+CREATE TABLE settlement_item (
+    item_id VARCHAR(36) NOT NULL,
+    settlement_id VARCHAR(36) NOT NULL,
+    account_id VARCHAR(36) NOT NULL,
+    item_type VARCHAR(20) NOT NULL,
+    debit_credit VARCHAR(10) NOT NULL,
+    amount DECIMAL(18,2) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    processed_time DATETIME NULL,
+    remarks TEXT NULL,
 
-CREATE TABLE IF NOT EXISTS audit_logs (
-  id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-  entity_name   VARCHAR(100) NOT NULL,
-  entity_id     VARCHAR(100) NULL,
-  action        VARCHAR(50)  NOT NULL,
-  performed_by  VARCHAR(100) NOT NULL,
-  status        VARCHAR(20)  NOT NULL,
-  description   VARCHAR(500) NULL,
-  timestamp     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP
+    PRIMARY KEY (item_id),
+
+    CONSTRAINT fk_settlement_item_settlement
+        FOREIGN KEY (settlement_id)
+        REFERENCES settlement(settlement_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    INDEX idx_settlement_item_account (account_id),
+    INDEX idx_settlement_item_status (status)
 ) ENGINE=InnoDB;
 
-CREATE INDEX idx_audit_entity ON audit_logs(entity_name, entity_id);
-CREATE INDEX idx_audit_user ON audit_logs(performed_by);
-CREATE INDEX idx_audit_action ON audit_logs(action);
-CREATE INDEX idx_audit_time ON audit_logs(timestamp);
+
+-- Settlement status history
+CREATE TABLE settlement_status_history (
+    history_id VARCHAR(36) NOT NULL,
+    settlement_id VARCHAR(36) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    changed_by VARCHAR(50) NULL,
+    changed_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    remarks TEXT NULL,
+
+    PRIMARY KEY (history_id),
+
+    CONSTRAINT fk_settlement_history_settlement
+        FOREIGN KEY (settlement_id)
+        REFERENCES settlement(settlement_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    INDEX idx_settlement_history_status (status),
+    INDEX idx_settlement_history_changed (changed_at)
+) ENGINE=InnoDB;
+
+
+-- ============================================================
+-- MODULE 3: NOTIFICATION DELIVERY
+-- ============================================================
+
+-- Customer notifications
+CREATE TABLE notification (
+    notification_id VARCHAR(36) NOT NULL,
+    settlement_id VARCHAR(36) NOT NULL,
+    customer_id VARCHAR(36) NOT NULL,
+    notification_type VARCHAR(50) NOT NULL,
+    channel VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    message TEXT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    scheduled_at DATETIME NULL,
+    sent_at DATETIME NULL,
+    error_message TEXT NULL,
+
+    PRIMARY KEY (notification_id),
+
+    CONSTRAINT fk_notification_settlement
+        FOREIGN KEY (settlement_id)
+        REFERENCES settlement(settlement_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    INDEX idx_notification_customer (customer_id),
+    INDEX idx_notification_status (status),
+    INDEX idx_notification_channel (channel),
+    INDEX idx_notification_scheduled (scheduled_at)
+) ENGINE=InnoDB;
+
+
+-- Notification delivery attempts/logs
+CREATE TABLE notification_log (
+    log_id VARCHAR(36) NOT NULL,
+    notification_id VARCHAR(36) NOT NULL,
+    channel VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+    response TEXT NULL,
+    attempt_count INT NOT NULL DEFAULT 1,
+    last_attempt_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (log_id),
+
+    CONSTRAINT fk_notification_log_notification
+        FOREIGN KEY (notification_id)
+        REFERENCES notification(notification_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    INDEX idx_notification_log_status (status),
+    INDEX idx_notification_log_attempt (last_attempt_at)
+) ENGINE=InnoDB;
+
+
+-- ============================================================
+-- END OF SCHEMA
+-- ============================================================
