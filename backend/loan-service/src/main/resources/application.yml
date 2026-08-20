@@ -1,0 +1,37 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: loan-service
+
+  profiles:
+    active: postgres
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+# Downstream Microservices Base URLs
+services:
+  customer-service:
+    url: ${SERVICES_CUSTOMER_URL:http://localhost:8081/api/v1/customers}
+  account-service:
+    url: ${SERVICES_ACCOUNT_URL:http://localhost:8082/api/v1/accounts}
+  transaction-service:
+    url: ${SERVICES_TRANSACTION_URL:http://localhost:8083/api/v1/transactions}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
