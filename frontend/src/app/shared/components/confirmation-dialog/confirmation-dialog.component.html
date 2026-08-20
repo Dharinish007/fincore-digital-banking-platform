@@ -1,0 +1,26 @@
+<div class="confirmation-dialog-wrapper">
+  <div class="dialog-header" [class.is-destructive]="data.isDestructive">
+    <div class="header-icon-box" [class.icon-destructive]="data.isDestructive">
+      <mat-icon>{{ data.isDestructive ? 'warning' : 'help_outline' }}</mat-icon>
+    </div>
+    <div class="header-text">
+      <h2 mat-dialog-title class="dialog-title">{{ data.title }}</h2>
+      <p class="dialog-message">{{ data.message }}</p>
+    </div>
+  </div>
+
+  <mat-dialog-actions align="end" class="dialog-actions">
+    <button type="button" class="btn btn--secondary" (click)="onCancel()">
+      {{ data.cancelText || 'Cancel' }}
+    </button>
+    <button
+      type="button"
+      class="btn"
+      [ngClass]="data.isDestructive ? 'btn--danger' : 'btn--primary'"
+      (click)="onConfirm()"
+      cdkFocusInitial
+    >
+      {{ data.confirmText || 'Confirm' }}
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,33 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Skills 
+.agent/
+
+# VS Code
+.vscode/
+
+# Java / Maven
+target/
+*.class
+
+# Node
+node_modules/
+dist/
+
+# Logs
+*.log
+logs/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Angular
+.angular/

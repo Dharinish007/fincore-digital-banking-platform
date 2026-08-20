@@ -1,0 +1,14 @@
+.page {
+  padding-bottom: var(--spacing-8);
+}
+
+.results-summary {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-3);
+  padding: 0 0.25rem;
+
+  strong {
+    color: var(--color-text-primary);
+  }
+}

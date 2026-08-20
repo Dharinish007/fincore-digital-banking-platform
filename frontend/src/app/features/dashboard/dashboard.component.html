@@ -1,0 +1,131 @@
+<div class="page dashboard-page">
+  
+  <!-- Operational Welcome Header -->
+  <app-dashboard-welcome-banner
+    [userName]="user?.fullName || 'Administrator'"
+    [role]="role || 'System Admin'">
+  </app-dashboard-welcome-banner>
+
+  <!-- Error / Warning Banner -->
+  @if (hasError) {
+    <div class="dashboard-error-banner" role="alert">
+      <div class="error-content">
+        <span class="material-icons-round error-icon">sync_problem</span>
+        <div class="error-text">
+          <span class="error-title">Data Synchronization Notice</span>
+          <span class="error-desc">Unable to reach live core banking API on localhost:8080. Operating in offline/cached mode.</span>
+        </div>
+      </div>
+      <button type="button" class="btn btn--secondary btn--sm" (click)="loadDashboardData()">
+        <span class="material-icons-round">refresh</span>
+        Retry Sync
+      </button>
+    </div>
+  }
+
+  <!-- KPI / Metric Cards Grid -->
+  @if (hasRole([Role.ADMIN, Role.EMPLOYEE])) {
+    <section class="dashboard-section" aria-label="Financial Operations Key Metrics">
+      @if (kpiCards$ | async; as cards) {
+        <div class="kpi-grid">
+          @for (card of cards; track card.title) {
+            <app-statistic-card
+              [label]="card.title"
+              [value]="card.value"
+              [icon]="card.icon"
+              [trend]="card.trend"
+              [cardVariant]="card.cardVariant || 'default'"
+              [iconColor]="card.iconColor || 'var(--color-primary)'"
+              [iconBgColor]="card.iconBgColor || 'var(--color-primary-light)'">
+            </app-statistic-card>
+          }
+        </div>
+      } @else {
+        <div class="kpi-grid skeleton-grid">
+          @for (i of [1,2,3,4]; track i) {
+            <div class="skeleton-card"></div>
+          }
+        </div>
+      }
+    </section>
+  }
+
+  <!-- Main Dashboard Operational Grid -->
+  <div class="dashboard-grid">
+    
+    <!-- Left Column (Primary Operations & Ledger) -->
+    <div class="dashboard-main-col">
+      
+      <!-- Transaction Activity Chart -->
+      @if (hasRole([Role.ADMIN, Role.EMPLOYEE])) {
+        <section class="dashboard-section" aria-label="Transaction Activity Analytics">
+          <app-card-container title="Transaction Activity" subtitle="Monthly volume trends across core banking channels">
+            @if (monthlyTransactionsChart$ | async; as data) {
+              <app-dashboard-chart-widget type="line" [chartData]="data" [height]="280"></app-dashboard-chart-widget>
+            } @else {
+              <div class="chart-loading-state">
+                <app-loading-spinner message="Loading transaction trends..."></app-loading-spinner>
+              </div>
+            }
+          </app-card-container>
+        </section>
+      }
+
+      <!-- Recent Transactions Table -->
+      <section class="dashboard-section" aria-label="Recent Transactions Ledger">
+        <app-card-container title="Recent Transactions" subtitle="Real-time transaction stream across accounts" [noPadding]="true">
+          <div card-actions>
+            <button type="button" class="view-all-link focus-ring" (click)="viewAllTransactions()" aria-label="View all transactions in full ledger">
+              <span>View All</span>
+              <span class="material-icons-round">arrow_forward</span>
+            </button>
+          </div>
+          @if (recentTransactions$ | async; as transactions) {
+            <app-dashboard-transactions-table [transactions]="transactions"></app-dashboard-transactions-table>
+          } @else {
+            <div class="loading-state">
+              <app-loading-spinner message="Loading transactions..."></app-loading-spinner>
+            </div>
+          }
+        </app-card-container>
+      </section>
+      
+    </div>
+
+    <!-- Right Column (Quick Actions, Activity & Alerts) -->
+    <div class="dashboard-side-col">
+      
+      <!-- Quick Operational Actions -->
+      <section class="dashboard-section" aria-label="Quick Actions">
+        <app-card-container title="Quick Actions" subtitle="Initiate frequent operations">
+          <app-dashboard-quick-actions [actions]="filteredQuickActions"></app-dashboard-quick-actions>
+        </app-card-container>
+      </section>
+      
+      <!-- System Activity Timeline (Admin / Employee) -->
+      @if (hasRole([Role.ADMIN, Role.EMPLOYEE])) {
+        <section class="dashboard-section" aria-label="Operational Activity Log">
+          <app-card-container title="System Activity" subtitle="Audit trail of recent events">
+            @if (activityTimeline$ | async; as activities) {
+              <app-dashboard-activity-timeline [activities]="activities"></app-dashboard-activity-timeline>
+            } @else {
+              <app-loading-spinner message="Loading system activity..."></app-loading-spinner>
+            }
+          </app-card-container>
+        </section>
+      }
+
+      <!-- System Alerts & Notifications -->
+      <section class="dashboard-section" aria-label="System Notifications">
+        <app-card-container title="System Alerts" subtitle="Operational notices">
+          @if (notifications$ | async; as notifications) {
+            <app-dashboard-notification-panel [notifications]="notifications"></app-dashboard-notification-panel>
+          } @else {
+            <app-loading-spinner message="Loading notifications..."></app-loading-spinner>
+          }
+        </app-card-container>
+      </section>
+      
+    </div>
+  </div>
+</div>

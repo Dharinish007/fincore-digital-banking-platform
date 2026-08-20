@@ -1,0 +1,132 @@
+@if (isLoading) {
+  <div class="table-container">
+    <div class="skeleton-rows">
+      @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="skeleton-row"></div>
+      }
+    </div>
+  </div>
+} @else if (customers.length === 0) {
+  @if (isFiltered) {
+    <app-empty-state
+      icon="person_search"
+      title="No matching customers"
+      description="No customer records match your current search and filter criteria."
+      actionLabel="Clear Filters"
+      (actionClicked)="clearFilters.emit()">
+    </app-empty-state>
+  } @else {
+    <app-empty-state
+      icon="groups"
+      title="No customers yet"
+      description="Create your first customer profile to start managing banking relationships."
+      actionLabel="Add Customer"
+      (actionClicked)="addCustomer.emit()">
+    </app-empty-state>
+  }
+} @else {
+  <div class="table-container">
+    <table mat-table [dataSource]="dataSource" matSort class="customer-table" aria-label="Customer Directory Table">
+
+      <!-- Customer Identity Column -->
+      <ng-container matColumnDef="customer">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="firstName"> Customer </th>
+        <td mat-cell *matCellDef="let c">
+          <div class="customer-identity-cell">
+            <div class="customer-avatar" aria-hidden="true">
+              {{ getInitials(c.firstName, c.lastName) }}
+            </div>
+            <div class="identity-text-group">
+              <a [routerLink]="['/customer', c.id]" class="customer-name-link">
+                {{ c.firstName }} {{ c.lastName }}
+              </a>
+              <span class="customer-id-pill">{{ getCustomerIdDisplay(c) }}</span>
+            </div>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Contact Information Column -->
+      <ng-container matColumnDef="contact">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="email"> Contact </th>
+        <td mat-cell *matCellDef="let c">
+          <div class="contact-cell">
+            <span class="email-text">{{ c.email }}</span>
+            <span class="phone-text">{{ c.phoneNumber }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- KYC Status Column -->
+      <ng-container matColumnDef="kyc">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="kycStatus"> KYC Compliance </th>
+        <td mat-cell *matCellDef="let c">
+          <app-status-badge
+            [status]="getKycBadgeStatus(c.kycStatus)"
+            [label]="getKycLabel(c.kycStatus)">
+          </app-status-badge>
+        </td>
+      </ng-container>
+
+      <!-- Customer Status Column -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="status"> Status </th>
+        <td mat-cell *matCellDef="let c">
+          <app-customer-status-chip [value]="c.status"></app-customer-status-chip>
+        </td>
+      </ng-container>
+
+      <!-- Member Since Column -->
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="createdAt"> Member Since </th>
+        <td mat-cell *matCellDef="let c">
+          <span class="date-text">{{ c.createdAt | date:'MMM d, y' }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="align-right"> Actions </th>
+        <td mat-cell *matCellDef="let c" class="align-right">
+          <div class="row-actions" (click)="$event.stopPropagation()">
+            <!-- View Profile -->
+            <a
+              mat-icon-button
+              class="action-icon-btn focus-ring"
+              [routerLink]="['/customer', c.id]"
+              matTooltip="View 360° Profile"
+              aria-label="View profile for {{ c.firstName }} {{ c.lastName }}">
+              <mat-icon>visibility</mat-icon>
+            </a>
+
+            <!-- Edit Customer -->
+            <a
+              mat-icon-button
+              class="action-icon-btn focus-ring"
+              [routerLink]="['/customer', c.id, 'edit']"
+              matTooltip="Edit Customer"
+              aria-label="Edit customer {{ c.firstName }} {{ c.lastName }}">
+              <mat-icon>edit</mat-icon>
+            </a>
+
+            <!-- Delete / Deactivate Customer -->
+            <button
+              mat-icon-button
+              class="action-icon-btn action-icon-btn--danger focus-ring"
+              type="button"
+              matTooltip="Delete Customer"
+              (click)="deleteCustomer.emit(c.id.toString())"
+              aria-label="Delete customer {{ c.firstName }} {{ c.lastName }}">
+              <mat-icon>delete_outline</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="data-row"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons aria-label="Select page of customers"></mat-paginator>
+  </div>
+}

@@ -1,0 +1,25 @@
+package com.fincore.transaction.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TransactionStatisticsResponse {
+
+    private long totalTransactions;
+    private long successfulTransactions;
+    private long failedTransactions;
+
+    private long deposits;
+    private long withdrawals;
+    private long transfers;
+
+    private BigDecimal totalDepositAmount;
+    private BigDecimal totalWithdrawalAmount;
+    private BigDecimal totalTransferAmount;
+}

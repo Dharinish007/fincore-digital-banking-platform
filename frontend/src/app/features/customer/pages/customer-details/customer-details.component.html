@@ -1,0 +1,279 @@
+@if (customer$ | async; as customer) {
+  <div class="page customer-details-page">
+
+    <!-- ── Top Action & Navigation Header ────────────────────── -->
+    <div class="details-topbar">
+      <button type="button" class="btn btn--secondary btn--sm back-btn" (click)="backToCustomers()" aria-label="Back to Customer Directory">
+        <span class="material-icons-round">arrow_back</span>
+        Back to Customers
+      </button>
+
+      <div class="topbar-actions">
+        <a [routerLink]="['/customer', customer.id, 'edit']" class="btn btn--primary btn--sm">
+          <span class="material-icons-round">edit</span>
+          Edit Profile
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Profile Hero Card ─────────────────────────────────── -->
+    <div class="profile-hero-card">
+      <div class="hero-main">
+        <div class="hero-avatar" aria-hidden="true">
+          {{ getInitials(customer) }}
+        </div>
+        <div class="hero-info">
+          <div class="hero-title-row">
+            <h1 class="hero-name">{{ customer.firstName }} {{ customer.lastName }}</h1>
+            <div class="hero-badges">
+              <app-customer-status-chip [value]="customer.status"></app-customer-status-chip>
+              <app-status-badge
+                [status]="getKycBadgeStatus(customer.kycStatus)"
+                [label]="getKycLabel(customer.kycStatus)">
+              </app-status-badge>
+            </div>
+          </div>
+          <div class="hero-meta-row">
+            <span class="meta-item">
+              <span class="meta-label">Customer ID:</span>
+              <strong class="meta-value mono">{{ getCustomerIdDisplay(customer) }}</strong>
+            </span>
+            <span class="meta-divider" aria-hidden="true">•</span>
+            <span class="meta-item">
+              <span class="meta-label">Member Since:</span>
+              <span class="meta-value">{{ customer.createdAt | date:'MMMM d, y' }}</span>
+            </span>
+            <span class="meta-divider" aria-hidden="true">•</span>
+            <span class="meta-item">
+              <span class="meta-label">Last Activity:</span>
+              <span class="meta-value">{{ customer.updatedAt | date:'MMM d, y, h:mm a' }}</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── 360° Profile 4-Card Grid ──────────────────────────── -->
+    <div class="profile-grid">
+
+      <!-- Personal Information -->
+      <app-card-container title="Personal Information" subtitle="Legal identity details">
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label">Full Legal Name</span>
+            <span class="info-val">{{ customer.firstName }} {{ customer.lastName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Date of Birth</span>
+            <span class="info-val tabular-nums">{{ customer.dateOfBirth | date:'MMMM d, y' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Customer Number</span>
+            <span class="info-val mono">{{ getCustomerIdDisplay(customer) }}</span>
+          </div>
+        </div>
+      </app-card-container>
+
+      <!-- Contact Information -->
+      <app-card-container title="Contact Channels" subtitle="Primary communication details">
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label">Email Address</span>
+            <a [href]="'mailto:' + customer.email" class="info-val link">{{ customer.email }}</a>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Phone Number</span>
+            <a [href]="'tel:' + customer.phoneNumber" class="info-val link tabular-nums">{{ customer.phoneNumber }}</a>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Notifications</span>
+            <span class="info-val">SMS & Email Enabled</span>
+          </div>
+        </div>
+      </app-card-container>
+
+      <!-- Residential Address -->
+      <app-card-container title="Residential Address" subtitle="Official tax & legal residence">
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label">Street Address</span>
+            <span class="info-val">{{ customer.address }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">City, State</span>
+            <span class="info-val">{{ customer.city }}, {{ customer.state }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Postal / Country</span>
+            <span class="info-val">{{ customer.postalCode }}, {{ customer.country }}</span>
+          </div>
+        </div>
+      </app-card-container>
+
+      <!-- Compliance & Security -->
+      <app-card-container title="Compliance & KYC" subtitle="Regulatory standing & audit info">
+        <div class="info-list">
+          <div class="info-row">
+            <span class="info-label">KYC Standing</span>
+            <span class="info-val">
+              <app-status-badge
+                [status]="getKycBadgeStatus(customer.kycStatus)"
+                [label]="getKycLabel(customer.kycStatus)">
+              </app-status-badge>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Account Status</span>
+            <span class="info-val">
+              <app-customer-status-chip [value]="customer.status"></app-customer-status-chip>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Risk Profile</span>
+            <span class="info-val">Standard Banking Tier</span>
+          </div>
+        </div>
+      </app-card-container>
+
+    </div>
+
+    <!-- ── Connected Banking Accounts ────────────────────────── -->
+    <section class="section-container" aria-label="Connected Banking Accounts">
+      <app-card-container title="Connected Banking Accounts" subtitle="Active deposit, savings, and loan products" [noPadding]="true">
+        <div card-actions>
+          <a [routerLink]="['/account/new']" [queryParams]="{ customerId: customer.id }" class="btn btn--secondary btn--sm">
+            <span class="material-icons-round">add</span>
+            Open New Account
+          </a>
+        </div>
+
+        @if (accounts$ | async; as accounts) {
+          @if (accounts.length > 0) {
+            <div class="table-responsive">
+              <table class="data-table" aria-label="Customer Connected Accounts">
+                <thead>
+                  <tr>
+                    <th>Account Number</th>
+                    <th>Product Type</th>
+                    <th>Currency</th>
+                    <th class="align-right">Available Balance</th>
+                    <th>Status</th>
+                    <th class="align-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (acc of accounts; track acc.id) {
+                    <tr>
+                      <td>
+                        <strong class="mono">{{ acc.accountNumber }}</strong>
+                      </td>
+                      <td>
+                        <span class="type-pill">{{ acc.accountType }}</span>
+                      </td>
+                      <td>{{ acc.currency }}</td>
+                      <td class="align-right">
+                        <strong class="balance-text tabular-nums">{{ acc.balance | currency:acc.currency:'symbol':'1.2-2' }}</strong>
+                      </td>
+                      <td>
+                        <span class="badge badge--success">{{ acc.status }}</span>
+                      </td>
+                      <td class="align-right">
+                        <a [routerLink]="['/account', acc.id]" class="table-link">
+                          View Details →
+                        </a>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="empty-section-state">
+              <span class="material-icons-round">account_balance_wallet</span>
+              <p>No active banking accounts linked to this customer profile.</p>
+              <a [routerLink]="['/account/new']" [queryParams]="{ customerId: customer.id }" class="btn btn--secondary btn--sm">
+                Open Account
+              </a>
+            </div>
+          }
+        } @else {
+          <div class="section-loading">
+            <app-loading-spinner message="Loading linked accounts..."></app-loading-spinner>
+          </div>
+        }
+      </app-card-container>
+    </section>
+
+    <!-- ── Recent Transaction Activity ──────────────────────── -->
+    <section class="section-container" aria-label="Recent Customer Transactions">
+      <app-card-container title="Recent Transaction Activity" subtitle="Real-time transaction history for this customer" [noPadding]="true">
+        @if (transactions$ | async; as transactions) {
+          @if (transactions.length > 0) {
+            <div class="table-responsive">
+              <table class="data-table" aria-label="Customer Transactions">
+                <thead>
+                  <tr>
+                    <th>Reference</th>
+                    <th>Type</th>
+                    <th class="align-right">Amount</th>
+                    <th>Status</th>
+                    <th>Timestamp</th>
+                    <th class="align-right">Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (t of transactions; track t.id) {
+                    <tr>
+                      <td>
+                        <span class="mono">{{ t.referenceNumber || t.id }}</span>
+                      </td>
+                      <td>
+                        <span class="type-pill">{{ t.type }}</span>
+                      </td>
+                      <td class="align-right">
+                        <strong class="tabular-nums" [class.text-success]="t.type === 'DEPOSIT'">
+                          {{ t.amount | currency:(t.currency || 'USD'):'symbol':'1.2-2' }}
+                        </strong>
+                      </td>
+                      <td>
+                        <app-status-badge [status]="getTransactionStatusBadge(t.status)" [label]="t.status"></app-status-badge>
+                      </td>
+                      <td>
+                        <span class="date-text">{{ t.transactionDate | date:'MMM d, y, h:mm a' }}</span>
+                      </td>
+                      <td class="align-right">
+                        <a [routerLink]="['/transaction', t.id]" class="table-link">
+                          View →
+                        </a>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          } @else {
+            <div class="empty-section-state">
+              <span class="material-icons-round">receipt_long</span>
+              <p>No recent transaction records found for this customer.</p>
+            </div>
+          }
+        } @else {
+          <div class="section-loading">
+            <app-loading-spinner message="Loading customer transaction ledger..."></app-loading-spinner>
+          </div>
+        }
+      </app-card-container>
+    </section>
+
+  </div>
+} @else {
+  <div class="page customer-details-page">
+    <app-empty-state
+      icon="person_off"
+      title="Customer Profile Not Found"
+      description="The requested customer profile could not be located or has been deactivated."
+      actionLabel="Back to Customer Directory"
+      (actionClicked)="backToCustomers()">
+    </app-empty-state>
+  </div>
+}
