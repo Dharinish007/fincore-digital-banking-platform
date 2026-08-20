@@ -1,0 +1,176 @@
+-- =====================================================================
+-- FinCore Digital Banking Platform — Payment Service Schema (PostgreSQL)
+-- Milestone: Payment Service | IMPS/NEFT/UPI | Beneficiary management
+--
+-- Runs against the SAME shared database as account-service and
+-- loan-service (fincore_database_postgres.sql):
+--   spring.datasource.url=jdbc:postgresql://localhost:5432/BankingApp
+--   spring.datasource.username=postgres
+--   spring.datasource.password=1998
+--
+-- PREREQUISITE: run fincore_database_postgres.sql first (customers,
+-- accounts tables must already exist — beneficiary and
+-- payment_transaction both reference them with real foreign keys).
+--
+-- SETUP:
+--   psql -U postgres -d BankingApp -f fincore_payment_service_postgres.sql
+
+-- =====================================================================
+
+
+\c BankingApp
+
+DROP TABLE IF EXISTS upi_mapping CASCADE;
+DROP TABLE IF EXISTS payment_transaction CASCADE;
+DROP TABLE IF EXISTS beneficiary CASCADE;
+
+-- ───────────────────────────── BENEFICIARY ─────────────────────────────
+CREATE TABLE beneficiary (
+    beneficiary_id     BIGSERIAL PRIMARY KEY,
+    customer_id        BIGINT NOT NULL REFERENCES customers(customer_id),
+
+    beneficiary_name   VARCHAR(150) NOT NULL,
+    account_number     VARCHAR(30)  NOT NULL,
+    ifsc_code          VARCHAR(11)  NOT NULL,
+    bank_name          VARCHAR(100) NOT NULL,
+    nickname           VARCHAR(50),
+
+    status             VARCHAR(20)  NOT NULL DEFAULT 'ACTIVE'
+                        CHECK (status IN ('ACTIVE','INACTIVE','BLOCKED')),
+
+    added_date         DATE NOT NULL DEFAULT CURRENT_DATE,
+
+    UNIQUE (customer_id, account_number)   -- can't add the same payee account twice
+);
+
+CREATE INDEX idx_beneficiary_customer ON beneficiary(customer_id);
+
+-- ───────────────────────────── PAYMENT TRANSACTION ─────────────────────────────
+CREATE TABLE payment_transaction (
+    transaction_id       BIGSERIAL PRIMARY KEY,
+    from_account_id       BIGINT NOT NULL REFERENCES accounts(account_id),
+    beneficiary_id         BIGINT REFERENCES beneficiary(beneficiary_id),  -- NULL for self/internal transfers
+
+    amount                  DECIMAL(15,2) NOT NULL CHECK (amount > 0),
+    transaction_mode         VARCHAR(10) NOT NULL
+                              CHECK (transaction_mode IN ('IMPS','NEFT','UPI')),
+    transaction_status        VARCHAR(20) NOT NULL DEFAULT 'INITIATED'
+                              CHECK (transaction_status IN ('INITIATED','SUCCESS','FAILED','PENDING')),
+
+    reference_number           VARCHAR(30) NOT NULL UNIQUE,
+    remarks                     VARCHAR(255),
+
+    initiated_at                 TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at                 TIMESTAMP
+);
+
+CREATE INDEX idx_txn_from_account ON payment_transaction(from_account_id);
+CREATE INDEX idx_txn_beneficiary ON payment_transaction(beneficiary_id);
+CREATE INDEX idx_txn_mode ON payment_transaction(transaction_mode);
+CREATE INDEX idx_txn_status ON payment_transaction(transaction_status);
+
+-- ───────────────────────────── UPI MAPPING ─────────────────────────────
+CREATE TABLE upi_mapping (
+    upi_id              BIGSERIAL PRIMARY KEY,
+    customer_id         BIGINT NOT NULL REFERENCES customers(customer_id),
+    linked_account_id   BIGINT NOT NULL REFERENCES accounts(account_id),
+
+    vpa                 VARCHAR(50) NOT NULL UNIQUE,   -- e.g. arun.kumar@fincore
+    status               VARCHAR(20) NOT NULL DEFAULT 'ACTIVE'
+                          CHECK (status IN ('ACTIVE','INACTIVE')),
+
+    linked_at             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_upi_customer ON upi_mapping(customer_id);
+
+-- ═══════════════════════════════════════════════════════════════════
+-- SEED DATA
+-- customer_id / account_id values below assume the seeded rows in
+-- fincore_database_postgres.sql already exist.
+-- ═══════════════════════════════════════════════════════════════════
+
+-- ───────────────────────────── BENEFICIARIES ─────────────────────────────
+INSERT INTO beneficiary (customer_id, beneficiary_name, account_number, ifsc_code, bank_name, nickname, status, added_date) VALUES
+(1,  'Divya Menon',        'FINCO-1002',     'FINC0001000', 'FinCore Bank',       'Divya',        'ACTIVE',   '2026-05-01'),
+(1,  'Landlord - Selva',   '021301567891',   'ICIC0002130', 'ICICI Bank',         'Rent',         'ACTIVE',   '2026-06-01'),
+(4,  'Rohan Das',          'FINCO-1020',     'FINC0001000', 'FinCore Bank',       'Rohan',        'ACTIVE',   '2026-03-22'),
+(4,  'Electricity Board',  '099887766554',   'PUNB0000998', 'Punjab National Bank','TNEB',        'ACTIVE',   '2026-02-05'),
+(6,  'Priya Gupta',        'FINCO-1006',     'FINC0001000', 'FinCore Bank',       'Priya',        'ACTIVE',   '2026-04-10'),
+(7,  'Amit Rao',           'FINCO-1019',     'FINC0001000', 'FinCore Bank',       'Amit',         'ACTIVE',   '2026-01-15'),
+(7,  'Broadband Provider', '445566778899',   'HDFC0004455', 'HDFC Bank',          'WiFi bill',    'ACTIVE',   '2025-12-20'),
+(8,  'Neha Gupta',         'FINCO-1001',     'FINC0001000', 'FinCore Bank',       'Neha',         'ACTIVE',   '2026-02-11'),
+(10, 'Manoj Nair',         'FINCO-1010',     'FINC0001000', 'FinCore Bank',       'Manoj',        'ACTIVE',   '2025-11-30'),
+(11, 'Sanjay Menon',       'FINCO-1022',     'FINC0001000', 'FinCore Bank',       'Sanjay',       'ACTIVE',   '2026-05-18'),
+(11, 'Gym Membership',     '112233445566',   'AXIS0001122', 'Axis Bank',          'Gym',          'INACTIVE', '2025-09-01'),
+(13, 'Rahul Menon',        'FINCO-1009',     'FINC0001000', 'FinCore Bank',       'Rahul M',      'ACTIVE',   '2026-06-05'),
+(14, 'Rohan Joshi',        'FINCO-1016',     'FINC0001000', 'FinCore Bank',       'Rohan J',      'ACTIVE',   '2025-10-14'),
+(15, 'Deepa Menon',        'FINCO-1005',     'FINC0001000', 'FinCore Bank',       'Deepa',        'ACTIVE',   '2026-03-08'),
+(25, 'John Verma',         'FINCO-1035',     'FINC0001000', 'FinCore Bank',       'John',         'ACTIVE',   '2026-01-22');
+
+-- ───────────────────────────── UPI MAPPINGS ─────────────────────────────
+INSERT INTO upi_mapping (customer_id, linked_account_id, vpa, status, linked_at) VALUES
+INSERT INTO upi_mapping (customer_id, linked_account_id, vpa, status, linked_at) VALUES
+(13, 1,  'neha.gupta@fincore',   'ACTIVE',   '2026-05-01 09:00:00'),
+(14, 2,  'divya.menon@fincore',  'ACTIVE',   '2026-04-10 11:20:00'),
+(11, 5,  'deepa.menon@fincore',  'ACTIVE',   '2026-03-15 14:45:00'),
+(1,  10, 'manoj.nair@fincore',   'ACTIVE',   '2026-06-01 10:00:00'),
+(7,  16, 'rohan.joshi@fincore',  'ACTIVE',   '2025-11-05 08:30:00'),
+(8,  19, 'amit.rao@fincore',     'ACTIVE',   '2026-02-20 13:15:00'),
+(25, 20, 'rohan.das@fincore',    'ACTIVE',   '2025-12-01 17:40:00'),
+(4,  22, 'sanjay.menon@fincore', 'ACTIVE',   '2026-01-18 09:50:00'),
+(5,  30, 'ritu.reddy@fincore',   'INACTIVE', '2025-08-22 12:00:00'),
+(12, 35, 'john.verma@fincore',   'ACTIVE',   '2026-04-28 15:25:00');
+ 
+
+-- ───────────────────────────── PAYMENT TRANSACTIONS ─────────────────────────────
+-- references the beneficiary rows inserted above (NULL = self-transfer)
+INSERT INTO payment_transaction (from_account_id, beneficiary_id, amount, transaction_mode, transaction_status, reference_number, remarks, initiated_at, completed_at) VALUES
+(1,  8,  2500.00,  'UPI',  'SUCCESS',   'TXN-UPI-20260701-001',  'Split dinner bill',      '2026-07-01 19:32:00', '2026-07-01 19:32:04'),
+(2,  1,  12000.00, 'NEFT', 'SUCCESS',   'TXN-NEFT-20260702-002', 'Monthly rent',           '2026-07-02 08:15:00', '2026-07-02 08:17:30'),
+(1,  NULL, 1000.00,'IMPS', 'SUCCESS',   'TXN-IMPS-20260703-003', 'Self transfer to FD',    '2026-07-03 12:05:00', '2026-07-03 12:05:12'),
+(9,  12, 5500.00,  'IMPS', 'FAILED',    'TXN-IMPS-20260704-004', 'Insufficient funds',     '2026-07-04 21:40:00', '2026-07-04 21:40:09'),
+(16, 6,  3200.00,  'UPI',  'SUCCESS',   'TXN-UPI-20260705-005',  'Movie tickets',          '2026-07-05 20:10:00', '2026-07-05 20:10:03'),
+(22, 4,  890.00,   'NEFT', 'PENDING',   'TXN-NEFT-20260706-006', 'Electricity bill',       '2026-07-06 09:00:00', NULL),
+(10, 9,  15000.00, 'IMPS', 'SUCCESS',   'TXN-IMPS-20260707-007', 'Loan repayment share',   '2026-07-07 10:00:00', '2026-07-07 10:00:14'),
+(19, 8,  4200.00,  'UPI',  'SUCCESS',   'TXN-UPI-20260708-008',  'Grocery split',          '2026-07-08 18:22:00', '2026-07-08 18:22:05'),
+(29, 10, 7800.00,  'NEFT', 'SUCCESS',   'TXN-NEFT-20260709-009', 'Freelance payment',      '2026-07-09 14:10:00', '2026-07-09 14:12:40'),
+(30, NULL, 2000.00,'IMPS', 'SUCCESS',   'TXN-IMPS-20260710-010', 'Self transfer',          '2026-07-10 07:45:00', '2026-07-10 07:45:11'),
+(31, 7,   650.00,  'UPI',  'SUCCESS',   'TXN-UPI-20260711-011',  'Broadband bill',         '2026-07-11 09:15:00', '2026-07-11 09:15:03'),
+(35, 15, 9400.00,  'NEFT', 'FAILED',    'TXN-NEFT-20260712-012', 'Beneficiary account frozen','2026-07-12 16:30:00', '2026-07-12 16:32:00'),
+(5,  11, 1250.00,  'UPI',  'SUCCESS',   'TXN-UPI-20260713-013',  'Gym fee',                '2026-07-13 06:50:00', '2026-07-13 06:50:04'),
+(7,  13, 3000.00,  'IMPS', 'SUCCESS',   'TXN-IMPS-20260714-014', 'Shared cab fare',        '2026-07-14 22:05:00', '2026-07-14 22:05:09'),
+(6,  5,  18000.00, 'NEFT', 'SUCCESS',   'TXN-NEFT-20260715-015', 'Advance payment',        '2026-07-15 11:00:00', '2026-07-15 11:03:20'),
+(28, 14, 4500.00,  'UPI',  'INITIATED', 'TXN-UPI-20260716-016',  'Weekend trip split',     '2026-07-16 08:00:00', NULL),
+(33, 3,  6200.00,  'IMPS', 'SUCCESS',   'TXN-IMPS-20260717-017', 'Sibling transfer',       '2026-07-17 13:25:00', '2026-07-17 13:25:14'),
+(26, 2,  980.00,   'NEFT', 'PENDING',   'TXN-NEFT-20260718-018', 'Utility bill',           '2026-07-18 10:40:00', NULL),
+(2,  NULL, 5000.00,'IMPS', 'SUCCESS',   'TXN-IMPS-20260719-019', 'Self transfer',          '2026-07-19 15:55:00', '2026-07-19 15:56:00'),
+(4,  1,  2200.00,  'UPI',  'SUCCESS',   'TXN-UPI-20260720-020',  'Birthday gift',          '2026-07-20 19:10:00', '2026-07-20 19:10:05');
+
+-- ───────────────────────────── RESET SEQUENCES ─────────────────────────────
+SELECT setval('beneficiary_beneficiary_id_seq', 6, true);
+SELECT setval('payment_transaction_transaction_id_seq', 7, true);
+SELECT setval('upi_mapping_upi_id_seq', 4, true);
+
+-- ═══════════════════════════════════════════════════════════════════
+-- NOTES
+-- ═══════════════════════════════════════════════════════════════════
+-- 1. beneficiary_id is NULL on a payment_transaction row when the
+--    transfer is a self-transfer between the customer's own accounts
+--    (see the IMPS row above) - no beneficiary record needed for that.
+-- 2. The UNIQUE constraint on beneficiary(customer_id, account_number)
+--    stops a customer from adding the exact same payee account twice.
+--    It does NOT stop two different customers from having the same
+--    beneficiary account number - that's expected (they could both be
+--    paying the same landlord, for example).
+-- 3. transaction_mode drives which real-world rail the transfer used:
+--      IMPS - instant, works 24/7, best for small/urgent transfers
+--      NEFT - batched, can take longer, no per-transaction cap in India
+--      UPI  - uses a VPA (upi_mapping.vpa) instead of account+IFSC
+--    Only UPI transactions should reasonably have a UPI-linked account;
+--    enforce that pairing in the service layer, not the DB, since a
+--    CHECK constraint can't easily cross-reference upi_mapping here.
+-- 4. When payment-service (Java) is built, its @Table names must match
+--    beneficiary, payment_transaction, upi_mapping exactly, and its
+--    enums must match the CHECK constraint values above - same class
+--    of integration bug already flagged for account-service.
