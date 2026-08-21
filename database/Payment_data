@@ -166,9 +166,11 @@ SELECT setval('beneficiary_beneficiary_id_seq', 6, true);
 SELECT setval('payment_transaction_transaction_id_seq', 7, true);
 SELECT setval('upi_mapping_upi_id_seq', 4, true);
 
+
 -- ═══════════════════════════════════════════════════════════════════
--- NOTES
--- ═══════════════════════════════════════════════════════════════════
+-- NOTES:
+---- ═══════════════════════════════════════════════════════════════════
+
 -- 1. beneficiary_id is NULL on a payment_transaction row when the
 --    transfer is a self-transfer between the customer's own accounts
 --    (see the IMPS row above) - no beneficiary record needed for that.
