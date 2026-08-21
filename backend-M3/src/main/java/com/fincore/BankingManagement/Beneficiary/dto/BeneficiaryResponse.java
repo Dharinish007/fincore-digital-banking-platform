@@ -16,12 +16,12 @@ public class BeneficiaryResponse {
     private Beneficiary_type beneficiary_type;
     private Status status;
 
-    public BeneficiaryResponse(long beneficiary_id,String beneficiaryName, String accountNo, String ifsc, String bankName, Beneficiary_type beneficiaryType,Status status) {
+    public BeneficiaryResponse(long beneficiary_id,String beneficiaryName, String AccountNumber, String ifsc, String bank, Beneficiary_type beneficiaryType,Status status) {
         this.beneficiary_id = beneficiary_id;
         this.name = beneficiaryName;
-        this.AccountNumber = accountNo;
+        this.AccountNumber = AccountNumber;
         this.ifsc = ifsc;
-        this.Bank = bankName;
+        this.Bank = bank;
         this.beneficiary_type = beneficiaryType;
         this.status=status;
     }
