@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fincore.kyc_service.config.NotificationClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class KycServiceImpl implements KycService {
 
     @Autowired
     private KycRepository kycRepository;
+
+    @Autowired
+    private NotificationClient notificationClient;
 
     @Override
     public List<KycResponseDTO> getAllKyc() {
@@ -83,6 +87,12 @@ public class KycServiceImpl implements KycService {
 
         Kyc savedKyc = kycRepository.save(kyc);
 
+        notificationClient.notify(
+                savedKyc.getEmail(),
+                "KYC_SUBMITTED",
+                "Your KYC application has been submitted and is pending review."
+        );
+
         KycResponseDTO response = new KycResponseDTO();
         response.setKycId(savedKyc.getKycId());
         response.setStatus(savedKyc.getStatus());
@@ -120,6 +130,12 @@ public class KycServiceImpl implements KycService {
 
             kycRepository.save(kyc);
 
+            notificationClient.notify(
+                    kyc.getEmail(),
+                    "KYC_APPROVED",
+                    "Your KYC has been approved."
+            );
+
             response.setKycId(kyc.getKycId());
             response.setStatus(kyc.getStatus());
             response.setMessage("KYC approved successfully");
@@ -146,6 +162,12 @@ public class KycServiceImpl implements KycService {
             kyc.setStatus("REJECTED");
 
             kycRepository.save(kyc);
+
+            notificationClient.notify(
+                    kyc.getEmail(),
+                    "KYC_REJECTED",
+                    "Your KYC has been rejected. Please contact support for details."
+            );
 
             response.setKycId(kyc.getKycId());
             response.setStatus(kyc.getStatus());

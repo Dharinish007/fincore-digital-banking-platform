@@ -3,6 +3,7 @@ package com.bankingsystem.disbursementsaga.service;
 import com.bankingsystem.disbursementsaga.client.AuditTrailClient;
 import com.bankingsystem.disbursementsaga.client.CoreBankingClient;
 import com.bankingsystem.disbursementsaga.client.KycServiceClient;
+import com.bankingsystem.disbursementsaga.client.NotificationClient;
 import com.bankingsystem.disbursementsaga.dto.AccountResponse;
 import com.bankingsystem.disbursementsaga.dto.AuditLogRequest;
 import com.bankingsystem.disbursementsaga.dto.DisbursementRequest;
@@ -28,15 +29,17 @@ public class DisbursementSagaOrchestrator {
     private final KycServiceClient kycClient;
     private final CoreBankingClient coreBankingClient;
     private final AuditTrailClient auditTrailClient;
+    private final NotificationClient notificationClient;
 
     public DisbursementSagaOrchestrator(DisbursementSagaRepository sagaRepository,
                                         KycServiceClient kycClient,
                                         CoreBankingClient coreBankingClient,
-                                        AuditTrailClient auditTrailClient) {
+                                        AuditTrailClient auditTrailClient, NotificationClient notificationClient) {
         this.sagaRepository = sagaRepository;
         this.kycClient = kycClient;
         this.coreBankingClient = coreBankingClient;
         this.auditTrailClient = auditTrailClient;
+        this.notificationClient = notificationClient;
     }
 
     public DisbursementResponse run(DisbursementRequest request) {
@@ -141,6 +144,12 @@ public class DisbursementSagaOrchestrator {
                     "Disbursement failed: " + ex.getMessage(),
                     LocalDateTime.now()
             ));
+
+            notificationClient.notify(
+                    request.getPerformedBy() == null ? "SYSTEM" : request.getPerformedBy(),
+                    "DISBURSEMENT_FAILED",
+                    "Disbursement failed: " + ex.getMessage()
+            );
 
             saga.setStatus(SagaStatus.FAILED);
             sagaRepository.save(saga);
