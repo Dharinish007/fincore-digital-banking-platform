@@ -18,6 +18,7 @@ public class beneficiary {
     @Id
     private long beneficiary_id;
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="customer_id")
     private Customer customer;
     private String beneficiary_name;
     private String account_no;

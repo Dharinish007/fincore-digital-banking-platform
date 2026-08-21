@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BeneficiaryResponse {
+    private long beneficiary_id;
     private String name;
     private String AccountNumber;
     private String ifsc;
@@ -17,7 +18,8 @@ public class BeneficiaryResponse {
     private Beneficiary_type beneficiary_type;
     private Status status;
 
-    public BeneficiaryResponse(String beneficiaryName, String accountNo, String ifsc, String bankName, Beneficiary_type beneficiaryType) {
+    public BeneficiaryResponse(long beneficiary_id,String beneficiaryName, String accountNo, String ifsc, String bankName, Beneficiary_type beneficiaryType) {
+        this.beneficiary_id = beneficiary_id;
         this.name = beneficiaryName;
         this.AccountNumber = accountNo;
         this.ifsc = ifsc;

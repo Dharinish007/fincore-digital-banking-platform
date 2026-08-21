@@ -16,7 +16,7 @@ public class BeneficiaryService {
         return
                 repo.findAll()
                         .stream()
-                        .map(b->new BeneficiaryResponse (b.getBeneficiary_name(),b.getAccount_no(),
+                        .map(b->new BeneficiaryResponse (b.getBeneficiary_id(),b.getBeneficiary_name(),b.getAccount_no(),
                                 b.getIfsc(),b.getBank_name(),b.getBeneficiary_type(),b.getStatus())).toList();
     }
 }
