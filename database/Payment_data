@@ -1,5 +1,5 @@
--- =====================================================================
 -- FinCore Digital Banking Platform — Payment Service Schema (PostgreSQL)
+
 -- Milestone: Payment Service | IMPS/NEFT/UPI | Beneficiary management
 --
 -- Runs against the SAME shared database as account-service and
@@ -13,6 +13,7 @@
 -- payment_transaction both reference them with real foreign keys).
 --
 -- SETUP:
+
 --   psql -U postgres -d BankingApp -f fincore_payment_service_postgres.sql
 
 -- =====================================================================
