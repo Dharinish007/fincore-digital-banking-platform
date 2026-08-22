@@ -31,5 +31,10 @@ export class SidebarComponent {
       icon: 'verified_user',
       route: '/beneficiary-verification',
     },
+    {
+      label: 'Fraud Check',
+      icon: 'shield',
+      route: '/fraud-check',
+    },
   ];
 }

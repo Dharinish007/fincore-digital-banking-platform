@@ -1,0 +1,354 @@
+<div class="dashboard-layout">
+  <!-- Top Navigation Header -->
+  <app-header
+    moduleTitle="Fraud Check"
+    moduleIcon="shield"
+    (toggleSidebar)="toggleSidebar()"
+  >
+  </app-header>
+
+  <div class="main-container">
+    <!-- Left Navigation Sidebar -->
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <!-- Main Content Area -->
+    <main class="content-area">
+      <!-- Toast Notification -->
+      <div class="toast-banner" *ngIf="toastMessage" [ngClass]="toastType">
+        <mat-icon>{{ toastType === 'success' ? 'check_circle' : 'warning' }}</mat-icon>
+        <span>{{ toastMessage }}</span>
+      </div>
+
+      <!-- Page Header -->
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>Fraud Check</h1>
+          <p class="subtitle">
+            Review automated risk scoring on verified payments and clear, flag, or block transactions before execution
+          </p>
+        </div>
+        <div class="live-indicator-badge">
+          <span class="live-pulse"></span>
+          <span>Fraud Engine: Active</span>
+        </div>
+      </div>
+
+      <!-- Summary Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon total">
+            <mat-icon>fact_check</mat-icon>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Total Screened</span>
+            <span class="metric-value">{{ totalCount }}</span>
+          </div>
+        </div>
+
+        <div class="metric-card clickable" (click)="setTab('Pending')" [class.active-card]="activeTab === 'Pending'">
+          <div class="metric-icon pending">
+            <mat-icon>hourglass_empty</mat-icon>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Pending Review</span>
+            <span class="metric-value warning">{{ pendingCount }}</span>
+          </div>
+        </div>
+
+        <div class="metric-card clickable" (click)="setTab('Safe')" [class.active-card]="activeTab === 'Safe'">
+          <div class="metric-icon safe">
+            <mat-icon>verified_user</mat-icon>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Safe / Cleared</span>
+            <span class="metric-value success">{{ safeCount }}</span>
+          </div>
+        </div>
+
+        <div class="metric-card clickable" (click)="setTab('Suspicious')" [class.active-card]="activeTab === 'Suspicious'">
+          <div class="metric-icon suspicious">
+            <mat-icon>report_problem</mat-icon>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Suspicious</span>
+            <span class="metric-value suspicious-text">{{ suspiciousCount }}</span>
+          </div>
+        </div>
+
+        <div class="metric-card clickable" (click)="setTab('Blocked')" [class.active-card]="activeTab === 'Blocked'">
+          <div class="metric-icon blocked">
+            <mat-icon>block</mat-icon>
+          </div>
+          <div class="metric-info">
+            <span class="metric-label">Blocked</span>
+            <span class="metric-value danger">{{ blockedCount }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Table Container Card -->
+      <div class="form-container-card">
+        <!-- Filter Tabs & Search Controls -->
+        <div class="table-controls">
+          <div class="tab-group">
+            <button class="tab-btn" [class.active]="activeTab === 'ALL'" (click)="setTab('ALL')">
+              All ({{ totalCount }})
+            </button>
+            <button class="tab-btn pending" [class.active]="activeTab === 'Pending'" (click)="setTab('Pending')">
+              Pending ({{ pendingCount }})
+            </button>
+            <button class="tab-btn safe" [class.active]="activeTab === 'Safe'" (click)="setTab('Safe')">
+              Safe ({{ safeCount }})
+            </button>
+            <button class="tab-btn suspicious" [class.active]="activeTab === 'Suspicious'" (click)="setTab('Suspicious')">
+              Suspicious ({{ suspiciousCount }})
+            </button>
+            <button class="tab-btn blocked" [class.active]="activeTab === 'Blocked'" (click)="setTab('Blocked')">
+              Blocked ({{ blockedCount }})
+            </button>
+          </div>
+
+          <div class="search-box">
+            <mat-icon>search</mat-icon>
+            <input
+              type="text"
+              [(ngModel)]="searchQuery"
+              (ngModelChange)="onSearchChange()"
+              placeholder="Search customer, beneficiary, payment ID, rule..."
+            />
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="table-wrapper">
+          <table class="fraud-table">
+            <thead>
+              <tr>
+                <th>Payment</th>
+                <th>Beneficiary</th>
+                <th>Amount</th>
+                <th>Risk Score</th>
+                <th>Rule Triggered</th>
+                <th>Status</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let f of filteredFraudChecks">
+                <!-- Payment -->
+                <td class="name-cell">
+                  <div class="avatar-chip" [ngClass]="'risk-' + riskLevel(f.risk_score)">
+                    {{ (f.customer_name || '?').charAt(0) }}
+                  </div>
+                  <div>
+                    <div class="font-semibold">{{ f.customer_name || 'Unknown Customer' }}</div>
+                    <div class="sub-text">Payment #{{ f.payment_id }} &middot; {{ f.payment_mode }}</div>
+                  </div>
+                </td>
+
+                <!-- Beneficiary -->
+                <td>
+                  <div class="font-semibold">{{ f.beneficiary_name || '—' }}</div>
+                  <div class="sub-text mono-font">{{ f.to_account_no }}</div>
+                </td>
+
+                <!-- Amount -->
+                <td class="mono-font amount-cell">₹{{ f.amount | number: '1.2-2' }}</td>
+
+                <!-- Risk Score -->
+                <td>
+                  <div class="risk-score-cell" [ngClass]="'risk-' + riskLevel(f.risk_score)">
+                    <div class="risk-bar-track">
+                      <div class="risk-bar-fill" [style.width.%]="f.risk_score"></div>
+                    </div>
+                    <span class="risk-score-value">{{ f.risk_score }}/100</span>
+                  </div>
+                </td>
+
+                <!-- Rule Triggered -->
+                <td class="rule-cell">
+                  <span *ngIf="f.rule_triggered && f.rule_triggered !== 'NONE'">{{ f.rule_triggered }}</span>
+                  <span *ngIf="!f.rule_triggered || f.rule_triggered === 'NONE'" class="sub-text">No rule triggered</span>
+                </td>
+
+                <!-- Status -->
+                <td>
+                  <span
+                    class="status-badge"
+                    [ngClass]="{
+                      'status-pending': f.fraud_status === 'Pending',
+                      'status-safe': f.fraud_status === 'Safe',
+                      'status-suspicious': f.fraud_status === 'Suspicious',
+                      'status-blocked': f.fraud_status === 'Blocked'
+                    }"
+                  >
+                    <mat-icon *ngIf="f.fraud_status === 'Pending'">hourglass_empty</mat-icon>
+                    <mat-icon *ngIf="f.fraud_status === 'Safe'">check_circle</mat-icon>
+                    <mat-icon *ngIf="f.fraud_status === 'Suspicious'">report_problem</mat-icon>
+                    <mat-icon *ngIf="f.fraud_status === 'Blocked'">block</mat-icon>
+                    <span>{{ f.fraud_status }}</span>
+                  </span>
+                </td>
+
+                <!-- Actions -->
+                <td class="text-right action-cell">
+                  <ng-container *ngIf="f.fraud_status === 'Pending'">
+                    <button class="btn-action approve-btn" (click)="openApproveModal(f)">
+                      <mat-icon>verified_user</mat-icon>
+                      <span>Mark Safe</span>
+                    </button>
+                    <button class="btn-action flag-btn" (click)="flagSuspicious(f)">
+                      <mat-icon>report_problem</mat-icon>
+                      <span>Flag</span>
+                    </button>
+                    <button class="btn-action block-btn" (click)="openBlockModal(f)">
+                      <mat-icon>block</mat-icon>
+                      <span>Block</span>
+                    </button>
+                  </ng-container>
+
+                  <ng-container *ngIf="f.fraud_status === 'Suspicious'">
+                    <button class="btn-action approve-btn" (click)="openApproveModal(f)">
+                      <mat-icon>verified_user</mat-icon>
+                      <span>Clear as Safe</span>
+                    </button>
+                    <button class="btn-action block-btn" (click)="openBlockModal(f)">
+                      <mat-icon>block</mat-icon>
+                      <span>Block</span>
+                    </button>
+                  </ng-container>
+
+                  <span *ngIf="f.fraud_status === 'Safe'" class="safe-tag">
+                    <mat-icon>check</mat-icon> Ready to Execute
+                  </span>
+
+                  <span *ngIf="f.fraud_status === 'Blocked'" class="blocked-tag">
+                    <mat-icon>shield</mat-icon> Payment Stopped
+                  </span>
+                </td>
+              </tr>
+
+              <tr *ngIf="filteredFraudChecks.length === 0">
+                <td colspan="7" class="empty-state">
+                  <mat-icon>fact_check</mat-icon>
+                  <p>No fraud check records found matching the criteria.</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- APPROVE (MARK SAFE) MODAL DIALOG -->
+<div class="modal-backdrop" *ngIf="showApproveModal" (click)="closeApproveModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-icon approve-icon">
+        <mat-icon>verified_user</mat-icon>
+      </div>
+      <div>
+        <h2>Clear Transaction as Safe</h2>
+        <p class="muted">Review the risk parameters before releasing this payment for execution.</p>
+      </div>
+      <button class="close-btn" (click)="closeApproveModal()">&times;</button>
+    </div>
+
+    <div class="modal-body" *ngIf="selectedForApprove">
+      <div class="review-details-grid">
+        <div class="review-item">
+          <span class="item-label">Customer</span>
+          <span class="item-value font-bold">{{ selectedForApprove.customer_name }}</span>
+        </div>
+
+        <div class="review-item">
+          <span class="item-label">Payment ID</span>
+          <span class="item-value highlight">#{{ selectedForApprove.payment_id }}</span>
+        </div>
+
+        <div class="review-item">
+          <span class="item-label">Beneficiary</span>
+          <span class="item-value">{{ selectedForApprove.beneficiary_name }}</span>
+        </div>
+
+        <div class="review-item">
+          <span class="item-label">Destination Account</span>
+          <span class="item-value highlight">{{ selectedForApprove.to_account_no }}</span>
+        </div>
+
+        <div class="review-item">
+          <span class="item-label">Amount</span>
+          <span class="item-value">₹{{ selectedForApprove.amount | number: '1.2-2' }}</span>
+        </div>
+
+        <div class="review-item">
+          <span class="item-label">Risk Score</span>
+          <span class="item-value" [ngClass]="'risk-text-' + riskLevel(selectedForApprove.risk_score)">
+            {{ selectedForApprove.risk_score }}/100
+          </span>
+        </div>
+      </div>
+
+      <div class="verification-notice">
+        <mat-icon>shield</mat-icon>
+        <span>
+          Upon confirmation, this transaction's fraud status will change to <strong>Safe</strong> and the payment will proceed to execution.
+        </span>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeApproveModal()">Cancel</button>
+      <button class="btn-primary btn-confirm" (click)="confirmApprove()">
+        <mat-icon>check_circle</mat-icon>
+        <span>Confirm & Clear</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK MODAL DIALOG -->
+<div class="modal-backdrop" *ngIf="showBlockModal" (click)="closeBlockModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-icon block-icon">
+        <mat-icon>gavel</mat-icon>
+      </div>
+      <div>
+        <h2>Block Transaction</h2>
+        <p class="muted">Stop this payment from proceeding to execution.</p>
+      </div>
+      <button class="close-btn" (click)="closeBlockModal()">&times;</button>
+    </div>
+
+    <div class="modal-body" *ngIf="selectedForBlock">
+      <p class="warning-text">
+        Are you sure you want to block the payment to <strong>{{ selectedForBlock.beneficiary_name }}</strong>
+        (Amount: ₹{{ selectedForBlock.amount | number: '1.2-2' }})?
+      </p>
+      <p class="sub-text">
+        Blocked transactions are immediately stopped and will not be executed.
+      </p>
+
+      <div class="remarks-field">
+        <label for="blockRemarks">Remarks (optional)</label>
+        <textarea
+          id="blockRemarks"
+          rows="3"
+          [(ngModel)]="blockRemarks"
+          placeholder="e.g. Beneficiary matched internal watchlist"
+        ></textarea>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" (click)="closeBlockModal()">Cancel</button>
+      <button class="btn-danger" (click)="confirmBlock()">
+        <mat-icon>block</mat-icon>
+        <span>Block Transaction</span>
+      </button>
+    </div>
+  </div>
+</div>
