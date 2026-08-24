@@ -6,7 +6,9 @@ import com.fasterxml.jackson.annotation.JsonValue;
 public enum PaymentType {
 
     TRANSFER("Transfer"),
+
     BILL_PAYMENT("Bill Payment"),
+
     OTHER("Other");
 
     private final String value;
@@ -22,11 +24,15 @@ public enum PaymentType {
 
     @JsonCreator
     public static PaymentType fromValue(String value) {
+
         for (PaymentType type : values()) {
             if (type.value.equalsIgnoreCase(value)) {
                 return type;
             }
         }
-        throw new IllegalArgumentException("Invalid payment type: " + value);
+
+        throw new IllegalArgumentException(
+                "Invalid payment type: " + value
+        );
     }
 }

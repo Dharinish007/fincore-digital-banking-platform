@@ -1,67 +1,28 @@
-package com.fincore.BankingManagement.Payment.entity;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+package com.fincore.BankingManagement.Payment.dto;
 
 import com.fincore.BankingManagement.Payment.enums.PaymentMode;
 import com.fincore.BankingManagement.Payment.enums.PaymentStatus;
 import com.fincore.BankingManagement.Payment.enums.PaymentType;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "payment")
-public class Payment {
+public class PaymentResponseDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "payment_id")
     private Long paymentId;
-
-    @Column(name = "from_account_no", nullable = false)
     private String fromAccountNo;
-
-    @Column(name = "to_account_no", nullable = false)
     private String toAccountNo;
-
-    @Column(name = "beneficiary_id", nullable = false)
     private Long beneficiaryId;
-
-    @Column(name = "amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_type", nullable = false)
     private PaymentType paymentType;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_mode", nullable = false)
     private PaymentMode paymentMode;
-
-    @Column(name = "description")
     private String description;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
-
-    @Column(name = "transaction_ref", unique = true)
     private String transactionRef;
-
-    @Column(name = "initiated_at")
     private LocalDateTime initiatedAt;
-
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public Payment() {
+    public PaymentResponseDTO() {
     }
 
     public Long getPaymentId() {

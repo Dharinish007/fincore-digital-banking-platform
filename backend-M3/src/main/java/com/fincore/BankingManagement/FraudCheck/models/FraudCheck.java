@@ -1,10 +1,17 @@
-package com.fincore.BankingManagement.models;
+package com.fincore.BankingManagement.FraudCheck.models;
+
+import java.time.LocalDateTime;
 
 import com.fincore.BankingManagement.FraudCheck.enums.FraudStatus;
 
-import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "fraud_check")

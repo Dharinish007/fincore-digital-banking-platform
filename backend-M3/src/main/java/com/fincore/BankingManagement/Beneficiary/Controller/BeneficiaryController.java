@@ -1,15 +1,20 @@
 package com.fincore.BankingManagement.Beneficiary.Controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fincore.BankingManagement.Beneficiary.dto.BeneficiaryRequest;
 import com.fincore.BankingManagement.Beneficiary.dto.BeneficiaryResponse;
 import com.fincore.BankingManagement.Beneficiary.dto.GetByBeneficiaryIdResponse;
 import com.fincore.BankingManagement.Beneficiary.service.BeneficiaryService;
-import com.fincore.BankingManagement.models.beneficiary;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("beneficiary-verification")
@@ -17,8 +22,6 @@ public class BeneficiaryController {
 
     @Autowired
     private BeneficiaryService service;
-
-    private BeneficiaryResponse response=new BeneficiaryResponse();
 
     @GetMapping("/getList")
     public List<BeneficiaryResponse> getList(){

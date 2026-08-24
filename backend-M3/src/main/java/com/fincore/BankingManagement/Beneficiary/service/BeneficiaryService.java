@@ -1,14 +1,15 @@
 package com.fincore.BankingManagement.Beneficiary.service;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.fincore.BankingManagement.Beneficiary.Repository.BeneficiaryRepository;
 import com.fincore.BankingManagement.Beneficiary.dto.BeneficiaryRequest;
 import com.fincore.BankingManagement.Beneficiary.dto.BeneficiaryResponse;
 import com.fincore.BankingManagement.Beneficiary.dto.GetByBeneficiaryIdResponse;
-import com.fincore.BankingManagement.models.Customer;
 import com.fincore.BankingManagement.models.beneficiary;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 public class BeneficiaryService {

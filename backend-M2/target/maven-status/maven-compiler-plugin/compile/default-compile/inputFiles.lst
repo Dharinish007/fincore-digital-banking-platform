@@ -1,0 +1,7 @@
+C:\Users\Admin\Desktop\Fincore-App\fincore-digital-banking-platform\backend-M2\src\main\java\com\fincore\BankingManagement\BankingManagementApplication.java
+C:\Users\Admin\Desktop\Fincore-App\fincore-digital-banking-platform\backend-M2\src\main\java\com\fincore\BankingManagement\EMI\controller\EMICalculationController.java
+C:\Users\Admin\Desktop\Fincore-App\fincore-digital-banking-platform\backend-M2\src\main\java\com\fincore\BankingManagement\EMI\dto\EMICalculationRequest.java
+C:\Users\Admin\Desktop\Fincore-App\fincore-digital-banking-platform\backend-M2\src\main\java\com\fincore\BankingManagement\EMI\dto\EMICalculationResponse.java
+C:\Users\Admin\Desktop\Fincore-App\fincore-digital-banking-platform\backend-M2\src\main\java\com\fincore\BankingManagement\EMI\entity\EMICalculation.java
+C:\Users\Admin\Desktop\Fincore-App\fincore-digital-banking-platform\backend-M2\src\main\java\com\fincore\BankingManagement\EMI\repository\EMICalculationRepository.java
+C:\Users\Admin\Desktop\Fincore-App\fincore-digital-banking-platform\backend-M2\src\main\java\com\fincore\BankingManagement\EMI\service\EMICalculationService.java
