@@ -24,12 +24,13 @@ public class FraudCheckController {
     }
 
     @PostMapping
-    public ResponseEntity<FraudCheck> saveFraudCheck(
+    public ResponseEntity<FraudCheck> processFraudCheck(
             @RequestBody FraudCheck fraudCheck) {
 
-        FraudCheck saved = fraudCheckService.saveFraudCheck(fraudCheck);
+        FraudCheck processed =
+                fraudCheckService.processFraudCheck(fraudCheck);
 
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(processed);
     }
 
     @GetMapping("/payment/{paymentId}")

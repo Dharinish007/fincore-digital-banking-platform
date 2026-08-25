@@ -26,7 +26,9 @@ public class PaymentService {
 
         LocalDateTime now = LocalDateTime.now();
 
-        payment.setPaymentStatus(PaymentStatus.Success);
+        // Payment is not successful yet.
+        // Fraud Check must happen before Success.
+        payment.setPaymentStatus(PaymentStatus.Processing);
 
         payment.setTransactionRef(
                 "TXN-" +
@@ -40,6 +42,19 @@ public class PaymentService {
 
         payment.setInitiatedAt(now);
         payment.setUpdatedAt(now);
+
+        return paymentRepository.save(payment);
+    }
+
+    @Transactional
+    public Payment updatePaymentStatus(Long paymentId, PaymentStatus status) {
+
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() ->
+                        new RuntimeException("Payment not found with ID: " + paymentId));
+
+        payment.setPaymentStatus(status);
+        payment.setUpdatedAt(LocalDateTime.now());
 
         return paymentRepository.save(payment);
     }
