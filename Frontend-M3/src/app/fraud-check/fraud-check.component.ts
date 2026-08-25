@@ -122,6 +122,24 @@ export class FraudCheckComponent implements OnInit {
     return 'low';
   }
 
+  // fraud_check.php now writes rule_triggered as an UPPER_SNAKE_CASE code
+  // (HIGH_TRANSACTION_AMOUNT / UNUSUAL_TRANSACTION_AMOUNT / NORMAL_TRANSACTION,
+  // matching 13_insert_fraud_check_data.sql) instead of a free-text sentence.
+  // Treat a normal/no-op result the same as "no rule" in the UI, and
+  // humanize the rest for display: HIGH_TRANSACTION_AMOUNT -> "High Transaction Amount".
+  hasTriggeredRule(rule: string | null | undefined): boolean {
+    return !!rule && rule !== 'NONE' && rule !== 'NORMAL_TRANSACTION';
+  }
+
+  formatRuleLabel(rule: string | null | undefined): string {
+    if (!rule) return '';
+    return rule
+      .toLowerCase()
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+
   // Approve (Mark Safe) Handlers
   openApproveModal(record: FraudCheck): void {
     this.selectedForApprove = record;

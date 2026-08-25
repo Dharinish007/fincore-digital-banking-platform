@@ -129,6 +129,8 @@
                 <th>Amount</th>
                 <th>Risk Score</th>
                 <th>Rule Triggered</th>
+                <th>Remarks</th>
+                <th>Checked At</th>
                 <th>Status</th>
                 <th class="text-right">Actions</th>
               </tr>
@@ -167,8 +169,22 @@
 
                 <!-- Rule Triggered -->
                 <td class="rule-cell">
-                  <span *ngIf="f.rule_triggered && f.rule_triggered !== 'NONE'">{{ f.rule_triggered }}</span>
-                  <span *ngIf="!f.rule_triggered || f.rule_triggered === 'NONE'" class="sub-text">No rule triggered</span>
+                  <span *ngIf="hasTriggeredRule(f.rule_triggered)" [title]="f.rule_triggered">
+                    {{ formatRuleLabel(f.rule_triggered) }}
+                  </span>
+                  <span *ngIf="!hasTriggeredRule(f.rule_triggered)" class="sub-text">No rule triggered</span>
+                </td>
+
+                <!-- Remarks -->
+                <td class="remarks-cell">
+                  <span *ngIf="f.remarks" class="remarks-text" [title]="f.remarks">{{ f.remarks }}</span>
+                  <span *ngIf="!f.remarks" class="sub-text">—</span>
+                </td>
+
+                <!-- Checked At -->
+                <td class="mono-font sub-text">
+                  <span *ngIf="f.checked_at">{{ f.checked_at | date: 'MMM d, y, h:mm a' }}</span>
+                  <span *ngIf="!f.checked_at">—</span>
                 </td>
 
                 <!-- Status -->
@@ -229,7 +245,7 @@
               </tr>
 
               <tr *ngIf="filteredFraudChecks.length === 0">
-                <td colspan="7" class="empty-state">
+                <td colspan="9" class="empty-state">
                   <mat-icon>fact_check</mat-icon>
                   <p>No fraud check records found matching the criteria.</p>
                 </td>
@@ -288,6 +304,16 @@
           <span class="item-value" [ngClass]="'risk-text-' + riskLevel(selectedForApprove.risk_score)">
             {{ selectedForApprove.risk_score }}/100
           </span>
+        </div>
+
+        <div class="review-item">
+          <span class="item-label">Checked At</span>
+          <span class="item-value">{{ selectedForApprove.checked_at | date: 'MMM d, y, h:mm a' }}</span>
+        </div>
+
+        <div class="review-item review-item-full" *ngIf="selectedForApprove.remarks">
+          <span class="item-label">System Remarks</span>
+          <span class="item-value">{{ selectedForApprove.remarks }}</span>
         </div>
       </div>
 

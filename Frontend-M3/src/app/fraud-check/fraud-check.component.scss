@@ -392,6 +392,20 @@
     color: #CBD5E1;
   }
 
+  .remarks-cell {
+    max-width: 200px;
+    font-size: 0.8125rem;
+    color: #CBD5E1;
+
+    .remarks-text {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      cursor: help;
+    }
+  }
+
   /* Risk Score Bar */
   .risk-score-cell {
     display: flex;
@@ -788,6 +802,10 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+
+    &.review-item-full {
+      grid-column: 1 / -1;
+    }
 
     .item-label {
       font-size: 0.75rem;
