@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, delay } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+
 import { Beneficiary } from './models/beneficiary.model';
 import { Payment } from './models/payment.model';
-import { FraudCheck } from './models/fraud-check.model';
 import { BeneficiaryService } from '../services/beneficiary.service';
 
 export interface UserAccount {
@@ -16,6 +17,7 @@ export interface UserAccount {
   providedIn: 'root',
 })
 export class PaymentInitiationService {
+
   private mockAccounts: UserAccount[] = [
     {
       account_no: 'XXXXXX1234',
@@ -37,58 +39,27 @@ export class PaymentInitiationService {
     },
   ];
 
-  constructor(private beneficiaryService: BeneficiaryService) {}
+  constructor(
+    private beneficiaryService: BeneficiaryService,
+    private http: HttpClient
+  ) {}
 
-  /**
-   * Fetch available sender accounts for dropdown selection
-   */
   getAccounts(): Observable<UserAccount[]> {
     return of([...this.mockAccounts]);
   }
 
-  /**
-   * Fetch all beneficiaries dynamically from shared BeneficiaryService
-   */
   getBeneficiaries(): Observable<Beneficiary[]> {
     return this.beneficiaryService.getBeneficiaries();
   }
 
-  /**
-   * Fetch only Verified beneficiaries eligible for payment initiation
-   */
   getVerifiedBeneficiaries(): Observable<Beneficiary[]> {
     return this.beneficiaryService.getVerifiedBeneficiaries();
   }
 
-  /**
-   * Simulate payment initiation flow with mock delay
-   */
-  initiatePayment(paymentPayload: Payment): Observable<{ payment: Payment; fraudCheck: FraudCheck }> {
-    const now = new Date();
-    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-    const randomHex = Math.random().toString(36).substring(2, 8).toUpperCase();
-    const transactionRef = `TXN-${dateStr}-${randomHex}`;
-
-    const completedPayment: Payment = {
-      ...paymentPayload,
-      payment_id: Math.floor(Math.random() * 900000) + 100000,
-      payment_status: 'Success',
-      transaction_ref: transactionRef,
-      initiated_at: now.toISOString().replace('T', ' ').slice(0, 19),
-      updated_at: now.toISOString().replace('T', ' ').slice(0, 19),
-    };
-
-    const fraudCheckRecord: FraudCheck = {
-      fraud_check_id: Math.floor(Math.random() * 900000) + 100000,
-      payment_id: completedPayment.payment_id!,
-      risk_score: Math.floor(Math.random() * 15), // Low risk score (0-15)
-      fraud_status: 'Safe',
-      rule_triggered: 'NONE',
-      remarks: 'Automated real-time fraud analysis: Low Risk / Cleared',
-      checked_at: completedPayment.initiated_at,
-    };
-
-    // Simulate backend asynchronous response
-    return of({ payment: completedPayment, fraudCheck: fraudCheckRecord }).pipe(delay(1500));
+  initiatePayment(paymentPayload: Payment): Observable<Payment> {
+    return this.http.post<Payment>(
+      'http://localhost:8080/api/payments',
+      paymentPayload
+    );
   }
 }

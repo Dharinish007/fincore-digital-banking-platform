@@ -172,10 +172,10 @@ export class PaymentInitiationComponent implements OnInit {
 
     this.paymentService.initiatePayment(payload).subscribe({
       next: (res) => {
-        this.completedPayment = res.payment;
-        this.fraudCheckResult = res.fraudCheck;
-        this.isSubmitting = false;
-        this.currentStep = 'SUCCESS';
+          this.completedPayment = res;
+          this.fraudCheckResult = null;
+          this.isSubmitting = false;
+          this.currentStep = 'SUCCESS';
       },
       error: (err) => {
         this.isSubmitting = false;
