@@ -236,11 +236,19 @@ Proceed Review Block/Flag
 # 📂 Database SQL Files
 
 ```text
-database/
+Digital-Banking-Database/
 │
-├── 01_create_database.sql
-├── 02_create_tables.sql
-├── 03_insert_sample_data.sql
+├── ├── 10_create_milestone3_tables.sql
+│   ├── 11_insert_beneficiary_data.sql
+│   ├── 12_insert_payment_data.sql
+│   └── 13_insert_fraud_check_data.sql
+│
+├── PHP/
+│   ├── db_connect.php
+│   ├── beneficiary_verification.php
+│   ├── payment_initiation.php
+│   └── fraud_check.php
+│
 └── README.md
 ```
 
