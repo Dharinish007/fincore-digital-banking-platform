@@ -39,7 +39,6 @@ public class PaymentService {
                         .substring(0, 6)
                         .toUpperCase()
         );
-
         payment.setInitiatedAt(now);
         payment.setUpdatedAt(now);
 

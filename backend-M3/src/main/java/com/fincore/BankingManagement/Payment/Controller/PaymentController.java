@@ -17,9 +17,8 @@ import com.fincore.BankingManagement.Payment.service.PaymentService;
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("*")
 public class PaymentController {
-
     private final PaymentService paymentService;
 
     public PaymentController(PaymentService paymentService) {

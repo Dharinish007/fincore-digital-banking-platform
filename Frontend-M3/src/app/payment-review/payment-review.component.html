@@ -11,101 +11,216 @@
     <!-- Left Navigation Sidebar -->
     <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
 
-    <!-- Main Content Area -->
+    <!-- Main Content -->
     <main class="content-area">
-      <!-- Title & Live Status Indicator -->
+      <!-- Title -->
       <div class="dashboard-header">
         <div class="title-group">
           <h1>Payment Review</h1>
+
           <p class="subtitle">
-            Review transaction parameters and authorization status before final ledger execution
+            Review transaction parameters and authorization status before final
+            ledger execution
           </p>
         </div>
+
         <div class="live-indicator-badge">
           <span class="live-pulse"></span>
-          <span>Fraud Engine: Active</span>
+
+          <span> Fraud Engine: Active </span>
         </div>
       </div>
 
-      <!-- Payment Review Card -->
-      <div class="form-container-card review-card">
+      <!-- ===================================================== -->
+      <!-- PAYMENT REVIEW -->
+      <!-- ===================================================== -->
+
+      <div
+        *ngIf="reviewData as payment"
+        class="form-container-card review-card"
+      >
+        <!-- Card Header -->
         <div class="card-header">
           <div class="header-icon review-icon">
             <mat-icon>fact_check</mat-icon>
           </div>
+
           <div>
             <h3>Payment Review</h3>
-            <p class="muted">Verify details carefully before confirming payment authorization.</p>
+
+            <p class="muted">
+              Verify details carefully before confirming payment authorization.
+            </p>
           </div>
         </div>
+
+        <!-- ================================================= -->
+        <!-- PAYMENT DETAILS -->
+        <!-- ================================================= -->
 
         <div class="review-details-grid">
           <!-- Payment ID -->
           <div class="review-item">
-            <span class="item-label">Payment ID</span>
-            <span class="item-value highlight">{{ reviewData.payment_id }}</span>
+            <span class="item-label"> Payment ID </span>
+
+            <span class="item-value highlight">
+              {{ payment.payment_id }}
+            </span>
           </div>
 
-          <!-- Payment Status (Always Pending) -->
+          <!-- Payment Status -->
           <div class="review-item">
-            <span class="item-label">Payment Status</span>
-            <span class="item-value status-badge status-pending">
-              <mat-icon>hourglass_empty</mat-icon> Pending
+            <span class="item-label"> Payment Status </span>
+
+            <span
+              class="item-value status-badge"
+              [ngClass]="{
+                'status-pending': payment.payment_status === 'Pending',
+
+                'status-processing': payment.payment_status === 'Processing',
+
+                'status-success': payment.payment_status === 'Success',
+
+                'status-failed': payment.payment_status === 'Failed',
+
+                'status-cancelled': payment.payment_status === 'Cancelled',
+              }"
+            >
+              <!-- Status Icon -->
+              <mat-icon>
+                {{
+                  payment.payment_status === "Pending"
+                    ? "hourglass_empty"
+                    : payment.payment_status === "Processing"
+                      ? "sync"
+                      : payment.payment_status === "Success"
+                        ? "check_circle"
+                        : payment.payment_status === "Failed"
+                          ? "error"
+                          : "cancel"
+                }}
+              </mat-icon>
+
+              <!-- Actual Payment Status -->
+              {{ payment.payment_status }}
             </span>
           </div>
 
           <!-- From Account -->
           <div class="review-item">
-            <span class="item-label">From Account</span>
-            <span class="item-value highlight">{{ reviewData.from_account_no }}</span>
+            <span class="item-label"> From Account </span>
+
+            <span class="item-value highlight">
+              {{ payment.from_account_no }}
+            </span>
           </div>
 
           <!-- Beneficiary -->
           <div class="review-item">
-            <span class="item-label">Beneficiary</span>
-            <span class="item-value font-semibold">{{ reviewData.beneficiary_name }}</span>
+            <span class="item-label"> Beneficiary </span>
+
+            <span class="item-value font-semibold">
+              {{ payment.beneficiary_name }}
+            </span>
           </div>
 
           <!-- To Account -->
           <div class="review-item">
-            <span class="item-label">To Account</span>
-            <span class="item-value highlight">{{ reviewData.to_account_no }}</span>
+            <span class="item-label"> To Account </span>
+
+            <span class="item-value highlight">
+              {{ payment.to_account_no }}
+            </span>
           </div>
 
           <!-- Amount -->
           <div class="review-item">
-            <span class="item-label">Amount</span>
-            <span class="item-value amount-text">₹{{ reviewData.amount | number:'1.0-2' }}</span>
+            <span class="item-label"> Amount </span>
+
+            <span class="item-value amount-text">
+              ₹{{ payment.amount | number: "1.0-2" }}
+            </span>
           </div>
 
           <!-- Payment Type -->
           <div class="review-item">
-            <span class="item-label">Payment Type</span>
-            <span class="item-value badge-pill">{{ reviewData.payment_type }}</span>
+            <span class="item-label"> Payment Type </span>
+
+            <span class="item-value badge-pill">
+              {{ payment.payment_type }}
+            </span>
           </div>
 
           <!-- Payment Mode -->
           <div class="review-item">
-            <span class="item-label">Payment Mode</span>
-            <span class="item-value badge-pill mode-badge">{{ reviewData.payment_mode }}</span>
+            <span class="item-label"> Payment Mode </span>
+
+            <span class="item-value badge-pill mode-badge">
+              {{ payment.payment_mode }}
+            </span>
           </div>
 
           <!-- Remarks -->
           <div class="review-item full-width-item">
-            <span class="item-label">Remarks</span>
-            <span class="item-value">{{ reviewData.remarks }}</span>
+            <span class="item-label"> Remarks </span>
+
+            <span class="item-value">
+              {{ payment.remarks }}
+            </span>
           </div>
         </div>
 
+        <!-- ================================================= -->
+        <!-- STATUS NOTICE -->
+        <!-- ================================================= -->
+
         <div class="review-notice">
           <mat-icon>shield</mat-icon>
-          <span>This payment is currently in <strong>Pending</strong> status and will undergo automated FinCore Nexus real-time fraud checking upon clearance.</span>
+
+          <span>
+            This payment is currently in
+
+            <strong>
+              {{ payment.payment_status }}
+            </strong>
+
+            status and will undergo automated FinCore Nexus real-time fraud
+            checking.
+          </span>
+        </div>
+
+        <!-- ================================================= -->
+        <!-- ACTIONS -->
+        <!-- ================================================= -->
+
+        <div class="form-actions">
+          <a routerLink="/payment-initiation" class="btn-secondary">
+            <mat-icon> arrow_back </mat-icon>
+
+            <span> Back to Payment Initiation </span>
+          </a>
+        </div>
+      </div>
+
+      <!-- ===================================================== -->
+      <!-- NO PAYMENT DATA -->
+      <!-- ===================================================== -->
+
+      <div *ngIf="!reviewData" class="form-container-card">
+        <div class="review-notice">
+          <mat-icon> error </mat-icon>
+
+          <span>
+            No payment data was received. Please return to Payment Initiation
+            and try again.
+          </span>
         </div>
 
         <div class="form-actions">
           <a routerLink="/payment-initiation" class="btn-secondary">
-            <mat-icon>arrow_back</mat-icon>
-            <span>Back to Payment Initiation</span>
+            <mat-icon> arrow_back </mat-icon>
+
+            Back to Payment Initiation
           </a>
         </div>
       </div>

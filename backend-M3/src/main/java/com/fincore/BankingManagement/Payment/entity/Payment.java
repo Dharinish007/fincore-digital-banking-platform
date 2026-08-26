@@ -2,7 +2,7 @@ package com.fincore.BankingManagement.Payment.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fincore.BankingManagement.Payment.enums.PaymentMode;
 import com.fincore.BankingManagement.Payment.enums.PaymentStatus;
 import com.fincore.BankingManagement.Payment.enums.PaymentType;
@@ -20,27 +20,33 @@ import jakarta.persistence.Table;
 @Table(name = "payment")
 public class Payment {
 
+    @JsonProperty("payment_id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "payment_id")
     private Long paymentId;
 
+    @JsonProperty("from_account_no")
     @Column(name = "from_account_no", nullable = false)
     private String fromAccountNo;
 
+    @JsonProperty("to_account_no")
     @Column(name = "to_account_no", nullable = false)
     private String toAccountNo;
 
+    @JsonProperty("beneficiary_id")
     @Column(name = "beneficiary_id", nullable = false)
     private Long beneficiaryId;
 
     @Column(name = "amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
 
+    @JsonProperty("payment_type")
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_type", nullable = false)
     private PaymentType paymentType;
 
+    @JsonProperty("payment_mode")
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_mode", nullable = false)
     private PaymentMode paymentMode;
@@ -48,19 +54,22 @@ public class Payment {
     @Column(name = "description")
     private String description;
 
+    @JsonProperty("payment_status")
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
     private PaymentStatus paymentStatus;
 
+    @JsonProperty("transaction_ref")
     @Column(name = "transaction_ref", unique = true)
     private String transactionRef;
 
+    @JsonProperty("initiated_at")
     @Column(name = "initiated_at")
     private LocalDateTime initiatedAt;
 
+    @JsonProperty("updated_at")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
     public Payment() {
     }
 

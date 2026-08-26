@@ -1,110 +1,163 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
-import { Beneficiary } from '../payment-initiation/models/beneficiary.model';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { BehaviorSubject, Observable, map } from "rxjs";
+
+import { Beneficiary } from "../payment-initiation/models/beneficiary.model";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class BeneficiaryService {
-  private initialBeneficiaries: Beneficiary[] = [
-    {
-      beneficiary_id: 101,
-      customer_id: 5001,
-      beneficiary_name: 'John Mathew',
-      account_no: 'XXXX1234',
-      ifsc_code: 'HDFC0001234',
-      bank_name: 'HDFC Bank',
-      beneficiary_type: 'External',
-      status: 'Verified',
-      created_at: '2026-01-15 10:30:00',
-    },
-    {
-      beneficiary_id: 102,
-      customer_id: 5001,
-      beneficiary_name: 'ABC Enterprises',
-      account_no: 'XXXX5678',
-      ifsc_code: 'SBIN0005678',
-      bank_name: 'State Bank of India',
-      beneficiary_type: 'External',
-      status: 'Verified',
-      created_at: '2026-02-10 14:15:00',
-    },
-    {
-      beneficiary_id: 103,
-      customer_id: 5001,
-      beneficiary_name: 'TechCorp Solutions',
-      account_no: 'XXXX9101',
-      ifsc_code: 'ICIC0009101',
-      bank_name: 'ICICI Bank',
-      beneficiary_type: 'Internal',
-      status: 'Verified',
-      created_at: '2026-03-01 09:00:00',
-    },
-    {
-      beneficiary_id: 104,
-      customer_id: 5001,
-      beneficiary_name: 'Priya Sharma',
-      account_no: 'XXXX3344',
-      ifsc_code: 'UTIB0003344',
-      bank_name: 'Axis Bank',
-      beneficiary_type: 'External',
-      status: 'Pending',
-      created_at: '2026-08-18 11:20:00',
-    },
-    {
-      beneficiary_id: 105,
-      customer_id: 5001,
-      beneficiary_name: 'Global Logistics Pvt Ltd',
-      account_no: 'XXXX7788',
-      ifsc_code: 'KKBK0007788',
-      bank_name: 'Kotak Mahindra Bank',
-      beneficiary_type: 'External',
-      status: 'Blocked',
-      created_at: '2026-05-12 16:45:00',
-    },
-  ];
+  private apiUrl = "http://localhost:8080/beneficiary-verification";
 
-  private beneficiariesSubject = new BehaviorSubject<Beneficiary[]>(this.initialBeneficiaries);
+  // Starts empty because data comes from DB
+  private beneficiariesSubject = new BehaviorSubject<Beneficiary[]>([]);
 
-  public beneficiaries$: Observable<Beneficiary[]> = this.beneficiariesSubject.asObservable();
+  public beneficiaries$: Observable<Beneficiary[]> =
+    this.beneficiariesSubject.asObservable();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   /**
-   * Get all beneficiaries as an Observable stream
+   * Load beneficiaries from Spring Boot backend
+   */
+  loadBeneficiaries(): void {
+    console.log("Loading beneficiaries from backend...");
+
+    this.http.get<any[]>(`${this.apiUrl}/getList`).subscribe({
+      next: (data) => {
+        console.log("Raw beneficiary data from backend:", data);
+
+        const beneficiaries: Beneficiary[] = data.map((b) => ({
+          beneficiary_id: b.beneficiary_id ?? b.beneficiaryId,
+          customer_id: b.customer_id ?? b.customerId,
+          beneficiary_name: b.name ?? b.beneficiary_name,
+          account_no: b.AccountNumber ?? b.accountNumber ?? b.accountNo,
+          ifsc_code: b.ifsc ?? b.ifscCode,
+          bank_name: b.Bank ?? b.bankName,
+          beneficiary_type: b.beneficiary_type ?? b.beneficiaryType,
+          status: b.status,
+          created_at: b.created_at ?? b.createdAt,
+        }));
+
+        console.log("Beneficiaries converted for Angular:", beneficiaries);
+
+        this.beneficiariesSubject.next(beneficiaries);
+      },
+
+      error: (error) => {
+        console.error("Error loading beneficiaries:", error);
+
+        this.beneficiariesSubject.next([]);
+      },
+    });
+  }
+
+  /**
+   * Get all beneficiaries
    */
   getBeneficiaries(): Observable<Beneficiary[]> {
     return this.beneficiaries$;
   }
 
   /**
-   * Get only verified beneficiaries as an Observable stream
+   * Get only verified beneficiaries
    */
   getVerifiedBeneficiaries(): Observable<Beneficiary[]> {
     return this.beneficiaries$.pipe(
-      map((list) => list.filter((b) => b.status === 'Verified'))
+      map((list) => list.filter((b) => b.status === "Verified")),
     );
   }
 
   /**
-   * Verify a pending beneficiary by ID
+   * Verify beneficiary
    */
   verifyBeneficiary(beneficiaryId: number): void {
     const current = this.beneficiariesSubject.getValue();
-    const updated = current.map((b) =>
-      b.beneficiary_id === beneficiaryId ? { ...b, status: 'Verified' as const } : b
-    );
-    this.beneficiariesSubject.next(updated);
+
+    const beneficiary = current.find((b) => b.beneficiary_id === beneficiaryId);
+
+    if (!beneficiary) {
+      console.error("Beneficiary not found:", beneficiaryId);
+
+      return;
+    }
+
+    const request = {
+      beneficiary_id: beneficiary.beneficiary_id,
+
+      name: beneficiary.beneficiary_name,
+
+      AccountNumber: beneficiary.account_no,
+
+      ifsc: beneficiary.ifsc_code,
+
+      Bank: beneficiary.bank_name,
+
+      beneficiary_type: beneficiary.beneficiary_type,
+
+      status: "Verified",
+    };
+
+    console.log("Verify request:", request);
+
+    this.http.put(`${this.apiUrl}/updateDetails`, request).subscribe({
+      next: (response) => {
+        console.log("Beneficiary verified:", response);
+
+        // Reload from database
+        this.loadBeneficiaries();
+      },
+
+      error: (error) => {
+        console.error("Error verifying beneficiary:", error);
+      },
+    });
   }
 
   /**
-   * Block a beneficiary by ID
+   * Block beneficiary
    */
   blockBeneficiary(beneficiaryId: number): void {
     const current = this.beneficiariesSubject.getValue();
-    const updated = current.map((b) =>
-      b.beneficiary_id === beneficiaryId ? { ...b, status: 'Blocked' as const } : b
-    );
-    this.beneficiariesSubject.next(updated);
+
+    const beneficiary = current.find((b) => b.beneficiary_id === beneficiaryId);
+
+    if (!beneficiary) {
+      console.error("Beneficiary not found:", beneficiaryId);
+
+      return;
+    }
+
+    const request = {
+      beneficiary_id: beneficiary.beneficiary_id,
+
+      name: beneficiary.beneficiary_name,
+
+      AccountNumber: beneficiary.account_no,
+
+      ifsc: beneficiary.ifsc_code,
+
+      Bank: beneficiary.bank_name,
+
+      beneficiary_type: beneficiary.beneficiary_type,
+
+      status: "Blocked",
+    };
+
+    console.log("Block request:", request);
+
+    this.http.put(`${this.apiUrl}/updateDetails`, request).subscribe({
+      next: (response) => {
+        console.log("Beneficiary blocked:", response);
+
+        // Reload latest data from DB
+        this.loadBeneficiaries();
+      },
+
+      error: (error) => {
+        console.error("Error blocking beneficiary:", error);
+      },
+    });
   }
 }
