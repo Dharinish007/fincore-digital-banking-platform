@@ -1,0 +1,49 @@
+<div class="module-container">
+  @if (toastMessage) {
+    <div class="toast-banner toast-success">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <h2 class="page-title">System & Saga Orchestration Settings</h2>
+
+  <div class="details-card">
+    <h3 class="card-header-title">Core Banking Configuration</h3>
+    <div style="display: flex; flex-direction: column; gap: 16px; max-width: 600px;">
+      <div class="form-group">
+        <label>System Currency Standard</label>
+        <input type="text" [(ngModel)]="currencySymbol" class="form-input" disabled style="opacity: 0.8;" />
+      </div>
+
+      <div class="form-group">
+        <label>Fraud Velocity Threshold Alert Limit (₹)</label>
+        <input type="number" [(ngModel)]="fraudThresholdInr" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label>Saga Orchestration Execution Timeout (Seconds)</label>
+        <input type="number" [(ngModel)]="sagaTimeoutSeconds" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label>Kafka Cluster Brokers</label>
+        <input type="text" [(ngModel)]="kafkaBrokers" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label>Notification Max Retries</label>
+        <input type="number" [(ngModel)]="maxRetries" class="form-input" />
+      </div>
+
+      <div class="form-group">
+        <label>Daily EMI Auto-Debit Execution Window</label>
+        <input type="text" [(ngModel)]="autoDebitWindow" class="form-input" />
+      </div>
+
+      <div style="margin-top: 12px;">
+        <button class="btn-primary" (click)="saveSettings()">Save System Settings</button>
+      </div>
+    </div>
+  </div>
+</div>

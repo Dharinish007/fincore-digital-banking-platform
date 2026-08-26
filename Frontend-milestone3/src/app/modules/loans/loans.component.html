@@ -1,0 +1,289 @@
+<div class="loans-container module-container">
+  <!-- Toast Banner -->
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <div class="header-action-row" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 class="page-title">Loan Origination & Servicing</h2>
+    <button class="action-btn primary-btn" (click)="openNewLoanModal()">+ Originate New Loan</button>
+  </div>
+
+  <!-- KPI Metric Cards Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Active Portfolio Loans</span>
+      <div class="kpi-value">8,47,000</div>
+      <span class="kpi-subtext blue-text">National Portfolio</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Disbursed YTD</span>
+      <div class="kpi-value">₹{{ (totalDisbursedYtd / 10000000).toFixed(1) }} Cr</div>
+      <span class="kpi-subtext muted-text">Current Fiscal Year</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">NPA Ratio</span>
+      <div class="kpi-value">2.3%</div>
+      <span class="kpi-subtext green-text">↓ 0.4% (Healthy Asset Quality)</span>
+    </div>
+  </div>
+
+  <!-- Detailed Loan Service Card -->
+  <div class="details-card">
+    <h3 class="card-header-title">Loan Service - Origination & Servicing</h3>
+
+    <div class="detail-rows">
+      <div class="detail-row">
+        <span class="label">Loan Account:</span> <span class="val highlight">{{ loan.id }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Type:</span> <span class="val">{{ loan.type }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Principal:</span> <span class="val">₹{{ loan.principal.toLocaleString('en-IN') }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Customer:</span> <span class="val">{{ loan.customerName }}</span>
+        <span class="pipe">|</span>
+        <span class="label">CIBIL Score:</span> <span class="val" [class.green-text]="loan.creditScore > 750">{{ loan.creditScore }}</span>
+        <span class="pipe">|</span>
+        <span class="badge approved-badge">{{ loan.approvalStatus }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">EMI Amount:</span> <span class="val">₹{{ loan.emi.toLocaleString('en-IN') }} / mo</span>
+        <span class="pipe">|</span>
+        <span class="label">Tenure:</span> <span class="val">{{ loan.tenureMonths }} months</span>
+        <span class="pipe">|</span>
+        <span class="label">Interest Rate:</span> <span class="val">{{ loan.interestRate }}% p.a.</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Disbursement:</span> <span class="val">{{ loan.disbursementChannel }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Saga Pipeline:</span> <span class="val saga-flow">{{ loan.sagaFlow }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">EMI Schedule:</span> <span class="val">{{ loan.installmentsTotal }} installments</span>
+        <span class="pipe">|</span>
+        <span class="label green-text">Auto-debit NACH Enabled</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Status:</span> <span class="val status-active" [class.green-text]="loan.status === 'Active'" [class.red-text]="loan.status.includes('Closed')">{{ loan.status }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Next EMI Due:</span> <span class="val">{{ loan.nextEmiDate }}</span>
+      </div>
+
+      <div class="detail-row action-row">
+        <span class="label">Action:</span>
+        <div class="action-buttons">
+          <button class="action-btn" (click)="onViewSchedule()">[View Schedule]</button>
+          <button class="action-btn" (click)="onPrepay()" [disabled]="loan.status.includes('Closed')">[Prepay Loan]</button>
+          <button class="action-btn danger-text" (click)="onForeclose()" [disabled]="loan.status.includes('Closed')">[Foreclose Account]</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loans List Table -->
+  <div class="table-card">
+    <div class="table-card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+      <h3 class="card-header-title" style="margin-bottom: 0; border-bottom: none;">Active Loan Portfolio</h3>
+      <div class="table-filters" style="display: flex; gap: 12px;">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search customer, loan ID..." class="form-input search-input" />
+        <select [(ngModel)]="statusFilter" class="form-select filter-select">
+          <option value="ALL">All Statuses</option>
+          <option value="Active">Active</option>
+          <option value="Pending">Pending Review</option>
+          <option value="Closed">Closed / Foreclosed</option>
+        </select>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Loan ID</th>
+          <th>Customer Name</th>
+          <th>Loan Type</th>
+          <th>Principal (₹)</th>
+          <th>EMI (₹)</th>
+          <th>Rate (%)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of filteredLoans; track item.id) {
+          <tr (click)="selectLoan(item)" [class.selected-row]="loan.id === item.id">
+            <td class="alert-id">{{ item.id }}</td>
+            <td>{{ item.customerName }}</td>
+            <td>{{ item.type }}</td>
+            <td>₹{{ item.principal.toLocaleString('en-IN') }}</td>
+            <td><strong>₹{{ item.emi.toLocaleString('en-IN') }}</strong></td>
+            <td>{{ item.interestRate }}%</td>
+            <td>
+              <span class="badge" 
+                [class.approved-badge]="item.status === 'Active'" 
+                [class.warn-badge]="item.status === 'Pending'" 
+                [class.danger-badge]="item.status.includes('Closed')">
+                {{ item.status }}
+              </span>
+            </td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">No loans found matching filter criteria.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal: View Schedule -->
+  @if (showScheduleModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Amortization Schedule - {{ loan.id }}</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <table class="schedule-table data-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Due Date</th>
+                <th>EMI Amount (₹)</th>
+                <th>Principal (₹)</th>
+                <th>Interest (₹)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of scheduleData; track item.installmentNo) {
+                <tr>
+                  <td>{{ item.installmentNo }}</td>
+                  <td>{{ item.dueDate }}</td>
+                  <td>₹{{ item.amount.toLocaleString('en-IN') }}</td>
+                  <td>₹{{ item.principalComponent.toLocaleString('en-IN') }}</td>
+                  <td>₹{{ item.interestComponent.toLocaleString('en-IN') }}</td>
+                  <td><span class="badge info-badge">{{ item.status }}</span></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal: Prepay -->
+  @if (showPrepayModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content small-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Prepay Loan - {{ loan.id }}</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-info" style="color: var(--text-muted); margin-bottom: 16px;">
+            Current Principal Outstanding: <strong>₹{{ loan.principal.toLocaleString('en-IN') }}</strong>. Enter partial prepayment in Rupees.
+          </p>
+          <div class="form-group">
+            <label>Prepayment Amount (₹)</label>
+            <input type="number" [(ngModel)]="prepayAmount" class="form-input" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Cancel</button>
+          <button class="btn-primary" (click)="submitPrepayment()">Submit Prepayment</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal: Foreclose -->
+  @if (showForecloseModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content small-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Loan Foreclosure Quote</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-info" style="color: var(--text-muted); margin-bottom: 16px;">Foreclosure summary for <strong>{{ loan.id }}</strong> (Customer: {{ loan.customerName }})</p>
+          <div class="quote-details" style="display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem;">
+            <div style="display: flex; justify-content: space-between;"><span>Outstanding Principal:</span> <strong>₹{{ loan.principal.toLocaleString('en-IN') }}</strong></div>
+            <div style="display: flex; justify-content: space-between;"><span>Accrued Interest (Current Month):</span> <strong>₹{{ Math.round(loan.emi * 0.25).toLocaleString('en-IN') }}</strong></div>
+            <div style="display: flex; justify-content: space-between;"><span>Foreclosure Charges (RBI 0% Rule):</span> <strong>₹0</strong></div>
+            <hr class="modal-divider" style="border: 0; border-top: 1px dashed var(--border-color); margin: 8px 0;" />
+            <div style="display: flex; justify-content: space-between; font-size: 1.05rem;"><span>Total Payoff Amount:</span> <strong class="total-payoff green-text">₹{{ (loan.principal + Math.round(loan.emi * 0.25)).toLocaleString('en-IN') }}</strong></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Cancel</button>
+          <button class="btn-danger" (click)="confirmForeclosure()">Confirm Foreclosure</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal: Originate New Loan -->
+  @if (showNewLoanModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Originate New Loan Application</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Customer Name</label>
+            <input type="text" [(ngModel)]="newCustomerName" placeholder="e.g. Vikramaditya Rao" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Loan Type</label>
+            <select [(ngModel)]="newLoanType" class="form-select">
+              <option value="Home Loan">Home Loan</option>
+              <option value="Car Loan">Car Loan</option>
+              <option value="Personal Loan">Personal Loan</option>
+              <option value="Business Expansion Loan">Business Expansion Loan</option>
+              <option value="Education Loan">Education Loan</option>
+            </select>
+          </div>
+          <div class="form-row" style="display: flex; gap: 12px;">
+            <div class="form-group" style="flex: 1;">
+              <label>Principal Amount (₹)</label>
+              <input type="number" [(ngModel)]="newPrincipal" (ngModelChange)="updateCalculatedEmi()" class="form-input" />
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Tenure (Months)</label>
+              <input type="number" [(ngModel)]="newTenureMonths" (ngModelChange)="updateCalculatedEmi()" class="form-input" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Interest Rate (% p.a.)</label>
+            <input type="number" step="0.1" [(ngModel)]="newInterestRate" (ngModelChange)="updateCalculatedEmi()" class="form-input" />
+          </div>
+          <div class="emi-preview-box" style="background: #12141c; padding: 14px; border-radius: 6px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Estimated Monthly EMI:</span>
+            <strong style="color: #38bdf8; font-size: 1.2rem;">₹{{ calculatedEmi.toLocaleString('en-IN') }} / mo</strong>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Cancel</button>
+          <button class="btn-primary" (click)="submitNewLoanApplication()">Originate & Disburse Loan</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
