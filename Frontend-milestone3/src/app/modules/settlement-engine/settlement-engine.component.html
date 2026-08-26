@@ -1,0 +1,243 @@
+<div class="module-container">
+  <!-- Toast Banner -->
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <div class="header-action-row" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 class="page-title">Interbank Settlement Engine (RBI RTGS / NEFT)</h2>
+    <button class="action-btn primary-btn" (click)="openNewBatchModal()">+ Queue Settlement Batch</button>
+  </div>
+
+  <!-- KPI Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Pending Net Clearing</span>
+      <div class="kpi-value">₹{{ (selectedBatch.pendingVolume / 10000000).toFixed(2) }} Cr</div>
+      <span class="kpi-subtext blue-text">{{ selectedBatch.batchId }}</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Netting Efficiency</span>
+      <div class="kpi-value">{{ selectedBatch.nettingRatio }}</div>
+      <span class="kpi-subtext green-text">Multilateral Netting Active</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Settlement SLA</span>
+      <div class="kpi-value">99.9%</div>
+      <span class="kpi-subtext green-text">&lt; 30s RBI Latency</span>
+    </div>
+  </div>
+
+  <!-- Clearing Saga Progress Bar (When Clearing Active) -->
+  @if (isClearingInProgress) {
+    <div class="saga-progress-card" style="background: #1e2538; border: 1px solid #38bdf8; border-radius: 8px; padding: 18px;">
+      <h4 style="color: #38bdf8; margin-bottom: 12px; font-size: 0.95rem;">⚡ Executing Saga Interbank Clearing Orchestration...</h4>
+      <div class="steps-flow" style="display: flex; gap: 12px; justify-content: space-between;">
+        <div class="step-item" [class.step-active]="clearingStep >= 1" style="flex: 1; padding: 10px; background: #12141c; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #cbd5e1; border: 1px solid var(--border-color);">
+          <strong>1. PaymentExecuted</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Event consumed</div>
+        </div>
+        <div class="step-item" [class.step-active]="clearingStep >= 2" style="flex: 1; padding: 10px; background: #12141c; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #cbd5e1; border: 1px solid var(--border-color);">
+          <strong>2. ReserveHold</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">RBI account reserved</div>
+        </div>
+        <div class="step-item" [class.step-active]="clearingStep >= 3" style="flex: 1; padding: 10px; background: #12141c; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #cbd5e1; border: 1px solid var(--border-color);">
+          <strong>3. InterbankNetting</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">Multilateral net computed</div>
+        </div>
+        <div class="step-item" [class.step-active]="clearingStep >= 4" style="flex: 1; padding: 10px; background: #12141c; border-radius: 6px; text-align: center; font-size: 0.82rem; color: #cbd5e1; border: 1px solid var(--border-color);">
+          <strong>4. FinalSettlement</strong>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">RTGS transfer completed</div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Detailed Settlement Card -->
+  <div class="details-card">
+    <h3 class="card-header-title">Settlement Service - Batch Netting & Clearing</h3>
+
+    <div class="detail-rows">
+      <div class="detail-row">
+        <span class="label">Batch ID:</span> <span class="val highlight">{{ selectedBatch.batchId }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Method:</span> <span class="val">{{ selectedBatch.clearingMethod }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Net Volume:</span> <span class="val">₹{{ (selectedBatch.pendingVolume / 10000000).toFixed(2) }} Cr</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Gross Volume:</span> <span class="val">₹{{ (selectedBatch.grossAmount / 10000000).toFixed(2) }} Cr</span>
+        <span class="pipe">|</span>
+        <span class="label">Gross Transactions:</span> <span class="val">{{ selectedBatch.totalTransactions.toLocaleString('en-IN') }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Net Savings:</span> <span class="val green-text">{{ selectedBatch.nettingRatio }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Saga Orchestration:</span> <span class="val saga-flow">{{ selectedBatch.sagaFlow }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Status:</span> <span class="val status-active" [class.green-text]="selectedBatch.status.includes('Settled')">{{ selectedBatch.status }}</span>
+        <span class="pipe">|</span>
+        <span class="label">ETA / Window:</span> <span class="val">{{ selectedBatch.estimatedCompletion }} ({{ selectedBatch.clearingWindow }})</span>
+      </div>
+
+      <div class="detail-row action-row">
+        <span class="label">Action:</span>
+        <div class="action-buttons">
+          <button class="action-btn primary-btn" (click)="forceClearBatch()" [disabled]="isClearingInProgress || selectedBatch.status === 'Settled & Reconciled'">
+            [Force Clearing Batch via RTGS]
+          </button>
+          <button class="action-btn" (click)="openNettingSummary()">[View Netting Summary]</button>
+          <button class="action-btn" (click)="downloadReport()">[Download Audit Report (ISO-20022)]</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batches Data Table -->
+  <div class="table-card">
+    <h3 class="card-header-title">Interbank Settlement Queue</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Batch ID</th>
+          <th>Clearing Method</th>
+          <th>Gross Volume (₹)</th>
+          <th>Net Volume (₹)</th>
+          <th>Txn Count</th>
+          <th>Netting %</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of batches; track item.batchId) {
+          <tr (click)="selectBatch(item)" [class.selected-row]="selectedBatch.batchId === item.batchId">
+            <td class="alert-id">{{ item.batchId }}</td>
+            <td>{{ item.clearingMethod }}</td>
+            <td>₹{{ (item.grossAmount / 10000000).toFixed(2) }} Cr</td>
+            <td><strong>₹{{ (item.pendingVolume / 10000000).toFixed(2) }} Cr</strong></td>
+            <td>{{ item.totalTransactions.toLocaleString('en-IN') }}</td>
+            <td><span class="green-text">{{ item.nettingRatio }}</span></td>
+            <td>
+              <span class="badge" 
+                [class.approved-badge]="item.status.includes('Settled')" 
+                [class.info-badge]="item.status.includes('Processing')" 
+                [class.warn-badge]="item.status === 'Queued'">
+                {{ item.status }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal: Netting Breakdown -->
+  @if (showNettingModal) {
+    <div class="modal-backdrop" (click)="closeNettingSummary()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Multilateral Netting Summary - {{ selectedBatch.batchId }}</h3>
+          <button class="close-btn" (click)="closeNettingSummary()">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px;">
+            12,450 gross transactions totaling <strong>₹{{ (selectedBatch.grossAmount / 10000000).toFixed(2) }} Cr</strong> reduced to net settlements totaling <strong>₹{{ (selectedBatch.pendingVolume / 10000000).toFixed(2) }} Cr</strong> (94.8% efficiency).
+          </p>
+
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Participant Bank</th>
+                <th>Gross Outward (₹)</th>
+                <th>Gross Inward (₹)</th>
+                <th>Net Obligation (₹)</th>
+                <th>Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (b of bankNettingList; track b.bankName) {
+                <tr>
+                  <td>{{ b.bankName }}</td>
+                  <td>₹{{ (b.grossOutward / 1000000).toFixed(2) }} L</td>
+                  <td>₹{{ (b.grossInward / 1000000).toFixed(2) }} L</td>
+                  <td><strong>₹{{ (b.netObligation / 1000000).toFixed(2) }} L</strong></td>
+                  <td>
+                    <span class="badge" [class.approved-badge]="b.type === 'RECEIVABLE'" [class.warn-badge]="b.type === 'PAYABLE'">
+                      {{ b.type }}
+                    </span>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeNettingSummary()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal: ISO-20022 Audit Report -->
+  @if (showReportModal) {
+    <div class="modal-backdrop" (click)="closeReportModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>ISO-20022 pacs.009 Settlement XML Payload</h3>
+          <button class="close-btn" (click)="closeReportModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <pre style="background: #12141c; color: #38bdf8; padding: 16px; border-radius: 6px; font-family: monospace; font-size: 0.8rem; overflow-x: auto; white-space: pre-wrap;">
+{{ getIsoXmlSnippet() }}
+          </pre>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeReportModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal: Queue New Batch -->
+  @if (showNewBatchModal) {
+    <div class="modal-backdrop" (click)="closeNewBatchModal()">
+      <div class="modal-content small-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Queue Interbank Clearing Batch</h3>
+          <button class="close-btn" (click)="closeNewBatchModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Clearing Method</label>
+            <select [(ngModel)]="newClearingMethod" class="form-select">
+              <option value="Multilateral Netting & RBI RTGS">Multilateral Netting & RBI RTGS</option>
+              <option value="NEFT Clearing Batch Session">NEFT Clearing Batch Session</option>
+              <option value="Bilateral High-Value RTGS">Bilateral High-Value RTGS</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Gross Volume (₹)</label>
+            <input type="number" [(ngModel)]="newGrossVolume" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Total Transactions</label>
+            <input type="number" [(ngModel)]="newTxnCount" class="form-input" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeNewBatchModal()">Cancel</button>
+          <button class="btn-primary" (click)="createNewBatch()">Queue Batch</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

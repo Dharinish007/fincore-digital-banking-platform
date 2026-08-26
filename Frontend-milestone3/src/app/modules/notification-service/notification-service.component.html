@@ -1,0 +1,203 @@
+<div class="module-container">
+  <!-- Toast Banner -->
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <div class="header-action-row" style="display: flex; justify-content: space-between; align-items: center;">
+    <h2 class="page-title">Notification & Alert Service</h2>
+    <div class="header-btns" style="display: flex; gap: 12px;">
+      <button class="action-btn primary-btn" (click)="sendTestAlert()">+ Dispatch Test Alert</button>
+      <button class="action-btn" (click)="configureWebhooks()">⚙ Webhook Manager</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Dispatched Today</span>
+      <div class="kpi-value">1,48,200</div>
+      <span class="kpi-subtext green-text">99.98% Delivery Rate</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">SMS / Email Latency</span>
+      <div class="kpi-value">1.2s</div>
+      <span class="kpi-subtext blue-text">Kafka Topic: notifications.alert</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Active Webhooks</span>
+      <div class="kpi-value">12</div>
+      <span class="kpi-subtext green-text">All Endpoints Healthy</span>
+    </div>
+  </div>
+
+  <!-- Detailed Notification Panel -->
+  <div class="details-card">
+    <h3 class="card-header-title">Notification Service - Event Stream Details</h3>
+
+    <div class="detail-rows">
+      <div class="detail-row">
+        <span class="label">Log ID:</span> <span class="val highlight">{{ selectedNotification.id }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Channel:</span> <span class="val">{{ selectedNotification.channel }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Status:</span> <span class="badge approved-badge">{{ selectedNotification.status }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Recipient:</span> <span class="val">{{ selectedNotification.recipient }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Event Type:</span> <span class="val saga-flow">{{ selectedNotification.eventType }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Time:</span> <span class="val">{{ selectedNotification.sentTime }}</span>
+      </div>
+
+      <div class="detail-row">
+        <span class="label">Payload Snippet:</span> <span class="val anomaly-text">{{ selectedNotification.payloadSnippet }}</span>
+      </div>
+
+      <div class="detail-row action-row">
+        <span class="label">Action:</span>
+        <div class="action-buttons">
+          <button class="action-btn" (click)="sendTestAlert()">[Re-send Notification]</button>
+          <button class="action-btn" (click)="configureWebhooks()">[Configure Webhook Endpoints]</button>
+          <button class="action-btn" (click)="viewDeliveryLogs()">[View Delivery Logs]</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Stream Table -->
+  <div class="table-card">
+    <h3 class="card-header-title">Recent Event Notification Logs</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Log ID</th>
+          <th>Channel</th>
+          <th>Recipient</th>
+          <th>Event Type</th>
+          <th>Payload Snippet</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of notificationLogs; track item.id) {
+          <tr (click)="selectNotification(item)" [class.selected-row]="selectedNotification.id === item.id">
+            <td class="alert-id">{{ item.id }}</td>
+            <td>{{ item.channel }}</td>
+            <td>{{ item.recipient }}</td>
+            <td><span class="saga-flow" style="font-size: 0.8rem;">{{ item.eventType }}</span></td>
+            <td>{{ item.payloadSnippet }}</td>
+            <td><span class="badge approved-badge">{{ item.status }}</span></td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal: Send Test Alert -->
+  @if (showTestModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Dispatch Real-Time Customer Alert</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Channel</label>
+            <select [(ngModel)]="testChannel" class="form-select">
+              <option value="SMS Gateway + Email">SMS Gateway + Email</option>
+              <option value="Push Notification">Push Notification</option>
+              <option value="Webhook Endpoint">Webhook Endpoint</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Recipient Contact / Endpoint</label>
+            <input type="text" [(ngModel)]="testRecipient" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Event Type</label>
+            <input type="text" [(ngModel)]="testEventType" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Message Content (Rupees ₹)</label>
+            <textarea [(ngModel)]="testCustomMessage" rows="3" class="form-textarea"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Cancel</button>
+          <button class="btn-primary" (click)="dispatchTestAlert()">Send Notification</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal: Webhook Configuration -->
+  @if (showWebhookModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Webhook Endpoint Manager</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Webhook URL</label>
+            <input type="text" [(ngModel)]="webhookUrl" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>HMAC Secret Signing Key</label>
+            <input type="text" [(ngModel)]="webhookSecret" class="form-input" />
+          </div>
+          <div class="form-group">
+            <label>Subscribed Topics</label>
+            <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.85rem; color: var(--text-muted);">
+              <label><input type="checkbox" checked /> LoanDisbursedEvent</label>
+              <label><input type="checkbox" checked /> FraudAlertEvent</label>
+              <label><input type="checkbox" checked /> SettlementReconciliationEvent</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Cancel</button>
+          <button class="btn-primary" (click)="saveWebhookSettings()">Save Configuration</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal: Delivery Logs Analytics -->
+  @if (showLogsModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Delivery Receipt & Audit Logs</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div style="display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem;">
+            <div style="background: #12141c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <strong style="color: #34d399;">SMS Gateway:</strong> 1,12,000 sent | 1,11,940 delivered (99.9%)
+            </div>
+            <div style="background: #12141c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <strong style="color: #38bdf8;">Email Gateway (SMTP):</strong> 32,200 sent | 32,180 delivered (99.9%)
+            </div>
+            <div style="background: #12141c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <strong style="color: #c084fc;">Webhooks:</strong> 4,000 sent | 4,000 acknowledged (100.0%)
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>
