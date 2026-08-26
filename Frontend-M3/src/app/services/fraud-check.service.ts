@@ -184,6 +184,25 @@ export class FraudCheckService {
     this.fraudChecksSubject.next(updated);
   }
 
+  /**
+   * Add or register a newly initiated payment in the fraud screening ledger
+   */
+  addFraudCheck(newCheck: FraudCheck): void {
+    const current = this.fraudChecksSubject.getValue();
+    if (!current.some((c) => c.payment_id === newCheck.payment_id)) {
+      this.fraudChecksSubject.next([newCheck, ...current]);
+    }
+  }
+
+  /**
+   * Get the next sequential Payment ID
+   */
+  getNextPaymentId(): number {
+    const current = this.fraudChecksSubject.getValue();
+    const maxId = current.reduce((max, c) => (c.payment_id > max ? c.payment_id : max), 9007);
+    return maxId + 1;
+  }
+
   private now(): string {
     return new Date().toISOString().replace('T', ' ').slice(0, 19);
   }

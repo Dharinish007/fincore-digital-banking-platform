@@ -14,6 +14,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'payment-review',
+    loadComponent: () =>
+      import('./payment-review/payment-review.component').then(
+        (m) => m.PaymentReviewComponent
+      ),
+  },
+  {
     path: 'beneficiary-verification',
     loadComponent: () =>
       import('./beneficiary-verification/beneficiary-verification.component').then(

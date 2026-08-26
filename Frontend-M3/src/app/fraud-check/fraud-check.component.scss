@@ -381,6 +381,22 @@
     font-size: 0.875rem;
   }
 
+  .payment-id-cell {
+    white-space: nowrap;
+  }
+
+  .payment-id-badge {
+    font-family: monospace;
+    font-weight: 600;
+    color: #60A5FA;
+    background: rgba(37, 99, 235, 0.15);
+    border: 1px solid rgba(37, 99, 235, 0.3);
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 0.8125rem;
+  }
+
   .amount-cell {
     font-weight: 600;
     color: #FFFFFF;

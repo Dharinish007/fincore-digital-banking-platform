@@ -41,6 +41,19 @@
 
         <form [formGroup]="paymentForm" (ngSubmit)="goToReview()" class="payment-form">
           <div class="form-grid">
+            <!-- Payment ID -->
+            <div class="form-field full-width">
+              <label for="paymentId">Payment ID <span class="required">*</span></label>
+              <input
+                id="paymentId"
+                type="text"
+                formControlName="payment_id"
+                readonly
+                class="readonly-input"
+                placeholder="Payment ID"
+              />
+            </div>
+
             <!-- From Account Selection -->
             <div class="form-field">
               <label for="fromAccount">From Account Number <span class="required">*</span></label>
@@ -165,7 +178,6 @@
             <button
               type="submit"
               class="btn-primary"
-              [disabled]="paymentForm.invalid"
             >
               <mat-icon>rate_review</mat-icon>
               <span>Review Payment</span>
@@ -187,6 +199,18 @@
         </div>
 
         <div class="review-details-grid">
+          <div class="review-item">
+            <span class="item-label">Payment ID</span>
+            <span class="item-value highlight">#{{ f['payment_id'].value }}</span>
+          </div>
+
+          <div class="review-item">
+            <span class="item-label">Payment Status</span>
+            <span class="item-value status-badge status-pending">
+              <mat-icon>hourglass_empty</mat-icon> Pending
+            </span>
+          </div>
+
           <div class="review-item">
             <span class="item-label">From Account</span>
             <span class="item-value highlight">{{ f['from_account_no'].value }}</span>

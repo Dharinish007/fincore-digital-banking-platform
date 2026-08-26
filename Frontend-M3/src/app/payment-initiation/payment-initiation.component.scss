@@ -391,6 +391,29 @@
             border-color: rgba(245, 158, 11, 0.3);
           }
         }
+
+        &.status-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 3px 10px;
+          border-radius: 12px;
+          font-size: 0.8125rem;
+          font-weight: 600;
+          width: fit-content;
+
+          mat-icon {
+            font-size: 15px;
+            width: 15px;
+            height: 15px;
+          }
+
+          &.status-pending {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: #FBBF24;
+          }
+        }
       }
     }
   }

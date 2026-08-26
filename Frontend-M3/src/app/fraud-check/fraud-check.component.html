@@ -124,6 +124,7 @@
           <table class="fraud-table">
             <thead>
               <tr>
+                <th>Payment ID</th>
                 <th>Payment</th>
                 <th>Beneficiary</th>
                 <th>Amount</th>
@@ -137,6 +138,11 @@
             </thead>
             <tbody>
               <tr *ngFor="let f of filteredFraudChecks">
+                <!-- Payment ID -->
+                <td class="mono-font payment-id-cell">
+                  <span class="payment-id-badge">#{{ f.payment_id }}</span>
+                </td>
+
                 <!-- Payment -->
                 <td class="name-cell">
                   <div class="avatar-chip" [ngClass]="'risk-' + riskLevel(f.risk_score)">
@@ -245,7 +251,7 @@
               </tr>
 
               <tr *ngIf="filteredFraudChecks.length === 0">
-                <td colspan="9" class="empty-state">
+                <td colspan="10" class="empty-state">
                   <mat-icon>fact_check</mat-icon>
                   <p>No fraud check records found matching the criteria.</p>
                 </td>

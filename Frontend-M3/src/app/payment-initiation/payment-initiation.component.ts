@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { PaymentInitiationService, UserAccount } from './payment-initiation.service';
@@ -61,7 +62,8 @@ export class PaymentInitiationComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private paymentService: PaymentInitiationService
+    private paymentService: PaymentInitiationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -71,6 +73,7 @@ export class PaymentInitiationComponent implements OnInit {
 
   private initForm(): void {
     this.paymentForm = this.fb.group({
+      payment_id: [this.paymentService.getNextPaymentId(), [Validators.required]],
       from_account_no: ['', [Validators.required]],
       beneficiary_id: ['', [Validators.required]],
       to_account_no: ['', [Validators.required]],
@@ -128,13 +131,23 @@ export class PaymentInitiationComponent implements OnInit {
     }
   }
 
-  // Navigate to Review step if valid
+  // Navigate to Review step on Review Payment button click
   goToReview(): void {
-    if (this.paymentForm.invalid) {
-      this.paymentForm.markAllAsTouched();
-      return;
-    }
-    this.currentStep = 'REVIEW';
+    const formValues = this.paymentForm.value;
+    this.router.navigate(['/payment-review'], {
+      state: {
+        payment: {
+          payment_id: formValues.payment_id ? `PAY-${formValues.payment_id}` : 'PAY-9002',
+          from_account_no: formValues.from_account_no || 'XXXX1234',
+          beneficiary_name: this.selectedBeneficiary?.beneficiary_name || 'TechCorp Solutions',
+          to_account_no: formValues.to_account_no || 'XXXX5678',
+          amount: formValues.amount || 950000,
+          payment_type: formValues.payment_type || 'Vendor Payment',
+          payment_mode: formValues.payment_mode || 'NEFT',
+          description: formValues.description || 'Monthly payment',
+        },
+      },
+    });
   }
 
   // Edit payment / back to form
@@ -161,6 +174,7 @@ export class PaymentInitiationComponent implements OnInit {
     const formValues = this.paymentForm.value;
 
     const payload: Payment = {
+      payment_id: Number(formValues.payment_id),
       from_account_no: formValues.from_account_no,
       to_account_no: formValues.to_account_no,
       beneficiary_id: Number(formValues.beneficiary_id),
@@ -192,6 +206,7 @@ export class PaymentInitiationComponent implements OnInit {
     this.fraudCheckResult = null;
     this.selectedBeneficiary = null;
     this.paymentForm.reset({
+      payment_id: this.paymentService.getNextPaymentId(),
       from_account_no: this.accounts.length > 0 ? this.accounts[0].account_no : '',
       beneficiary_id: '',
       to_account_no: '',
