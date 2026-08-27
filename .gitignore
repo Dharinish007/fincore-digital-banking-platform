@@ -1,0 +1,23 @@
+# Angular / Node
+Frontend-milestone3/node_modules/
+Frontend-milestone3/dist/
+Frontend-milestone3/.angular/
+
+# Environment files
+Frontend-milestone3/.env
+Frontend-milestone3/.env.*
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Maven Backend
+Milestone3-Backend/milestone-3/target/

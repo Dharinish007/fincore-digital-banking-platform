@@ -1,0 +1,41 @@
+.fincore-sidebar {
+  width: 180px;
+  min-width: 180px;
+  background-color: #191b24;
+  border-right: 1px solid #232733;
+  min-height: calc(100vh - 56px);
+  padding-top: 24px;
+}
+
+.nav-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-menu li {
+  margin-bottom: 4px;
+}
+
+.nav-item {
+  display: block;
+  padding: 12px 24px;
+  color: #7e8b9b;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  color: #a5b4fc;
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.nav-item.active {
+  color: #38bdf8;
+  font-weight: 600;
+  border-left-color: #38bdf8;
+  background-color: rgba(56, 189, 248, 0.06);
+}
