@@ -1,0 +1,33 @@
+<section class="operations-shell">
+  <header class="page-heading">
+    <div><p class="eyebrow">CORE OPERATIONS</p><h1>Balance & loan servicing</h1><p class="lede">Manage account state, repayment schedules, and funds movement from one control surface.</p></div>
+    <span class="status-dot">● Systems ready</span>
+  </header>
+
+  <nav class="tabs" aria-label="Operations areas">
+    @for (tab of [['balances','Balances'], ['statements','Statements'], ['customers','Customers'], ['emi','EMI calculator'], ['funds','Disbursement'], ['collections','Collections']]; track tab[0]) {
+      <button [class.active]="activeTab === tab[0]" (click)="activeTab = tab[0]">{{ tab[1] }}</button>
+    }
+  </nav>
+
+  @if (message) { <div class="notice" role="status">{{ message }}</div> }
+
+  @if (activeTab === 'balances') {
+    <div class="workspace-grid">
+      <div class="panel account-panel"><div class="panel-title"><h2>Live accounts</h2><span>{{ accounts.length }} records</span></div>
+        @for (account of accounts; track account.id) { <button class="account-row" [class.selected]="selectedAccount.id === account.id" (click)="selectAccount(account)"><span><strong>{{ account.accountNumber }}</strong><small>{{ account.accountType }}</small></span><span class="account-balance">₹{{ account.balance | number:'1.2-2' }}<small>{{ account.status }}</small></span></button> }
+      </div>
+      <div class="panel balance-card"><p class="eyebrow">SELECTED ACCOUNT</p><h2>{{ selectedAccount.accountNumber }}</h2><div class="big-balance">₹{{ selectedAccount.balance | number:'1.2-2' }}</div><p>Available balance</p><label>Lifecycle state<select [(ngModel)]="lifecycleStatus"><option>ACTIVE</option><option>FROZEN</option><option>DORMANT</option><option>CLOSED</option></select></label><button class="primary" (click)="updateLifecycle()">Update account state</button><div class="adjustment"><label>Balance adjustment (₹)<input type="number" [(ngModel)]="balanceAdjustment.amount"></label><select [(ngModel)]="balanceAdjustment.entryType"><option>CREDIT</option><option>DEBIT</option></select><button class="secondary" (click)="adjustBalance()">Post adjustment</button></div></div>
+    </div>
+  }
+
+  @if (activeTab === 'statements') { <div class="panel"><div class="panel-title"><div><p class="eyebrow">AUDITABLE LEDGER</p><h2>Statement for {{ selectedAccount.accountNumber }}</h2></div><button class="secondary" (click)="selectAccount(selectedAccount)">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>Reference</th><th>Type</th><th>Description</th><th>Amount</th><th>Balance after</th></tr></thead><tbody>@for (item of statements; track item.reference) { <tr><td>{{ item.reference }}</td><td><span class="pill" [class.credit]="item.entryType === 'CREDIT'">{{ item.entryType }}</span></td><td>{{ item.description }}</td><td>₹{{ item.amount | number:'1.2-2' }}</td><td>₹{{ item.balanceAfter | number:'1.2-2' }}</td></tr> }</tbody></table></div></div> }
+
+  @if (activeTab === 'customers') { <div class="workspace-grid"><div class="panel form-panel"><p class="eyebrow">CUSTOMER ONBOARDING</p><h2>Add customer details</h2><label>Full name<input type="text" [(ngModel)]="customerForm.fullName" required></label><label>Email<input type="email" [(ngModel)]="customerForm.email" required></label><label>Phone number<input type="tel" [(ngModel)]="customerForm.phoneNumber" required></label><label>Account number (optional)<input type="text" [(ngModel)]="customerForm.accountNumber"></label><button class="primary" (click)="addCustomer()">Add customer</button></div><div class="panel"><div class="panel-title"><h2>Customer directory</h2><span>{{ customers.length }} records</span></div>@for (customer of customers; track customer.id) { <div class="account-row"><span><strong>{{ customer.fullName }}</strong><small>{{ customer.email }} · {{ customer.phoneNumber }}</small></span><span class="account-balance"><small>{{ customer.accountNumber || 'No account linked' }}</small></span></div> } @if (!customers.length) { <p class="lede">No customers registered yet.</p> }</div></div> }
+
+  @if (activeTab === 'emi') { <div class="form-layout"><div class="panel form-panel"><p class="eyebrow">REPAYMENT PLANNER</p><h2>Calculate monthly EMI</h2><label>Principal (₹)<input type="number" [(ngModel)]="principal"></label><label>Annual interest rate (%)<input type="number" [(ngModel)]="annualRate"></label><label>Tenure (months)<input type="number" [(ngModel)]="tenureMonths"></label><button class="primary" (click)="calculateEmi()">Calculate EMI</button></div><div class="result-panel"><p class="eyebrow">ESTIMATE</p><span>Monthly payment</span><strong>₹{{ emiResult.emi | number:'1.2-2' }}</strong><dl><dt>Total interest</dt><dd>₹{{ emiResult.totalInterest | number:'1.2-2' }}</dd><dt>Total payable</dt><dd>₹{{ emiResult.totalPayable | number:'1.2-2' }}</dd></dl></div></div> }
+
+  @if (activeTab === 'funds') { <div class="panel form-panel narrow"><p class="eyebrow">LOAN SERVICING</p><h2>Disburse approved funds</h2><label>Loan ID<input type="number" [(ngModel)]="disbursement.loanId"></label><label>Amount (₹)<input type="number" [(ngModel)]="disbursement.amount"></label><label>Channel<select [(ngModel)]="disbursement.channel"><option>NEFT</option><option>RTGS</option><option>IMPS</option></select></label><button class="primary" (click)="submit('/api/operations/disbursements', disbursement, 'Disbursement')">Record disbursement</button></div> }
+
+  @if (activeTab === 'collections') { <div class="panel form-panel narrow"><p class="eyebrow">REPAYMENT INTAKE</p><h2>Record collection</h2><label>Loan ID<input type="number" [(ngModel)]="collection.loanId"></label><label>Schedule ID<input type="number" [(ngModel)]="collection.scheduleId"></label><label>Amount (₹)<input type="number" [(ngModel)]="collection.amount"></label><label>Channel<select [(ngModel)]="collection.channel"><option>AUTO_DEBIT</option><option>UPI</option><option>NEFT</option><option>CASH</option></select></label><button class="primary" (click)="submit('/api/operations/collections', collection, 'Collection')">Record collection</button></div> }
+</section>
