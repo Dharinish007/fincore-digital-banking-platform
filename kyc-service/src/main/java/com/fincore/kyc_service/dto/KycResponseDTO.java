@@ -14,6 +14,9 @@ public class KycResponseDTO {
 	    private String city;
 	    private String status;
 	    private String message;
+	private boolean pepDeclaration;
+	private String occupationStatus;
+	private String annualIncomeRange;
 
 	 
     public String getFirstName() {
@@ -87,4 +90,23 @@ public class KycResponseDTO {
     public void setMessage(String message) {
         this.message = message;
     }
+
+	public boolean isPepDeclaration() {
+		return pepDeclaration;
+	}
+	public void setPepDeclaration(boolean pepDeclaration) {
+		this.pepDeclaration = pepDeclaration;
+	}
+	public String getOccupationStatus() {
+		return occupationStatus;
+	}
+	public void setOccupationStatus(String occupationStatus) {
+		this.occupationStatus = occupationStatus;
+	}
+	public String getAnnualIncomeRange() {
+		return annualIncomeRange;
+	}
+	public void setAnnualIncomeRange(String annualIncomeRange) {
+		this.annualIncomeRange = annualIncomeRange;
+	}
 }

@@ -110,6 +110,10 @@ public class KycServiceImpl implements KycService {
         KycResponseDTO response = new KycResponseDTO();
         response.setKycId(kyc.getKycId());
         response.setStatus(kyc.getStatus());
+        response.setGovernmentIdNumber(kyc.getGovernmentIdNumber());
+        response.setPepDeclaration(kyc.isPepDeclaration());
+        response.setOccupationStatus(kyc.getOccupationStatus());
+        response.setAnnualIncomeRange(kyc.getAnnualIncomeRange());
         response.setMessage("KYC status fetched successfully");
 
         return response;

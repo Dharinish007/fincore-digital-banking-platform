@@ -1,13 +1,7 @@
 package com.bankingsystem.disbursementsaga.service;
 
-import com.bankingsystem.disbursementsaga.client.AuditTrailClient;
-import com.bankingsystem.disbursementsaga.client.CoreBankingClient;
-import com.bankingsystem.disbursementsaga.client.KycServiceClient;
-import com.bankingsystem.disbursementsaga.client.NotificationClient;
-import com.bankingsystem.disbursementsaga.dto.AccountResponse;
-import com.bankingsystem.disbursementsaga.dto.AuditLogRequest;
-import com.bankingsystem.disbursementsaga.dto.DisbursementRequest;
-import com.bankingsystem.disbursementsaga.dto.DisbursementResponse;
+import com.bankingsystem.disbursementsaga.client.*;
+import com.bankingsystem.disbursementsaga.dto.*;
 import com.bankingsystem.disbursementsaga.entity.DisbursementSagaEntity;
 import com.bankingsystem.disbursementsaga.entity.SagaStatus;
 import com.bankingsystem.disbursementsaga.entity.SagaStep;
@@ -30,16 +24,19 @@ public class DisbursementSagaOrchestrator {
     private final CoreBankingClient coreBankingClient;
     private final AuditTrailClient auditTrailClient;
     private final NotificationClient notificationClient;
+    private final ComplianceCheckClient complianceCheckClient;
 
     public DisbursementSagaOrchestrator(DisbursementSagaRepository sagaRepository,
                                         KycServiceClient kycClient,
                                         CoreBankingClient coreBankingClient,
-                                        AuditTrailClient auditTrailClient, NotificationClient notificationClient) {
+                                        AuditTrailClient auditTrailClient, NotificationClient notificationClient,
+                                        ComplianceCheckClient complianceCheckClient) {
         this.sagaRepository = sagaRepository;
         this.kycClient = kycClient;
         this.coreBankingClient = coreBankingClient;
         this.auditTrailClient = auditTrailClient;
         this.notificationClient = notificationClient;
+        this.complianceCheckClient = complianceCheckClient;
     }
 
     public DisbursementResponse run(DisbursementRequest request) {
@@ -64,6 +61,18 @@ public class DisbursementSagaOrchestrator {
 
             if (!kycClient.isKycApproved(request.getKycId())) {
                 throw new RuntimeException("KYC not approved for kycId " + request.getKycId());
+            }
+
+            // ---- STEP 1.5: Compliance check ----
+            saga.setCurrentStep(SagaStep.COMPLIANCE_CHECK);
+            sagaRepository.save(saga);
+
+            ComplianceCheckResponse compliance = complianceCheckClient.check(
+                    request.getKycId(), request.getAmount(), request.getPerformedBy()
+            );
+            if (!"APPROVED".equalsIgnoreCase(compliance.getVerdict())) {
+                throw new RuntimeException("Compliance check " + compliance.getVerdict()
+                        + ": " + compliance.getReasons());
             }
 
             // ---- STEP 2: Debit source account ----
