@@ -1,0 +1,223 @@
+/* ==========================================
+   Role Card
+========================================== */
+
+.role-card {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  padding: 24px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.2);
+
+  transition: all 0.3s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-5px);
+
+  border-color: rgba(37, 99, 235, 0.5);
+
+  box-shadow:
+    0 15px 35px rgba(37, 99, 235, 0.12);
+}
+
+
+/* ==========================================
+   Header
+========================================== */
+
+.role-card-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 22px;
+}
+
+
+/* ==========================================
+   Role Icon
+========================================== */
+
+.role-icon {
+  width: 52px;
+  height: 52px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  font-size: 22px;
+}
+
+.role-icon.blue {
+  background: #2563eb;
+}
+
+.role-icon.purple {
+  background: #7c3aed;
+}
+
+.role-icon.green {
+  background: #059669;
+}
+
+.role-icon.orange {
+  background: #d97706;
+}
+
+
+/* ==========================================
+   Actions
+========================================== */
+
+.role-actions {
+  display: flex;
+
+  gap: 8px;
+}
+
+.role-action {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.role-action.edit {
+  background: rgba(37, 99, 235, 0.12);
+
+  color: #60a5fa;
+}
+
+.role-action.edit:hover {
+  background: #2563eb;
+
+  color: white;
+}
+
+.role-action.delete {
+  background: rgba(239, 68, 68, 0.1);
+
+  color: #f87171;
+}
+
+.role-action.delete:hover {
+  background: #dc2626;
+
+  color: white;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.role-card-content h3 {
+  margin: 0 0 8px;
+
+  color: white;
+
+  font-size: 19px;
+}
+
+.role-card-content p {
+  margin: 0;
+
+  color: #94a3b8;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.role-card-stats {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 15px;
+
+  margin-top: 24px;
+
+  padding-top: 20px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.role-stat {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  color: #60a5fa;
+}
+
+.role-stat > svg {
+  font-size: 17px;
+}
+
+.role-stat div {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+.role-stat strong {
+  color: #e2e8f0;
+
+  font-size: 14px;
+}
+
+.role-stat span {
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 600px) {
+
+  .role-card {
+    padding: 20px;
+  }
+
+}

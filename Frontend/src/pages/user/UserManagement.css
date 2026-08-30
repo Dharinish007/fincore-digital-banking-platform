@@ -1,0 +1,356 @@
+/* ==========================================
+   User Management Page
+========================================== */
+
+.user-page {
+  min-height: 100vh;
+
+  background: #0f172a;
+
+  color: #e2e8f0;
+
+  font-family: "Inter", sans-serif;
+}
+
+
+/* ==========================================
+   Main
+========================================== */
+
+.user-main {
+  margin-left: 270px;
+
+  min-height: 100vh;
+
+  min-width: 0;
+
+  background: #0f172a;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.user-content {
+  padding: 35px;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Page Header
+========================================== */
+
+.user-page-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-bottom: 35px;
+}
+
+.user-page-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #60a5fa;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+.user-page-header h1 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 34px;
+
+  font-weight: 700;
+}
+
+.user-page-header p {
+  margin: 10px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+}
+
+
+/* ==========================================
+   Add User Button
+========================================== */
+
+.add-user-btn {
+  border: none;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 12px 18px;
+
+  border-radius: 11px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+.add-user-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.user-stats-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 22px;
+
+  margin-bottom: 30px;
+}
+
+
+/* ==========================================
+   Filters
+========================================== */
+
+.user-filter-card {
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 16px;
+
+  padding: 18px;
+
+  margin-bottom: 25px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  box-sizing: border-box;
+}
+
+
+/* Search */
+
+.user-filter-search {
+  flex: 1;
+
+  min-width: 250px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  background: #1f2937;
+
+  border: 1px solid #374151;
+
+  padding: 11px 15px;
+
+  border-radius: 10px;
+
+  color: #64748b;
+
+  transition: all 0.3s ease;
+}
+
+.user-filter-search:focus-within {
+  border-color: #2563eb;
+
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.user-filter-search input {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 13px;
+}
+
+.user-filter-search input::placeholder {
+  color: #64748b;
+}
+
+
+/* Select */
+
+.user-filter-select {
+  min-width: 180px;
+
+  background: #1f2937;
+
+  color: #cbd5e1;
+
+  border: 1px solid #374151;
+
+  border-radius: 10px;
+
+  padding: 11px 13px;
+
+  outline: none;
+
+  cursor: pointer;
+
+  font-size: 13px;
+}
+
+.user-filter-select:focus {
+  border-color: #2563eb;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1300px) {
+
+  .user-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 992px) {
+
+  .user-main {
+    margin-left: 0;
+  }
+
+  .user-content {
+    padding: 30px;
+  }
+
+  .user-filter-card {
+    flex-wrap: wrap;
+  }
+
+  .user-filter-search {
+    flex-basis: 100%;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .user-content {
+    padding: 20px;
+  }
+
+  .user-page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    margin-bottom: 25px;
+  }
+
+  .user-page-header h1 {
+    font-size: 28px;
+  }
+
+  .user-page-header p {
+    font-size: 14px;
+  }
+
+  .add-user-btn {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .user-stats-grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+  .user-filter-card {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .user-filter-search {
+    min-width: 0;
+
+    width: 100%;
+  }
+
+  .user-filter-select {
+    width: 100%;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .user-content {
+    padding: 15px;
+  }
+
+  .user-page-header h1 {
+    font-size: 24px;
+  }
+
+}

@@ -1,0 +1,254 @@
+/* ==========================================
+   Transaction Report
+========================================== */
+
+.transaction-report {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  padding: 25px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ==========================================
+   Header
+========================================== */
+
+.transaction-report-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 22px;
+}
+
+.transaction-report-header h2 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 20px;
+}
+
+.transaction-report-header p {
+  margin: 6px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   Export Button
+========================================== */
+
+.export-report-btn {
+  border: none;
+
+  background: rgba(37, 99, 235, 0.15);
+
+  color: #60a5fa;
+
+  padding: 10px 16px;
+
+  border-radius: 9px;
+
+  cursor: pointer;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  transition: all 0.3s ease;
+}
+
+.export-report-btn:hover {
+  background: #2563eb;
+
+  color: white;
+}
+
+
+/* ==========================================
+   Table
+========================================== */
+
+.transaction-table-wrapper {
+  width: 100%;
+
+  overflow-x: auto;
+}
+
+.transaction-report-table {
+  width: 100%;
+
+  min-width: 850px;
+
+  border-collapse: collapse;
+}
+
+.transaction-report-table thead {
+  background: #111827;
+}
+
+.transaction-report-table th {
+  padding: 14px;
+
+  text-align: left;
+
+  color: #64748b;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+}
+
+.transaction-report-table td {
+  padding: 15px 14px;
+
+  color: #cbd5e1;
+
+  font-size: 12px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  white-space: nowrap;
+}
+
+.transaction-report-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.transaction-report-table tbody tr:hover {
+  background: #172033;
+}
+
+
+/* ==========================================
+   Transaction ID
+========================================== */
+
+.transaction-id {
+  color: #60a5fa;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================
+   Amount
+========================================== */
+
+.transaction-amount {
+  color: white !important;
+
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   Transaction Type
+========================================== */
+
+.transaction-type {
+  display: inline-block;
+
+  padding: 5px 9px;
+
+  border-radius: 15px;
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+.transaction-type.deposit {
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #4ade80;
+}
+
+.transaction-type.withdrawal {
+  background: rgba(239, 68, 68, 0.12);
+
+  color: #f87171;
+}
+
+.transaction-type.transfer {
+  background: rgba(59, 130, 246, 0.12);
+
+  color: #60a5fa;
+}
+
+
+/* ==========================================
+   Status
+========================================== */
+
+.transaction-status {
+  display: inline-block;
+
+  padding: 5px 10px;
+
+  border-radius: 20px;
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+.transaction-status.success {
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #4ade80;
+}
+
+.transaction-status.pending {
+  background: rgba(245, 158, 11, 0.12);
+
+  color: #fbbf24;
+}
+
+.transaction-status.failed {
+  background: rgba(239, 68, 68, 0.12);
+
+  color: #f87171;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 700px) {
+
+  .transaction-report {
+    padding: 18px;
+  }
+
+  .transaction-report-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 15px;
+  }
+
+  .export-report-btn {
+    width: 100%;
+  }
+
+}

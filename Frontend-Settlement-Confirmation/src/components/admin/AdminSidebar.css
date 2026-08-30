@@ -1,0 +1,393 @@
+/* ==========================================
+   Admin Sidebar
+   Premium Dark Theme
+========================================== */
+
+.admin-sidebar {
+  width: 270px;
+
+  height: 100vh;
+
+  position: fixed;
+
+  left: 0;
+  top: 0;
+
+  background: linear-gradient(
+    180deg,
+    #020617,
+    #111827
+  );
+
+  color: #ffffff;
+
+  display: flex;
+
+  flex-direction: column;
+
+  padding: 25px;
+
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-sizing: border-box;
+
+  z-index: 1000;
+
+  overflow: hidden;
+}
+
+
+/* ==========================================
+   Sidebar Header
+========================================== */
+
+.admin-sidebar-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  margin-bottom: 45px;
+
+  flex-shrink: 0;
+}
+
+
+/* ==========================================
+   Logo
+========================================== */
+
+.admin-logo-circle {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 16px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 26px;
+
+  flex-shrink: 0;
+
+  box-shadow:
+    0 0 25px rgba(37, 99, 235, 0.4);
+
+  transition: all 0.3s ease;
+}
+
+.admin-logo-circle:hover {
+  transform: scale(1.04);
+
+  box-shadow:
+    0 0 30px rgba(37, 99, 235, 0.55);
+}
+
+
+/* ==========================================
+   Brand Text
+========================================== */
+
+.admin-brand-text h2 {
+  margin: 0;
+
+  font-size: 25px;
+
+  font-weight: 700;
+
+  color: #ffffff;
+}
+
+.admin-brand-text span {
+  display: block;
+
+  margin-top: 4px;
+
+  font-size: 12px;
+
+  color: #94a3b8;
+}
+
+
+/* ==========================================
+   Navigation
+========================================== */
+
+.admin-menu {
+  flex: 1;
+
+  list-style: none;
+
+  padding: 0;
+
+  margin: 0;
+
+  overflow-y: auto;
+
+  overflow-x: hidden;
+
+  scrollbar-width: none;
+}
+
+.admin-menu::-webkit-scrollbar {
+  display: none;
+}
+
+
+/* ==========================================
+   Menu Item
+========================================== */
+
+.admin-menu li {
+  display: flex;
+
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 14px 16px;
+
+  margin-bottom: 8px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  color: #94a3b8;
+
+  user-select: none;
+}
+
+
+/* ==========================================
+   Menu Icons
+========================================== */
+
+.admin-menu li svg {
+  font-size: 17px;
+
+  flex-shrink: 0;
+
+  transition: transform 0.3s ease;
+}
+
+
+/* ==========================================
+   Hover
+========================================== */
+
+.admin-menu li:hover {
+  background: rgba(37, 99, 235, 0.15);
+
+  color: #ffffff;
+
+  transform: translateX(5px);
+}
+
+.admin-menu li:hover svg {
+  transform: scale(1.08);
+}
+
+
+/* ==========================================
+   Active Menu
+========================================== */
+
+.admin-menu li.active {
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-weight: 600;
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.3);
+}
+
+.admin-menu li.active:hover {
+  background: #2563eb;
+
+  transform: translateX(3px);
+}
+
+.admin-menu li.active svg {
+  color: #ffffff;
+}
+
+
+/* ==========================================
+   Logout
+========================================== */
+
+.admin-logout {
+  width: 100%;
+
+  border: 1px solid #374151;
+
+  background: #1e293b;
+
+  color: #cbd5e1;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  flex-shrink: 0;
+}
+
+
+/* Logout Icon */
+
+.admin-logout svg {
+  font-size: 16px;
+
+  transition: transform 0.3s ease;
+}
+
+
+/* Logout Hover */
+
+.admin-logout:hover {
+  background: #dc2626;
+
+  border-color: #dc2626;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 20px rgba(220, 38, 38, 0.2);
+}
+
+.admin-logout:hover svg {
+  transform: translateX(-2px);
+}
+
+
+/* ==========================================
+   Tablet
+========================================== */
+
+@media (max-width: 992px) {
+
+  .admin-sidebar {
+    width: 85px;
+
+    padding: 20px 12px;
+  }
+
+
+  /* Header */
+
+  .admin-sidebar-header {
+    justify-content: center;
+
+    margin-bottom: 35px;
+  }
+
+
+  /* Hide Brand Text */
+
+  .admin-brand-text {
+    display: none;
+  }
+
+
+  /* Logo */
+
+  .admin-logo-circle {
+    width: 58px;
+
+    height: 58px;
+
+    font-size: 25px;
+  }
+
+
+  /* Menu */
+
+  .admin-menu li {
+    justify-content: center;
+
+    padding: 15px;
+
+    gap: 0;
+  }
+
+
+  .admin-menu li span {
+    display: none;
+  }
+
+
+  .admin-menu li svg {
+    font-size: 20px;
+  }
+
+
+  /* Logout */
+
+  .admin-logout {
+    padding: 15px;
+
+    justify-content: center;
+
+    gap: 0;
+  }
+
+
+  .admin-logout span {
+    display: none;
+  }
+
+}
+
+
+/* ==========================================
+  Mobile
+========================================== */
+
+@media (max-width: 768px) {
+
+  .admin-sidebar {
+    display: none;
+  }
+
+}

@@ -1,0 +1,1 @@
+CREATE DATABASE IF NOT EXISTS bankingSystem_notification_db;

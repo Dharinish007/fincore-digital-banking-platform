@@ -1,0 +1,168 @@
+/* ==========================================
+   NPA Classification Layout
+========================================== */
+
+.npa-layout {
+  min-height: 100vh;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-family: "Inter", sans-serif;
+}
+
+
+/* ==========================================
+   Main Content
+========================================== */
+
+.npa-main {
+  margin-left: 270px;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #0f172a;
+
+  min-width: 0;
+}
+
+
+/* ==========================================
+   NPA Page
+========================================== */
+
+.npa-page {
+  padding: 35px;
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Page Header
+========================================== */
+
+.npa-page-header {
+  margin-bottom: 35px;
+}
+
+.npa-page-label {
+  display: block;
+
+  color: #60a5fa;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  margin-bottom: 8px;
+}
+
+.npa-page-header h1 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.npa-page-header p {
+  margin: 10px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.npa-stats-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 22px;
+
+  margin-bottom: 35px;
+}
+
+
+/* ==========================================
+   Main NPA Grid
+========================================== */
+
+.npa-main-grid {
+  display: grid;
+
+  grid-template-columns: 1.3fr 1fr;
+
+  gap: 25px;
+
+  align-items: start;
+}
+
+.npa-form-section,
+.npa-result-section {
+  min-width: 0;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1300px) {
+
+  .npa-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .npa-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 992px) {
+
+  .npa-main {
+    margin-left: 0;
+  }
+
+  .npa-page {
+    padding: 30px;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .npa-page {
+    padding: 20px;
+  }
+
+  .npa-page-header h1 {
+    font-size: 28px;
+  }
+
+  .npa-page-header p {
+    font-size: 14px;
+  }
+
+  .npa-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .npa-main-grid {
+    gap: 20px;
+  }
+
+}

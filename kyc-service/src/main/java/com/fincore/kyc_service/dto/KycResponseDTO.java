@@ -3,8 +3,6 @@ package com.fincore.kyc_service.dto;
 
 public class KycResponseDTO {
 
-	
-
 	private Long kycId;
 	private String firstName;
 	private String lastName;
@@ -14,9 +12,6 @@ public class KycResponseDTO {
 	private String city;
 	private String status;
 	private String message;
-	private boolean pepDeclaration;
-	private String occupationStatus;
-	private String annualIncomeRange;
 
 	 
     public String getFirstName() {
@@ -91,22 +86,4 @@ public class KycResponseDTO {
         this.message = message;
     }
 
-	public boolean isPepDeclaration() {
-		return pepDeclaration;
-	}
-	public void setPepDeclaration(boolean pepDeclaration) {
-		this.pepDeclaration = pepDeclaration;
-	}
-	public String getOccupationStatus() {
-		return occupationStatus;
-	}
-	public void setOccupationStatus(String occupationStatus) {
-		this.occupationStatus = occupationStatus;
-	}
-	public String getAnnualIncomeRange() {
-		return annualIncomeRange;
-	}
-	public void setAnnualIncomeRange(String annualIncomeRange) {
-		this.annualIncomeRange = annualIncomeRange;
-	}
 }

@@ -1,8 +1,7 @@
-CREATE DATABASE compliance_db;
+CREATE DATABASE IF NOT EXISTS compliance_db;
 
 USE compliance_db;
 
-SHOW Tables;
+SHOW tables;
 
 SELECT * FROM compliance_checks;
-

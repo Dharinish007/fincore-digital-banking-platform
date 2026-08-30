@@ -1,0 +1,248 @@
+/* ==========================================
+   Teller Dashboard
+========================================== */
+
+.teller-dashboard {
+    min-height: 100vh;
+
+    background: #0b1020;
+
+    color: #e5e7eb;
+
+    font-family: "Inter", sans-serif;
+}
+
+
+/* ==========================================
+   Main Area
+========================================== */
+
+.teller-main {
+    margin-left: 270px;
+
+    width: calc(100% - 270px);
+
+    height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    background: #0b1020;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Dashboard Content
+========================================== */
+
+.teller-content {
+    flex: 1;
+
+    padding: 35px;
+
+    padding-top: 110px;
+
+    width: 100%;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+
+/* ==========================================
+   Heading
+========================================== */
+
+.teller-heading {
+    margin-bottom: 35px;
+}
+
+.teller-heading h1 {
+    font-size: 34px;
+
+    font-weight: 700;
+
+    color: #ffffff;
+
+    margin: 0 0 10px;
+}
+
+.teller-heading p {
+    color: #9ca3af;
+
+    font-size: 16px;
+
+    margin: 0;
+
+    line-height: 1.6;
+}
+
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.teller-stats {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 25px;
+
+    margin-bottom: 35px;
+}
+
+
+/* ==========================================
+   Dashboard Grid
+========================================== */
+
+.teller-dashboard-grid {
+    display: grid;
+
+    grid-template-columns: 1.7fr 1fr;
+
+    gap: 25px;
+
+    align-items: start;
+}
+
+.teller-section {
+    width: 100%;
+
+    min-width: 0;
+}
+
+
+/* ==========================================
+   Common Section Card
+========================================== */
+
+.teller-section > * {
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Scrollbar
+========================================== */
+
+.teller-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.teller-content::-webkit-scrollbar-track {
+    background: #111827;
+}
+
+.teller-content::-webkit-scrollbar-thumb {
+    background: #2563eb;
+
+    border-radius: 10px;
+}
+
+.teller-content::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6;
+}
+
+
+/* ==========================================
+   Large Tablet
+========================================== */
+
+@media (max-width: 1200px) {
+
+    .teller-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .teller-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ==========================================
+   Tablet
+========================================== */
+
+@media (max-width: 992px) {
+
+    .teller-main {
+        margin-left: 85px;
+
+        width: calc(100% - 85px);
+    }
+
+    .teller-content {
+        padding: 30px;
+
+        padding-top: 105px;
+    }
+}
+
+
+/* ==========================================
+   Mobile
+========================================== */
+
+@media (max-width: 768px) {
+
+    .teller-main {
+        margin-left: 0;
+
+        width: 100%;
+    }
+
+    .teller-content {
+        padding: 20px;
+
+        padding-top: 95px;
+    }
+
+    .teller-heading {
+        margin-bottom: 25px;
+    }
+
+    .teller-heading h1 {
+        font-size: 28px;
+    }
+
+    .teller-heading p {
+        font-size: 15px;
+    }
+
+    .teller-stats {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+    .teller-dashboard-grid {
+        gap: 20px;
+    }
+}
+
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 480px) {
+
+    .teller-content {
+        padding: 15px;
+
+        padding-top: 90px;
+    }
+
+    .teller-heading h1 {
+        font-size: 24px;
+    }
+}

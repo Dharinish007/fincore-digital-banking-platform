@@ -1,0 +1,154 @@
+/* ==========================================
+   Report Summary
+========================================== */
+
+.report-summary {
+  background: #1e293b;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 18px;
+
+  padding: 25px;
+
+  margin-bottom: 25px;
+}
+
+
+/* ==========================================
+   Header
+========================================== */
+
+.report-summary-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  margin-bottom: 25px;
+}
+
+.report-summary-header h2 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 20px;
+}
+
+.report-summary-header p {
+  margin: 6px 0 0;
+
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+.report-period {
+  padding: 7px 12px;
+
+  background: rgba(37, 99, 235, 0.12);
+
+  color: #60a5fa;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+
+  font-weight: 600;
+}
+
+
+/* ==========================================
+   Summary Grid
+========================================== */
+
+.report-summary-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 20px;
+}
+
+.summary-item {
+  padding: 18px;
+
+  background: #111827;
+
+  border-radius: 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.summary-item span {
+  display: block;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+.summary-item strong {
+  display: block;
+
+  margin-top: 8px;
+
+  color: white;
+
+  font-size: 22px;
+}
+
+.summary-item small {
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  margin-top: 7px;
+
+  font-size: 10px;
+
+  font-weight: 600;
+}
+
+.summary-positive {
+  color: #4ade80;
+}
+
+.summary-negative {
+  color: #f87171;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 900px) {
+
+  .report-summary-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .report-summary {
+    padding: 18px;
+  }
+
+  .report-summary-header {
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+  .report-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
