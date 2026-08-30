@@ -1,0 +1,228 @@
+/* ==========================================
+   Employee Management Page
+========================================== */
+
+.employee-page {
+  min-height: 100vh;
+
+  background: #0f172a;
+
+  color: #e2e8f0;
+
+  font-family: "Inter", sans-serif;
+}
+
+
+/* ==========================================
+   Main
+========================================== */
+
+.employee-main {
+  margin-left: 270px;
+
+  min-height: 100vh;
+
+  min-width: 0;
+
+  background: #0f172a;
+
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.employee-content {
+  padding: 35px;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Page Header
+========================================== */
+
+.employee-page-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 25px;
+
+  margin-bottom: 35px;
+}
+
+.employee-page-label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #60a5fa;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+}
+
+.employee-page-header h1 {
+  margin: 0;
+
+  color: white;
+
+  font-size: 34px;
+
+  font-weight: 700;
+}
+
+.employee-page-header p {
+  margin: 10px 0 0;
+
+  color: #94a3b8;
+
+  font-size: 15px;
+}
+
+
+/* ==========================================
+   Add Employee Button
+========================================== */
+
+.add-employee-btn {
+  border: none;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 12px 18px;
+
+  border-radius: 11px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  cursor: pointer;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+.add-employee-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.employee-stats-grid {
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 22px;
+
+  margin-bottom: 35px;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 1300px) {
+
+  .employee-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 992px) {
+
+  .employee-main {
+    margin-left: 0;
+  }
+
+  .employee-content {
+    padding: 30px;
+  }
+
+}
+
+
+@media (max-width: 768px) {
+
+  .employee-content {
+    padding: 20px;
+  }
+
+  .employee-page-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    margin-bottom: 25px;
+  }
+
+  .employee-page-header h1 {
+    font-size: 28px;
+  }
+
+  .employee-page-header p {
+    font-size: 14px;
+  }
+
+  .add-employee-btn {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .employee-stats-grid {
+    grid-template-columns: 1fr;
+
+    gap: 16px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .employee-content {
+    padding: 15px;
+  }
+
+  .employee-page-header h1 {
+    font-size: 24px;
+  }
+
+}

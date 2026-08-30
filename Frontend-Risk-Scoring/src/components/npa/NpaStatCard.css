@@ -1,0 +1,142 @@
+/* ==========================================
+   NPA Stat Card
+========================================== */
+
+.npa-stat-card {
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 18px;
+
+  padding: 22px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  transition: all 0.3s ease;
+
+  box-sizing: border-box;
+}
+
+.npa-stat-card:hover {
+  transform: translateY(-4px);
+
+  border-color: #2563eb;
+
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
+}
+
+
+/* ==========================================
+   Icon
+========================================== */
+
+.npa-stat-icon {
+  width: 52px;
+
+  height: 52px;
+
+  min-width: 52px;
+
+  border-radius: 14px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  color: white;
+
+  font-size: 21px;
+}
+
+.npa-stat-icon.blue {
+  background: #2563eb;
+}
+
+.npa-stat-icon.green {
+  background: #059669;
+}
+
+.npa-stat-icon.orange {
+  background: #d97706;
+}
+
+.npa-stat-icon.red {
+  background: #dc2626;
+}
+
+.npa-stat-icon.purple {
+  background: #7c3aed;
+}
+
+
+/* ==========================================
+   Content
+========================================== */
+
+.npa-stat-content {
+  min-width: 0;
+}
+
+.npa-stat-content p {
+  margin: 0 0 6px;
+
+  color: #9ca3af;
+
+  font-size: 13px;
+}
+
+.npa-stat-content h3 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 25px;
+
+  font-weight: 700;
+}
+
+.npa-stat-content span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #64748b;
+
+  font-size: 11px;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 576px) {
+
+  .npa-stat-card {
+    padding: 18px;
+
+    gap: 14px;
+  }
+
+  .npa-stat-icon {
+    width: 46px;
+
+    height: 46px;
+
+    min-width: 46px;
+
+    font-size: 18px;
+  }
+
+  .npa-stat-content h3 {
+    font-size: 21px;
+  }
+
+}

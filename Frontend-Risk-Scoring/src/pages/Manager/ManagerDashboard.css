@@ -1,0 +1,174 @@
+/* ==========================================
+   Manager Dashboard
+========================================== */
+
+.manager-dashboard {
+    display: flex;
+    min-height: 100vh;
+    background: #0b1020;
+    color: #e5e7eb;
+    font-family: "Inter", sans-serif;
+}
+
+/* ==========================================
+   Main Area
+========================================== */
+
+.manager-main {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    margin-left: 270px;
+    display: flex;
+    flex-direction: column;
+    background: #0b1020;
+}
+
+/* ==========================================
+   Dashboard Content
+========================================== */
+
+.manager-content {
+    padding: 35px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Heading
+========================================== */
+
+.manager-heading {
+    margin-bottom: 35px;
+}
+
+.manager-heading h1 {
+    font-size: 34px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 10px;
+}
+
+.manager-heading p {
+    color: #9ca3af;
+    font-size: 16px;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   Statistics
+========================================== */
+
+.manager-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    margin-bottom: 35px;
+}
+
+/* ==========================================
+   Dashboard Grid
+========================================== */
+
+.manager-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 25px;
+    align-items: start;
+}
+
+.manager-section {
+    width: 100%;
+    min-width: 0;
+}
+
+/* ==========================================
+   Common Section Card
+========================================== */
+
+.manager-section > * {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   Responsive - Large Tablet
+========================================== */
+
+@media (max-width: 1200px) {
+
+    .manager-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .manager-dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* ==========================================
+   Responsive - Tablet
+========================================== */
+
+@media (max-width: 992px) {
+
+    .manager-main {
+        margin-left: 0;
+    }
+
+    .manager-content {
+        padding: 30px;
+    }
+
+}
+
+/* ==========================================
+   Responsive - Mobile
+========================================== */
+
+@media (max-width: 768px) {
+
+    .manager-content {
+        padding: 20px;
+    }
+
+    .manager-heading {
+        margin-bottom: 25px;
+    }
+
+    .manager-heading h1 {
+        font-size: 28px;
+    }
+
+    .manager-heading p {
+        font-size: 15px;
+    }
+
+    .manager-stats {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .manager-dashboard-grid {
+        gap: 20px;
+    }
+
+}
+
+/* ==========================================
+   Small Mobile
+========================================== */
+
+@media (max-width: 480px) {
+
+    .manager-content {
+        padding: 15px;
+    }
+
+    .manager-heading h1 {
+        font-size: 24px;
+    }
+
+}

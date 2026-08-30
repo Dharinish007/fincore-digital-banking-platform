@@ -1,0 +1,255 @@
+/* ==========================================
+   NPA Form
+========================================== */
+
+.npa-form-card {
+  background: #111827;
+
+  border: 1px solid #1f2937;
+
+  border-radius: 18px;
+
+  padding: 28px;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ==========================================
+   Header
+========================================== */
+
+.npa-form-header {
+  margin-bottom: 28px;
+}
+
+.npa-form-header h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: 21px;
+
+  font-weight: 700;
+}
+
+.npa-form-header p {
+  margin: 7px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   Form Grid
+========================================== */
+
+.npa-form-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 22px;
+}
+
+
+/* ==========================================
+   Form Group
+========================================== */
+
+.npa-form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 9px;
+}
+
+.npa-form-group label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  color: #cbd5e1;
+
+  font-size: 13px;
+
+  font-weight: 600;
+}
+
+.npa-form-group label svg {
+  color: #60a5fa;
+
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   Inputs
+========================================== */
+
+.npa-form-group input,
+.npa-form-group select {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #374151;
+
+  background: #1f2937;
+
+  color: #ffffff;
+
+  padding: 12px 14px;
+
+  border-radius: 10px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  transition: all 0.3s ease;
+}
+
+.npa-form-group input:focus,
+.npa-form-group select:focus {
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.npa-form-group input::placeholder {
+  color: #6b7280;
+}
+
+.npa-form-group select option {
+  background: #1f2937;
+
+  color: white;
+}
+
+
+/* ==========================================
+   Helper Text
+========================================== */
+
+.npa-form-group small {
+  color: #64748b;
+
+  font-size: 11px;
+
+  margin-top: -3px;
+}
+
+
+/* ==========================================
+   Actions
+========================================== */
+
+.npa-form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 28px;
+
+  padding-top: 22px;
+
+  border-top: 1px solid #1f2937;
+}
+
+.npa-reset-btn,
+.npa-classify-btn {
+  border: none;
+
+  padding: 11px 22px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.npa-reset-btn {
+  background: #1f2937;
+
+  color: #cbd5e1;
+
+  border: 1px solid #374151;
+}
+
+.npa-reset-btn:hover {
+  background: #374151;
+
+  color: white;
+}
+
+.npa-classify-btn {
+  background: #2563eb;
+
+  color: white;
+
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.npa-classify-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+.npa-reset-btn:disabled,
+.npa-classify-btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 768px) {
+
+  .npa-form-card {
+    padding: 22px;
+  }
+
+  .npa-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .npa-form-card {
+    padding: 18px;
+  }
+
+  .npa-form-actions {
+    flex-direction: column;
+  }
+
+  .npa-reset-btn,
+  .npa-classify-btn {
+    width: 100%;
+  }
+
+}

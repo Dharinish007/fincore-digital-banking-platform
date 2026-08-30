@@ -1,0 +1,162 @@
+/* ==========================================
+   Manager Sidebar
+========================================== */
+
+.manager-sidebar {
+    width: 270px;
+    height: 100vh;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    background: linear-gradient(180deg, #020617, #111827);
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 25px;
+
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+    z-index: 1000;
+
+    box-sizing: border-box;
+}
+
+
+/* ==========================================
+   Logo
+========================================== */
+
+.manager-sidebar-logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.manager-logo-icon {
+    font-size: 55px;
+    color: #2563eb;
+    margin-bottom: 12px;
+
+    filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.35));
+}
+
+.manager-sidebar-logo h2 {
+    font-size: 28px;
+    color: #ffffff;
+    margin: 0;
+}
+
+.manager-sidebar-logo p {
+    color: #9ca3af;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+
+/* ==========================================
+   Navigation
+========================================== */
+
+.manager-sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+}
+
+.manager-sidebar ul li {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 14px 16px;
+
+    margin-bottom: 5px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    color: #9ca3af;
+
+    transition: all 0.3s ease;
+}
+
+.manager-sidebar ul li:hover {
+    background: rgba(37, 99, 235, 0.12);
+
+    color: #ffffff;
+
+    transform: translateX(4px);
+}
+
+.manager-sidebar ul li.active {
+    background: #2563eb;
+
+    color: #ffffff;
+
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.25);
+}
+
+.manager-sidebar ul li svg {
+    font-size: 18px;
+}
+
+
+/* ==========================================
+   Logout
+========================================== */
+
+.manager-logout-btn {
+    border: 1px solid #374151;
+
+    background: #1f2937;
+
+    color: #d1d5db;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 15px;
+
+    transition: all 0.3s ease;
+}
+
+.manager-logout-btn:hover {
+    background: #ef4444;
+
+    border-color: #ef4444;
+
+    color: #ffffff;
+
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 992px) {
+
+    .manager-sidebar {
+        display: none;
+    }
+
+}

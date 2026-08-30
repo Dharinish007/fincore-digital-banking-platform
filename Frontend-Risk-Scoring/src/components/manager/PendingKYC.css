@@ -1,0 +1,70 @@
+.pending-kyc {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 18px;
+    padding: 25px;
+}
+
+.kyc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+}
+
+.kyc-header h3 {
+    color: #ffffff;
+    font-size: 20px;
+}
+
+.kyc-header button {
+    border: none;
+    background: transparent;
+    color: #60a5fa;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.kyc-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 0;
+    border-bottom: 1px solid #1f2937;
+}
+
+.kyc-row:last-child {
+    border-bottom: none;
+}
+
+.kyc-row strong {
+    display: block;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+.kyc-row span {
+    color: #9ca3af;
+    font-size: 13px;
+}
+
+.kyc-status {
+    background: rgba(245, 158, 11, 0.12);
+    color: #f59e0b !important;
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.verify-btn {
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.verify-btn:hover {
+    background: #3b82f6;
+}

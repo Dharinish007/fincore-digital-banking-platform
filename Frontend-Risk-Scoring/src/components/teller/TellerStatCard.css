@@ -1,0 +1,61 @@
+/* ==========================================
+   Teller Stat Card
+========================================== */
+
+.teller-stat-card {
+    background: #111827;
+    border: 1px solid #1f2937;
+    border-radius: 18px;
+    padding: 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    transition: all 0.3s ease;
+}
+
+.teller-stat-card:hover {
+    transform: translateY(-5px);
+    border-color: #2563eb;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.15);
+}
+
+.teller-stat-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.teller-stat-card p {
+    color: #9ca3af;
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+.teller-stat-card h2 {
+    color: #ffffff;
+    font-size: 26px;
+}
+
+/* Icon Colors */
+
+.teller-stat-icon.green {
+    background: #10b981;
+}
+
+.teller-stat-icon.orange {
+    background: #f59e0b;
+}
+
+.teller-stat-icon.blue {
+    background: #2563eb;
+}
+
+.teller-stat-icon.purple {
+    background: #8b5cf6;
+}

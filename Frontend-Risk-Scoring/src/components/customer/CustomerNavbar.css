@@ -1,0 +1,188 @@
+/* ==========================================
+   Customer Navbar
+========================================== */
+
+.customer-navbar {
+    height: 75px;
+
+    background: #111827;
+
+    border-bottom: 1px solid #1f2937;
+
+    padding: 0 35px;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    box-sizing: border-box;
+
+    flex-shrink: 0;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+}
+
+
+/* ==========================================
+   Search
+========================================== */
+
+.customer-search {
+    width: 360px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    background: #1f2937;
+
+    border: 1px solid #374151;
+
+    padding: 12px 18px;
+
+    border-radius: 12px;
+
+    color: #9ca3af;
+
+    transition: 0.3s;
+}
+
+.customer-search:focus-within {
+    border-color: #2563eb;
+
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.customer-search input {
+    border: none;
+
+    background: transparent;
+
+    color: #ffffff;
+
+    outline: none;
+
+    width: 100%;
+
+    font-size: 15px;
+}
+
+.customer-search input::placeholder {
+    color: #6b7280;
+}
+
+
+/* ==========================================
+   Navbar Right
+========================================== */
+
+.customer-navbar-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+}
+
+
+/* ==========================================
+   Notification Icon
+========================================== */
+
+.customer-nav-icon {
+    font-size: 21px;
+
+    color: #60a5fa;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.customer-nav-icon:hover {
+    color: #93c5fd;
+
+    transform: scale(1.1);
+}
+
+
+/* ==========================================
+   Profile
+========================================== */
+
+.customer-profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: #ffffff;
+
+    font-weight: 600;
+}
+
+.customer-profile svg {
+    font-size: 34px;
+
+    color: #3b82f6;
+}
+
+
+/* ==========================================
+   Responsive
+========================================== */
+
+@media (max-width: 992px) {
+
+    .customer-navbar {
+        padding: 0 20px;
+    }
+
+    .customer-search {
+        width: 260px;
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .customer-navbar {
+        padding: 0 20px;
+    }
+
+    .customer-search {
+        width: 220px;
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .customer-navbar {
+        padding: 0 15px;
+    }
+
+    .customer-search {
+        width: 170px;
+    }
+
+    .customer-navbar-right {
+        gap: 15px;
+    }
+
+    .customer-profile span {
+        display: none;
+    }
+
+}
