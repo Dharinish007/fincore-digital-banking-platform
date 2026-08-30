@@ -27,6 +27,7 @@ import RoleManagement from "../pages/role/RoleManagement";
 import NpaClassification from "../pages/npa/NpaClassification";
 import AuditLogs from "../pages/audit/AuditLogs";
 import SettlementConfirmation from "../pages/settlement/SettlementConfirmation";
+import RiskScoring from "../pages/risk/RiskScoring";
 
 // ==========================================
 // Admin Additional Pages
@@ -139,6 +140,12 @@ function AppRoutes() {
         path="/settlement-confirmation"
         element={<SettlementConfirmation />}
       />
+
+      <Route
+        path="/risk-scoring"
+        element={<RiskScoring />}
+      />
+
       <Route
         path="/teller/dashboard"
         element={<TellerDashboard />}

@@ -9,6 +9,7 @@ import {
   FaUniversity,
   FaExchangeAlt,
   FaCheckCircle,
+  FaShieldAlt,
 } from "react-icons/fa";
 
 import { useNavigate } from "react-router-dom";
@@ -81,6 +82,13 @@ function ManagerSidebar() {
           <FaCheckCircle />
           Settlement Confirmation
         </li>
+
+      <li
+        onClick={() => navigate("/risk-scoring")}
+      >
+        <FaShieldAlt />
+        Risk Scoring
+      </li>
 
         <li
           onClick={() => navigate("/reports")}
