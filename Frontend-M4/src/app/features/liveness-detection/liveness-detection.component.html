@@ -1,0 +1,190 @@
+<div class="liveness-page-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-subtitle">KYC & Identity Verification • Stage 2</div>
+    <h1 class="page-title">Liveness Detection</h1>
+  </div>
+
+  <!-- Stepper / Workflow Progress Bar -->
+  <div class="card workflow-stepper">
+    <div class="step-item">
+      <div class="step-badge">1</div>
+      <div class="step-label">
+        <span class="s-title">Document OCR</span>
+        <span class="s-sub">Upload & Extract</span>
+      </div>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item active">
+      <div class="step-badge">2</div>
+      <div class="step-label">
+        <span class="s-title">Liveness Detection</span>
+        <span class="s-sub">Camera Challenge</span>
+      </div>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item">
+      <div class="step-badge">3</div>
+      <div class="step-label">
+        <span class="s-title">Face Match Accuracy</span>
+        <span class="s-sub">Pavithra's Feature</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Alert Banner -->
+  <div [ngSwitch]="currentState" class="status-banner-container">
+
+    <div *ngSwitchCase="'INITIAL'" class="alert info fade-in">
+      <mat-icon class="alert-icon">videocam</mat-icon>
+      <div class="alert-content">
+        <strong>Before You Begin</strong>
+        <span>Make sure you're in a well-lit area with your face fully visible. You'll be asked to complete a few quick actions to confirm you're a real person.</span>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'CAMERA_READY'" class="alert info fade-in">
+      <mat-icon class="alert-icon">task_alt</mat-icon>
+      <div class="alert-content">
+        <strong>Camera Active</strong>
+        <span>Position your face within the frame guide, then click "Begin Verification" to start the challenge sequence.</span>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'CHALLENGE_IN_PROGRESS'" class="alert warning fade-in">
+      <mat-icon class="alert-icon">sync</mat-icon>
+      <div class="alert-content">
+        <strong>Verification In Progress</strong>
+        <span>Follow the on-screen instructions to complete the liveness challenge.</span>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'PROCESSING'" class="alert warning fade-in processing-alert">
+      <div class="spinner-box">
+        <mat-icon class="spin-icon">autorenew</mat-icon>
+      </div>
+      <div class="alert-content width-full">
+        <strong>Verifying Liveness...</strong>
+        <span>Analyzing captured frames for signs of a live, present user. Please wait.</span>
+        <mat-progress-bar mode="indeterminate" class="custom-progress"></mat-progress-bar>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'SUCCESS'" class="alert success fade-in">
+      <mat-icon class="alert-icon">verified</mat-icon>
+      <div class="alert-content">
+        <strong>Liveness Confirmed (Ref: {{ requestId || 'N/A' }})</strong>
+        <span>Liveness verification passed. Please confirm below to proceed to Face Match Accuracy.</span>
+      </div>
+    </div>
+
+    <div *ngSwitchCase="'CAMERA_ERROR'" class="alert error fade-in">
+      <mat-icon class="alert-icon">videocam_off</mat-icon>
+      <div class="alert-content">
+        <strong>Camera Error</strong>
+        <span>{{ errorMessage || 'The camera could not be accessed on this device.' }}</span>
+      </div>
+      <button class="ghost-button btn-sm" (click)="onRetry()">Try Again</button>
+    </div>
+
+    <div *ngSwitchCase="'LIVENESS_FAILED'" class="alert error fade-in">
+      <mat-icon class="alert-icon">error_outline</mat-icon>
+      <div class="alert-content">
+        <strong>Liveness Check Failed</strong>
+        <span>{{ errorMessage || 'We could not confirm liveness from the captured frames.' }}</span>
+      </div>
+      <button class="primary-button btn-sm" (click)="onRetry()">
+        <mat-icon>refresh</mat-icon> Retry Check
+      </button>
+    </div>
+
+    <div *ngSwitchCase="'NETWORK_ERROR'" class="alert error fade-in">
+      <mat-icon class="alert-icon">wifi_off</mat-icon>
+      <div class="alert-content">
+        <strong>Network Communication Error</strong>
+        <span>Unable to communicate with the liveness verification backend. Check network connectivity.</span>
+      </div>
+      <button class="secondary-button btn-sm" (click)="onRetry()">
+        <mat-icon>refresh</mat-icon> Retry Connection
+      </button>
+    </div>
+
+  </div>
+
+  <!-- Start Camera Action -->
+  <div class="action-bar-container" *ngIf="currentState === 'INITIAL'">
+    <button type="button" class="primary-button btn-lg" (click)="startCamera()">
+      <mat-icon>videocam</mat-icon> Start Liveness Check
+    </button>
+  </div>
+
+  <!-- Camera / Challenge Card -->
+  <div class="card camera-card" *ngIf="currentState === 'CAMERA_READY' || currentState === 'CHALLENGE_IN_PROGRESS'">
+    <div class="camera-frame" [class.recording]="currentState === 'CHALLENGE_IN_PROGRESS'">
+      <video #videoEl autoplay playsinline muted></video>
+      <div class="face-guide"></div>
+      <div class="camera-overlay" *ngIf="currentState === 'CHALLENGE_IN_PROGRESS'">
+        <mat-icon>{{ currentStep?.icon }}</mat-icon>
+        <span>{{ currentStep?.instruction }}</span>
+      </div>
+    </div>
+
+    <div class="step-indicator" *ngIf="currentState === 'CHALLENGE_IN_PROGRESS'">
+      <div
+        class="step-dot"
+        *ngFor="let step of challengeSteps; let i = index"
+        [class.active]="i === currentStepIndex"
+        [class.done]="i < currentStepIndex"
+      >
+        <mat-icon>{{ i < currentStepIndex ? 'check' : step.icon }}</mat-icon>
+        <span>{{ step.label }}</span>
+      </div>
+    </div>
+
+    <div class="action-bar-container" *ngIf="currentState === 'CAMERA_READY'">
+      <button type="button" class="primary-button btn-lg" (click)="beginChallenge()">
+        <mat-icon>play_circle</mat-icon> Begin Verification
+      </button>
+      <button type="button" class="ghost-button btn-lg" (click)="cancelCamera()">
+        <mat-icon>clear</mat-icon> Cancel
+      </button>
+    </div>
+  </div>
+
+  <!-- Result Card -->
+  <div class="card result-card fade-in" *ngIf="currentState === 'SUCCESS' && resultData">
+    <h3><mat-icon>check_circle</mat-icon> Liveness Result</h3>
+
+    <div class="result-body">
+      <img class="result-preview" [src]="resultData.capturedFrame" alt="Captured liveness frame" />
+
+      <div class="result-details">
+        <div class="detail-row">
+          <span class="detail-label">Verification Status</span>
+          <span class="badge badge-approved">{{ resultData.verificationStatus }}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Confidence Score</span>
+          <span class="detail-value">{{ resultData.confidenceScore }}%</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Liveness Score</span>
+          <span class="detail-value">{{ resultData.livenessScore }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar-container">
+      <button type="button" class="primary-button btn-lg" (click)="onConfirmLiveness()">
+        <mat-icon>arrow_forward</mat-icon> Confirm & Proceed to Face Match Accuracy
+      </button>
+      <button type="button" class="ghost-button btn-lg" (click)="onRetry()">
+        <mat-icon>refresh</mat-icon> Re-run Check
+      </button>
+    </div>
+  </div>
+
+  <canvas #captureCanvas hidden></canvas>
+
+</div>
