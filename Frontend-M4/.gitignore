@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Angular build & cache outputs
+.angular/
+dist/
+
+# System & Log files
+*.log
+.DS_Store
+Thumbs.db

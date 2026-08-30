@@ -1,0 +1,78 @@
+<div class="ocr-page-container">
+  
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-subtitle">KYC & Identity Verification • Stage 1</div>
+    <h1 class="page-title">Document Optical Character Recognition (OCR)</h1>
+  </div>
+
+  <!-- Stepper / Workflow Progress Bar -->
+  <div class="card workflow-stepper">
+    <div class="step-item active">
+      <div class="step-badge">1</div>
+      <div class="step-label">
+        <span class="s-title">Document OCR</span>
+        <span class="s-sub">Upload & Extract</span>
+      </div>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item">
+      <div class="step-badge">2</div>
+      <div class="step-label">
+        <span class="s-title">Liveness Detection</span>
+        <span class="s-sub">Kousalya's Feature</span>
+      </div>
+    </div>
+    <div class="step-divider"></div>
+    <div class="step-item">
+      <div class="step-badge">3</div>
+      <div class="step-label">
+        <span class="s-title">Face Match Accuracy</span>
+        <span class="s-sub">Pavithra's Feature</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Alert Banner -->
+  <app-ocr-status-banner 
+    [currentState]="currentState"
+    [errorMessage]="errorMessage"
+    [requestId]="requestId"
+    (retry)="onRetry()">
+  </app-ocr-status-banner>
+
+  <!-- Upload Card -->
+  <app-document-upload-card 
+    [selectedDocumentType]="selectedDocumentType"
+    [isProcessing]="currentState === 'PROCESSING'"
+    [selectedFile]="selectedFile"
+    (fileSelected)="onFileSelected($event)"
+    (documentTypeChange)="onDocumentTypeChange($event)"
+    (fileRemoved)="onFileRemoved()">
+  </app-document-upload-card>
+
+  <!-- Start Processing Button Action Bar -->
+  <div class="action-bar-container" *ngIf="currentState === 'SELECTED'">
+    <button 
+      type="button" 
+      class="primary-button btn-lg" 
+      (click)="startOcrProcessing()">
+      <mat-icon>play_circle</mat-icon> Start OCR Extraction
+    </button>
+    <button 
+      type="button" 
+      class="ghost-button btn-lg" 
+      (click)="resetWorkflow()">
+      <mat-icon>clear</mat-icon> Cancel
+    </button>
+  </div>
+
+  <!-- OCR Results Display Component -->
+  <app-ocr-result-viewer 
+    *ngIf="currentState === 'SUCCESS' || currentState === 'REVIEW'"
+    [extractedData]="extractedData"
+    (confirmData)="onConfirmData($event)"
+    (reprocessRequest)="startOcrProcessing()">
+  </app-ocr-result-viewer>
+
+</div>

@@ -1,0 +1,84 @@
+<div [ngSwitch]="currentState" class="status-banner-container">
+  
+  <!-- INITIAL STATE -->
+  <div *ngSwitchCase="'INITIAL'" class="alert info fade-in">
+    <mat-icon class="alert-icon">info</mat-icon>
+    <div class="alert-content">
+      <strong>KYC Document Verification Required</strong>
+      <span>Please select a valid identity document (Aadhaar, PAN, Passport, or Driving License) to begin OCR extraction.</span>
+    </div>
+  </div>
+
+  <!-- SELECTED STATE -->
+  <div *ngSwitchCase="'SELECTED'" class="alert info fade-in">
+    <mat-icon class="alert-icon">task_alt</mat-icon>
+    <div class="alert-content">
+      <strong>Document Selected</strong>
+      <span>Click "Start OCR Extraction" below to initiate optical character recognition on the document.</span>
+    </div>
+  </div>
+
+  <!-- PROCESSING STATE -->
+  <div *ngSwitchCase="'PROCESSING'" class="alert warning fade-in processing-alert">
+    <div class="spinner-box">
+      <mat-icon class="spin-icon">sync</mat-icon>
+    </div>
+    <div class="alert-content width-full">
+      <strong>Extracting Document Information...</strong>
+      <span>Performing AI layout analysis, OCR text extraction, and KYC field validation. Please wait.</span>
+      <mat-progress-bar mode="indeterminate" class="custom-progress"></mat-progress-bar>
+    </div>
+  </div>
+
+  <!-- SUCCESS / REVIEW STATE -->
+  <div *ngSwitchCase="'SUCCESS'" class="alert success fade-in">
+    <mat-icon class="alert-icon">verified</mat-icon>
+    <div class="alert-content">
+      <strong>OCR Extraction Complete (Ref: {{ requestId || 'N/A' }})</strong>
+      <span>Extracted fields match digital banking verification standards. Please review the details below before proceeding.</span>
+    </div>
+  </div>
+
+  <div *ngSwitchCase="'REVIEW'" class="alert success fade-in">
+    <mat-icon class="alert-icon">fact_check</mat-icon>
+    <div class="alert-content">
+      <strong>Review & Edit Mode</strong>
+      <span>Inspect extracted text fields. Make necessary edits if document quality affected recognition accuracy.</span>
+    </div>
+  </div>
+
+  <!-- VALIDATION ERROR STATE -->
+  <div *ngSwitchCase="'VALIDATION_ERROR'" class="alert error fade-in">
+    <mat-icon class="alert-icon">warning</mat-icon>
+    <div class="alert-content">
+      <strong>Invalid Document Upload</strong>
+      <span>{{ errorMessage || 'The uploaded file does not satisfy KYC file type or size specifications.' }}</span>
+    </div>
+    <button class="ghost-button btn-sm" (click)="onRetry()">Re-select File</button>
+  </div>
+
+  <!-- OCR ERROR STATE -->
+  <div *ngSwitchCase="'OCR_ERROR'" class="alert error fade-in">
+    <mat-icon class="alert-icon">error_outline</mat-icon>
+    <div class="alert-content">
+      <strong>OCR Extraction Failure</strong>
+      <span>{{ errorMessage || 'The document processing engine could not read text from this file. Try a clearer upload.' }}</span>
+    </div>
+    <button class="primary-button btn-sm" (click)="onRetry()">
+      <mat-icon>refresh</mat-icon> Retry OCR
+    </button>
+  </div>
+
+  <!-- NETWORK ERROR STATE -->
+  <div *ngSwitchCase="'NETWORK_ERROR'" class="alert error fade-in">
+    <mat-icon class="alert-icon">wifi_off</mat-icon>
+    <div class="alert-content">
+      <strong>Network Communication Error</strong>
+      <span>Unable to communicate with the KYC OCR backend service. Check network connectivity.</span>
+    </div>
+    <button class="secondary-button btn-sm" (click)="onRetry()">
+      <mat-icon>refresh</mat-icon> Retry Connection
+    </button>
+  </div>
+
+</div>

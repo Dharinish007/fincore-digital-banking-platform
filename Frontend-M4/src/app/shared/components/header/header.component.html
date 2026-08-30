@@ -1,0 +1,30 @@
+<header class="app-header">
+  <div class="header-left">
+    <button mat-icon-button (click)="onToggleSidebar()" aria-label="Toggle navigation menu">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <div class="brand-logo">
+      <mat-icon class="logo-icon">account_balance</mat-icon>
+      <div class="brand-name">
+        <span class="main-title">FinCore Nexus</span>
+        <span class="sub-title">CORE BANKING SYSTEM</span>
+      </div>
+    </div>
+
+    <div class="module-tag">
+      <mat-icon>{{ moduleIcon }}</mat-icon>
+      <span>{{ moduleTitle }}</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <div class="user-badge">
+      <div class="avatar">MK</div>
+      <div class="user-details">
+        <span class="username">Manikandan</span>
+        <span class="role">KYC / OCR Verification</span>
+      </div>
+    </div>
+  </div>
+</header>

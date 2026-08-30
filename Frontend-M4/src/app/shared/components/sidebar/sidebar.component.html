@@ -1,0 +1,25 @@
+<aside class="app-sidebar" [class.collapsed]="collapsed">
+  <div class="sidebar-section-title" *ngIf="!collapsed">KYC Verification Suite</div>
+
+  <nav class="nav-list">
+    <a
+      *ngFor="let item of navItems"
+      class="nav-item"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+    >
+      <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+      <div class="nav-text" *ngIf="!collapsed">
+        <span class="nav-label">{{ item.label }}</span>
+        <span class="dev-tag" *ngIf="item.developer">{{ item.developer }}</span>
+      </div>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer" *ngIf="!collapsed">
+    <div class="version-info">
+      <span class="v-title">FinCore Platform</span>
+      <span class="v-number">v4.0.0 • KYC Suite</span>
+    </div>
+  </div>
+</aside>
