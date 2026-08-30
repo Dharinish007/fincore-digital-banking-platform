@@ -118,9 +118,9 @@ INSERT INTO document_verification (document_id, verification_status, name_match_
 (12, 'VERIFIED',       98.20, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-08 15:36:00');
 
 -- ───────────────────────────── RESET SEQUENCES ─────────────────────────────
-SELECT setval('document_upload_document_id_seq', 12, true);
-SELECT setval('ocr_result_ocr_id_seq', 10, true);
-SELECT setval('document_verification_verification_id_seq', 10, true);
+SELECT setval('document_upload_document_id_seq', 26, true);
+SELECT setval('ocr_result_ocr_id_seq', 25, true);
+SELECT setval('document_verification_verification_id_seq', 25, true);
 
 -- ═══════════════════════════════════════════════════════════════════
 -- NOTES
