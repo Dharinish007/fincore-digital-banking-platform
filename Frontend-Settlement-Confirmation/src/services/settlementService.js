@@ -1,59 +1,95 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:8080/api/v1";
+const API_BASE_URL =
+  "http://localhost:8080/api/v1/settlements";
 
-const settlementApi = axios.create({
-  baseURL: API_BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+// =====================================================
+// GET ALL SETTLEMENTS
+// GET /api/v1/settlements
+// =====================================================
 
-// Attach JWT token automatically
-settlementApi.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-/**
- * Get all settlements
- */
-export const getSettlements = async () => {
-  const response = await settlementApi.get("/settlements");
+export const getAllSettlements = async () => {
+  const response = await axios.get(API_BASE_URL);
 
   return response.data;
 };
 
-/**
- * Get settlement by ID
- */
+// =====================================================
+// GET SETTLEMENT BY SETTLEMENT ID
+// GET /api/v1/settlements/{settlementId}
+// =====================================================
+
 export const getSettlementById = async (settlementId) => {
-  const response = await settlementApi.get(
-    `/settlements/${settlementId}`
+  const response = await axios.get(
+    `${API_BASE_URL}/${settlementId}`
   );
 
   return response.data;
 };
 
-/**
- * Confirm settlement
- */
-export const confirmSettlement = async (settlementId) => {
-  const response = await settlementApi.put(
-    `/settlements/${settlementId}/confirm`
+// =====================================================
+// CONFIRM SETTLEMENT
+// PUT /api/v1/settlements/{settlementId}/confirm
+// ?managerId=MGR001
+// =====================================================
+
+export const confirmSettlement = async (
+  settlementId,
+  managerId
+) => {
+  const response = await axios.put(
+    `${API_BASE_URL}/${settlementId}/confirm`,
+    null,
+    {
+      params: {
+        managerId: managerId,
+      },
+    }
   );
 
   return response.data;
 };
 
-export default settlementApi;
+// =====================================================
+// GET STATISTICS
+// GET /api/v1/settlements/statistics
+// =====================================================
+
+export const getSettlementStatistics = async () => {
+  const response = await axios.get(
+    `${API_BASE_URL}/statistics`
+  );
+
+  return response.data;
+};
+
+// =====================================================
+// SEARCH
+// GET /api/v1/settlements/search?value=...
+// =====================================================
+
+export const searchSettlements = async (search) => {
+  const response = await axios.get(
+    `${API_BASE_URL}/search`,
+    {
+      params: {
+        value: search,
+      },
+    }
+  );
+
+  return response.data;
+};
+
+// =====================================================
+// FILTER BY STATUS
+// GET /api/v1/settlements/status/PENDING
+// =====================================================
+
+export const getSettlementsByStatus = async (status) => {
+  const response = await axios.get(
+    `${API_BASE_URL}/status/${status}`
+  );
+
+  return response.data;
+};
