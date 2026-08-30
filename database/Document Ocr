@@ -22,86 +22,60 @@ DROP TABLE IF EXISTS document_verification CASCADE;
 DROP TABLE IF EXISTS ocr_result CASCADE;
 DROP TABLE IF EXISTS document_upload CASCADE;
 
--- ───────────────────────────── DOCUMENT UPLOAD ─────────────────────────────
-CREATE TABLE document_upload (
-    document_id       BIGSERIAL PRIMARY KEY,
-    customer_id       BIGINT NOT NULL REFERENCES customers(customer_id),
+- ───────────────────────────── DOCUMENT UPLOADS ─────────────────────────────
+INSERT INTO document_upload (document_id, customer_id, document_type, file_name, file_path, file_size_kb, mime_type, upload_status, uploaded_at) VALUES
+(13, 14, 'PAN',             'divya_pan.jpg',        '/docs/2026/07/divya_pan.jpg',        798,  'image/jpeg',      'PROCESSED', '2026-07-09 09:10:00'),
+(14, 15, 'AADHAAR',         'rahul_g_aadhaar.pdf',  '/docs/2026/07/rahul_g_aadhaar.pdf',  1180, 'application/pdf', 'PROCESSED', '2026-07-09 11:25:00'),
+(15, 16, 'PASSPORT',        'arjun_passport.jpg',   '/docs/2026/07/arjun_passport.jpg',   1020, 'image/jpeg',      'PROCESSED', '2026-07-10 08:40:00'),
+(16, 17, 'VOTER_ID',        'sneha_voterid.jpg',    '/docs/2026/07/sneha_voterid.jpg',    680,  'image/jpeg',      'PROCESSED', '2026-07-10 13:05:00'),
+(17, 18, 'DRIVING_LICENSE', 'aditya_dl.jpg',        '/docs/2026/07/aditya_dl.jpg',        740,  'image/jpeg',      'PROCESSED', '2026-07-11 10:15:00'),
+(18, 19, 'BANK_STATEMENT',  'deepa19_stmt.pdf',     '/docs/2026/07/deepa19_stmt.pdf',     2210, 'application/pdf', 'PROCESSED', '2026-07-11 14:50:00'),
+(19, 20, 'SALARY_SLIP',     'swathi_salary.pdf',    '/docs/2026/07/swathi_salary.pdf',    560,  'application/pdf', 'PROCESSED', '2026-07-12 09:30:00'),
+(20, 21, 'PAN',             'neha_r_pan.jpg',       '/docs/2026/07/neha_r_pan.jpg',       805,  'image/jpeg',      'PROCESSED', '2026-07-12 15:00:00'),
+(21, 22, 'AADHAAR',         'vivek_aadhaar.jpg',    '/docs/2026/07/vivek_aadhaar.jpg',    960,  'image/jpeg',      'PROCESSED', '2026-07-13 08:20:00'),
+(22, 23, 'PASSPORT',        'pooja_passport.jpg',   '/docs/2026/07/pooja_passport.jpg',   1090, 'image/jpeg',      'FAILED',    '2026-07-13 12:45:00'),
+(23, 6,  'PAN',             'rahul_m_pan.jpg',      '/docs/2026/07/rahul_m_pan.jpg',      770,  'image/jpeg',      'PROCESSED', '2026-07-14 09:00:00'),
+(24, 9,  'PAN',             'anjali_pan.jpg',       '/docs/2026/07/anjali_pan.jpg',       815,  'image/jpeg',      'PROCESSED', '2026-07-14 11:30:00'),
+(25, 10, 'AADHAAR',         'priya_g_aadhaar.pdf',  '/docs/2026/07/priya_g_aadhaar.pdf',  1150, 'application/pdf', 'PROCESSED', '2026-07-15 10:10:00'),
+(26, 24, 'AADHAAR',         'priya_k_aadhaar.jpg',  '/docs/2026/07/priya_k_aadhaar.jpg',  940,  'image/jpeg',      'PROCESSED', '2026-07-15 14:20:00');
 
-    document_type     VARCHAR(20) NOT NULL
-                       CHECK (document_type IN ('PAN','AADHAAR','PASSPORT','VOTER_ID','DRIVING_LICENSE','BANK_STATEMENT','SALARY_SLIP')),
 
-    file_name         VARCHAR(255) NOT NULL,
-    file_path         VARCHAR(500) NOT NULL,     -- storage location (e.g. S3 key or local path)
-    file_size_kb      INT CHECK (file_size_kb > 0),
-    mime_type         VARCHAR(50),
-
-    upload_status     VARCHAR(20) NOT NULL DEFAULT 'UPLOADED'
-                       CHECK (upload_status IN ('UPLOADED','PROCESSING','PROCESSED','FAILED')),
-
-    uploaded_at       TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_document_customer ON document_upload(customer_id);
-CREATE INDEX idx_document_type ON document_upload(document_type);
-CREATE INDEX idx_document_status ON document_upload(upload_status);
-
--- ───────────────────────────── OCR RESULT ─────────────────────────────
--- One row per OCR attempt - a document can be re-processed if the first
--- attempt fails or comes back low-confidence, so this is 1:N, not 1:1.
-CREATE TABLE ocr_result (
-    ocr_id              BIGSERIAL PRIMARY KEY,
-    document_id         BIGINT NOT NULL REFERENCES document_upload(document_id),
-
-    extracted_name      VARCHAR(150),
-    extracted_dob       DATE,
-    extracted_id_number VARCHAR(50),
-    extracted_address   VARCHAR(255),
-    extracted_gender    VARCHAR(10),
-    issue_date          DATE,
-    expiry_date         DATE,
-
-    confidence_score    DECIMAL(5,2) CHECK (confidence_score BETWEEN 0 AND 100),
-    ocr_engine          VARCHAR(30) NOT NULL DEFAULT 'TESSERACT'
-                        CHECK (ocr_engine IN ('TESSERACT','GOOGLE_VISION','AWS_TEXTRACT','AZURE_OCR')),
-    processing_time_ms  INT,
-
-    status              VARCHAR(20) NOT NULL DEFAULT 'SUCCESS'
-                        CHECK (status IN ('SUCCESS','LOW_CONFIDENCE','FAILED')),
-
-    processed_at        TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_ocr_document ON ocr_result(document_id);
-CREATE INDEX idx_ocr_status ON ocr_result(status);
-
--- ───────────────────────────── DOCUMENT VERIFICATION ─────────────────────────────
--- Compares OCR output against the customer's declared profile
--- (customers.first_name/last_name/date_of_birth) and produces a decision.
-CREATE TABLE document_verification (
-    verification_id       BIGSERIAL PRIMARY KEY,
-    document_id           BIGINT NOT NULL REFERENCES document_upload(document_id),
-
-    verification_status   VARCHAR(20) NOT NULL DEFAULT 'PENDING'
-                          CHECK (verification_status IN ('PENDING','VERIFIED','REJECTED','MANUAL_REVIEW')),
-
-    name_match_score      DECIMAL(5,2) CHECK (name_match_score BETWEEN 0 AND 100),
-    dob_match              BOOLEAN,
-
-    verified_by            VARCHAR(50) NOT NULL DEFAULT 'SYSTEM',
-    remarks                 VARCHAR(255),
-
-    verified_at             TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_verification_document ON document_verification(document_id);
-CREATE INDEX idx_verification_status ON document_verification(verification_status);
-
--- ═══════════════════════════════════════════════════════════════════
--- SEED DATA
--- customer_id values assume the 25 seeded customers from
--- fincore_database_postgres.sql already exist.
--- ═══════════════════════════════════════════════════════════════════
-
+- ───────────────────────────── OCR RESULTS ─────────────────────────────
+INSERT INTO ocr_result (ocr_id, document_id, extracted_name, extracted_dob, extracted_id_number, extracted_address, extracted_gender, issue_date, expiry_date, confidence_score, ocr_engine, processing_time_ms, status, processed_at) VALUES
+(11, 13, 'DIVYA MENON',   '1979-05-24', 'FXQPM6712R', NULL, 'F', '2016-03-18', NULL,        96.90, 'GOOGLE_VISION', 800,  'SUCCESS',       '2026-07-09 09:10:03'),
+(12, 14, 'RAHUL GUPTA',   '1995-05-30', '6543 2109 8765', '1 Church Street, Hyderabad', 'M', '2018-07-09', NULL, 92.80, 'AWS_TEXTRACT',   1090, 'SUCCESS',       '2026-07-09 11:25:05'),
+(13, 15, 'ARJUN MENON',   '1998-10-28', 'R8123456',   NULL, 'M', '2019-11-02', '2029-11-01', 95.10, 'AZURE_OCR',      1250, 'SUCCESS',       '2026-07-10 08:40:06'),
+(14, 16, 'SNEHA VERMA',   '1993-10-21', 'ABC1234567', '6 Indiranagar, Chennai', 'F', '2014-09-30', NULL, 84.30, 'TESSERACT',      1400, 'LOW_CONFIDENCE','2026-07-10 13:05:08'),
+(15, 17, 'ADITYA RAO',    '1995-07-23', 'DL-0620190067890', NULL, 'M', '2019-06-12', '2039-06-11', 90.70, 'AZURE_OCR', 1310, 'SUCCESS',       '2026-07-11 10:15:07'),
+(16, 18, NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,          91.50, 'AWS_TEXTRACT',    1850, 'SUCCESS',       '2026-07-11 14:50:12'),
+(17, 19, NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,          88.20, 'AWS_TEXTRACT',    1020, 'SUCCESS',       '2026-07-12 09:30:04'),
+(18, 20, 'NEHA RAO',      '1994-03-09', 'GXTPR2345S', NULL, 'F', '2017-01-25', NULL,        97.60, 'GOOGLE_VISION', 780,  'SUCCESS',       '2026-07-12 15:00:03'),
+(19, 21, 'VIVEK IYER',    '1991-01-19', '8765 4321 0987', '40 Brigade Road, Bengaluru', 'M', '2020-05-16', NULL, 93.40, 'AWS_TEXTRACT',    1070, 'SUCCESS',       '2026-07-13 08:20:05'),
+(20, 22, NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,          18.60, 'TESSERACT',      2600, 'FAILED',        '2026-07-13 12:45:11'),
+(21, 23, 'RAHUL MENON',   '1986-10-14', 'HXLPM7890T', NULL, 'M', '2015-12-08', NULL,        96.20, 'GOOGLE_VISION', 810,  'SUCCESS',       '2026-07-14 09:00:03'),
+(22, 24, 'ANJALI KRISHNAN','1975-11-16','JXNPK4567U', NULL, 'F', '2014-04-27', NULL,        94.90, 'GOOGLE_VISION', 830,  'SUCCESS',       '2026-07-14 11:30:04'),
+(23, 25, 'PRIYA GUPTA',   '1998-09-02', '1098 7654 3210', '71 Anna Nagar, Hyderabad', 'F', '2021-08-19', NULL, 92.10, 'AWS_TEXTRACT',    1150, 'SUCCESS',       '2026-07-15 10:10:06'),
+(24, 26, 'PRIYA KUMAR',   '1978-02-11', '5432 1098 7654', '52 Brigade Road, Hyderabad', 'F', '2019-10-03', NULL, 95.70, 'AWS_TEXTRACT',    1000, 'SUCCESS',       '2026-07-15 14:20:05'),
+-- Retry attempt on the previously FAILED document (id 3) - second OCR pass succeeds
+(25, 3,  'RAHUL KAPOOR',  '1988-02-25', 'P9876543',   NULL, 'M', '2020-02-14', '2030-02-13', 93.80, 'AZURE_OCR',      1180, 'SUCCESS',       '2026-07-16 10:00:00');
+ 
+- ───────────────────────────── DOCUMENT VERIFICATIONS ─────────────────────────────
+INSERT INTO document_verification (verification_id, document_id, verification_status, name_match_score, dob_match, verified_by, remarks, verified_at) VALUES
+(11, 13, 'VERIFIED',      98.20, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-09 09:11:00'),
+(12, 14, 'VERIFIED',      95.00, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-09 11:26:00'),
+(13, 15, 'VERIFIED',      96.50, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-10 08:41:00'),
+(14, 16, 'MANUAL_REVIEW', 79.40, TRUE,  'KYC Officer - S. Menon','Low OCR confidence, manually cross-checked and approved','2026-07-10 16:00:00'),
+(15, 17, 'VERIFIED',      92.30, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-11 10:16:00'),
+(16, 18, 'VERIFIED',      88.00, NULL,  'SYSTEM',                'Bank statement accepted as address proof',             '2026-07-11 14:51:00'),
+(17, 19, 'VERIFIED',      85.50, NULL,  'SYSTEM',                'Salary slip accepted as income proof',                 '2026-07-12 09:31:00'),
+(18, 20, 'VERIFIED',      99.00, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-12 15:01:00'),
+(19, 21, 'VERIFIED',      95.80, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-13 08:21:00'),
+(20, 22, 'REJECTED',       0.00, FALSE, 'SYSTEM',                'OCR failed - document image unreadable, re-upload requested', '2026-07-13 12:46:00'),
+(21, 23, 'VERIFIED',      97.10, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-14 09:01:00'),
+(22, 24, 'VERIFIED',      96.00, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-14 11:31:00'),
+(23, 25, 'VERIFIED',      93.60, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-15 10:11:00'),
+(24, 26, 'VERIFIED',      97.90, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-15 14:21:00'),
+(25, 3,  'VERIFIED',      91.20, TRUE,  'KYC Officer - R. Iyer', 'Re-upload successful on retry, manually confirmed',    '2026-07-16 10:05:00');
 -- ───────────────────────────── DOCUMENT UPLOADS ─────────────────────────────
 INSERT INTO document_upload (customer_id, document_type, file_name, file_path, file_size_kb, mime_type, upload_status, uploaded_at) VALUES
 (1,  'PAN',            'manoj_pan.jpg',        '/docs/2026/07/manoj_pan.jpg',        842,  'image/jpeg', 'PROCESSED', '2026-07-01 09:15:00'),
