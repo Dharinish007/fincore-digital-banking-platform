@@ -1,1 +1,0 @@
-CREATE DATABASE fincore_audit;
