@@ -272,17 +272,15 @@ The Milestone 3 implementation contains:
 * Application screenshots
 
 
-
-👥 Team Contributions
-
-Team Member| Responsibility
-Soumya Ranjan Puthal| Frontend – Saga Execution
-Sharvari Shalgar|Backend – Notification Delivery
-Tharun M| Frontend – Notification Delivery
-Vaishnavi Mahadik| Frontend Notification Delivery
-Thejashree B| Frontend Settlement Confirmation
-Sathiya Priya | Backend Saga Execution,Settlement Confirmation
-Warkar Vaishnavi| Database Design & Integration
+| **Team Member**      | **Responsibility**                                |
+| -------------------- | ------------------------------------------------- |
+| Soumya Ranjan Puthal | Frontend – Saga Execution                         |
+| Sharvari Shalgar     | Backend – Notification Delivery                   |
+| Tharun M             | Frontend – Notification Delivery                  |
+| Vaishnavi Mahadik    | Frontend – Notification Delivery                  |
+| Thejashree B         | Frontend – Settlement Confirmation                |
+| Sathiya Priya        | Backend – Saga Execution, Settlement Confirmation |
+| Warkar Vaishnavi     | Database Design & Integration                     |
 
 
 ---
