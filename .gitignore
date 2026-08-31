@@ -1,4 +1,6 @@
-# Dependencies
+# =========================
+# Frontend Dependencies
+# =========================
 **/node_modules/
 node_modules/
 
@@ -8,14 +10,51 @@ node_modules/
 **/dist/
 dist/
 
+# =========================
+# Spring Boot / Java
+# =========================
+**/target/
+target/
+*.class
+*.jar
+*.war
+
+# =========================
+# Python / FastAPI
+# =========================
+
+# Virtual environments (IMPORTANT - prevents 1.8GB venv upload)
+**/venv/
+venv/
+**/.venv/
+.venv/
+
+# Python cache
+**/__pycache__/
+__pycache__/
+*.py[cod]
+
+# Temporary files
+**/temp/
+temp/
+
+# Python environment variables
+.env
+.env.*
+
+# =========================
 # IDE & Editor files
+# =========================
 .vscode/
 .idea/
 .metadata/
 *.launch
 *.pref
+*.iml
 
+# =========================
 # OS & Log files
+# =========================
 *.log
 .DS_Store
 Thumbs.db
