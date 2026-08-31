@@ -1,4 +1,4 @@
-package com.fincore.kyc_service.config;
+package com.fincore.kyc_service.client;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
