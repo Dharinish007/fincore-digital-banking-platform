@@ -280,7 +280,7 @@ The Milestone 3 implementation contains:
 | Vaishnavi Mahadik    | Frontend – Notification Delivery                  |
 | Thejashree B         | Frontend – Settlement Confirmation                |
 | Sathiya Priya        | Backend – Saga Execution, Settlement Confirmation |
-| Warkar Vaishnavi     | Database Design & Integration                     |
+| Warkar Vaishnavi     | Database Design & Project Integration             |
 
 
 ---
