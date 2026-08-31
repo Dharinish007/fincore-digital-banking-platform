@@ -5,38 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="570b04c8-a55d-4643-8577-56da6f2d450c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/kyc_service/dto/KycResponseDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/kyc_service/dto/KycResponseDTO.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/kyc_service/service/KycServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/kyc_service/service/KycServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/KycServiceApplication.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/config/NotificationClient.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/config/RestClientConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/config/SecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/controller/DocumentController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/controller/KycController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/DocumentResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/KycRequestDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/KycResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/KycStatusResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/OtpRequestDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/OtpResponseDTO.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/UploadRequest.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/UploadResponse.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/entity/Kyc.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/exception/GlobalExceptionHandler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/repository/KycDocumentRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/repository/KycRepository.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/DocumentService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/DocumentServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/KycService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/KycServiceImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/OtpService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/OtpServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/KycResponseDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/dto/KycResponseDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/KycServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/fincore/kyc_service/service/KycServiceImpl.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -69,13 +41,37 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Maven.kyc-service [compile].executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "Spring Boot.KycServiceApplication.executor": "Run",
     "git-widget-placeholder": "team-d-milestone-4",
     "kotlin-language-version-configured": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="KycServiceApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <option name="ACTIVE_PROFILES" value="sharvari" />
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <module name="kyc-service" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.fincore.kyc_service.KycServiceApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.fincore.kyc_service.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.KycServiceApplication" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
