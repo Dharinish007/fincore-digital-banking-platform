@@ -91,31 +91,6 @@ INSERT INTO document_upload (customer_id, document_type, file_name, file_path, f
 (13, 'AADHAAR',        'neha_aadhaar.jpg',     '/docs/2026/07/neha_aadhaar.jpg',     990,  'image/jpeg', 'PROCESSED', '2026-07-08 11:20:00'),
 (24, 'PAN',            'priya_k_pan.jpg',      '/docs/2026/07/priya_k_pan.jpg',      870,  'image/jpeg', 'PROCESSED', '2026-07-08 15:35:00');
 
--- ───────────────────────────── OCR RESULTS ─────────────────────────────
-INSERT INTO ocr_result (document_id, extracted_name, extracted_dob, extracted_id_number, extracted_address, extracted_gender, issue_date, expiry_date, confidence_score, ocr_engine, processing_time_ms, status, processed_at) VALUES
-(1,  'MANOJ NAIR',    '1979-03-16', 'AXYPN1234K', NULL, 'M', '2015-06-10', NULL,        97.80, 'GOOGLE_VISION', 820,  'SUCCESS',       '2026-07-01 09:15:04'),
-(2,  'JOHN DAS',      '1987-06-19', '4521 7890 1234', '90 Church Street, Kochi', 'M', '2019-02-14', NULL, 94.20, 'AWS_TEXTRACT',   1150, 'SUCCESS',       '2026-07-02 10:20:06'),
-(3,  NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,          22.10, 'TESSERACT',      2400, 'FAILED',        '2026-07-03 11:05:09'),
-(4,  'SANJAY MENON',  '1991-08-10', 'BXQPM5678L', NULL, 'M', '2017-11-05', NULL,        96.50, 'GOOGLE_VISION', 790,  'SUCCESS',       '2026-07-03 14:40:03'),
-(5,  'RITU REDDY',    '1976-06-09', '7890 4521 6543', '99 MG Road, Mumbai', 'F', '2020-01-20', NULL, 91.30, 'AWS_TEXTRACT',    1080, 'SUCCESS',       '2026-07-04 08:50:05'),
-(7,  'ROHAN JOSHI',   '1977-11-06', 'DL-0420150012345', '88 Church Street, Coimbatore', 'M', '2015-04-20', '2035-04-19', 88.60, 'AZURE_OCR', 1320, 'LOW_CONFIDENCE', '2026-07-05 16:00:07'),
-(8,  'AMIT RAO',      '1986-10-25', 'CXRPR9012N', NULL, 'M', '2018-09-15', NULL,        98.10, 'GOOGLE_VISION', 760,  'SUCCESS',       '2026-07-06 09:45:03'),
-(9,  NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,           89.00, 'AWS_TEXTRACT',    1900, 'SUCCESS',       '2026-07-06 13:15:11'),
-(11, 'NEHA GUPTA',    '1977-09-20', '3210 6547 8901', '60 MG Road, Chennai', 'F', '2021-03-11', NULL, 95.40, 'AWS_TEXTRACT',    1010, 'SUCCESS',       '2026-07-08 11:20:04'),
-(12, 'PRIYA KUMAR',   '1978-02-11', 'EXTPK3456M', NULL, 'F', '2016-08-22', NULL,        97.00, 'GOOGLE_VISION', 800,  'SUCCESS',       '2026-07-08 15:35:03');
-
--- ───────────────────────────── DOCUMENT VERIFICATIONS ─────────────────────────────
-INSERT INTO document_verification (document_id, verification_status, name_match_score, dob_match, verified_by, remarks, verified_at) VALUES
-(1,  'VERIFIED',       99.10, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-01 09:16:00'),
-(2,  'VERIFIED',       97.50, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-02 10:21:00'),
-(3,  'REJECTED',        0.00, FALSE, 'SYSTEM',                 'OCR failed - document image unreadable, re-upload requested', '2026-07-03 11:06:00'),
-(4,  'VERIFIED',       98.80, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-03 14:41:00'),
-(5,  'VERIFIED',       93.60, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-04 08:51:00'),
-(7,  'MANUAL_REVIEW',  81.20, TRUE,  'KYC Officer - R. Iyer',  'Low OCR confidence, manually cross-checked and approved', '2026-07-06 10:00:00'),
-(8,  'VERIFIED',       99.40, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-06 09:46:00'),
-(9,  'VERIFIED',       90.00, NULL,  'SYSTEM',                 'Bank statement accepted as address proof',     '2026-07-06 13:16:00'),
-(11, 'VERIFIED',       96.90, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-08 11:21:00'),
-(12, 'VERIFIED',       98.20, TRUE,  'SYSTEM',                 'Auto-verified - high confidence match',        '2026-07-08 15:36:00');
 
 -- ───────────────────────────── RESET SEQUENCES ─────────────────────────────
 SELECT setval('document_upload_document_id_seq', 26, true);
