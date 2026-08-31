@@ -118,36 +118,6 @@ Development Tools
 
 ---
 
-🔄 End-to-End Workflow
-
-User Transaction
-       │
-       ▼
-React Frontend
-       │
-       ▼
-Spring Boot API
-       │
-       ▼
-Saga Execution
-       │
-       ├── Step 1
-       ├── Step 2
-       ├── Step 3
-       │
-       ▼
-Settlement Confirmation
-       │
-       ▼
-Transaction Confirmed
-       │
-       ▼
-Notification Delivery
-       │
-       ▼
-User receives status notification
-
----
 
 📷 Application Screenshots
 
