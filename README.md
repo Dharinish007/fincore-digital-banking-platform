@@ -1,102 +1,86 @@
-# 💳 FinCore Digital Banking Platform
+💳 FinCore Digital Banking Platform — Milestone 3
 
-## 📖 Overview
+📖 Overview
 
-FinCore Digital Banking Platform is a full-stack digital banking application developed as part of Team D within the FinCore Nexus initiative. The project focuses on three core banking requirements: Role-Based Access Control (RBAC), KYC Verification, and Audit Trail Management.
+FinCore Digital Banking Platform is a full-stack digital banking application developed as part of Team D within the FinCore Nexus initiative.
 
-The application follows a layered architecture with a React frontend, Spring Boot backend, JWT-based authentication, REST APIs, and MySQL database. It provides role-aware banking operations for Admin, Supervisor, Teller, and Customer users while maintaining secure access and traceable system activity.
+Milestone 3 focuses on three important banking services:
 
-## ✨ Features
+1. Saga Execution
+2. Settlement Confirmation
+3. Notification Delivery
 
-### 🔐 Secure Authentication
+These services work together to support reliable transaction processing. Saga Execution coordinates multiple steps in a transaction, Settlement Confirmation verifies the successful completion of the financial process, and Notification Delivery informs users about transaction status and important events.
 
-* JWT-based authentication
-* Secure login and authorization
-* Role-based access control
-* Protected REST APIs
-* Failed login activity tracking
+The application follows a layered architecture using a React frontend, Java Spring Boot backend, REST APIs, and MySQL database.
 
-### 👥 Role-Based Access Control
+---
 
-* Admin role
-* Supervisor role
-* Teller role
-* Customer role
-* Role-specific dashboards and permissions
-* Backend-side authorization
+✨ Features
 
-### 👤 User Management
+🔄 Saga Execution
 
-* Admin user management
-* User role management
-* Account status management
-* Role-aware navigation and operations
+* Coordinates multi-step banking transactions
+* Tracks the status of each transaction step
+* Manages successful transaction completion
+* Handles transaction failures
+* Supports compensation/recovery when a step fails
+* Maintains transaction execution status
+* Provides backend APIs for saga operations
 
-### 🪪 KYC Verification
+💰 Settlement Confirmation
 
-* Customer information collection
-* KYC document management
-* Verification workflow
-* Liveness / verification stage
-* KYC status tracking
-* PENDING and APPROVED statuses
-* Dedicated KYC frontend module
+* Verifies settlement completion
+* Tracks settlement status
+* Maintains transaction/reference information
+* Records confirmation details
+* Updates final transaction status
+* Provides settlement information through REST APIs
+* Stores settlement records in MySQL
 
-### 🏦 Teller Operations
+🔔 Notification Delivery
 
-* View customer accounts
-* View account information
-* Statement operations
-* Transfer operations
-* View customer KYC records
-* Role-restricted banking operations
+* Generates transaction-related notifications
+* Sends status updates to users
+* Supports success and failure notifications
+* Tracks notification delivery status
+* Stores notification information
+* Displays relevant notifications through the frontend
 
-### 📜 Audit Trail
-
-* Centralized audit logging
-* Login activity tracking
-* Failed login tracking
-* KYC activity tracking
-* Account operation tracking
-* Actor, action, entity, timestamp, and status tracking
-* Searchable and sortable audit records
-
-### 💻 User Interface
+💻 User Interface
 
 * React-based frontend
-* Admin Dashboard
-* Teller Operations Console
-* User Management
-* Role Management
-* Audit Logs
-* KYC Records
-* Enterprise banking interface
+* Service-specific pages and dashboards
+* Transaction status display
+* Settlement status display
+* Notification/status messages
+* Responsive enterprise banking interface
 
-## 🛠 Tech Stack
+---
 
-**Frontend**
+🛠 Tech Stack
+
+Frontend
 
 * React
 * JavaScript
 * HTML5
 * CSS3
-* Frontend-KYC
 
-**Backend**
+Backend
 
 * Java
 * Spring Boot
 * Spring Security
 * REST APIs
-* JWT
 * Spring Data JPA
 
-**Database**
+Database
 
 * MySQL
 * XAMPP / phpMyAdmin
 
-**Development Tools**
+Development Tools
 
 * Git
 * GitHub
@@ -105,208 +89,238 @@ The application follows a layered architecture with a React frontend, Spring Boo
 * IntelliJ IDEA
 * Visual Studio Code
 
-## 📷 Application Screenshots
+---
 
-### 🏠 Home Page
+🏗️ Service Architecture
 
-![Home Page](Screenshots/home-page.jpg)
+                    ┌─────────────────────┐
+                    │   React Frontend    │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Spring Boot REST    │
+                    │       APIs          │
+                    └──────────┬──────────┘
+                               │
+             ┌─────────────────┼─────────────────┐
+             ▼                 ▼                 ▼
+     ┌───────────────┐ ┌───────────────┐ ┌────────────────┐
+     │ Saga Execution│ │   Settlement  │ │  Notification  │
+     │    Service    │ │ Confirmation  │ │    Delivery    │
+     └───────┬───────┘ └───────┬───────┘ └───────┬────────┘
+             │                 │                 │
+             └─────────────────┼─────────────────┘
+                               ▼
+                    ┌─────────────────────┐
+                    │   MySQL Database    │
+                    └─────────────────────┘
 
-### 🔐 Login Page
+---
 
-![Login Page](Screenshots/login-page.jpg)
+🔄 End-to-End Workflow
 
-### 👨‍💼 Admin Dashboard
+User Transaction
+       │
+       ▼
+React Frontend
+       │
+       ▼
+Spring Boot API
+       │
+       ▼
+Saga Execution
+       │
+       ├── Step 1
+       ├── Step 2
+       ├── Step 3
+       │
+       ▼
+Settlement Confirmation
+       │
+       ▼
+Transaction Confirmed
+       │
+       ▼
+Notification Delivery
+       │
+       ▼
+User receives status notification
 
-![Admin Dashboard](Screenshots/admin-dashboard.jpg)
+---
 
-### 👨‍💼 Supervisor Dashboard
+📷 Application Screenshots
 
-![Supervisor Dashboard](Screenshots/supervisor-dashboard.jpg)
+🔄 Saga Execution
 
-### 🏦 Teller Dashboard
+"Saga Execution" (Screenshots/saga-execution.jpg)
 
-![Teller Dashboard](Screenshots/teller-dashboard.jpg)
+💰 Settlement Confirmation
 
-### 👤 User Dashboard
+"Settlement Confirmation" (Screenshots/settlement-confirmation.jpg)
 
-![User Dashboard](Screenshots/user-dashboard.jpg)
+🔔 Notification Delivery
 
-
-## 📂 Project Structure
-
-```text
-fincore-digital-banking-platform/
-│
-├── Frontend/
-│   └── Main React frontend
-│
-├── Frontend-KYC/
-│   └── KYC frontend module
-│
-├── audittrail/
-│   └── Audit Trail Spring Boot microservice
-│
-├── kyc-service/
-│   └── KYC Spring Boot microservice
-│
-├── database/
-│   ├── schema.sql
-│   ├── queries.sql
-│   └── sample_data.sql
-│
-├── Screenshots/
-│   └── Application screenshots
-│
-└── README.md
-```
+"Notification Delivery" (Screenshots/notification-delivery.jpg)
 
 
-## ▶️ Running the Project
 
-### Backend
 
-**Audit Trail Microservice**
 
-```text
-cd audittrail
-.\mvnw.cmd spring-boot:run
-```
+▶️ Running the Project
 
-Runs on:
+Prerequisites
 
-```text
-http://localhost:8081
-```
+Make sure the following are installed:
 
-**KYC Microservice**
+* Java JDK
+* Maven
+* Node.js
+* npm
+* MySQL
+* Git
 
-```text
-cd kyc-service
-.\mvnw.cmd spring-boot:run
-```
+---
 
-Runs on:
-
-```text
-http://localhost:8080
-```
-
-### Frontend
-
-**Main Frontend**
-
-```text
-cd Frontend
-npm install
-npm run dev
-```
-
-Runs on:
-
-```text
-http://localhost:5173
-```
-
-**KYC Frontend**
-
-```text
-cd Frontend-KYC
-npm install
-npm run dev
-```
-
-Runs on:
-
-```text
-http://localhost:5174
-```
-
-### Database
+🗄️ Database Setup
 
 Make sure MySQL is running on:
 
-```text
 localhost:3306
-```
 
-Username:
+Create the required database and execute the project's SQL files:
 
-```text
-root
-```
+database/schema.sql
+database/sample_data.sql
 
-Password:
+Update the Spring Boot database configuration with your MySQL credentials.
 
-```text
-root
-```
+Example:
 
-Keep all required services running while testing the complete application.
+spring.datasource.url=jdbc:mysql://localhost:3306/fincore_db
+spring.datasource.username=root
+spring.datasource.password=root
 
-## 📌 Core Modules
+---
 
-| Module                | Description                            |
-| --------------------- | -------------------------------------- |
-| 🔐 RBAC               | Controls access based on user roles    |
-| 🪪 KYC Verification   | Manages customer identity verification |
-| 📜 Audit Trail        | Records and tracks system activities   |
-| 👨‍💼 Admin Dashboard | Provides administrative management     |
-| 🏦 Teller Operations  | Provides restricted banking operations |
+🔄 Saga Execution Backend
+
+Open the Saga service directory:
+
+cd saga-service
+
+Run:
+
+.\mvnw.cmd spring-boot:run
+
+Or:
+
+mvn spring-boot:run
+
+---
+
+💰 Settlement Confirmation Backend
+
+Open the settlement service:
+
+cd settlement-service
+
+Run:
+
+.\mvnw.cmd spring-boot:run
+
+---
+
+🔔 Notification Delivery Backend
+
+Open the notification service:
+
+cd notification-service
+
+Run:
+
+.\mvnw.cmd spring-boot:run
+
+---
+
+💻 Frontend
+
+Open the React frontend:
+
+cd Frontend
+
+Install dependencies:
+
+npm install
+
+Start the development server:
+
+npm run dev
+
+Open the URL displayed by the React development server.
+
+---
+
+🧪 Testing the Services
+
+After starting the application:
+
+1. Open the React frontend.
+2. Initiate the required transaction/workflow.
+3. Verify that Saga Execution processes the transaction steps.
+4. Check the Settlement Confirmation status.
+5. Verify that the transaction result is stored in MySQL.
+6. Check whether Notification Delivery is triggered.
+7. Verify the notification/status displayed to the user.
+
+---
+
+📌 Core Modules
+
+Module| Description
+🔄 Saga Execution| Coordinates multi-step transaction processing
+💰 Settlement Confirmation| Confirms successful financial settlement
+🔔 Notification Delivery| Sends transaction and status notifications
+💻 React Frontend| Provides user interaction and service views
+⚙️ Spring Boot Backend| Provides REST APIs and business logic
+🗄️ MySQL Database| Stores transaction and service information
+
+---
+
+🔀 Version Control
+
+Team D development is maintained using Git and GitHub.
+
+The Milestone 3 implementation contains:
+
+* Saga Execution
+* Settlement Confirmation
+* Notification Delivery
+* Frontend components
+* Backend services
+* Database changes
+* Application screenshots
 
 
 
-## 🔀 Version Control
+👥 Team Contributions
 
-Team D development is maintained in the shared **team-d** branch using Git and GitHub.
-
-The branch contains:
-
-* Frontend
-* Frontend-KYC
-* Audit Trail backend
-* KYC backend
-* Database
-* Screenshots
+Team Member| Responsibility
+Soumya Ranjan Puthal| Frontend – Saga Execution
+Sharvari Shalgar|Backend – Notification Delivery
+Tharun M| Frontend – Notification Delivery
+Vaishnavi Mahadik| Frontend Notification Delivery
+Thejashree B| Frontend Settlement Confirmation
+Sathiya Priya | Backend Saga Execution,Settlement Confirmation
+Warkar Vaishnavi| Database Design & Integration
 
 
-## 📌 Project Information
+---
 
-| Information    | Details                          |
-| -------------- | -------------------------------- |
-| Project        | FinCore Digital Banking Platform |
-| Team           | Team D                           |
-| Branch         | team-d                           |
-| Frontend       | React                            |
-| Backend        | Spring Boot                      |
-| Database       | MySQL                            |
-| Authentication | JWT                              |
-| Audit Trail    | localhost:8081                   |
-| KYC Service    | localhost:8080                   |
-| Main Frontend  | localhost:5173                   |
-| KYC Frontend   | localhost:5174                   |
-| MySQL          | localhost:3306                   |
+📝 Conclusion
 
-## 👥 Team Contributions
+Saga Execution provides reliable coordination of multi-step transactions, Settlement Confirmation verifies the final financial state, and Notification Delivery keeps users informed about transaction outcomes.
 
-| Team Member          | Responsibility     |
-| -------------------- | ------------------ |
-| Soumya Ranjan Puthal | Frontend Developer |
-| Vaishnavi Mahadik    | Frontend Developer |
-| Thejashree B         | Frontend Developer |
-| Tharun M             | Frontend Developer |
-| Sathiya Priya T      | Backend Developer  |
-| Sharvari Shalgar     | Backend Developer  |
-| Vaishnavi Warkar     | Database Developer |
+The combination of React, Java Spring Boot, REST APIs, and MySQL provides a structured foundation for integrating these services into the complete digital banking platform.
 
-## 📝 Conclusion
-
-Team D has implemented core digital banking capabilities covering **Role-Based Access Control, KYC Verification, and Audit Trail Management**.
-
-The platform provides separate experiences for administrative and Teller users, ensuring that users can access only the functionality permitted by their assigned roles.
-
-The KYC module provides a structured customer verification workflow with explicit status tracking, while the Audit Trail provides centralized visibility into important system activities.
-
-The modular frontend, backend, microservices, and database structure provides a strong foundation for further development and future production hardening.
-
-> **"Authenticate securely, act within role, and record everything."**
-
+«"Execute reliably, settle accurately, and notify instantly."»
