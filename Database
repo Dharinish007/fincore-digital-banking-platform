@@ -1,0 +1,456 @@
+-- FinCore Banking System
+-- PostgreSQL SQL Script
+-- Modules: Liveness Detection, Risk Assessment, Audit Logging
+-- Includes table creation, indexes, sample/input data, views and useful queries.
+
+-- =========================================================
+-- 1. CLEANUP
+-- =========================================================
+
+DROP VIEW IF EXISTS high_risk_transactions;
+DROP VIEW IF EXISTS recent_audit_activity;
+
+DROP TABLE IF EXISTS audit_logs CASCADE;
+DROP TABLE IF EXISTS risk_assessment CASCADE;
+DROP TABLE IF EXISTS liveness_detection CASCADE;
+
+-- =========================================================
+-- 2. LIVENESS DETECTION
+-- =========================================================
+-- Stores the result and metadata of a liveness/identity check.
+-- Do NOT store raw biometric images in this table.
+
+CREATE TABLE liveness_detection (
+    liveness_id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL,
+    session_id VARCHAR(100) NOT NULL,
+    verification_type VARCHAR(30) NOT NULL DEFAULT 'FACE',
+    verification_status VARCHAR(20) NOT NULL,
+    confidence_score NUMERIC(5,2),
+    attempt_number INTEGER NOT NULL DEFAULT 1,
+    device_id VARCHAR(150),
+    ip_address INET,
+    failure_reason VARCHAR(255),
+    verified_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_liveness_type
+        CHECK (verification_type IN ('FACE', 'VIDEO', 'BIOMETRIC')),
+
+    CONSTRAINT chk_liveness_status
+        CHECK (verification_status IN ('PASSED', 'FAILED', 'PENDING')),
+
+    CONSTRAINT chk_confidence
+        CHECK (confidence_score IS NULL OR
+               confidence_score BETWEEN 0 AND 100),
+
+    CONSTRAINT chk_attempt
+        CHECK (attempt_number > 0)
+);
+
+CREATE INDEX idx_liveness_customer
+    ON liveness_detection(customer_id);
+
+CREATE INDEX idx_liveness_status
+    ON liveness_detection(verification_status);
+
+CREATE INDEX idx_liveness_verified_at
+    ON liveness_detection(verified_at);
+
+-- =========================================================
+-- 3. RISK ASSESSMENT
+-- =========================================================
+-- Stores the calculated risk score and reason for a transaction.
+
+CREATE TABLE risk_assessment (
+    risk_id BIGSERIAL PRIMARY KEY,
+    transaction_id BIGINT NOT NULL,
+    customer_id BIGINT NOT NULL,
+    risk_score NUMERIC(5,2) NOT NULL,
+    risk_level VARCHAR(20) NOT NULL,
+    risk_reason VARCHAR(500) NOT NULL,
+    assessment_status VARCHAR(30) NOT NULL DEFAULT 'COMPLETED',
+    assessed_by VARCHAR(100) DEFAULT 'FRAUD-DETECTION-SERVICE',
+    assessed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_risk_score
+        CHECK (risk_score BETWEEN 0 AND 100),
+
+    CONSTRAINT chk_risk_level
+        CHECK (risk_level IN ('LOW', 'MEDIUM', 'HIGH', 'CRITICAL')),
+
+    CONSTRAINT chk_assessment_status
+        CHECK (assessment_status IN ('PENDING', 'COMPLETED', 'REVIEW_REQUIRED'))
+);
+
+CREATE INDEX idx_risk_transaction
+    ON risk_assessment(transaction_id);
+
+CREATE INDEX idx_risk_customer
+    ON risk_assessment(customer_id);
+
+CREATE INDEX idx_risk_level
+    ON risk_assessment(risk_level);
+
+CREATE INDEX idx_risk_assessed_at
+    ON risk_assessment(assessed_at);
+
+-- =========================================================
+-- 4. AUDIT LOGGING
+-- =========================================================
+-- Records important user/system actions for traceability.
+
+CREATE TABLE audit_logs (
+    audit_id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT,
+    username VARCHAR(100),
+    action VARCHAR(100) NOT NULL,
+    entity_type VARCHAR(100),
+    entity_id VARCHAR(100),
+    description TEXT,
+    old_value JSONB,
+    new_value JSONB,
+    ip_address INET,
+    device_id VARCHAR(150),
+    service_name VARCHAR(100),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_audit_user
+    ON audit_logs(user_id);
+
+CREATE INDEX idx_audit_action
+    ON audit_logs(action);
+
+CREATE INDEX idx_audit_entity
+    ON audit_logs(entity_type, entity_id);
+
+CREATE INDEX idx_audit_created_at
+    ON audit_logs(created_at);
+
+-- =========================================================
+-- 5. SAMPLE LIVENESS INPUT DATA
+-- =========================================================
+
+INSERT INTO liveness_detection
+(customer_id, session_id, verification_type, verification_status,
+ confidence_score, attempt_number, device_id, ip_address, failure_reason)
+VALUES
+(101, 'SES-10001', 'FACE', 'PASSED', 98.50, 1,
+ 'DEVICE-RAHUL-01', '192.168.1.10', NULL),
+
+(102, 'SES-10002', 'FACE', 'PASSED', 96.20, 1,
+ 'DEVICE-PRIYA-01', '192.168.1.11', NULL),
+
+(103, 'SES-10003', 'VIDEO', 'FAILED', 42.80, 1,
+ 'DEVICE-ARJUN-01', '192.168.1.12', 'Low liveness confidence'),
+
+(103, 'SES-10003-R2', 'VIDEO', 'PASSED', 94.70, 2,
+ 'DEVICE-ARJUN-01', '192.168.1.12', NULL),
+
+(104, 'SES-10004', 'FACE', 'PENDING', NULL, 1,
+ 'DEVICE-NEHA-01', '192.168.1.13', NULL),
+
+(105, 'SES-10005', 'BIOMETRIC', 'PASSED', 99.10, 1,
+ 'DEVICE-AMIT-01', '192.168.1.14', NULL),
+
+(106, 'SES-10006', 'FACE', 'FAILED', 35.40, 1,
+ 'DEVICE-SNEHA-01', '192.168.1.15', 'Face not clearly detected'),
+
+(106, 'SES-10006-R2', 'FACE', 'FAILED', 48.60, 2,
+ 'DEVICE-SNEHA-01', '192.168.1.15', 'Liveness challenge failed'),
+
+(107, 'SES-10007', 'FACE', 'PASSED', 97.80, 1,
+ 'DEVICE-VIKAS-01', '192.168.1.16', NULL),
+
+(108, 'SES-10008', 'VIDEO', 'PASSED', 93.50, 1,
+ 'DEVICE-KAVYA-01', '192.168.1.17', NULL),
+
+(109, 'SES-10009', 'FACE', 'PASSED', 91.40, 1,
+ 'DEVICE-ROHAN-01', '192.168.1.18', NULL),
+
+(110, 'SES-10010', 'FACE', 'FAILED', 28.70, 1,
+ 'DEVICE-MEERA-01', '192.168.1.19', 'Unable to complete liveness check');
+
+-- =========================================================
+-- 6. SAMPLE RISK ASSESSMENT INPUT DATA
+-- =========================================================
+-- Risk score interpretation used in these examples:
+-- 0-24   = LOW
+-- 25-49  = MEDIUM
+-- 50-74  = HIGH
+-- 75-100 = CRITICAL
+
+INSERT INTO risk_assessment
+(transaction_id, customer_id, risk_score, risk_level,
+ risk_reason, assessment_status, assessed_by)
+VALUES
+(5001, 101, 12.50, 'LOW',
+ 'Normal transaction amount and known device',
+ 'COMPLETED', 'FRAUD-DETECTION-SERVICE'),
+
+(5002, 102, 28.00, 'MEDIUM',
+ 'Transaction amount slightly above normal pattern',
+ 'COMPLETED', 'FRAUD-DETECTION-SERVICE'),
+
+(5003, 103, 58.50, 'HIGH',
+ 'New device and unusual transaction frequency',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE'),
+
+(5004, 104, 82.00, 'CRITICAL',
+ 'Large transaction from new location and device',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE'),
+
+(5005, 105, 18.75, 'LOW',
+ 'Known device and normal transaction behavior',
+ 'COMPLETED', 'FRAUD-DETECTION-SERVICE'),
+
+(5006, 106, 67.40, 'HIGH',
+ 'Multiple failed liveness attempts and unusual amount',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE'),
+
+(5007, 107, 34.20, 'MEDIUM',
+ 'Unusual transaction time detected',
+ 'COMPLETED', 'FRAUD-DETECTION-SERVICE'),
+
+(5008, 108, 9.80, 'LOW',
+ 'Normal transaction with verified customer session',
+ 'COMPLETED', 'FRAUD-DETECTION-SERVICE'),
+
+(5009, 109, 76.50, 'CRITICAL',
+ 'High-value transaction from an unfamiliar location',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE'),
+
+(5010, 110, 88.90, 'CRITICAL',
+ 'Failed liveness verification and abnormal transaction pattern',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE'),
+
+(5011, 101, 45.00, 'MEDIUM',
+ 'Multiple transactions within a short time period',
+ 'COMPLETED', 'FRAUD-DETECTION-SERVICE'),
+
+(5012, 102, 72.30, 'HIGH',
+ 'New beneficiary and unusually high transfer amount',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE'),
+
+(5013, 103, 21.60, 'LOW',
+ 'Verified liveness and normal transaction pattern',
+ 'COMPLETED', 'FRAUD-DETECTION-SERVICE'),
+
+(5014, 104, 55.00, 'HIGH',
+ 'Transaction behavior differs from customer history',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE'),
+
+(5015, 105, 95.20, 'CRITICAL',
+ 'Multiple risk indicators detected simultaneously',
+ 'REVIEW_REQUIRED', 'FRAUD-DETECTION-SERVICE');
+
+-- =========================================================
+-- 7. SAMPLE AUDIT LOG INPUT DATA
+-- =========================================================
+
+INSERT INTO audit_logs
+(user_id, username, action, entity_type, entity_id,
+ description, old_value, new_value, ip_address,
+ device_id, service_name)
+VALUES
+(101, 'rahul', 'LOGIN_SUCCESS', 'USER', '101',
+ 'Customer successfully logged in',
+ NULL,
+ '{"login_status":"SUCCESS"}',
+ '192.168.1.10', 'DEVICE-RAHUL-01', 'AUTH-SERVICE'),
+
+(101, 'rahul', 'LIVENESS_PASSED', 'LIVENESS', '1',
+ 'Customer passed face liveness verification',
+ NULL,
+ '{"status":"PASSED","confidence":98.50}',
+ '192.168.1.10', 'DEVICE-RAHUL-01', 'LIVENESS-SERVICE'),
+
+(101, 'rahul', 'TRANSFER_INITIATED', 'TRANSACTION', '5001',
+ 'Customer initiated a transfer',
+ NULL,
+ '{"amount":10000,"currency":"INR"}',
+ '192.168.1.10', 'DEVICE-RAHUL-01', 'TRANSACTION-SERVICE'),
+
+(101, 'rahul', 'RISK_ASSESSED', 'TRANSACTION', '5001',
+ 'Transaction assessed as low risk',
+ NULL,
+ '{"risk_score":12.50,"risk_level":"LOW"}',
+ '192.168.1.10', 'DEVICE-RAHUL-01', 'FRAUD-DETECTION-SERVICE'),
+
+(101, 'rahul', 'TRANSACTION_SETTLED', 'TRANSACTION', '5001',
+ 'Transaction successfully settled',
+ '{"status":"PROCESSING"}',
+ '{"status":"SETTLED"}',
+ '192.168.1.10', 'DEVICE-RAHUL-01', 'SETTLEMENT-SERVICE'),
+
+(101, 'rahul', 'NOTIFICATION_SENT', 'NOTIFICATION', '9001',
+ 'Transaction confirmation notification sent',
+ NULL,
+ '{"notification_status":"SENT"}',
+ '192.168.1.10', 'DEVICE-RAHUL-01', 'NOTIFICATION-SERVICE'),
+
+(103, 'arjun', 'LIVENESS_FAILED', 'LIVENESS', '3',
+ 'Customer failed liveness verification',
+ NULL,
+ '{"status":"FAILED","confidence":42.80}',
+ '192.168.1.12', 'DEVICE-ARJUN-01', 'LIVENESS-SERVICE'),
+
+(103, 'arjun', 'RISK_ASSESSED', 'TRANSACTION', '5003',
+ 'Transaction flagged for review',
+ NULL,
+ '{"risk_score":58.50,"risk_level":"HIGH"}',
+ '192.168.1.12', 'DEVICE-ARJUN-01', 'FRAUD-DETECTION-SERVICE'),
+
+(104, 'neha', 'TRANSFER_INITIATED', 'TRANSACTION', '5004',
+ 'High-value transfer initiated',
+ NULL,
+ '{"amount":250000,"currency":"INR"}',
+ '192.168.1.13', 'DEVICE-NEHA-01', 'TRANSACTION-SERVICE'),
+
+(104, 'neha', 'FRAUD_ALERT_GENERATED', 'TRANSACTION', '5004',
+ 'Critical-risk transaction detected',
+ NULL,
+ '{"risk_score":82.00,"risk_level":"CRITICAL"}',
+ '192.168.1.13', 'DEVICE-NEHA-01', 'FRAUD-DETECTION-SERVICE'),
+
+(104, 'neha', 'NOTIFICATION_SENT', 'NOTIFICATION', '9002',
+ 'Fraud alert notification sent to customer',
+ NULL,
+ '{"notification_status":"SENT","type":"FRAUD_ALERT"}',
+ '192.168.1.13', 'DEVICE-NEHA-01', 'NOTIFICATION-SERVICE'),
+
+(106, 'sneha', 'LIVENESS_FAILED', 'LIVENESS', '7',
+ 'Liveness verification failed after challenge',
+ NULL,
+ '{"status":"FAILED","confidence":35.40}',
+ '192.168.1.15', 'DEVICE-SNEHA-01', 'LIVENESS-SERVICE'),
+
+(106, 'sneha', 'TRANSACTION_BLOCKED', 'TRANSACTION', '5006',
+ 'Transaction blocked for additional verification',
+ '{"status":"PROCESSING"}',
+ '{"status":"BLOCKED"}',
+ '192.168.1.15', 'DEVICE-SNEHA-01', 'FRAUD-DETECTION-SERVICE'),
+
+(109, 'rohan', 'RISK_ASSESSED', 'TRANSACTION', '5009',
+ 'High-value transaction classified as critical risk',
+ NULL,
+ '{"risk_score":76.50,"risk_level":"CRITICAL"}',
+ '192.168.1.18', 'DEVICE-ROHAN-01', 'FRAUD-DETECTION-SERVICE'),
+
+(110, 'meera', 'FRAUD_ALERT_GENERATED', 'TRANSACTION', '5010',
+ 'Transaction flagged due to failed liveness and abnormal behavior',
+ NULL,
+ '{"risk_score":88.90,"risk_level":"CRITICAL"}',
+ '192.168.1.19', 'DEVICE-MEERA-01', 'FRAUD-DETECTION-SERVICE'),
+
+(NULL, 'SYSTEM', 'SERVICE_STARTED', 'SYSTEM', 'FRAUD-DETECTION',
+ 'Fraud Detection Service started successfully',
+ NULL,
+ '{"status":"UP"}',
+ '127.0.0.1', NULL, 'FRAUD-DETECTION-SERVICE'),
+
+(NULL, 'SYSTEM', 'SERVICE_STARTED', 'SYSTEM', 'SETTLEMENT',
+ 'Settlement Engine started successfully',
+ NULL,
+ '{"status":"UP"}',
+ '127.0.0.1', NULL, 'SETTLEMENT-SERVICE'),
+
+(NULL, 'SYSTEM', 'SERVICE_STARTED', 'SYSTEM', 'NOTIFICATION',
+ 'Notification Service started successfully',
+ NULL,
+ '{"status":"UP"}',
+ '127.0.0.1', NULL, 'NOTIFICATION-SERVICE');
+
+-- =========================================================
+-- 8. USEFUL VIEWS
+-- =========================================================
+
+CREATE OR REPLACE VIEW high_risk_transactions AS
+SELECT
+    risk_id,
+    transaction_id,
+    customer_id,
+    risk_score,
+    risk_level,
+    risk_reason,
+    assessment_status,
+    assessed_at
+FROM risk_assessment
+WHERE risk_level IN ('HIGH', 'CRITICAL')
+ORDER BY risk_score DESC;
+
+CREATE OR REPLACE VIEW recent_audit_activity AS
+SELECT
+    audit_id,
+    user_id,
+    username,
+    action,
+    entity_type,
+    entity_id,
+    description,
+    service_name,
+    created_at
+FROM audit_logs
+ORDER BY created_at DESC;
+
+-- =========================================================
+-- 9. DEMONSTRATION QUERIES
+-- =========================================================
+
+-- View all liveness records
+SELECT * FROM liveness_detection
+ORDER BY verified_at DESC;
+
+-- View only successful liveness checks
+SELECT customer_id, session_id, confidence_score, verified_at
+FROM liveness_detection
+WHERE verification_status = 'PASSED'
+ORDER BY confidence_score DESC;
+
+-- Find customers with failed liveness attempts
+SELECT customer_id, COUNT(*) AS failed_attempts
+FROM liveness_detection
+WHERE verification_status = 'FAILED'
+GROUP BY customer_id
+ORDER BY failed_attempts DESC;
+
+-- View all risk assessments
+SELECT *
+FROM risk_assessment
+ORDER BY risk_score DESC;
+
+-- View high and critical risk transactions
+SELECT *
+FROM high_risk_transactions;
+
+-- Count transactions by risk level
+SELECT risk_level, COUNT(*) AS transaction_count
+FROM risk_assessment
+GROUP BY risk_level
+ORDER BY transaction_count DESC;
+
+-- Find transactions requiring review
+SELECT transaction_id, customer_id, risk_score,
+       risk_level, risk_reason
+FROM risk_assessment
+WHERE assessment_status = 'REVIEW_REQUIRED'
+ORDER BY risk_score DESC;
+
+-- View audit history for Rahul
+SELECT audit_id, action, entity_type, entity_id,
+       description, service_name, created_at
+FROM audit_logs
+WHERE user_id = 101
+ORDER BY created_at DESC;
+
+-- View all fraud-related audit events
+SELECT *
+FROM audit_logs
+WHERE action LIKE '%FRAUD%'
+ORDER BY created_at DESC;
+
+-- View the latest 20 audit records
+SELECT *
+FROM audit_logs
+ORDER BY created_at DESC
+LIMIT 20;
