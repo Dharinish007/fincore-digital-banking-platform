@@ -1,6 +1,0 @@
-.toast-banner {
-  display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-radius: 8px; font-weight: 500; font-size: 0.9rem; animation: slideDown 0.3s ease;
-}
-.toast-success { background-color: #065f46; color: #a7f3d0; border: 1px solid #047857; }
-.toast-close { background: transparent; border: none; color: inherit; font-size: 1.1rem; cursor: pointer; }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
