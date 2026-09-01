@@ -1,28 +1,16 @@
-package com.example.risk_scoring_service.entity;
-
+package com.example.risk_scoring_service.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.example.risk_scoring_service.enums.RiskLevel;
 import com.example.risk_scoring_service.enums.RiskStatus;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
-@Table(name = "risk_assessment")
 @Data
-public class RiskAssessment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class RiskAssessmentResponseDTO {
+	private Long riskId;
 
     private Long customerId;
 
@@ -30,28 +18,12 @@ public class RiskAssessment {
 
     private String accountNumber;
 
-    private String transactionId;
-
-    private BigDecimal transactionAmount;
-
-    private Integer riskScore;
-
-    @Enumerated(EnumType.STRING)
-    private RiskLevel riskLevel;
-
-    @Enumerated(EnumType.STRING)
-    private RiskStatus riskStatus;
-
-    private LocalDateTime assessmentDate;
-
-    private LocalDateTime updatedDate;
-
-	public Long getId() {
-		return id;
+    public Long getRiskId() {
+		return riskId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setRiskId(Long riskId) {
+		this.riskId = riskId;
 	}
 
 	public Long getCustomerId() {
@@ -59,7 +31,7 @@ public class RiskAssessment {
 	}
 
 	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	    this.customerId = customerId;
 	}
 
 	public String getCustomerName() {
@@ -133,4 +105,28 @@ public class RiskAssessment {
 	public void setUpdatedDate(LocalDateTime updatedDate) {
 		this.updatedDate = updatedDate;
 	}
+
+	public List<RiskFactorDTO> getRiskFactors() {
+		return riskFactors;
+	}
+
+	public void setRiskFactors(List<RiskFactorDTO> riskFactors) {
+		this.riskFactors = riskFactors;
+	}
+
+	private String transactionId;
+
+    private BigDecimal transactionAmount;
+
+    private Integer riskScore;
+
+    private RiskLevel riskLevel;
+
+    private RiskStatus riskStatus;
+
+    private LocalDateTime assessmentDate;
+
+    private LocalDateTime updatedDate;
+
+    private List<RiskFactorDTO> riskFactors;
 }
