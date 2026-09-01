@@ -16,7 +16,6 @@ import { MatIconModule } from '@angular/material/icon';
       <div class="alert info">
         <mat-icon>face</mat-icon>
         <div>
-          <strong>Developer Assigned: Pavithra</strong>
           <div>This module workspace is reserved for Face Match Accuracy integration.</div>
         </div>
       </div>

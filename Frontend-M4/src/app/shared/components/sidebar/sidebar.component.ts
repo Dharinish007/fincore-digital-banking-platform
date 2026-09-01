@@ -24,20 +24,17 @@ export class SidebarComponent {
     {
       label: 'Document OCR',
       icon: 'badge',
-      route: '/document-ocr',
-      developer: 'Manikandan'
+      route: '/document-ocr'
     },
     {
       label: 'Liveness Detection',
       icon: 'videocam',
-      route: '/liveness-detection',
-      developer: 'Kousalya'
+      route: '/liveness-detection'
     },
     {
       label: 'Face Match Accuracy',
       icon: 'face',
-      route: '/face-match',
-      developer: 'Pavithra'
+      route: '/face-match'
     }
   ];
 }
