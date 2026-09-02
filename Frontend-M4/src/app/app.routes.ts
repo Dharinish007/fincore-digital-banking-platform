@@ -23,8 +23,15 @@ export const routes: Routes = [
   {
     path: 'face-match',
     loadComponent: () =>
-      import('./features/face-match/face-match.component').then(
+      import('./pages/face-match/face-match.component').then(
         (m) => m.FaceMatchComponent
+      ),
+  },
+  {
+    path: 'verification-summary',
+    loadComponent: () =>
+      import('./pages/verification-summary/verification-summary.component').then(
+        (m) => m.VerificationSummaryComponent
       ),
   },
   {
@@ -32,3 +39,4 @@ export const routes: Routes = [
     redirectTo: 'document-ocr',
   },
 ];
+

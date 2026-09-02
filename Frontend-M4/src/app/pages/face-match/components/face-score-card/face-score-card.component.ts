@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { FaceMatchResult } from '../../../../models/face-match.model';
+import { FaceMatchResult } from '../../../../core/models/face-match.model';
 
 @Component({
   selector: 'app-face-score-card',
@@ -36,3 +36,4 @@ export class FaceScoreCardComponent implements OnChanges {
     return '#EF4444';
   }
 }
+

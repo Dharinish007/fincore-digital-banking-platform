@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { SimilarityMetric } from '../../../../models/face-match.model';
+import { SimilarityMetric } from '../../../../core/models/face-match.model';
 
 @Component({
   selector: 'app-similarity-analysis-card',
@@ -13,3 +13,4 @@ import { SimilarityMetric } from '../../../../models/face-match.model';
 export class SimilarityAnalysisCardComponent {
   @Input() metrics: SimilarityMetric[] = [];
 }
+

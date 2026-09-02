@@ -14,7 +14,7 @@ import {
   FaceMatchResult,
   FaceSourceImage,
   UploadImageState
-} from '../../../../models/face-match.model';
+} from '../../../../core/models/face-match.model';
 import { environment } from '../../../../../environments/environment';
 
 @Component({
@@ -308,4 +308,5 @@ export class FaceComparisonCardComponent implements OnInit, OnDestroy {
     }
   }
 }
+
 

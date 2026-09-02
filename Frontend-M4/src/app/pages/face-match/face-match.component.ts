@@ -4,14 +4,14 @@ import { Router } from '@angular/router';
 import { MatIconModule } from '@angular/material/icon';
 import { Observable } from 'rxjs';
 
-import { FaceMatchService } from '../../services/face-match.service';
+import { FaceMatchService } from '../../core/services/face-match.service';
 import {
   FaceMatchResult,
   FaceSourceImage,
   QualityCheckItem,
   SimilarityMetric,
   MatchDetailsReport
-} from '../../models/face-match.model';
+} from '../../core/models/face-match.model';
 
 import { FaceComparisonCardComponent } from './components/face-comparison-card/face-comparison-card.component';
 import { FaceScoreCardComponent } from './components/face-score-card/face-score-card.component';
@@ -100,4 +100,6 @@ export class FaceMatchComponent implements OnInit {
     }
   }
 }
+
+
 

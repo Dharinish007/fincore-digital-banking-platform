@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { QualityCheckItem } from '../../../../models/face-match.model';
+import { QualityCheckItem } from '../../../../core/models/face-match.model';
 
 @Component({
   selector: 'app-face-quality-card',
@@ -27,3 +27,4 @@ export class FaceQualityCardComponent {
     }
   }
 }
+

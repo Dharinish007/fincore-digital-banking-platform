@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
-import { FaceMatchResult, MatchDetailsReport } from '../../../../models/face-match.model';
+import { FaceMatchResult, MatchDetailsReport } from '../../../../core/models/face-match.model';
 
 @Component({
   selector: 'app-match-details-modal',
@@ -19,3 +19,4 @@ export class MatchDetailsModalComponent {
     this.close.emit();
   }
 }
+
