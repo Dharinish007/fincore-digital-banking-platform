@@ -199,6 +199,7 @@ M4_PHP_AI_KYC/
 
 ## 🧪 Sample AI Verification
 
+```text
 
 Example successful verification:
 
@@ -214,18 +215,21 @@ Component	Result
 1. Start XAMPP
 
 Start:
-
 Apache
 MySQL
 2. Open phpMyAdmin
+
 http://localhost/phpmyadmin/
 3. Select Database
+
 USE digital_banking;
+
 4. Execute M4 SQL
 
 Run:
 
 00_M4_AI_KYC_Master.sql
+
 5. Verify Tables
 SHOW TABLES;
 
@@ -234,7 +238,10 @@ You should have:
 document_ocr
 liveness_detection
 face_match
+```
 👨‍💻 Database Responsibility
+
+```text
 Database Developer
 
 Raghvendra Singh Pawar
@@ -248,3 +255,4 @@ Responsibility
 🤳 Face match result management
 🧪 Sample data and validation queries
 🔄 Integration with previous milestone database
+```
