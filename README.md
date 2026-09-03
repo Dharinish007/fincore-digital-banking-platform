@@ -407,12 +407,7 @@ mvn spring-boot:run
 mvnw.cmd spring-boot:run
 ```
 
-### Linux/macOS Maven Wrapper
 
-```bash
-./mvnw spring-boot:run
-
----
 
 # Team Members
 
