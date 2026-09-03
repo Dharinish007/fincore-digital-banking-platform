@@ -1,0 +1,33 @@
+.fincore-app-layout {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: var(--bg-app);
+
+  .layout-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+
+    .main-content-viewport {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 28px 32px 48px 32px;
+      background-color: var(--bg-app);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .fincore-app-layout {
+    .layout-body {
+      .main-content-viewport {
+        padding: 16px 14px 32px 14px;
+      }
+    }
+  }
+}

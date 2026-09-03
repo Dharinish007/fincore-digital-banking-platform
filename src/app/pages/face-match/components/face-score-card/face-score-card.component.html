@@ -1,0 +1,131 @@
+<div class="fincore-card face-score-container">
+  <!-- Card Header -->
+  <div class="card-header">
+    <div class="title-with-icon">
+      <mat-icon class="card-icon">analytics</mat-icon>
+      <h3>Face Match Score</h3>
+    </div>
+    <p class="subtitle">Facial similarity confidence</p>
+  </div>
+
+  <!-- Circular Gauge Progress Container -->
+  <div class="score-body">
+    <div class="circular-gauge-wrap">
+      <svg class="score-ring-svg" viewBox="0 0 180 180">
+        <defs>
+          <linearGradient id="scoreGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#34D399" />
+            <stop offset="100%" stop-color="#10B981" />
+          </linearGradient>
+          <linearGradient id="scoreBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#60A5FA" />
+            <stop offset="100%" stop-color="#3B82F6" />
+          </linearGradient>
+          <linearGradient id="scoreAmberGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FBBF24" />
+            <stop offset="100%" stop-color="#F59E0B" />
+          </linearGradient>
+          <linearGradient id="scoreRedGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#F87171" />
+            <stop offset="100%" stop-color="#EF4444" />
+          </linearGradient>
+          <filter id="gaugeGlow">
+            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <!-- Background Track Ring -->
+        <circle
+          class="ring-bg"
+          cx="90"
+          cy="90"
+          r="70"
+          stroke-width="12"
+        />
+
+        <!-- Threshold Benchmark Tick / Marker at 80% (288 deg) -->
+        <circle
+          class="threshold-marker"
+          cx="90"
+          cy="90"
+          r="70"
+          stroke-width="14"
+          stroke="#475569"
+          stroke-dasharray="2 437.82"
+          stroke-dashoffset="-351.85"
+        />
+
+        <!-- Active Animated Score Ring -->
+        <circle
+          class="ring-progress"
+          cx="90"
+          cy="90"
+          r="70"
+          stroke-width="12"
+          [attr.stroke]="scoreColor"
+          [attr.stroke-dasharray]="circumference"
+          [attr.stroke-dashoffset]="strokeDashoffset"
+          filter="url(#gaugeGlow)"
+        />
+      </svg>
+
+      <!-- Center Score Label -->
+      <div class="ring-content">
+        <span class="score-number" *ngIf="result.status !== 'PROCESSING'">
+          {{ result.score | number:'1.1-1' }}<span class="pct">%</span>
+        </span>
+        <span class="score-number processing" *ngIf="result.status === 'PROCESSING'">
+          <mat-icon class="spin-icon">sync</mat-icon>
+        </span>
+        <span class="score-subtext">SIMILARITY</span>
+      </div>
+    </div>
+
+    <!-- Match Status Badge -->
+    <div class="match-status-badge" [ngClass]="result.status.toLowerCase()">
+      <mat-icon class="status-icon">
+        {{
+          result.status === 'PROCESSING' ? 'hourglass_top' :
+          result.matched ? 'check_circle' :
+          result.status === 'REVIEW_REQUIRED' ? 'warning' : 'cancel'
+        }}
+      </mat-icon>
+      <span class="status-text">
+        {{
+          result.status === 'PROCESSING' ? 'ANALYZING...' :
+          result.matched ? '✓ MATCHED' :
+          result.status === 'REVIEW_REQUIRED' ? '⚠ REVIEW' : '✕ MISMATCH'
+        }}
+      </span>
+    </div>
+
+    <!-- Dual Metric Information Cards -->
+    <div class="threshold-confidence-grid">
+      <!-- Threshold Box -->
+      <div class="metric-card">
+        <div class="metric-value-row">
+          <span class="value-highlight">{{ result.threshold }}%</span>
+        </div>
+        <div class="metric-label-row">
+          <span>THRESHOLD</span>
+        </div>
+      </div>
+
+      <!-- Confidence Box -->
+      <div class="metric-card">
+        <div class="metric-value-row">
+          <span class="confidence-pill" [ngClass]="result.confidence.toLowerCase()">
+            {{ result.confidence }}
+          </span>
+        </div>
+        <div class="metric-label-row">
+          <span>CONFIDENCE</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

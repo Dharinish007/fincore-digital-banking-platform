@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" width="100%" height="100%">
+  <defs>
+    <linearGradient id="idCardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E293B" />
+    </linearGradient>
+    <linearGradient id="faceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#F59E0B" stop-opacity="0.8" />
+    </linearGradient>
+    <linearGradient id="suitGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1E3A8A" />
+      <stop offset="100%" stop-color="#0F172A" />
+    </linearGradient>
+    <radialGradient id="hologram" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#60A5FA" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0" />
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="400" height="480" rx="12" fill="url(#idCardBg)" />
+  <rect width="396" height="476" x="2" y="2" rx="10" fill="none" stroke="#334155" stroke-width="1.5" />
+  
+  <!-- Subtle Security Pattern Background -->
+  <g opacity="0.08" stroke="#93C5FD" stroke-width="1">
+    <circle cx="200" cy="240" r="160" fill="none" />
+    <circle cx="200" cy="240" r="120" fill="none" />
+    <circle cx="200" cy="240" r="80" fill="none" />
+    <line x1="40" y1="40" x2="360" y2="440" />
+    <line x1="360" y1="40" x2="40" y2="440" />
+  </g>
+
+  <!-- Passport/ID Watermark -->
+  <rect x="20" y="20" width="80" height="24" rx="4" fill="#1E293B" stroke="#475569" stroke-width="1" />
+  <text x="60" y="36" fill="#94A3B8" font-family="Inter, sans-serif" font-size="10" font-weight="700" text-anchor="middle" letter-spacing="1">ID PHOTO</text>
+
+  <!-- Hologram ambient circle -->
+  <circle cx="200" cy="210" r="110" fill="url(#hologram)" />
+
+  <!-- Avatar / Face Illustration -->
+  <!-- Shoulders / Suit -->
+  <path d="M 100 420 C 100 350, 140 330, 200 330 C 260 330, 300 350, 300 420 Z" fill="url(#suitGrad)" />
+  <!-- Shirt Collar -->
+  <polygon points="175,330 200,370 225,330" fill="#FFFFFF" opacity="0.9" />
+  <polygon points="190,345 200,410 210,345" fill="#3B82F6" />
+
+  <!-- Neck -->
+  <rect x="180" y="270" width="40" height="70" rx="4" fill="#D97706" opacity="0.75" />
+
+  <!-- Head / Face Contour -->
+  <ellipse cx="200" cy="205" rx="72" ry="92" fill="#E2E8F0" opacity="0.95" />
+  <!-- Shadow/Skin tone -->
+  <ellipse cx="200" cy="205" rx="68" ry="88" fill="#CBD5E1" />
+  <ellipse cx="200" cy="200" rx="64" ry="82" fill="#F1F5F9" />
+
+  <!-- Hair Style -->
+  <path d="M 130 190 C 130 115, 170 110, 200 110 C 230 110, 270 115, 270 190 C 255 145, 235 135, 200 135 C 165 135, 145 145, 130 190 Z" fill="#1E293B" />
+  
+  <!-- Eyebrows -->
+  <path d="M 155 175 Q 170 168 185 174" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none" />
+  <path d="M 215 174 Q 230 168 245 175" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none" />
+
+  <!-- Eyes -->
+  <ellipse cx="170" cy="190" rx="9" ry="6" fill="#0F172A" />
+  <ellipse cx="230" cy="190" rx="9" ry="6" fill="#0F172A" />
+  <circle cx="172" cy="188" r="2.5" fill="#FFFFFF" />
+  <circle cx="232" cy="188" r="2.5" fill="#FFFFFF" />
+
+  <!-- Nose -->
+  <path d="M 200 185 L 196 220 L 206 220" stroke="#94A3B8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+  <!-- Mouth -->
+  <path d="M 182 245 Q 200 252 218 245" stroke="#64748B" stroke-width="3.5" stroke-linecap="round" fill="none" />
+
+  <!-- Ears -->
+  <ellipse cx="130" cy="205" rx="8" ry="18" fill="#CBD5E1" />
+  <ellipse cx="270" cy="205" rx="8" ry="18" fill="#CBD5E1" />
+
+  <!-- Biometric Landmark Nodes Overlay -->
+  <g opacity="0.6" fill="#3B82F6">
+    <circle cx="170" cy="190" r="2.5" />
+    <circle cx="230" cy="190" r="2.5" />
+    <circle cx="200" cy="185" r="2.5" />
+    <circle cx="196" cy="220" r="2.5" />
+    <circle cx="182" cy="245" r="2.5" />
+    <circle cx="218" cy="245" r="2.5" />
+    <circle cx="200" cy="275" r="2.5" />
+    <circle cx="150" cy="205" r="2.5" />
+    <circle cx="250" cy="205" r="2.5" />
+  </g>
+
+  <!-- Microchips / KYC Verified Stamp -->
+  <g transform="translate(315, 20)">
+    <circle cx="16" cy="16" r="15" fill="#065F46" opacity="0.8" />
+    <path d="M 10 16 L 14 20 L 22 12" stroke="#34D399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  </g>
+</svg>

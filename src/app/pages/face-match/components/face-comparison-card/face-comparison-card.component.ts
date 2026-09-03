@@ -16,7 +16,7 @@ import {
   FaceMatchResult,
   FaceSourceImage,
   UploadImageState
-} from '../../../../core/models/face-match.model';
+} from '../../../../models/face-match.model';
 import { environment } from '../../../../../environments/environment';
 
 @Component({

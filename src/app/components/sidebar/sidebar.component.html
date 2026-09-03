@@ -1,0 +1,34 @@
+<aside class="app-sidebar" [class.collapsed]="collapsed">
+  <div class="sidebar-section-title" *ngIf="!collapsed">
+    <span>KYC VERIFICATION SUITE</span>
+  </div>
+
+  <nav class="nav-list">
+    <a
+      *ngFor="let item of kycNavItems"
+      class="nav-item"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      [title]="item.label"
+    >
+      <div class="icon-wrap">
+        <mat-icon class="nav-icon">{{ item.icon }}</mat-icon>
+        <span class="stage-dot" *ngIf="collapsed"></span>
+      </div>
+      <div class="nav-text" *ngIf="!collapsed">
+        <span class="nav-label">{{ item.label }}</span>
+        <span class="nav-stage">Stage {{ item.stageNumber }}</span>
+      </div>
+      <span class="nav-badge" [ngClass]="item.badgeClass" *ngIf="!collapsed && item.badge">
+        {{ item.badge }}
+      </span>
+    </a>
+  </nav>
+
+  <div class="sidebar-footer" *ngIf="!collapsed">
+    <div class="version-info">
+      <div class="v-title">FinCore Nexus KYC Suite</div>
+      <div class="v-number">v2.4.0 • Biometrics Engine</div>
+    </div>
+  </div>
+</aside>

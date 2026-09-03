@@ -1,0 +1,34 @@
+<div class="fincore-card similarity-analysis-container">
+  <!-- Card Header -->
+  <div class="card-header">
+    <div class="title-with-icon">
+      <mat-icon class="card-icon">insights</mat-icon>
+      <h3>Similarity Analysis</h3>
+    </div>
+    <p class="subtitle">Detailed AI comparison metrics</p>
+  </div>
+
+  <!-- Dynamic Metrics List -->
+  <div class="metrics-list">
+    <div *ngFor="let metric of metrics" class="metric-row">
+      <div class="metric-info">
+        <span class="metric-name">{{ metric.label }}</span>
+        <div class="metric-value-wrap">
+          <span class="benchmark-hint" *ngIf="metric.benchmark">
+            (Min: {{ metric.benchmark }}%)
+          </span>
+          <span class="metric-percentage">{{ metric.value | number:'1.1-1' }}%</span>
+        </div>
+      </div>
+
+      <!-- Dynamic Progress Bar -->
+      <div class="progress-track">
+        <div
+          class="progress-fill"
+          [style.width.%]="metric.value"
+          [style.background-color]="metric.color || '#3B82F6'"
+        ></div>
+      </div>
+    </div>
+  </div>
+</div>

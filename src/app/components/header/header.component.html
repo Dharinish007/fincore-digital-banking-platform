@@ -1,0 +1,74 @@
+<header class="app-header">
+  <div class="header-left">
+    <button class="icon-button" (click)="onToggleSidebar()" aria-label="Toggle navigation menu" title="Toggle Navigation">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <div class="brand-logo">
+      <mat-icon class="logo-icon">account_balance</mat-icon>
+      <div class="brand-name">
+        <span class="main-title">FinCore Nexus</span>
+        <span class="sub-title">CORE BANKING SYSTEM</span>
+      </div>
+    </div>
+
+    <div class="module-tag">
+      <mat-icon>{{ moduleIcon }}</mat-icon>
+      <span>{{ moduleTitle }}</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <!-- State Simulation Switcher for Reviewer / QA Testing -->
+    <div class="state-simulator-dropdown">
+      <button class="state-btn" (click)="toggleStateMenu()" title="Simulate KYC Verification States">
+        <span class="state-dot" [ngClass]="currentState.toLowerCase()"></span>
+        <span class="state-label">State: {{ currentState }}</span>
+        <mat-icon class="arrow-icon">arrow_drop_down</mat-icon>
+      </button>
+
+      <div class="dropdown-menu" *ngIf="isStateMenuOpen">
+        <div class="menu-header">Select Verification State:</div>
+        <button
+          *ngFor="let item of availableStates"
+          class="dropdown-item"
+          [class.active]="item.state === currentState"
+          (click)="setState(item.state)"
+        >
+          <mat-icon [style.color]="item.color">{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </button>
+        <div class="menu-divider"></div>
+        <button class="dropdown-item re-run-btn" (click)="retriggerAnalysis()">
+          <mat-icon style="color: #60A5FA;">refresh</mat-icon>
+          <span>Run AI Analysis (1.5s Sim)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- User Profile Badge -->
+    <div class="user-badge-container">
+      <div class="user-badge" (click)="toggleRoleMenu()" role="button" tabindex="0">
+        <div class="avatar">AD</div>
+        <div class="user-details">
+          <span class="username">Alex Developer</span>
+          <span class="role">{{ currentRole }}</span>
+        </div>
+        <mat-icon class="caret">arrow_drop_down</mat-icon>
+      </div>
+
+      <div class="dropdown-menu role-menu" *ngIf="isRoleMenuOpen">
+        <div class="menu-header">Active Operator Role:</div>
+        <button
+          *ngFor="let role of availableRoles"
+          class="dropdown-item"
+          [class.active]="role === currentRole"
+          (click)="setRole(role)"
+        >
+          <mat-icon>{{ role === currentRole ? 'check' : 'person_outline' }}</mat-icon>
+          <span>{{ role }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

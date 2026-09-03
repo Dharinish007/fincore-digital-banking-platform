@@ -1,0 +1,20 @@
+<div class="fincore-app-layout">
+  <!-- Global Banking Top Header -->
+  <app-header
+    moduleTitle="KYC Verification Suite"
+    moduleIcon="verified_user"
+    (toggleSidebar)="toggleSidebar()"
+  >
+  </app-header>
+
+  <!-- Layout Body (Sidebar + Scrollable Content) -->
+  <div class="layout-body">
+    <!-- KYC Navigation Sidebar -->
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <!-- Main Content Stage Area -->
+    <main class="main-content-viewport">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
