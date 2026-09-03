@@ -196,7 +196,7 @@ M4_PHP_AI_KYC/
 │
 └── 📄 README.md
 
-
+```
 ## 🧪 Sample AI Verification
 
 ```text
@@ -214,7 +214,8 @@ Component	Result
 ```
 
 ## 🚀 Setup
-``` text 
+
+```text 
 1. Start XAMPP
 
 Start:
