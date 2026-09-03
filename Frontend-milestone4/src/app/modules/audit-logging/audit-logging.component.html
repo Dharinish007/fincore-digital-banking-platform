@@ -1,0 +1,192 @@
+<div class="audit-container">
+  <div class="module-header">
+    <h2><i class="icon">📜</i> Audit Logs</h2>
+    <span class="badge-tag">Milestone 4 — Module 3</span>
+  </div>
+
+  <div class="card filter-card">
+    <div class="filter-top-row">
+      <!-- Search -->
+      <div class="filter-item search-item">
+        <label>Search:</label>
+        <div class="search-input-wrapper">
+          <input type="text" 
+                 [(ngModel)]="filter.searchQuery" 
+                 (input)="applyFilters()" 
+                 placeholder="Search user, action, description, audit ID..." 
+                 class="form-input" />
+          <span class="search-icon">🔍</span>
+        </div>
+      </div>
+
+      <button class="btn btn-secondary btn-sm reset-btn" (click)="resetFilters()">Reset Filters</button>
+    </div>
+
+    <!-- Multi Filter Row -->
+    <div class="filter-grid">
+      <div class="filter-item">
+        <label>User:</label>
+        <select [(ngModel)]="filter.user" (change)="applyFilters()" class="form-select">
+          <option *ngFor="let u of users" [value]="u">{{ u }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Module:</label>
+        <select [(ngModel)]="filter.module" (change)="applyFilters()" class="form-select">
+          <option *ngFor="let m of modules" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Action:</label>
+        <select [(ngModel)]="filter.action" (change)="applyFilters()" class="form-select">
+          <option *ngFor="let a of actions" [value]="a">{{ a }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>Status:</label>
+        <select [(ngModel)]="filter.status" (change)="applyFilters()" class="form-select">
+          <option *ngFor="let s of statuses" [value]="s">{{ s }}</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label>From Date:</label>
+        <input type="date" [(ngModel)]="filter.fromDate" (change)="applyFilters()" class="form-input date-input" />
+      </div>
+
+      <div class="filter-item">
+        <label>To Date:</label>
+        <input type="date" [(ngModel)]="filter.toDate" (change)="applyFilters()" class="form-input date-input" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit Log Table Card -->
+  <div class="card table-card">
+    <div class="table-responsive">
+      <table class="audit-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Action</th>
+            <th>Module</th>
+            <th>Status</th>
+            <th>Date & Time</th>
+            <th class="text-right">Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of paginatedLogs" class="log-row">
+            <td>
+              <div class="user-cell">
+                <span class="user-avatar">{{ log.userName.charAt(0) }}</span>
+                <div class="user-meta">
+                  <strong class="user-name">{{ log.userName }}</strong>
+                  <small class="user-id">{{ log.userId }}</small>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="action-tag">{{ log.action }}</span>
+            </td>
+            <td>
+              <span class="module-chip">{{ log.module }}</span>
+            </td>
+            <td>
+              <span class="status-badge" [class.badge-success]="log.status === 'SUCCESS'" [class.badge-failed]="log.status === 'FAILED'">
+                {{ log.status }}
+              </span>
+            </td>
+            <td>
+              <span class="date-text">{{ log.timestamp }}</span>
+            </td>
+            <td class="text-right">
+              <button class="btn btn-sm btn-outline" (click)="viewDetails(log)">View</button>
+            </td>
+          </tr>
+
+          <tr *ngIf="paginatedLogs.length === 0">
+            <td colspan="6" class="no-records">
+              <p>No audit logs found matching the selected search and filter criteria.</p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-bar">
+      <div class="pagination-info">
+        Showing {{ paginatedLogs.length }} of {{ filteredLogs.length }} audit entries
+      </div>
+
+      <div class="pagination-buttons">
+        <button class="page-nav-btn" [disabled]="currentPage === 1" (click)="goToPage(currentPage - 1)">
+          &lt;
+        </button>
+
+        <button *ngFor="let page of [].constructor(totalPages); let i = index" 
+                class="page-num-btn" 
+                [class.active]="currentPage === (i + 1)"
+                (click)="goToPage(i + 1)">
+          {{ i + 1 }}
+        </button>
+
+        <button class="page-nav-btn" [disabled]="currentPage === totalPages" (click)="goToPage(currentPage + 1)">
+          &gt;
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit Details Modal -->
+  <div class="modal-backdrop" *ngIf="showDetailModal" (click)="closeDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()" *ngIf="selectedLog">
+      <div class="modal-header">
+        <h3>Audit Record Details — {{ selectedLog.auditId }}</h3>
+        <button class="close-btn" (click)="closeDetails()">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>Audit ID:</label>
+            <span>{{ selectedLog.auditId }}</span>
+          </div>
+          <div class="detail-item">
+            <label>User Name (ID):</label>
+            <span>{{ selectedLog.userName }} ({{ selectedLog.userId }})</span>
+          </div>
+          <div class="detail-item">
+            <label>Action Performed:</label>
+            <span>{{ selectedLog.action }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Target Module:</label>
+            <span>{{ selectedLog.module }}</span>
+          </div>
+          <div class="detail-item">
+            <label>Execution Status:</label>
+            <span class="status-badge" [class.badge-success]="selectedLog.status === 'SUCCESS'" [class.badge-failed]="selectedLog.status === 'FAILED'">
+              {{ selectedLog.status }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <label>Date & Time:</label>
+            <span>{{ selectedLog.timestamp }}</span>
+          </div>
+        </div>
+
+        <div class="description-box">
+          <label>Audit Event Description:</label>
+          <p>{{ selectedLog.description }}</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeDetails()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

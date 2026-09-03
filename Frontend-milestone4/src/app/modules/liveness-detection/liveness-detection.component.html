@@ -1,0 +1,131 @@
+<div class="liveness-container">
+  <div class="module-header">
+    <h2><i class="icon">📷</i> Liveness Verification</h2>
+    <span class="badge-tag">Milestone 4 — Module 1</span>
+  </div>
+
+  <div class="liveness-layout">
+    <!-- Left Column: Settings & Live Preview -->
+    <div class="card preview-card">
+      <div class="input-group-row">
+        <div class="field-item">
+          <label>Customer ID:</label>
+          <input type="text" [(ngModel)]="customerId" placeholder="CUS1001" class="form-input" />
+        </div>
+        <div class="field-item">
+          <label>Verification ID:</label>
+          <input type="text" [(ngModel)]="verificationId" readonly class="form-input readonly-input" />
+        </div>
+      </div>
+
+      <!-- Camera Preview Box -->
+      <div class="camera-wrapper">
+        <div class="camera-preview" [class.active]="cameraActive" [class.verifying]="verificationStatus === 'VERIFYING'">
+          <video #videoElement autoplay playsinline muted [hidden]="!mediaStream"></video>
+          
+          <!-- Virtual Face Overlay Graphics -->
+          <div class="face-oval-guide" [class.pulse]="verificationStatus === 'VERIFYING'" [class.success]="verificationStatus === 'SUCCESS'" [class.failed]="verificationStatus === 'FAILED'">
+            <div class="face-target">
+              <span class="face-text">[ Face Target ]</span>
+            </div>
+            <div class="scanning-line" *ngIf="verificationStatus === 'VERIFYING'"></div>
+          </div>
+
+          <div class="camera-offline" *ngIf="!cameraActive && !mediaStream">
+            <span class="cam-icon">📹</span>
+            <p>Camera is offline</p>
+            <button class="btn btn-secondary" (click)="startCamera()">Enable Camera Access</button>
+          </div>
+        </div>
+
+        <div class="camera-info" *ngIf="cameraError">
+          <small class="notice">{{ cameraError }}</small>
+        </div>
+      </div>
+
+      <!-- Verification Challenges -->
+      <div class="challenges-section">
+        <h3>Liveness Challenges</h3>
+        <div class="challenge-list">
+          <div *ngFor="let ch of challenges; let i = index" 
+               class="challenge-chip"
+               [class.completed]="ch.completed"
+               [class.active]="ch.active">
+            <span class="chip-status">{{ ch.completed ? '✓' : (ch.active ? '⏳' : i + 1) }}</span>
+            <span class="chip-label">{{ ch.label }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive State & Results -->
+    <div class="card status-card">
+      <h3>Verification Monitor</h3>
+
+      <div class="instruction-box" *ngIf="verificationStatus === 'VERIFYING'">
+        <label>Instruction:</label>
+        <p class="instruction-text">"{{ currentChallenge?.instruction || 'Processing facial analysis...' }}"</p>
+      </div>
+
+      <div class="instruction-box idle" *ngIf="verificationStatus === 'IDLE'">
+        <label>Instruction:</label>
+        <p class="instruction-text">Position face inside oval frame and press <strong>Start Verification</strong>.</p>
+      </div>
+
+      <!-- Status Indicator -->
+      <div class="status-box" [ngClass]="verificationStatus.toLowerCase()">
+        <label>Status:</label>
+        <span class="status-value" *ngIf="verificationStatus === 'IDLE'">Ready</span>
+        <span class="status-value warning" *ngIf="verificationStatus === 'VERIFYING'">Verifying...</span>
+        <span class="status-value success" *ngIf="verificationStatus === 'SUCCESS'">✓ Verification Successful</span>
+        <span class="status-value danger" *ngIf="verificationStatus === 'FAILED'">✗ Verification Failed</span>
+      </div>
+
+      <!-- Score Display -->
+      <div class="score-display-box" *ngIf="verificationStatus !== 'IDLE'">
+        <div class="score-header">
+          <span>Liveness Score:</span>
+          <strong class="score-num" [class.pass]="livenessScore >= 80" [class.fail]="livenessScore < 80">
+            {{ verificationStatus === 'VERIFYING' ? 'Analyzing...' : livenessScore + '%' }}
+          </strong>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" 
+               [style.width.%]="verificationStatus === 'VERIFYING' ? 65 : livenessScore"
+               [class.animated]="verificationStatus === 'VERIFYING'"
+               [class.success-bar]="verificationStatus === 'SUCCESS'"
+               [class.danger-bar]="verificationStatus === 'FAILED'">
+          </div>
+        </div>
+      </div>
+
+      <!-- Failure Reason if any -->
+      <div class="failure-alert" *ngIf="verificationStatus === 'FAILED'">
+        <strong>Failure Reason:</strong>
+        <p>{{ failureReason }}</p>
+      </div>
+
+      <!-- Details Summary -->
+      <div class="verification-meta" *ngIf="verificationTime">
+        <p><strong>Customer ID:</strong> {{ customerId }}</p>
+        <p><strong>Verification ID:</strong> {{ verificationId }}</p>
+        <p><strong>Verification Time:</strong> {{ verificationTime }}</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-buttons">
+        <button class="btn btn-primary" 
+                (click)="startVerification()" 
+                [disabled]="isSimulating"
+                *ngIf="verificationStatus === 'IDLE'">
+          Start Verification
+        </button>
+
+        <ng-container *ngIf="verificationStatus === 'SUCCESS' || verificationStatus === 'FAILED'">
+          <button class="btn btn-secondary" (click)="retryVerification()">Retry</button>
+          <button class="btn btn-success" *ngIf="verificationStatus === 'SUCCESS'">Continue</button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>

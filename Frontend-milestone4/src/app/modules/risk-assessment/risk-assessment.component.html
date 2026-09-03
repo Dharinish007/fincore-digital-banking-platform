@@ -1,0 +1,195 @@
+<div class="risk-container">
+  <div class="module-header">
+    <h2><i class="icon">⚖️</i> Risk Assessment</h2>
+    <span class="badge-tag">Milestone 4 — Module 2</span>
+  </div>
+
+  <div class="risk-layout">
+    <!-- Left Column: Form Controls -->
+    <div class="card form-card">
+      <div class="card-header">
+        <h3>Transaction & Customer Parameters</h3>
+        <button class="btn-link" (click)="generateNewTxnId()">⚡ New Txn ID</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Customer ID:</label>
+          <div class="input-with-search">
+            <input type="text" [(ngModel)]="customerId" placeholder="CUS1001" class="form-input" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Transaction ID:</label>
+          <input type="text" [(ngModel)]="transactionId" placeholder="TXN5001" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Amount (₹):</label>
+          <input type="number" [(ngModel)]="amount" placeholder="50000" class="form-input" />
+        </div>
+
+        <div class="form-group">
+          <label>Transaction Type:</label>
+          <select [(ngModel)]="transactionType" class="form-select">
+            <option *ngFor="let t of transactionTypes" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Account Type:</label>
+          <select [(ngModel)]="accountType" class="form-select">
+            <option *ngFor="let a of accountTypes" [value]="a">{{ a }}</option>
+          </select>
+        </div>
+
+        <div class="form-group toggles-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="isCustomerVerified" />
+            <span>Customer KYC Verified</span>
+          </label>
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="hasPreviousHistory" />
+            <span>Has Previous Transaction History</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary btn-block" (click)="assessRisk()" [disabled]="isEvaluating">
+          <span *ngIf="!isEvaluating">Assess Risk</span>
+          <span *ngIf="isEvaluating">Evaluating Risk Matrix...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column: Risk Output Display -->
+    <div class="card result-card" *ngIf="currentAssessment">
+      <div class="result-header">
+        <h3>Assessment Result</h3>
+        <button class="btn btn-secondary btn-sm" (click)="toggleHistory()">View History ({{ assessmentHistory.length }})</button>
+      </div>
+
+      <!-- Overview Grid -->
+      <div class="summary-list">
+        <div class="summary-item">
+          <span class="lbl">Customer ID:</span>
+          <strong class="val">{{ currentAssessment.customerId }}</strong>
+        </div>
+        <div class="summary-item">
+          <span class="lbl">Transaction ID:</span>
+          <strong class="val">{{ currentAssessment.transactionId }}</strong>
+        </div>
+        <div class="summary-item">
+          <span class="lbl">Amount:</span>
+          <strong class="val amount-highlight">₹{{ currentAssessment.amount | number:'1.0-2' }}</strong>
+        </div>
+        <div class="summary-item">
+          <span class="lbl">Transaction Type:</span>
+          <strong class="val">{{ currentAssessment.transactionType }}</strong>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Score & Level Cards -->
+      <div class="risk-metrics">
+        <div class="metric-box">
+          <span class="metric-label">Risk Score:</span>
+          <span class="metric-value score" 
+                [class.score-low]="currentAssessment.riskLevel === 'LOW'"
+                [class.score-med]="currentAssessment.riskLevel === 'MEDIUM'"
+                [class.score-high]="currentAssessment.riskLevel === 'HIGH'">
+            {{ currentAssessment.riskScore }}
+          </span>
+        </div>
+
+        <div class="metric-box">
+          <span class="metric-label">Risk Level:</span>
+          <span class="risk-badge" 
+                [class.level-low]="currentAssessment.riskLevel === 'LOW'"
+                [class.level-medium]="currentAssessment.riskLevel === 'MEDIUM'"
+                [class.level-high]="currentAssessment.riskLevel === 'HIGH'">
+            {{ currentAssessment.riskLevel }}
+          </span>
+        </div>
+
+        <div class="metric-box">
+          <span class="metric-label">Status:</span>
+          <span class="status-pill"
+                [class.status-appr]="currentAssessment.status === 'APPROVED'"
+                [class.status-rev]="currentAssessment.status === 'UNDER_REVIEW'"
+                [class.status-flag]="currentAssessment.status === 'FLAGGED'">
+            {{ currentAssessment.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- High Risk Warning Alert -->
+      <div class="high-risk-alert" *ngIf="currentAssessment.riskLevel === 'HIGH'">
+        <i class="alert-icon">⚠️</i>
+        <div>
+          <strong>HIGH RISK ALERT DETECTED</strong>
+          <p>Transaction exceeds acceptable risk thresholds and requires manual compliance clearance.</p>
+        </div>
+      </div>
+
+      <!-- Risk Factors -->
+      <div class="risk-factors-section">
+        <h4>Risk Factors:</h4>
+        <ul class="factors-list">
+          <li *ngFor="let factor of currentAssessment.riskFactors" 
+              [class.factor-warn]="factor.includes('⚠️')"
+              [class.factor-pass]="factor.includes('✓')">
+            {{ factor }}
+          </li>
+        </ul>
+      </div>
+
+      <div class="timestamp-footer">
+        <small>Assessed at: {{ currentAssessment.assessedAt }}</small>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assessment History Modal / Section -->
+  <div class="modal-backdrop" *ngIf="showHistoryModal" (click)="toggleHistory()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Assessment History</h3>
+        <button class="close-btn" (click)="toggleHistory()">×</button>
+      </div>
+      <div class="modal-body">
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Customer</th>
+              <th>Txn ID</th>
+              <th>Amount</th>
+              <th>Score</th>
+              <th>Level</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let h of assessmentHistory">
+              <td>{{ h.customerId }}</td>
+              <td>{{ h.transactionId }}</td>
+              <td>₹{{ h.amount | number }}</td>
+              <td><strong>{{ h.riskScore }}</strong></td>
+              <td>
+                <span class="risk-badge-sm" [class.level-low]="h.riskLevel==='LOW'" [class.level-medium]="h.riskLevel==='MEDIUM'" [class.level-high]="h.riskLevel==='HIGH'">
+                  {{ h.riskLevel }}
+                </span>
+              </td>
+              <td>{{ h.status }}</td>
+              <td><small>{{ h.assessedAt }}</small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

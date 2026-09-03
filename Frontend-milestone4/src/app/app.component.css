@@ -1,0 +1,164 @@
+.fincore-app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #0b0f19;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* Header styling */
+.fincore-header {
+  height: 52px;
+  background: linear-gradient(90deg, #0f2b5c, #1e40af);
+  border-bottom: 1px solid #1e3a8a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  z-index: 10;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-brand h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.header-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(255,255,255,0.3);
+}
+
+.header-subtitle {
+  font-size: 0.95rem;
+  color: #93c5fd;
+  font-weight: 500;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: #e0f2fe;
+}
+
+.divider-v {
+  opacity: 0.5;
+}
+
+.logout-link {
+  color: #93c5fd;
+  text-decoration: none;
+}
+
+.logout-link:hover {
+  text-decoration: underline;
+  color: #ffffff;
+}
+
+/* Main Body Layout */
+.fincore-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar styling */
+.fincore-sidebar {
+  width: 240px;
+  background: #0f172a;
+  border-right: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.nav-section-title {
+  padding: 8px 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 1px;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: #94a3b8;
+  font-size: 0.92rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background: #1e293b;
+  color: #f8fafc;
+}
+
+.nav-item.active {
+  background: rgba(2, 132, 199, 0.15);
+  color: #38bdf8;
+  border-left-color: #38bdf8;
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-style: normal;
+  font-size: 1.1rem;
+}
+
+.sidebar-footer {
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: #64748b;
+  border-top: 1px solid #1e293b;
+}
+
+.status-indicator.online {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+/* Content Area */
+.fincore-content {
+  flex: 1;
+  background: #0b0f19;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}

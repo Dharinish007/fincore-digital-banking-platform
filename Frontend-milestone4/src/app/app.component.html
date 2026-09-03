@@ -1,0 +1,61 @@
+<div class="fincore-app">
+  <!-- Top Navigation Header -->
+  <header class="fincore-header">
+    <div class="header-brand">
+      <h1>FinCore Nexus</h1>
+      <span class="header-divider"></span>
+      <span class="header-subtitle">Milestone 4: Security, Risk & Audit</span>
+    </div>
+
+    <div class="header-user">
+      <span class="user-role">{{ userRole }}</span>
+      <span class="divider-v">|</span>
+      <a href="#" class="logout-link">Logout</a>
+    </div>
+  </header>
+
+  <!-- Main Application Body with Sidebar -->
+  <div class="fincore-body">
+    <!-- Left Navigation Sidebar -->
+    <aside class="fincore-sidebar">
+      <nav class="nav-menu">
+        <div class="nav-section-title">SECURITY & RISK</div>
+
+        <a class="nav-item" 
+           [class.active]="activeModule === 'liveness'" 
+           (click)="setActiveModule('liveness')">
+          <i class="nav-icon">📷</i>
+          <span>Liveness Verification</span>
+        </a>
+
+        <a class="nav-item" 
+           [class.active]="activeModule === 'risk'" 
+           (click)="setActiveModule('risk')">
+          <i class="nav-icon">⚖️</i>
+          <span>Risk Assessment</span>
+        </a>
+
+        <a class="nav-item" 
+           [class.active]="activeModule === 'audit'" 
+           (click)="setActiveModule('audit')">
+          <i class="nav-icon">📜</i>
+          <span>Audit Logging</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="status-indicator online"></div>
+        <span>Security Core v4.2 Active</span>
+      </div>
+    </aside>
+
+    <!-- Main Workspace Content Area -->
+    <main class="fincore-content">
+      <div class="content-wrapper">
+        <app-liveness-detection *ngIf="activeModule === 'liveness'"></app-liveness-detection>
+        <app-risk-assessment *ngIf="activeModule === 'risk'"></app-risk-assessment>
+        <app-audit-logging *ngIf="activeModule === 'audit'"></app-audit-logging>
+      </div>
+    </main>
+  </div>
+</div>
