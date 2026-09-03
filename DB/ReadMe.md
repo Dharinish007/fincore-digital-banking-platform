@@ -125,7 +125,7 @@ The M4 database is designed to remain **connected with the existing database arc
 ---
 
 🤖 AI Verification Flow:-
-
+``` text
         Customer
            │
            ▼
@@ -165,16 +165,18 @@ The M4 database is designed to remain **connected with the existing database arc
    Overall KYC Verification
 
 
+```
 
 
-
-📁 SQL Files
+## 📁 SQL Files
+``` text
 M4_SQL/
 │
 ├── 01_create_document_ocr.sql
 ├── 02_create_liveness_detection.sql
 ├── 03_create_face_match.sql
 └── 04_m4_sample_data_and_queries.sql
+```
 ## 📁 M4 PHP Module — Folder Structure
 
 The PHP module acts as the **database/API integration layer** between the AI services and the MySQL database.
