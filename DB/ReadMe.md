@@ -125,6 +125,7 @@ The M4 database is designed to remain **connected with the existing database arc
 ---
 
 🤖 AI Verification Flow:-
+
         Customer
            │
            ▼
@@ -167,7 +168,6 @@ The M4 database is designed to remain **connected with the existing database arc
 
 
 
-   🧪 Sample AI Verification
 📁 SQL Files
 M4_SQL/
 │
@@ -195,6 +195,7 @@ M4_PHP_AI_KYC/
 └── 📄 README.md
 
 
+## 🧪 Sample AI Verification
 
 
 Example successful verification:
