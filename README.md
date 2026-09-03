@@ -96,6 +96,31 @@ Team D developed the Risk, Compliance, and Audit Integrity components of **Miles
 * Integrated the database with the Spring Boot backend.
 
 ---
+## Screenshots
+
+### 1. Login Page
+
+The login page provides secure access to the banking platform for authorized users.
+
+![Login Page](Screenshots_M4/login.png)
+
+### 2. Risk Scoring
+
+The Risk Scoring module evaluates and displays the risk associated with customers or transactions.
+
+![Risk Scoring](Screenshots_M4/risk-scoring.png)
+
+### 3. Compliance Check
+
+The Compliance Check module validates banking information against the required compliance rules and displays the compliance result.
+
+![Compliance Check](Screenshots_M4/compliance-check.png)
+
+### 4. Audit Integrity
+
+The Audit Integrity module verifies audit records and displays their integrity status.
+
+![Audit Integrity](Screenshots_M4/audit-integrity.png)
 
 # Modules Developed
 
