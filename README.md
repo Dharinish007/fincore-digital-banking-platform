@@ -455,8 +455,7 @@ mvnw.cmd spring-boot:run
 | Risk Scoring         | Vaishnavi Mahadik    | Sathiya Priya T  | Vaishnavi Warkar |
 | Compliance Check     | Soumya Ranjan Puthal | Sharvari Shalgar | Vaishnavi Warkar |
 | Audit Integrity      | Thejashree B         | Tharun M         | Vaishnavi Warkar |
-| Testing & Validation | Team D               | Team D           | Vaishnavi Warkar |
-| Overall Integration  | Team D               | Team D           | Vaishnavi Warkar |
+
 
 ---
 
