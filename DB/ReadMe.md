@@ -211,7 +211,10 @@ Component	Result
 🤳 Face Match	SUCCESS
 🤖 Face Match Confidence	92.35%
 🔐 Overall Verification	AI VERIFICATION PASSED
-🚀 Setup
+```
+
+## 🚀 Setup
+``` text 
 1. Start XAMPP
 
 Start:
