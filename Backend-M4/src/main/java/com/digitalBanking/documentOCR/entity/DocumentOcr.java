@@ -45,6 +45,9 @@ public class DocumentOcr {
 
     private LocalDateTime createdAt;
 
+    @Column(length = 1000)
+    private String uploadedFilePath;
+
     public DocumentOcr() {
     }
 
@@ -159,4 +162,12 @@ public class DocumentOcr {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+    public String getUploadedFilePath() {
+    return uploadedFilePath;
+}
+
+    public void setUploadedFilePath(String uploadedFilePath) {
+    this.uploadedFilePath = uploadedFilePath;
+}
 }

@@ -1,10 +1,12 @@
 package com.digitalBanking.documentOCR.controller;
 
-import com.digitalBanking.documentOCR.dto.DocumentOcrRequest;
 import com.digitalBanking.documentOCR.dto.DocumentOcrResponse;
+import com.digitalBanking.documentOCR.enums.DocumentType;
 import com.digitalBanking.documentOCR.service.DocumentOcrService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/document-ocr")
@@ -17,12 +19,13 @@ public class DocumentOcrController {
         this.documentOcrService = documentOcrService;
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentOcrResponse> processDocument(
-            @RequestBody DocumentOcrRequest request) {
+            @RequestParam("document") MultipartFile document,
+            @RequestParam("documentType") DocumentType documentType) {
 
         DocumentOcrResponse response =
-                documentOcrService.processDocument(request);
+                documentOcrService.processDocument(document, documentType);
 
         return ResponseEntity.ok(response);
     }

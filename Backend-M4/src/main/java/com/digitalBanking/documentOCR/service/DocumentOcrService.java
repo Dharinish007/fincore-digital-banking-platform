@@ -1,11 +1,22 @@
 package com.digitalBanking.documentOCR.service;
 
-import com.digitalBanking.documentOCR.dto.DocumentOcrRequest;
+import com.digitalBanking.documentOCR.client.OcrApiClient;
+import com.digitalBanking.documentOCR.client.OcrApiResponse;
 import com.digitalBanking.documentOCR.dto.DocumentOcrResponse;
 import com.digitalBanking.documentOCR.entity.DocumentOcr;
+import com.digitalBanking.documentOCR.enums.DocumentType;
+import com.digitalBanking.documentOCR.enums.VerificationStatus;
+import com.digitalBanking.documentOCR.parser.DocumentFieldParser;
 import com.digitalBanking.documentOCR.repository.DocumentOcrRepository;
-import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -13,78 +24,217 @@ import java.util.UUID;
 public class DocumentOcrService {
 
     private final DocumentOcrRepository documentOcrRepository;
+    private final OcrApiClient ocrApiClient;
+    private final DocumentFieldParser documentFieldParser;
 
-    public DocumentOcrService(DocumentOcrRepository documentOcrRepository) {
+    @Value("${document.upload-dir}")
+    private String uploadDir;
+
+    public DocumentOcrService(
+            DocumentOcrRepository documentOcrRepository,
+            OcrApiClient ocrApiClient,
+            DocumentFieldParser documentFieldParser) {
+
         this.documentOcrRepository = documentOcrRepository;
+        this.ocrApiClient = ocrApiClient;
+        this.documentFieldParser = documentFieldParser;
     }
 
-    // Process and save OCR data
-    public DocumentOcrResponse processDocument(DocumentOcrRequest request) {
+    public DocumentOcrResponse processDocument(
+            MultipartFile document,
+            DocumentType documentType) {
 
-        // Validate request
-        if (request == null) {
-            throw new IllegalArgumentException("OCR request cannot be null");
+        // 1. Validate document
+        if (document == null || document.isEmpty()) {
+            throw new IllegalArgumentException(
+                    "Document file is required"
+            );
         }
 
-        if (request.getDocumentType() == null) {
-            throw new IllegalArgumentException("Document type is required");
+        // 2. Validate document type
+        if (documentType == null) {
+            throw new IllegalArgumentException(
+                    "Document type is required"
+            );
         }
 
-        if (request.getDocumentNumber() == null ||
-                request.getDocumentNumber().isBlank()) {
-            throw new IllegalArgumentException("Document number is required");
+        // 3. Validate file type
+        String contentType = document.getContentType();
+
+        if (contentType == null) {
+            throw new IllegalArgumentException(
+                    "Unable to determine document file type"
+            );
         }
 
-        if (request.getFullName() == null ||
-                request.getFullName().isBlank()) {
-            throw new IllegalArgumentException("Full name is required");
+        if (!contentType.startsWith("image/") &&
+                !contentType.equals("application/octet-stream")) {
+
+            throw new IllegalArgumentException(
+                    "Only image files are supported currently"
+            );
         }
 
-        // Create entity
+        // 4. Save uploaded document
+        String filePath = saveUploadedDocument(document);
+
+        // 5. Send document to Python OCR service
+        OcrApiResponse ocrResult =
+                ocrApiClient.extractText(document);
+
+        // 6. Get extracted raw text
+        String extractedRawText =
+                ocrResult != null &&
+                ocrResult.getExtractedRawText() != null
+                        ? ocrResult.getExtractedRawText()
+                        : "";
+
+        // 7. Get OCR confidence score
+        Double confidenceScore =
+                ocrResult != null &&
+                ocrResult.getConfidenceScore() != null
+                        ? ocrResult.getConfidenceScore()
+                        : 0.0;
+
+        // 8. Create Document OCR entity
         DocumentOcr documentOcr = new DocumentOcr();
 
-        documentOcr.setDocumentType(request.getDocumentType());
-        documentOcr.setFullName(request.getFullName());
-        documentOcr.setDob(request.getDob());
-        documentOcr.setGender(request.getGender());
-        documentOcr.setDocumentNumber(request.getDocumentNumber());
-        documentOcr.setAddress(request.getAddress());
-        documentOcr.setIssueDate(request.getIssueDate());
-        documentOcr.setExpiryDate(request.getExpiryDate());
-        documentOcr.setConfidenceScore(request.getConfidenceScore());
-        documentOcr.setExtractedRawText(request.getExtractedRawText());
-        documentOcr.setVerificationStatus(request.getVerificationStatus());
+        documentOcr.setDocumentType(documentType);
 
-        // Generate unique request ID
-        String requestId = "REQ-" +
+        documentOcr.setExtractedRawText(
+                extractedRawText
+        );
+
+        documentOcr.setConfidenceScore(
+                confidenceScore
+        );
+
+        // 9. Extract individual fields from OCR text
+        documentFieldParser.parseFields(
+                extractedRawText,
+                documentOcr
+        );
+
+        // 10. Determine verification status
+        VerificationStatus verificationStatus;
+
+        if (confidenceScore >= 70.0 &&
+                !extractedRawText.isBlank()) {
+
+            verificationStatus =
+                    VerificationStatus.VERIFIED;
+
+        } else {
+
+            verificationStatus =
+                    VerificationStatus.NEEDS_REVIEW;
+        }
+
+        documentOcr.setVerificationStatus(
+                verificationStatus
+        );
+
+        // 11. Store uploaded file path
+        documentOcr.setUploadedFilePath(
+                filePath
+        );
+
+        // 12. Generate request ID
+        String requestId =
+                "REQ-" +
                 UUID.randomUUID()
                         .toString()
                         .substring(0, 8)
                         .toUpperCase();
 
-        documentOcr.setRequestId(requestId);
-        documentOcr.setCreatedAt(LocalDateTime.now());
+        documentOcr.setRequestId(
+                requestId
+        );
 
-        // Save to database
+        // 13. Set creation timestamp
+        documentOcr.setCreatedAt(
+                LocalDateTime.now()
+        );
+
+        // 14. Save OCR result to database
         DocumentOcr savedDocument =
                 documentOcrRepository.save(documentOcr);
 
-        // Convert saved entity to response
+        // 15. Return response
         return createResponse(
                 savedDocument,
-                "Document OCR data saved successfully"
+                "Document OCR processed successfully"
         );
     }
 
-    // Get OCR record by ID
-    public DocumentOcrResponse getDocumentById(Long id) {
+    /**
+     * Saves the uploaded document to the configured
+     * document upload directory.
+     */
+    private String saveUploadedDocument(
+            MultipartFile document) {
 
-        DocumentOcr document = documentOcrRepository.findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Document OCR record not found with id: " + id
-                        )
-                );
+        try {
+
+            Path uploadPath =
+                    Paths.get(uploadDir);
+
+            Files.createDirectories(
+                    uploadPath
+            );
+
+            String originalFilename =
+                    document.getOriginalFilename();
+
+            String extension = "";
+
+            if (originalFilename != null &&
+                    originalFilename.contains(".")) {
+
+                extension =
+                        originalFilename.substring(
+                                originalFilename.lastIndexOf(".")
+                        );
+            }
+
+            String filename =
+                    UUID.randomUUID() + extension;
+
+            Path destination =
+                    uploadPath.resolve(filename);
+
+            Files.copy(
+                    document.getInputStream(),
+                    destination
+            );
+
+            return destination.toString();
+
+        } catch (IOException e) {
+
+            throw new RuntimeException(
+                    "Failed to save uploaded document",
+                    e
+            );
+        }
+    }
+
+    /**
+     * Retrieves a previously processed OCR record
+     * using its database ID.
+     */
+    public DocumentOcrResponse getDocumentById(
+            Long id) {
+
+        DocumentOcr document =
+                documentOcrRepository
+                        .findById(id)
+                        .orElseThrow(() ->
+                                new RuntimeException(
+                                        "Document OCR record not found with id: "
+                                                + id
+                                )
+                        );
 
         return createResponse(
                 document,
@@ -92,33 +242,77 @@ public class DocumentOcrService {
         );
     }
 
-    // Convert Entity to Response DTO
+    /**
+     * Converts the database entity into the API response.
+     */
     private DocumentOcrResponse createResponse(
             DocumentOcr document,
             String message) {
 
-        DocumentOcrResponse response = new DocumentOcrResponse();
+        DocumentOcrResponse response =
+                new DocumentOcrResponse();
 
         response.setSuccess(true);
-        response.setId(document.getId());
-        response.setRequestId(document.getRequestId());
-        response.setTimestamp(document.getCreatedAt());
 
-        response.setDocumentType(document.getDocumentType());
-        response.setFullName(document.getFullName());
-        response.setDob(document.getDob());
-        response.setGender(document.getGender());
-        response.setDocumentNumber(document.getDocumentNumber());
-        response.setAddress(document.getAddress());
-        response.setIssueDate(document.getIssueDate());
-        response.setExpiryDate(document.getExpiryDate());
-        response.setConfidenceScore(document.getConfidenceScore());
-        response.setExtractedRawText(document.getExtractedRawText());
+        response.setId(
+                document.getId()
+        );
+
+        response.setRequestId(
+                document.getRequestId()
+        );
+
+        response.setTimestamp(
+                document.getCreatedAt()
+        );
+
+        response.setDocumentType(
+                document.getDocumentType()
+        );
+
+        response.setFullName(
+                document.getFullName()
+        );
+
+        response.setDob(
+                document.getDob()
+        );
+
+        response.setGender(
+                document.getGender()
+        );
+
+        response.setDocumentNumber(
+                document.getDocumentNumber()
+        );
+
+        response.setAddress(
+                document.getAddress()
+        );
+
+        response.setIssueDate(
+                document.getIssueDate()
+        );
+
+        response.setExpiryDate(
+                document.getExpiryDate()
+        );
+
+        response.setConfidenceScore(
+                document.getConfidenceScore()
+        );
+
+        response.setExtractedRawText(
+                document.getExtractedRawText()
+        );
+
         response.setVerificationStatus(
                 document.getVerificationStatus()
         );
 
-        response.setMessage(message);
+        response.setMessage(
+                message
+        );
 
         return response;
     }
