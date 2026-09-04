@@ -335,9 +335,9 @@ FACE MATCH FAILED
 
 ---
 
-# 🔌 PHP / API Integration
+# 🔌 Backend / API Integration
 
-The PHP/API layer connects the AI-generated verification results with the MySQL database.
+The Spring Boot backend communicates with the AI microservices through REST APIs and handles validation, processing, and database integration.
 
 ```text
                  🤖 AI SERVICES
