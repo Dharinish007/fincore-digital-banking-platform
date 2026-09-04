@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinCore Nexus - Audit Integrity</title>
+
+    <!-- CSS FILE -->
+    <link rel="stylesheet" href="auditintegrity.css">
+</head>
+
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="header">
+
+        <div class="logo-area">
+            <div class="logo">F</div>
+
+            <div>
+                <h2>FinCore Nexus</h2>
+                <p>Secure Digital Banking</p>
+            </div>
+        </div>
+
+        <div class="page-title">
+            Audit Integrity
+        </div>
+
+        <div class="admin">
+            <div class="admin-circle">A</div>
+            <span>Admin</span>
+        </div>
+
+    </header>
+
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <p class="menu-title">MAIN MENU</p>
+
+        <button class="menu active" id="dashboardBtn">
+            🏠 Dashboard
+        </button>
+
+        <button class="menu" id="auditBtn">
+            ✓ Audit Integrity
+        </button>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboardPage" class="page">
+
+            <div class="title-section">
+                <h1>Dashboard</h1>
+                <p>Secure monitoring of banking audit records.</p>
+            </div>
+
+
+            <div class="dashboard-card">
+
+                <div class="shield">
+                    ✓
+                </div>
+
+                <div class="dashboard-content">
+
+                    <span class="security">
+                        SECURITY MODULE
+                    </span>
+
+                    <h2>Audit Integrity</h2>
+
+                    <p>
+                        Monitor banking activities, verify audit records
+                        and identify suspicious or tampered records.
+                    </p>
+
+
+                    <div class="small-stats">
+
+                        <div>
+                            <strong>1,245</strong>
+                            <span>Total Logs</span>
+                        </div>
+
+                        <div>
+                            <strong class="green">1,180</strong>
+                            <span>Verified</span>
+                        </div>
+
+                        <div>
+                            <strong class="orange">12</strong>
+                            <span>Suspicious</span>
+                        </div>
+
+                        <div>
+                            <strong class="red">3</strong>
+                            <span>Failures</span>
+                        </div>
+
+                    </div>
+
+
+                    <button class="blue-button" id="openAudit">
+                        Open Audit Integrity
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= AUDIT PAGE ================= -->
+
+        <section id="auditPage" class="page hidden">
+
+            <div class="title-section audit-title">
+
+                <div>
+                    <h1>AUDIT INTEGRITY</h1>
+
+                    <p>
+                        Monitor, verify and protect banking audit
+                        records from unauthorized changes.
+                    </p>
+                </div>
+
+                <button class="blue-button" id="verifyButton">
+                    ✓ Verify Integrity
+                </button>
+
+            </div>
+
+
+            <!-- STAT CARDS -->
+
+            <div class="cards">
+
+                <div class="card blue-card">
+
+                    <div class="card-icon">▣</div>
+
+                    <div>
+                        <p>Total Audit Logs</p>
+                        <h2>1,245</h2>
+                        <span>Records</span>
+                    </div>
+
+                </div>
+
+
+                <div class="card green-card">
+
+                    <div class="card-icon">✓</div>
+
+                    <div>
+                        <p>Verified Records</p>
+                        <h2>1,180</h2>
+                        <span>Secure</span>
+                    </div>
+
+                </div>
+
+
+                <div class="card orange-card">
+
+                    <div class="card-icon">!</div>
+
+                    <div>
+                        <p>Suspicious Activities</p>
+                        <h2>12</h2>
+                        <span>Needs Review</span>
+                    </div>
+
+                </div>
+
+
+                <div class="card red-card">
+
+                    <div class="card-icon">×</div>
+
+                    <div>
+                        <p>Integrity Failures</p>
+                        <h2>3</h2>
+                        <span>Detected</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- INTEGRITY SCORE -->
+
+            <div class="score-box">
+
+                <div class="score-left">
+
+                    <h2>Audit Integrity Score</h2>
+
+                    <p>
+                        Overall health of banking audit records
+                    </p>
+
+                    <div class="progress">
+                        <div class="progress-bar"></div>
+                    </div>
+
+                </div>
+
+
+                <div class="score-number">
+                    <h1>98.7%</h1>
+                    <p>Integrity Level</p>
+                </div>
+
+
+                <div class="score-details">
+
+                    <div>
+                        <strong class="green">1,180</strong>
+                        <span>Verified</span>
+                    </div>
+
+                    <div>
+                        <strong class="orange">12</strong>
+                        <span>Suspicious</span>
+                    </div>
+
+                    <div>
+                        <strong class="red">3</strong>
+                        <span>Failed</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SEARCH / FILTER -->
+
+            <div class="filter-box">
+
+                <input
+                    type="text"
+                    id="searchBox"
+                    placeholder="Search Audit ID / Transaction ID / User ID"
+                >
+
+
+                <select id="statusFilter">
+
+                    <option value="All">All Status</option>
+                    <option value="Verified">Verified</option>
+                    <option value="Suspicious">Suspicious</option>
+                    <option value="Tampered">Tampered</option>
+                    <option value="Failed">Failed</option>
+
+                </select>
+
+
+                <select id="activityFilter">
+
+                    <option value="All">All Activities</option>
+                    <option value="Login">Login</option>
+                    <option value="Money Transfer">Money Transfer</option>
+                    <option value="Withdrawal">Withdrawal</option>
+                    <option value="Profile Update">Profile Update</option>
+                    <option value="Password Change">Password Change</option>
+
+                </select>
+
+
+                <button class="export-button" id="exportButton">
+                    ↓ Export Report
+                </button>
+
+            </div>
+
+
+
+            <!-- AUDIT TABLE -->
+
+            <div class="table-box">
+
+                <div class="table-header">
+
+                    <div>
+                        <h2>Audit Logs</h2>
+                        <p>Recent banking activities and verification status</p>
+                    </div>
+
+                    <span class="live">
+                        ● LIVE MONITORING
+                    </span>
+
+                </div>
+
+
+                <div class="table-container">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>Audit ID</th>
+                                <th>Transaction ID</th>
+                                <th>User ID</th>
+                                <th>Activity</th>
+                                <th>Amount</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="auditTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BOTTOM SECTION -->
+
+            <div class="bottom">
+
+                <!-- ALERTS -->
+
+                <div class="bottom-box">
+
+                    <div class="table-header">
+
+                        <div>
+                            <h2>Integrity Alerts</h2>
+                            <p>Activities requiring attention</p>
+                        </div>
+
+                    </div>
+
+                    <div id="alerts"></div>
+
+                </div>
+
+
+
+                <!-- RECENT ACTIVITY -->
+
+                <div class="bottom-box">
+
+                    <div class="table-header">
+
+                        <div>
+                            <h2>Recent Audit Activity</h2>
+                            <p>Latest system activities</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="activity">
+
+                        <div class="activity-item">
+                            <span class="dot green-dot"></span>
+
+                            <p>
+                                <b>10:30 AM</b><br>
+                                T102 performed Money Transfer<br>
+                                <span class="green">✓ Verified</span>
+                            </p>
+                        </div>
+
+
+                        <div class="activity-item">
+                            <span class="dot green-dot"></span>
+
+                            <p>
+                                <b>10:45 AM</b><br>
+                                T105 logged into system<br>
+                                <span class="green">✓ Verified</span>
+                            </p>
+                        </div>
+
+
+                        <div class="activity-item">
+                            <span class="dot orange-dot"></span>
+
+                            <p>
+                                <b>11:05 AM</b><br>
+                                T102 modified profile<br>
+                                <span class="orange">! Suspicious</span>
+                            </p>
+                        </div>
+
+
+                        <div class="activity-item">
+                            <span class="dot red-dot"></span>
+
+                            <p>
+                                <b>11:45 AM</b><br>
+                                T108 transaction integrity failed<br>
+                                <span class="red">× Tampered</span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- DETAILS POPUP -->
+
+    <div class="popup-bg hidden" id="detailsPopup">
+
+        <div class="popup">
+
+            <div class="popup-header">
+
+                <h2>Audit Details</h2>
+
+                <button id="closePopup">×</button>
+
+            </div>
+
+
+            <div id="detailsContent" class="details">
+
+            </div>
+
+
+            <div class="popup-footer">
+
+                <button class="export-button" id="closeDetails">
+                    Close
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- VERIFY POPUP -->
+
+    <div class="popup-bg hidden" id="verifyPopup">
+
+        <div class="verify-box">
+
+            <div class="loading"></div>
+
+            <h2>Verifying Audit Records...</h2>
+
+            <p>
+                Checking audit records and integrity.
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- JAVASCRIPT FILE -->
+
+    <script src="auditintegrity.js"></script>
+
+</body>
+</html>
