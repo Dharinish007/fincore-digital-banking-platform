@@ -1,0 +1,370 @@
+<div class="send-money-page">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Clearing</div>
+      <h1 class="page-title">Instant Fund Transfer & Settlement Wizard</h1>
+      <p class="page-subtitle">Saga-orchestrated funds movement via UPI 2.0, IMPS & NEFT with real-time fraud scoring.</p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/payments" class="btn btn-secondary">
+        Payment Dashboard
+      </a>
+    </div>
+  </div>
+
+  <!-- Wizard Steps Indicator -->
+  <div class="wizard-stepper fc-card mb-4">
+    <div class="step-indicator" [class.active]="currentStep === 1" [class.done]="currentStep > 1">
+      <div class="num">1</div>
+      <span class="label">Source Account</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep > 1"></div>
+
+    <div class="step-indicator" [class.active]="currentStep === 2" [class.done]="currentStep > 2">
+      <div class="num">2</div>
+      <span class="label">Beneficiary</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep > 2"></div>
+
+    <div class="step-indicator" [class.active]="currentStep === 3" [class.done]="currentStep > 3">
+      <div class="num">3</div>
+      <span class="label">Amount</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep > 3"></div>
+
+    <div class="step-indicator" [class.active]="currentStep === 4" [class.done]="currentStep > 4">
+      <div class="num">4</div>
+      <span class="label">Payment Mode</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep > 4"></div>
+
+    <div class="step-indicator" [class.active]="currentStep === 5" [class.done]="currentStep > 5">
+      <div class="num">5</div>
+      <span class="label">Review</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep > 5"></div>
+
+    <div class="step-indicator" [class.active]="currentStep === 6" [class.done]="currentStep > 6">
+      <div class="num">6</div>
+      <span class="label">Confirm 2FA</span>
+    </div>
+    <div class="step-line" [class.done]="currentStep > 6"></div>
+
+    <div class="step-indicator" [class.active]="currentStep === 7" [class.done]="currentStep === 7">
+      <div class="num">7</div>
+      <span class="label">Settled</span>
+    </div>
+  </div>
+
+  <!-- Step Content Container -->
+  <div class="fc-card wizard-body-card">
+    <!-- STEP 1: Select Source Account -->
+    <div *ngIf="currentStep === 1" class="wizard-step-pane">
+      <div class="pane-header">
+        <h2>Step 1: Select Debit Account</h2>
+        <p class="text-sm text-muted">Choose the active ledger account from which funds will be debited.</p>
+      </div>
+
+      <div class="source-accounts-grid mt-4">
+        <div
+          *ngFor="let acc of accounts"
+          class="account-card-radio"
+          [class.selected]="selectedSourceAccount?.accountId === acc.accountId"
+          (click)="selectedSourceAccount = acc">
+          <div class="radio-circle"></div>
+          <div class="acc-details">
+            <div class="flex justify-between items-center">
+              <span class="acc-type font-semibold">{{ acc.accountType }} Account</span>
+              <span class="badge badge-success">{{ acc.status }}</span>
+            </div>
+            <div class="font-mono text-sm text-muted mt-1">{{ acc.accountNumber }}</div>
+            <div class="font-semibold text-lg mt-2 tabular-nums">₹{{ acc.availableBalance | number:'1.2-2' }}</div>
+            <div class="text-xs text-muted mt-1">{{ acc.branchName }} ({{ acc.ifsc }})</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-footer mt-6">
+        <div></div>
+        <button class="btn btn-primary" (click)="goToStep(2)">
+          Proceed to Beneficiary →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Select Beneficiary -->
+    <div *ngIf="currentStep === 2" class="wizard-step-pane">
+      <div class="pane-header">
+        <h2>Step 2: Select Verified Beneficiary</h2>
+        <p class="text-sm text-muted">Pick a registered payee or transfer to another FinCore/Interbank account.</p>
+      </div>
+
+      <div class="beneficiary-grid mt-4">
+        <div
+          *ngFor="let ben of beneficiaries"
+          class="beneficiary-card"
+          [class.selected]="selectedBeneficiary?.beneficiaryId === ben.beneficiaryId"
+          (click)="selectedBeneficiary = ben">
+          <div class="flex items-center gap-3">
+            <div class="ben-avatar">{{ ben.beneficiaryName.charAt(0) }}</div>
+            <div>
+              <div class="font-semibold">{{ ben.beneficiaryName }}</div>
+              <div class="text-xs text-muted">{{ ben.bankName }}</div>
+            </div>
+          </div>
+          <div class="font-mono text-xs text-muted mt-2">Acct: {{ ben.accountNumber }}</div>
+          <div class="flex justify-between items-center mt-2">
+            <span class="font-mono text-xs">{{ ben.ifsc }}</span>
+            <span class="badge badge-success">Verified</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-footer mt-6">
+        <button class="btn btn-secondary" (click)="goToStep(1)">← Back to Account</button>
+        <button class="btn btn-primary" (click)="goToStep(3)">
+          Enter Amount & Purpose →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Enter Amount -->
+    <div *ngIf="currentStep === 3" class="wizard-step-pane">
+      <div class="pane-header">
+        <h2>Step 3: Transfer Amount & Purpose</h2>
+        <p class="text-sm text-muted">Specify value in Indian Rupees (INR). Daily transfer limit: ₹10,00,000.</p>
+      </div>
+
+      <div class="amount-entry-box mt-4">
+        <label class="form-label font-semibold">Amount to Transfer (INR)</label>
+        <div class="amount-large-input">
+          <span class="currency-symbol">₹</span>
+          <input
+            type="number"
+            class="input-clean font-mono tabular-nums"
+            [(ngModel)]="transferAmount"
+            min="1"
+            max="1000000"
+          />
+        </div>
+
+        <div class="quick-presets mt-3">
+          <span class="preset-label">Quick Select:</span>
+          <button
+            *ngFor="let p of presets"
+            class="preset-chip"
+            [class.active]="transferAmount === p"
+            (click)="setPreset(p)">
+            ₹{{ p | number }}
+          </button>
+        </div>
+
+        <div class="form-group mt-6">
+          <label>Transfer Purpose / Invoice Remarks</label>
+          <input type="text" class="form-control" [(ngModel)]="remarks" placeholder="e.g. Consulting fees invoice #402" />
+        </div>
+      </div>
+
+      <div class="step-footer mt-6">
+        <button class="btn btn-secondary" (click)="goToStep(2)">← Back</button>
+        <button class="btn btn-primary" (click)="goToStep(4)">
+          Select Payment Rail →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Choose Payment Mode -->
+    <div *ngIf="currentStep === 4" class="wizard-step-pane">
+      <div class="pane-header">
+        <h2>Step 4: Select Payment Channel</h2>
+        <p class="text-sm text-muted">Compare settlement speed, transaction limits, and clearing network.</p>
+      </div>
+
+      <div class="rails-grid mt-4">
+        <div
+          class="rail-card"
+          [class.selected]="paymentMode === 'IMPS'"
+          (click)="paymentMode = 'IMPS'">
+          <div class="rail-badge">Recommended</div>
+          <div class="rail-title">IMPS (Immediate Payment Service)</div>
+          <div class="rail-meta">Instant 24x7x365 Settlement • Limit: ₹5,00,000 • Fee: ₹0.00</div>
+          <div class="rail-desc">Direct account-to-account real-time gross clearing via NPCI network.</div>
+        </div>
+
+        <div
+          class="rail-card"
+          [class.selected]="paymentMode === 'UPI'"
+          (click)="paymentMode = 'UPI'">
+          <div class="rail-title">UPI (Unified Payments Interface)</div>
+          <div class="rail-meta">Real-time VPA / Account • Limit: ₹2,00,000 • Fee: ₹0.00</div>
+          <div class="rail-desc">Zero latency instant mobile clearing with two-step validation.</div>
+        </div>
+
+        <div
+          class="rail-card"
+          [class.selected]="paymentMode === 'NEFT'"
+          (click)="paymentMode = 'NEFT'">
+          <div class="rail-title">NEFT (National Electronic Funds Transfer)</div>
+          <div class="rail-meta">Half-Hourly Batches • Limit: Unlimited • Fee: ₹0.00</div>
+          <div class="rail-desc">High-value commercial payments processed through RBI settlement windows.</div>
+        </div>
+      </div>
+
+      <div class="step-footer mt-6">
+        <button class="btn btn-secondary" (click)="goToStep(3)">← Back</button>
+        <button class="btn btn-primary" (click)="goToStep(5)">
+          Review Transfer Details →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 5: Review -->
+    <div *ngIf="currentStep === 5" class="wizard-step-pane">
+      <div class="pane-header">
+        <h2>Step 5: Review & Audit Pre-Check</h2>
+        <p class="text-sm text-muted">Verify all transaction parameters before final cryptographic confirmation.</p>
+      </div>
+
+      <div class="review-summary-card mt-4">
+        <div class="summary-hero">
+          <span class="sub">Total Transfer Amount</span>
+          <div class="val tabular-nums">₹{{ transferAmount | number:'1.2-2' }}</div>
+          <span class="sub">Via {{ paymentMode }} Clearing Rail (Zero Charges)</span>
+        </div>
+
+        <div class="review-details-table mt-4">
+          <div class="review-row">
+            <span class="lbl">Source Account:</span>
+            <span class="val font-mono font-semibold">{{ selectedSourceAccount?.accountNumber }} ({{ selectedSourceAccount?.accountType }})</span>
+          </div>
+          <div class="review-row">
+            <span class="lbl">Beneficiary:</span>
+            <span class="val font-semibold">{{ selectedBeneficiary?.beneficiaryName }}</span>
+          </div>
+          <div class="review-row">
+            <span class="lbl">Beneficiary Account:</span>
+            <span class="val font-mono">{{ selectedBeneficiary?.accountNumber }}</span>
+          </div>
+          <div class="review-row">
+            <span class="lbl">Bank & IFSC:</span>
+            <span class="val font-mono">{{ selectedBeneficiary?.bankName }} ({{ selectedBeneficiary?.ifsc }})</span>
+          </div>
+          <div class="review-row">
+            <span class="lbl">Remarks:</span>
+            <span class="val">{{ remarks }}</span>
+          </div>
+          <div class="review-row">
+            <span class="lbl">Real-time Fraud Pre-Score:</span>
+            <span class="val text-emerald-600 font-semibold">12 / 100 (Clean / Low Risk)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-footer mt-6">
+        <button class="btn btn-secondary" (click)="goToStep(4)">← Edit Details</button>
+        <button class="btn btn-primary" (click)="goToStep(6)">
+          Authorize & Authenticate →
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 6: Confirm with simulated PIN / 2FA -->
+    <div *ngIf="currentStep === 6" class="wizard-step-pane text-center">
+      <div class="pane-header">
+        <h2>Step 6: Confirm Banking Authorization</h2>
+        <p class="text-sm text-muted">Enter FinCore 4-digit Security PIN / 2FA OTP to sign the transaction.</p>
+      </div>
+
+      <div class="pin-entry-container mt-6">
+        <div class="pin-shield-icon">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+
+        <div class="pin-input-box mt-4">
+          <input
+            type="password"
+            maxlength="4"
+            [(ngModel)]="mpin"
+            class="pin-input font-mono"
+            placeholder="••••"
+          />
+        </div>
+
+        <p class="text-xs text-muted mt-3">Simulated FinCore 2FA Token: <code>4820</code> (Pre-filled for testing)</p>
+      </div>
+
+      <div class="step-footer mt-8 justify-center">
+        <button class="btn btn-secondary" [disabled]="isProcessing" (click)="goToStep(5)">← Cancel</button>
+        <button class="btn btn-success btn-lg" [disabled]="isProcessing || mpin.length < 4" (click)="executeTransfer()">
+          <span *ngIf="!isProcessing">Commit & Execute Transfer</span>
+          <span *ngIf="isProcessing">Executing Saga Transaction...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 7: Success / Receipt Screen -->
+    <div *ngIf="currentStep === 7 && completedPayment" class="wizard-step-pane">
+      <div class="success-banner text-center">
+        <div class="success-icon">
+          <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+
+        <h2 class="text-2xl font-bold mt-3">Funds Transfer Completed Successfully!</h2>
+        <p class="text-sm text-muted">The transaction has been committed atomically to the general ledger and broadcast to Kafka.</p>
+      </div>
+
+      <div class="receipt-card mt-6">
+        <div class="receipt-header">
+          <div class="receipt-amount tabular-nums">₹{{ completedPayment.amount | number:'1.2-2' }}</div>
+          <span class="badge badge-success">SETTLED</span>
+        </div>
+
+        <div class="receipt-body">
+          <div class="receipt-row">
+            <span class="lbl">Transaction Reference:</span>
+            <span class="val font-mono font-semibold">{{ completedPayment.transactionReference }}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="lbl">Payment ID:</span>
+            <span class="val font-mono">{{ completedPayment.paymentId }}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="lbl">Beneficiary:</span>
+            <span class="val font-semibold">{{ completedPayment.beneficiaryName }}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="lbl">Beneficiary Account:</span>
+            <span class="val font-mono">{{ completedPayment.beneficiaryAccount }}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="lbl">Debit Account:</span>
+            <span class="val font-mono">{{ completedPayment.sourceAccount }}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="lbl">Payment Rail:</span>
+            <span class="val font-semibold">{{ completedPayment.paymentType }}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="lbl">Timestamp:</span>
+            <span class="val font-mono">{{ completedPayment.completedAt }}</span>
+          </div>
+          <div class="receipt-row">
+            <span class="lbl">Saga Event Layer:</span>
+            <span class="val text-emerald-600 font-mono text-xs">COMMITTED_ACID_PG_AND_REDIS</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-footer mt-6 justify-center gap-4">
+        <button class="btn btn-secondary" (click)="resetWizard()">Initiate Another Transfer</button>
+        <a routerLink="/transactions" class="btn btn-primary">View in Master Ledger</a>
+      </div>
+    </div>
+  </div>
+</div>

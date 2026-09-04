@@ -1,0 +1,366 @@
+<div class="kyc-page">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Regulatory Compliance</div>
+      <h1 class="page-title">Digital KYC & Biometric Identity Verification</h1>
+      <p class="page-subtitle">UIDAI e-KYC, NSDL PAN OCR, 3D passive liveness & AI facial vector matching.</p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/risk-assessment" class="btn btn-secondary">
+        Risk Assessment
+      </a>
+      <a routerLink="/customers" class="btn btn-secondary">
+        Customer Directory
+      </a>
+    </div>
+  </div>
+
+  <!-- Interactive KYC Workflow Stepper Container -->
+  <div class="fc-card kyc-wizard-card">
+    <div class="fc-card-header">
+      <div class="fc-card-title">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <circle cx="10" cy="13" r="2"></circle>
+        </svg>
+        Multi-Stage Biometric Verification Pipeline
+      </div>
+
+      <!-- Steps Navigator -->
+      <div class="kyc-step-pills">
+        <button class="step-pill" [class.active]="activeStep === 1" (click)="setStep(1)">1. Customer</button>
+        <button class="step-pill" [class.active]="activeStep === 2" (click)="setStep(2)">2. Document OCR</button>
+        <button class="step-pill" [class.active]="activeStep === 3" (click)="setStep(3)">3. Face Match</button>
+        <button class="step-pill" [class.active]="activeStep === 4" (click)="setStep(4)">4. Liveness</button>
+        <button class="step-pill" [class.active]="activeStep === 5" (click)="setStep(5)">5. Compliance Review</button>
+      </div>
+    </div>
+
+    <div class="fc-card-body">
+      <!-- STEP 1: Customer Profile -->
+      <div *ngIf="activeStep === 1" class="kyc-step-body">
+        <div class="step-desc-bar mb-4">
+          Select target applicant for regulatory customer due diligence (CDD).
+        </div>
+
+        <div class="applicant-profile-card">
+          <div class="flex items-center gap-4">
+            <div class="avatar-lg">RS</div>
+            <div>
+              <h3 class="text-lg font-bold">Rahul Sharma (CUS100234)</h3>
+              <p class="text-sm text-muted">PAN: <strong>ABCPS1234F</strong> • Aadhaar Ref: <strong>XXXX-XXXX-8921</strong></p>
+              <div class="flex gap-2 mt-2">
+                <span class="badge badge-warning">Verification in Progress</span>
+                <span class="badge badge-info">Salaried Professional</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button class="btn btn-primary" (click)="setStep(2)">Proceed to Document OCR →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Document OCR Extraction -->
+      <div *ngIf="activeStep === 2" class="kyc-step-body">
+        <div class="step-desc-bar mb-4">
+          Government Identity Document Inspection & OCR Parsing.
+        </div>
+
+        <div class="grid grid-cols-2 gap-6">
+          <!-- Document Card Preview -->
+          <div class="document-scan-box">
+            <div class="doc-header">
+              <span class="font-semibold text-xs text-blue-600">INCOME TAX DEPARTMENT • GOVT OF INDIA</span>
+              <span class="font-mono text-xs">PERMANENT ACCOUNT CARD</span>
+            </div>
+            <div class="doc-body flex items-center gap-4 mt-4">
+              <div class="mock-id-photo">
+                <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#94A3B8" stroke-width="1.5">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="doc-meta">
+                <div class="font-bold text-base font-mono">ABCPS1234F</div>
+                <div class="text-sm font-semibold mt-1">RAHUL SHARMA</div>
+                <div class="text-xs text-muted">DOB: 14/05/1988</div>
+              </div>
+            </div>
+            <div class="doc-footer mt-4 flex justify-between items-center text-xs text-muted">
+              <span>Security Hologram: VERIFIED</span>
+              <span class="badge badge-success">TAMPER FREE</span>
+            </div>
+          </div>
+
+          <!-- Extracted OCR Fields -->
+          <div class="ocr-results-box">
+            <div class="flex justify-between items-center mb-3">
+              <span class="font-bold text-sm text-slate-900">Extracted OCR Metadata</span>
+              <button class="btn btn-secondary btn-sm" (click)="runOcrSimulation()" [disabled]="isOcrProcessing">
+                {{ isOcrProcessing ? 'Extracting Text...' : 'Re-scan OCR' }}
+              </button>
+            </div>
+
+            <div class="ocr-field-list text-sm">
+              <div class="ocr-row">
+                <span class="lbl">Document Type:</span>
+                <span class="val font-semibold">PAN Card (National Tax ID)</span>
+              </div>
+              <div class="ocr-row">
+                <span class="lbl">Extracted Name:</span>
+                <span class="val font-mono font-semibold">{{ extractedData.name }}</span>
+              </div>
+              <div class="ocr-row">
+                <span class="lbl">Date of Birth:</span>
+                <span class="val font-mono">{{ extractedData.dob }}</span>
+              </div>
+              <div class="ocr-row">
+                <span class="lbl">Card Number:</span>
+                <span class="val font-mono font-semibold text-blue-600">{{ extractedData.docNumber }}</span>
+              </div>
+              <div class="ocr-row">
+                <span class="lbl">AI Confidence Score:</span>
+                <span class="val font-semibold text-emerald-600">99.4% (Ultra High Precision)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" (click)="setStep(1)">← Back</button>
+          <button class="btn btn-primary" (click)="setStep(3)">Proceed to Face Match →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Face Match UI (Two containers side by side + 96.8% score) -->
+      <div *ngIf="activeStep === 3" class="kyc-step-body">
+        <div class="step-desc-bar mb-4">
+          1:1 Biometric Facial Vector Matching against Government Document Photo.
+        </div>
+
+        <div class="face-match-container">
+          <div class="photos-comparison-grid">
+            <!-- Left: ID Document Photo -->
+            <div class="photo-card">
+              <div class="photo-card-title">ID Document Photo (PAN)</div>
+              <div class="photo-frame doc-photo">
+                <div class="face-silhouette">
+                  <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="#60A5FA" stroke-width="1.2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div class="mesh-overlay"></div>
+              </div>
+              <span class="photo-sub">Extracted: NSDL Repository</span>
+            </div>
+
+            <!-- VS Badge -->
+            <div class="match-vs-circle">
+              <span>VS</span>
+            </div>
+
+            <!-- Right: Live Customer Photo -->
+            <div class="photo-card">
+              <div class="photo-card-title">Live Biometric Capture</div>
+              <div class="photo-frame live-photo">
+                <div class="face-silhouette">
+                  <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="#10B981" stroke-width="1.2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <div class="live-active-tag">LIVE FEED</div>
+              </div>
+              <span class="photo-sub">Captured: 04-Sep-2026 10:45 AM</span>
+            </div>
+          </div>
+
+          <!-- Face Match Score Section -->
+          <div class="match-score-card mt-6">
+            <div class="score-number-hero tabular-nums">
+              {{ faceMatchScore }}%
+            </div>
+            <div class="match-verdict text-emerald-600 font-bold">
+              ✓ Biometric Match Successful (Threshold: ≥ 90.0%)
+            </div>
+            <p class="text-xs text-muted mt-1">Facial geometry, eye distance, nodal points and jawline alignment verified.</p>
+
+            <div class="match-threshold-bar mt-3">
+              <div class="threshold-segment fail">Below 75%: Reject</div>
+              <div class="threshold-segment manual">75–89%: Manual Review</div>
+              <div class="threshold-segment success active">90–100%: Auto-Verified</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" (click)="setStep(2)">← Back</button>
+          <button class="btn btn-primary" (click)="setStep(4)">Proceed to Liveness Check →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Liveness Detection -->
+      <div *ngIf="activeStep === 4" class="kyc-step-body">
+        <div class="step-desc-bar mb-4">
+          Passive 3D Liveness Detection & Anti-Spoofing Camera Analysis.
+        </div>
+
+        <div class="liveness-container">
+          <div class="camera-viewport-mock">
+            <!-- Simulated Face Detection Overlay -->
+            <div class="face-oval-guide">
+              <div class="tracking-corners top-left"></div>
+              <div class="tracking-corners top-right"></div>
+              <div class="tracking-corners bottom-left"></div>
+              <div class="tracking-corners bottom-right"></div>
+            </div>
+
+            <div class="camera-status-strip">
+              <span class="rec-dot"></span>
+              <span>HD Biometric Stream • 1080p &#64; 60fps</span>
+            </div>
+          </div>
+
+          <!-- Liveness Indicators Grid -->
+          <div class="liveness-metrics-grid mt-4">
+            <div class="liveness-box">
+              <span class="lbl">Blink Detection</span>
+              <span class="val text-emerald-600 font-bold">✓ Natural Blink (14 blinks/min)</span>
+            </div>
+            <div class="liveness-box">
+              <span class="lbl">Head Movement</span>
+              <span class="val text-emerald-600 font-bold">✓ 3D Pitch & Yaw Validated</span>
+            </div>
+            <div class="liveness-box">
+              <span class="lbl">Screen Spoof / Print Check</span>
+              <span class="val text-emerald-600 font-bold">✓ Zero Texture Moiré Detected</span>
+            </div>
+            <div class="liveness-box">
+              <span class="lbl">Composite Liveness Score</span>
+              <span class="val text-emerald-600 font-extrabold text-lg tabular-nums">97.2% (Genuine Live Human)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between mt-6">
+          <button class="btn btn-secondary" (click)="setStep(3)">← Back</button>
+          <button class="btn btn-primary" (click)="setStep(5)">Review & Authorize →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Risk Assessment & Compliance Review -->
+      <div *ngIf="activeStep === 5" class="kyc-step-body">
+        <div class="step-desc-bar mb-4">
+          Final Compliance Review & Multi-Tier AML Signoff.
+        </div>
+
+        <div class="compliance-review-grid">
+          <div class="review-card">
+            <div class="review-title">Verification Synthesis Summary</div>
+            <div class="review-list mt-3">
+              <div class="row">
+                <span>NSDL PAN Database Lookup:</span>
+                <span class="badge badge-success">VALID RECORD</span>
+              </div>
+              <div class="row">
+                <span>OCR Character Match Accuracy:</span>
+                <span class="font-mono font-bold text-emerald-600">99.4%</span>
+              </div>
+              <div class="row">
+                <span>Face Match Alignment Score:</span>
+                <span class="font-mono font-bold text-emerald-600">96.8% (Approved)</span>
+              </div>
+              <div class="row">
+                <span>Biometric Liveness Confidence:</span>
+                <span class="font-mono font-bold text-emerald-600">97.2% (Passed)</span>
+              </div>
+              <div class="row">
+                <span>Composite Risk Category:</span>
+                <span class="badge badge-success">Low Risk (18 / 100)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="verdict-actions-card">
+            <div class="verdict-title">Officer Decision</div>
+            <p class="text-xs text-muted mb-4">Approved records are timestamped to the immutable audit ledger with SHA-256 integrity hash.</p>
+
+            <div class="flex flex-col gap-3">
+              <button class="btn btn-success btn-lg" (click)="approveVerification()">
+                ✓ Approve & Issue KYC Certificate
+              </button>
+              <button class="btn btn-danger" (click)="rejectVerification()">
+                ✕ Reject Application (Discrepancy)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master KYC Records Table -->
+  <div class="fc-card mt-6">
+    <div class="fc-card-header">
+      <div class="fc-card-title">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        Master KYC Compliance Records
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>KYC ID</th>
+            <th>Customer Name</th>
+            <th>Document Type & Number</th>
+            <th>OCR Score</th>
+            <th>Face Match</th>
+            <th>Liveness</th>
+            <th>Risk Score</th>
+            <th>Status</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let k of kycRecords">
+            <td class="font-mono text-xs font-semibold text-blue-600">{{ k.kycId }}</td>
+            <td class="font-semibold">{{ k.customerName }}</td>
+            <td>
+              <div class="flex flex-col">
+                <span class="font-semibold">{{ k.documentType }}</span>
+                <span class="font-mono text-xs text-muted">{{ k.documentNumber }}</span>
+              </div>
+            </td>
+            <td class="tabular-nums font-mono font-semibold">{{ k.ocrScore }}%</td>
+            <td class="tabular-nums font-mono font-semibold" [class.text-emerald-600]="k.faceMatchScore >= 90">
+              {{ k.faceMatchScore }}%
+            </td>
+            <td class="tabular-nums font-mono font-semibold">{{ k.livenessScore }}%</td>
+            <td class="font-semibold tabular-nums" [class.text-rose-600]="k.riskScore >= 70">
+              {{ k.riskScore }}/100
+            </td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="k.verificationStatus === 'Verified'"
+                [class.badge-warning]="k.verificationStatus === 'Pending' || k.verificationStatus === 'Review Required'"
+                [class.badge-danger]="k.verificationStatus === 'Rejected'">
+                {{ k.verificationStatus }}
+              </span>
+            </td>
+            <td class="text-xs text-muted max-w-xs">{{ k.remarks }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,162 @@
+<header class="fc-navbar">
+  <!-- Left Side: Toggle button & Logo/App Name -->
+  <div class="navbar-left">
+    <button class="menu-toggle-btn" (click)="onToggleSidebar()" title="Toggle Sidebar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+
+    <div class="brand-container">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 2L2 7h20L12 2z"></path>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-title">FinCore</span>
+        <span class="brand-tag">DIGITAL BANKING</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Center: Global Quick Search Bar -->
+  <div class="navbar-search">
+    <div class="search-box">
+      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+      <input
+        type="text"
+        placeholder="Search customers, accounts (IFSC, Acct #), transactions, loans..."
+        [(ngModel)]="searchQuery"
+      />
+      <span class="search-shortcut">⌘K</span>
+    </div>
+  </div>
+
+  <!-- Right Side: Environment Status, Notifications, Role Switcher & User Profile -->
+  <div class="navbar-right">
+    <!-- Environment Pill -->
+    <div class="env-pill" title="Current Connected Backend Cluster">
+      <span class="pulsing-dot"></span>
+      <span class="env-label">PROD</span>
+      <span class="env-region">v2.4.0 • LIVE</span>
+    </div>
+
+    <!-- Microservices Health Mini-Indicator -->
+    <a routerLink="/architecture/microservices" class="health-pill" title="Microservices Cluster Status: 8/8 Healthy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+      </svg>
+      <span>99.98% SLA</span>
+    </a>
+
+    <!-- Notifications Icon with Dropdown -->
+    <div class="dropdown-wrapper">
+      <button class="nav-icon-btn" (click)="toggleNotifications()" title="Notifications Center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+        <span class="notification-badge">4</span>
+      </button>
+
+      <!-- Dropdown Menu -->
+      <div class="dropdown-menu notif-dropdown" *ngIf="showNotificationsDropdown">
+        <div class="dropdown-header">
+          <div>
+            <span class="title">Notifications</span>
+            <span class="count">4 unread</span>
+          </div>
+          <a routerLink="/notifications" (click)="showNotificationsDropdown = false" class="view-all">View All</a>
+        </div>
+        <div class="notif-list" *ngIf="notifications$ | async as notifs">
+          <div class="notif-item" *ngFor="let n of notifs.slice(0, 4)">
+            <div class="notif-bullet" [ngClass]="n.notificationType.toLowerCase()"></div>
+            <div class="notif-content">
+              <div class="notif-title">{{ n.title }}</div>
+              <div class="notif-msg">{{ n.message }}</div>
+              <div class="notif-time">{{ n.createdAt }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Profile & RBAC Role Switcher -->
+    <div class="dropdown-wrapper">
+      <div class="user-profile-btn" (click)="toggleProfile()">
+        <div class="avatar-circle">
+          <span>BA</span>
+        </div>
+        <div class="user-info">
+          <span class="user-name">{{ auth.currentSession.fullName }}</span>
+          <span class="user-role">{{ auth.currentSession.role }}</span>
+        </div>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+
+      <!-- Profile Dropdown -->
+      <div class="dropdown-menu profile-dropdown" *ngIf="showProfileDropdown">
+        <div class="profile-header">
+          <div class="full-name">{{ auth.currentSession.fullName }}</div>
+          <div class="user-email">{{ auth.currentSession.email }}</div>
+          <div class="security-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            OAuth 2.0 / Keycloak
+          </div>
+        </div>
+
+        <div class="role-selector-section">
+          <span class="section-title">SIMULATE RBAC ROLE</span>
+          <div class="role-pills">
+            <button
+              *ngFor="let r of availableRoles"
+              class="role-pill"
+              [class.active]="auth.currentSession.role === r"
+              (click)="changeRole(r)">
+              {{ r }}
+            </button>
+          </div>
+        </div>
+
+        <div class="dropdown-divider"></div>
+
+        <a routerLink="/settings" (click)="showProfileDropdown = false" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          System Settings
+        </a>
+
+        <a routerLink="/architecture/security" (click)="showProfileDropdown = false" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          Security & OAuth Policy
+        </a>
+
+        <div class="dropdown-divider"></div>
+
+        <button class="dropdown-item logout-btn" (click)="logout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Logout of FinCore
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

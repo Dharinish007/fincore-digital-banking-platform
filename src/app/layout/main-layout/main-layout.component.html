@@ -1,0 +1,50 @@
+<div class="fc-app-container">
+  <!-- Toast Notifications Overlay -->
+  <div class="fc-toast-container">
+    <div
+      *ngFor="let toast of toasts$ | async"
+      class="fc-toast"
+      [ngClass]="'toast-' + toast.type">
+      <div class="toast-content">
+        <div class="toast-title">{{ toast.title }}</div>
+        <div class="toast-message">{{ toast.message }}</div>
+      </div>
+      <button class="toast-close" (click)="removeToast(toast.id)">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Left Sidebar -->
+  <app-sidebar
+    [isCollapsed]="isSidebarCollapsed"
+    [isMobileOpen]="isMobileSidebarOpen"
+    (closeMobile)="closeMobileSidebar()">
+  </app-sidebar>
+
+  <!-- Main View Area -->
+  <div class="fc-main-wrapper" [class.collapsed-sidebar]="isSidebarCollapsed">
+    <!-- Top Navbar -->
+    <app-navbar (toggleSidebar)="toggleSidebar()"></app-navbar>
+
+    <!-- Dynamic Routed Content -->
+    <main class="fc-content-area">
+      <router-outlet></router-outlet>
+    </main>
+
+    <!-- Platform Footer -->
+    <footer class="fc-footer">
+      <div class="footer-left">
+        <span>© 2026 FinCore Digital Banking Platform. Enterprise Core Release v2.4.0.</span>
+        <span class="compliance-tag">PCI-DSS 4.0 • ISO 27001 • SOC2 Type II Certified</span>
+      </div>
+      <div class="footer-right">
+        <span class="status-dot"></span>
+        <span>Connected: Spring Cloud Gateway • OAuth2 Keycloak • Kafka Cluster Active</span>
+      </div>
+    </footer>
+  </div>
+</div>

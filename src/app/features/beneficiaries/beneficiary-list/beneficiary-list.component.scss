@@ -1,0 +1,62 @@
+.ben-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  .breadcrumb {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-blue-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--fc-slate-900);
+  }
+
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--fc-slate-500);
+    margin-top: 4px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.table-filter-controls {
+  .filter-input { width: 300px; }
+}
+
+.ben-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.text-rose-600 { color: var(--fc-rose-600); }

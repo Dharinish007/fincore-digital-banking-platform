@@ -1,0 +1,243 @@
+<div class="transaction-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / General Ledger</div>
+      <h1 class="page-title">Transaction Management & Clearing</h1>
+      <p class="page-subtitle">Real-time settlement ledger across UPI, IMPS, NEFT, ATM, Net Banking and Branch counters.</p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/payments/send" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        New Payment
+      </a>
+
+      <button (click)="exportCSV()" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Export Ledger (CSV)
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="fc-card">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="17 1 21 5 17 9"></polyline>
+            <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+            <polyline points="7 23 3 19 7 15"></polyline>
+            <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+          </svg>
+          Master Transaction Ledger
+        </div>
+        <div class="fc-card-subtitle">Found {{ filteredTransactions.length }} matching transactions</div>
+      </div>
+
+      <div class="table-filter-controls">
+        <input
+          type="text"
+          class="form-control filter-input"
+          placeholder="Search by TXN ID, customer, reference..."
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()"
+        />
+
+        <select class="form-control filter-select" [(ngModel)]="selectedChannel" (change)="applyFilters()">
+          <option value="ALL">All Channels</option>
+          <option value="UPI">UPI</option>
+          <option value="IMPS">IMPS</option>
+          <option value="NEFT">NEFT</option>
+          <option value="ATM">ATM</option>
+          <option value="Branch">Branch</option>
+          <option value="Net Banking">Net Banking</option>
+          <option value="Mobile Banking">Mobile Banking</option>
+        </select>
+
+        <select class="form-control filter-select" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+          <option value="ALL">All Status</option>
+          <option value="Success">Success</option>
+          <option value="Pending">Pending</option>
+          <option value="Failed">Failed</option>
+          <option value="Reversed">Reversed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Customer & Account</th>
+            <th>Description & Reference</th>
+            <th>Type</th>
+            <th>Amount (INR)</th>
+            <th>Channel</th>
+            <th>Timestamp</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of paginatedTransactions">
+            <td class="font-mono text-sm font-semibold text-blue-600">{{ t.transactionId }}</td>
+            <td>
+              <div class="cust-acct-cell">
+                <span class="font-semibold">{{ t.customerName }}</span>
+                <span class="text-xs text-muted font-mono">{{ t.accountNumber }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="desc-cell">
+                <span class="desc-text">{{ t.description }}</span>
+                <span class="text-xs text-muted font-mono">{{ t.referenceNumber }}</span>
+              </div>
+            </td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="t.transactionType === 'Credit' || t.transactionType === 'Deposit'"
+                [class.badge-danger]="t.transactionType === 'Debit' || t.transactionType === 'Withdrawal'"
+                [class.badge-info]="t.transactionType === 'Transfer'">
+                {{ t.transactionType }}
+              </span>
+            </td>
+            <td class="tabular-nums font-semibold" [class.text-emerald-600]="t.transactionType === 'Credit'" [class.text-rose-600]="t.transactionType === 'Debit'">
+              {{ t.transactionType === 'Credit' ? '+' : '-' }}₹{{ t.amount | number:'1.2-2' }}
+            </td>
+            <td>
+              <span class="channel-badge">{{ t.channel }}</span>
+            </td>
+            <td class="text-xs text-muted font-mono">{{ t.timestamp }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="t.status === 'Success'"
+                [class.badge-warning]="t.status === 'Pending'"
+                [class.badge-danger]="t.status === 'Failed'"
+                [class.badge-neutral]="t.status === 'Reversed'">
+                {{ t.status }}
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <button class="btn btn-secondary btn-sm" (click)="viewDetails(t)">
+                Details
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="fc-card-footer flex justify-between items-center">
+      <span class="text-sm text-muted">
+        Showing page {{ currentPage }} of {{ totalPages }} ({{ filteredTransactions.length }} total records)
+      </span>
+
+      <div class="flex gap-2">
+        <button class="btn btn-secondary btn-sm" [disabled]="currentPage === 1" (click)="currentPage = currentPage - 1">
+          ← Previous
+        </button>
+        <button class="btn btn-secondary btn-sm" [disabled]="currentPage === totalPages" (click)="currentPage = currentPage + 1">
+          Next →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction Details & Audit Trace Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showDetailModal && selectedTransaction">
+    <div class="fc-modal-dialog">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Transaction Audit Trace</h3>
+          <p class="text-sm text-muted font-mono">{{ selectedTransaction.transactionId }}</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeDetailModal()">✕</button>
+      </div>
+
+      <div class="fc-modal-body">
+        <div class="txn-highlight-box mb-4">
+          <div class="amount-line tabular-nums" [class.text-emerald-600]="selectedTransaction.transactionType === 'Credit'">
+            ₹{{ selectedTransaction.amount | number:'1.2-2' }}
+          </div>
+          <div class="status-line">
+            <span class="badge" [class.badge-success]="selectedTransaction.status === 'Success'" [class.badge-neutral]="selectedTransaction.status === 'Reversed'">
+              {{ selectedTransaction.status }}
+            </span>
+            <span class="channel-badge">{{ selectedTransaction.channel }}</span>
+          </div>
+        </div>
+
+        <div class="detail-grid">
+          <div class="detail-item">
+            <span class="lbl">Customer</span>
+            <span class="val font-semibold">{{ selectedTransaction.customerName }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Account</span>
+            <span class="val font-mono">{{ selectedTransaction.accountNumber }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Reference Number</span>
+            <span class="val font-mono">{{ selectedTransaction.referenceNumber }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Timestamp</span>
+            <span class="val font-mono">{{ selectedTransaction.timestamp }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Balance After TXN</span>
+            <span class="val font-semibold tabular-nums">₹{{ selectedTransaction.balanceAfter | number:'1.2-2' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="lbl">Description</span>
+            <span class="val">{{ selectedTransaction.description }}</span>
+          </div>
+        </div>
+
+        <!-- Simulated Event Trace -->
+        <div class="event-trace-box mt-4">
+          <div class="trace-title">Kafka Event Trace & Atomicity Check</div>
+          <div class="trace-step">
+            <span class="dot done"></span>
+            <span class="msg">HTTP API Gateway /api/v1/transactions authorized with OAuth2 JWT</span>
+          </div>
+          <div class="trace-step">
+            <span class="dot done"></span>
+            <span class="msg">Double-entry ledger balance atomicity verified (ACID compliant)</span>
+          </div>
+          <div class="trace-step">
+            <span class="dot done"></span>
+            <span class="msg">Kafka Event published to topic: <code>transaction-created</code></span>
+          </div>
+          <div class="trace-step">
+            <span class="dot done"></span>
+            <span class="msg">Redis Cache invalidated for customer balance</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="fc-modal-footer">
+        <button
+          *ngIf="selectedTransaction.status === 'Success'"
+          class="btn btn-danger btn-sm"
+          (click)="reverse(selectedTransaction)">
+          Reverse Transaction
+        </button>
+        <button class="btn btn-secondary" (click)="closeDetailModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
