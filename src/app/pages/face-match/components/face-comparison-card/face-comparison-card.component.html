@@ -5,7 +5,7 @@
     type="file"
     accept="image/jpeg,image/png,image/jpg"
     (change)="onIdFileSelected($event)"
-    style="display: none;"
+    style="display: none"
     aria-label="Upload ID Document Photo"
   />
   <input
@@ -13,23 +13,38 @@
     type="file"
     accept="image/jpeg,image/png,image/jpg"
     (change)="onSelfieFileSelected($event)"
-    style="display: none;"
+    style="display: none"
     aria-label="Upload Live Selfie Capture"
   />
 
   <!-- Hidden canvas for selfie snapshot -->
-  <canvas #snapshotCanvas style="display: none;"></canvas>
+  <canvas #snapshotCanvas style="display: none"></canvas>
 
   <!-- ===== CAMERA CAPTURE MODAL ===== -->
-  <div class="camera-modal-overlay" *ngIf="isCameraOpen" (click)="closeCameraOnBackdrop($event)">
-    <div class="camera-modal" id="camera-modal" role="dialog" aria-modal="true" aria-label="Live Camera Capture">
+  <div
+    class="camera-modal-overlay"
+    *ngIf="isCameraOpen"
+    (click)="closeCameraOnBackdrop($event)"
+  >
+    <div
+      class="camera-modal"
+      id="camera-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Live Camera Capture"
+    >
       <!-- Modal Header -->
       <div class="camera-modal-header">
         <div class="camera-modal-title">
           <mat-icon>videocam</mat-icon>
           <span>Live Selfie Capture</span>
         </div>
-        <button type="button" class="camera-close-btn" (click)="closeCamera()" aria-label="Close camera">
+        <button
+          type="button"
+          class="camera-close-btn"
+          (click)="closeCamera()"
+          aria-label="Close camera"
+        >
           <mat-icon>close</mat-icon>
         </button>
       </div>
@@ -73,7 +88,11 @@
           <mat-icon class="error-icon">no_photography</mat-icon>
           <p class="error-title">Camera Unavailable</p>
           <p class="error-msg">{{ cameraError }}</p>
-          <button type="button" class="btn-retry-camera" (click)="startCamera()">
+          <button
+            type="button"
+            class="btn-retry-camera"
+            (click)="startCamera()"
+          >
             <mat-icon>refresh</mat-icon>
             <span>Try Again</span>
           </button>
@@ -103,11 +122,21 @@
         </ng-container>
 
         <ng-container *ngIf="capturedImageUrl">
-          <button type="button" class="btn-retake" (click)="retakeSnapshot()" id="btn-retake-selfie">
+          <button
+            type="button"
+            class="btn-retake"
+            (click)="retakeSnapshot()"
+            id="btn-retake-selfie"
+          >
             <mat-icon>refresh</mat-icon>
             <span>Retake</span>
           </button>
-          <button type="button" class="btn-use-photo" (click)="useSnapshot()" id="btn-use-selfie">
+          <button
+            type="button"
+            class="btn-use-photo"
+            (click)="useSnapshot()"
+            id="btn-use-selfie"
+          >
             <mat-icon>check_circle</mat-icon>
             <span>Use This Photo</span>
           </button>
@@ -123,15 +152,24 @@
         <mat-icon class="card-icon">compare</mat-icon>
         <h3>Face Comparison</h3>
       </div>
-      <p class="subtitle">Biometric face match between ID document and selfie capture</p>
+      <p class="subtitle">
+        Biometric face match between ID document and selfie capture
+      </p>
     </div>
 
     <!-- Top Right Status Badge -->
-    <div class="faces-detected-badge" [class.mismatch]="(result.facesDetectedCount ?? 2) < 2">
+    <div
+      class="faces-detected-badge"
+      [class.mismatch]="(result.facesDetectedCount ?? 2) < 2"
+    >
       <mat-icon class="check-icon">
-        {{ (result.facesDetectedCount ?? 2) === 2 ? 'check' : 'warning' }}
+        {{ (result.facesDetectedCount ?? 2) === 2 ? "check" : "warning" }}
       </mat-icon>
-      <span>{{ (result.facesDetectedCount ?? 2) === 2 ? '✓ 2 faces detected' : (result.facesDetectedCount ?? 1) + ' face detected' }}</span>
+      <span>{{
+        (result.facesDetectedCount ?? 2) === 2
+          ? "✓ 2 faces detected"
+          : (result.facesDetectedCount ?? 1) + " face detected"
+      }}</span>
     </div>
   </div>
 
@@ -154,7 +192,11 @@
       <!-- Main Viewport Area -->
       <div class="image-viewport" [class.empty]="!idState.previewUrl">
         <!-- STATE 1: NO IMAGE (Upload Dropzone) -->
-        <div class="upload-dropzone" *ngIf="!idState.previewUrl" (click)="triggerIdFileInput()">
+        <div
+          class="upload-dropzone"
+          *ngIf="!idState.previewUrl"
+          (click)="triggerIdFileInput()"
+        >
           <div class="dropzone-content">
             <div class="upload-icon-circle">
               <mat-icon>cloud_upload</mat-icon>
@@ -184,7 +226,9 @@
           <div
             class="biometric-box"
             [class.scanning]="result.status === 'PROCESSING' || isProcessing"
-            [class.error-box]="result.status === 'REJECTED' && !result.idFaceDetected"
+            [class.error-box]="
+              result.status === 'REJECTED' && !result.idFaceDetected
+            "
           >
             <div class="corner top-left"></div>
             <div class="corner top-right"></div>
@@ -192,7 +236,11 @@
             <div class="corner bottom-right"></div>
             <div
               class="laser-scanner"
-              *ngIf="result.status === 'PROCESSING' || isProcessing || result.status === 'VERIFIED'"
+              *ngIf="
+                result.status === 'PROCESSING' ||
+                isProcessing ||
+                result.status === 'VERIFIED'
+              "
             ></div>
             <div class="box-tag">ID FACE #1</div>
           </div>
@@ -200,8 +248,12 @@
           <!-- File Info Pill Overlay -->
           <div class="file-meta-overlay" *ngIf="idState.fileName">
             <mat-icon class="meta-icon">image</mat-icon>
-            <span class="meta-name" [title]="idState.fileName">{{ idState.fileName }}</span>
-            <span class="meta-size" *ngIf="idState.fileSize">({{ idState.fileSize }})</span>
+            <span class="meta-name" [title]="idState.fileName">{{
+              idState.fileName
+            }}</span>
+            <span class="meta-size" *ngIf="idState.fileSize"
+              >({{ idState.fileSize }})</span
+            >
           </div>
         </ng-container>
       </div>
@@ -240,9 +292,18 @@
 
         <!-- Detection & Quality Metrics -->
         <div class="panel-metrics-row">
-          <div class="detection-status" [class.success]="result.idFaceDetected ?? true">
-            <mat-icon>{{ (result.idFaceDetected ?? true) ? 'check_circle' : 'cancel' }}</mat-icon>
-            <span>{{ (result.idFaceDetected ?? true) ? '✓ Face detected' : '✕ No face found' }}</span>
+          <div
+            class="detection-status"
+            [class.success]="result.idFaceDetected ?? true"
+          >
+            <mat-icon>{{
+              (result.idFaceDetected ?? true) ? "check_circle" : "cancel"
+            }}</mat-icon>
+            <span>{{
+              (result.idFaceDetected ?? true)
+                ? "✓ Face detected"
+                : "✕ No face found"
+            }}</span>
           </div>
           <div class="quality-metric" *ngIf="result.status !== 'ERROR'">
             <span class="metric-label">Quality</span>
@@ -278,7 +339,10 @@
       <!-- Main Viewport Area -->
       <div class="image-viewport" [class.empty]="!selfieState.previewUrl">
         <!-- STATE 1: NO IMAGE (Upload Dropzone) -->
-        <div class="upload-dropzone selfie-dropzone" *ngIf="!selfieState.previewUrl">
+        <div
+          class="upload-dropzone selfie-dropzone"
+          *ngIf="!selfieState.previewUrl"
+        >
           <div class="dropzone-content">
             <div class="upload-icon-circle selfie-icon-circle">
               <mat-icon>face</mat-icon>
@@ -321,7 +385,9 @@
           <div
             class="biometric-box selfie-box"
             [class.scanning]="result.status === 'PROCESSING' || isProcessing"
-            [class.error-box]="result.status === 'REJECTED' && !result.selfieFaceDetected"
+            [class.error-box]="
+              result.status === 'REJECTED' && !result.selfieFaceDetected
+            "
           >
             <div class="corner top-left"></div>
             <div class="corner top-right"></div>
@@ -329,7 +395,11 @@
             <div class="corner bottom-right"></div>
             <div
               class="laser-scanner"
-              *ngIf="result.status === 'PROCESSING' || isProcessing || result.status === 'VERIFIED'"
+              *ngIf="
+                result.status === 'PROCESSING' ||
+                isProcessing ||
+                result.status === 'VERIFIED'
+              "
             ></div>
             <div class="box-tag">LIVE SELFIE #2</div>
           </div>
@@ -337,8 +407,12 @@
           <!-- File Info Pill Overlay -->
           <div class="file-meta-overlay" *ngIf="selfieState.fileName">
             <mat-icon class="meta-icon">face</mat-icon>
-            <span class="meta-name" [title]="selfieState.fileName">{{ selfieState.fileName }}</span>
-            <span class="meta-size" *ngIf="selfieState.fileSize">({{ selfieState.fileSize }})</span>
+            <span class="meta-name" [title]="selfieState.fileName">{{
+              selfieState.fileName
+            }}</span>
+            <span class="meta-size" *ngIf="selfieState.fileSize"
+              >({{ selfieState.fileSize }})</span
+            >
           </div>
         </ng-container>
       </div>
@@ -387,13 +461,24 @@
 
         <!-- Detection & Quality Metrics -->
         <div class="panel-metrics-row">
-          <div class="detection-status" [class.success]="result.selfieFaceDetected ?? true">
-            <mat-icon>{{ (result.selfieFaceDetected ?? true) ? 'check_circle' : 'cancel' }}</mat-icon>
-            <span>{{ (result.selfieFaceDetected ?? true) ? '✓ Face detected' : '✕ No face found' }}</span>
+          <div
+            class="detection-status"
+            [class.success]="result.selfieFaceDetected ?? true"
+          >
+            <mat-icon>{{
+              (result.selfieFaceDetected ?? true) ? "check_circle" : "cancel"
+            }}</mat-icon>
+            <span>{{
+              (result.selfieFaceDetected ?? true)
+                ? "✓ Face detected"
+                : "✕ No face found"
+            }}</span>
           </div>
           <div class="quality-metric" *ngIf="result.status !== 'ERROR'">
             <span class="metric-label">Quality</span>
-            <span class="metric-value">{{ result.selfieFaceQuality ?? 92 }}%</span>
+            <span class="metric-value"
+              >{{ result.selfieFaceQuality ?? 92 }}%</span
+            >
           </div>
         </div>
       </div>
@@ -403,13 +488,17 @@
   <!-- Primary Compare Action Section -->
   <div class="compare-action-section">
     <div class="readiness-indicators">
-      <div class="indicator-chip" [class.ready]="!!idState.previewUrl">
-        <mat-icon>{{ idState.previewUrl ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
-        <span>ID Document: {{ idState.previewUrl ? 'Ready' : 'Missing' }}</span>
+      <div class="indicator-chip" [class.ready]="!!idState.file">
+        <mat-icon>{{
+          idState.file ? "check_circle" : "radio_button_unchecked"
+        }}</mat-icon>
+        <span>ID Document: {{ idState.file ? "Ready" : "Missing" }}</span>
       </div>
-      <div class="indicator-chip" [class.ready]="!!selfieState.previewUrl">
-        <mat-icon>{{ selfieState.previewUrl ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
-        <span>Live Selfie: {{ selfieState.previewUrl ? 'Ready' : 'Missing' }}</span>
+      <div class="indicator-chip" [class.ready]="!!selfieState.file">
+        <mat-icon>{{
+          selfieState.file ? "check_circle" : "radio_button_unchecked"
+        }}</mat-icon>
+        <span>Live Selfie: {{ selfieState.file ? "Ready" : "Missing" }}</span>
       </div>
     </div>
 
@@ -418,15 +507,29 @@
       class="btn-compare-faces"
       [disabled]="!canCompare"
       (click)="onTriggerCompare()"
-      [title]="canCompare ? 'Run AI Facial Biometric Comparison' : 'Upload both ID Document and Selfie to compare'"
+      [title]="
+        canCompare
+          ? 'Proceed to face matching'
+          : 'Upload both ID Document and Selfie to proceed'
+      "
     >
-      <mat-icon class="compare-icon" [class.spin]="result.status === 'PROCESSING' || isProcessing">
-        {{ (result.status === 'PROCESSING' || isProcessing) ? 'sync' : 'document_scanner' }}
+      <mat-icon
+        class="compare-icon"
+        [class.spin]="result.status === 'PROCESSING' || isProcessing"
+      >
+        {{
+          result.status === "PROCESSING" || isProcessing
+            ? "sync"
+            : "document_scanner"
+        }}
       </mat-icon>
       <span class="btn-text">
-        {{ (result.status === 'PROCESSING' || isProcessing) ? 'Analyzing Facial Biometrics...' : 'Compare Faces' }}
+        {{
+          result.status === "PROCESSING" || isProcessing
+            ? "Analyzing Facial Biometrics..."
+            : "Proceed to Face Match"
+        }}
       </span>
     </button>
   </div>
 </div>
-

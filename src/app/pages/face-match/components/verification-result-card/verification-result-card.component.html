@@ -1,19 +1,40 @@
-<div class="fincore-card result-container" [ngClass]="result.status.toLowerCase()">
+<div
+  class="fincore-card result-container"
+  [ngClass]="result.status.toLowerCase()"
+>
   <!-- LEFT: Icon & Status Text -->
   <div class="result-info">
     <div class="status-symbol-wrap" [ngClass]="result.status.toLowerCase()">
-      <mat-icon class="main-status-icon" *ngIf="result.status === 'VERIFIED'">check_circle</mat-icon>
-      <mat-icon class="main-status-icon spin" *ngIf="result.status === 'PROCESSING'">sync</mat-icon>
-      <mat-icon class="main-status-icon" *ngIf="result.status === 'REJECTED'">cancel</mat-icon>
-      <mat-icon class="main-status-icon" *ngIf="result.status === 'REVIEW_REQUIRED'">warning</mat-icon>
-      <mat-icon class="main-status-icon" *ngIf="result.status === 'ERROR'">error</mat-icon>
+      <mat-icon class="main-status-icon" *ngIf="result.status === 'VERIFIED'"
+        >check_circle</mat-icon
+      >
+      <mat-icon
+        class="main-status-icon spin"
+        *ngIf="result.status === 'PROCESSING'"
+        >sync</mat-icon
+      >
+      <mat-icon class="main-status-icon" *ngIf="result.status === 'REJECTED'"
+        >cancel</mat-icon
+      >
+      <mat-icon
+        class="main-status-icon"
+        *ngIf="result.status === 'REVIEW_REQUIRED'"
+        >warning</mat-icon
+      >
+      <mat-icon class="main-status-icon" *ngIf="result.status === 'ERROR'"
+        >error</mat-icon
+      >
     </div>
 
     <div class="status-details">
       <!-- STATE A: PROCESSING -->
       <ng-container *ngIf="result.status === 'PROCESSING'">
-        <h2 class="status-title text-processing">Analyzing facial features...</h2>
-        <p class="status-desc">Comparing ID photo with selfie in real-time neural pipeline</p>
+        <h2 class="status-title text-processing">
+          Analyzing facial features...
+        </h2>
+        <p class="status-desc">
+          Comparing ID photo with selfie in real-time neural pipeline
+        </p>
         <div class="processing-loader">
           <div class="loading-bar"></div>
         </div>
@@ -21,9 +42,17 @@
 
       <!-- STATE B: VERIFIED -->
       <ng-container *ngIf="result.status === 'VERIFIED'">
-        <h2 class="status-title text-verified">✓ FACE VERIFICATION SUCCESSFUL</h2>
+        <h2 class="status-title text-verified">
+          ✓ FACE VERIFICATION SUCCESSFUL
+        </h2>
         <p class="status-desc">
-          Match score <strong class="highlight-score">{{ result.score | number:'1.1-1' }}%</strong> is above the configured <strong class="highlight-score">{{ result.threshold }}%</strong> threshold.
+          Match score
+          <strong class="highlight-score"
+            >{{ result.score | number: "1.1-1" }}%</strong
+          >
+          is above the configured
+          <strong class="highlight-score">{{ result.threshold }}%</strong>
+          threshold.
         </p>
       </ng-container>
 
@@ -32,7 +61,9 @@
         <h2 class="status-title text-rejected">✕ FACE MATCH FAILED</h2>
         <p class="status-desc">
           Match score is below the configured threshold.
-          <span class="error-reason" *ngIf="result.errorMessage">({{ result.errorMessage }})</span>
+          <span class="error-reason" *ngIf="result.errorMessage"
+            >({{ result.errorMessage }})</span
+          >
         </p>
       </ng-container>
 
@@ -40,17 +71,27 @@
       <ng-container *ngIf="result.status === 'REVIEW_REQUIRED'">
         <h2 class="status-title text-review">⚠ MANUAL REVIEW REQUIRED</h2>
         <p class="status-desc">
-          Match score is near threshold boundary. A Tier 2 KYC Supervisor must review the facial biometric telemetry.
+          Match score is near threshold boundary. A Tier 2 KYC Supervisor must
+          review the facial biometric telemetry.
         </p>
       </ng-container>
 
       <!-- STATE E: ERROR -->
       <ng-container *ngIf="result.status === 'ERROR'">
-        <h2 class="status-title text-error">Face Match Could Not Be Completed</h2>
+        <h2 class="status-title text-error">
+          Face Match Could Not Be Completed
+        </h2>
         <p class="status-desc">
-          {{ result.errorMessage || 'An error occurred during facial biometric processing. Please try again.' }}
+          {{
+            result.errorMessage ||
+              "An error occurred during facial biometric processing. Please try again."
+          }}
         </p>
       </ng-container>
+
+      <p class="status-desc" *ngIf="result.status !== 'PROCESSING'">
+        Face match result: <strong>{{ result.matched }}</strong>
+      </p>
     </div>
   </div>
 
@@ -81,11 +122,7 @@
       </button>
 
       <!-- Processing: Disabled action -->
-      <button
-        *ngSwitchCase="'PROCESSING'"
-        class="btn-primary"
-        disabled
-      >
+      <button *ngSwitchCase="'PROCESSING'" class="btn-primary" disabled>
         <span>Processing...</span>
       </button>
 

@@ -1,12 +1,13 @@
-package com.digitalBanking.platform.FaceMatching.controller;
-import com.digitalBanking.platform.FaceMatching.dto.FaceMatchResponse;
-import com.digitalBanking.platform.FaceMatching.service.FaceMatchService;
+package com.digitalBanking.FaceMatching.controller;
+import com.digitalBanking.FaceMatching.dto.FaceMatchResponse;
+import com.digitalBanking.FaceMatching.service.FaceMatchService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/face")
+@CrossOrigin("*")
 public class FaceMatchController {
 
     private final FaceMatchService faceMatchService;

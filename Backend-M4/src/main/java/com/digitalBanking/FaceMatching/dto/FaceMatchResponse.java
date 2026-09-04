@@ -1,4 +1,4 @@
-package com.digitalBanking.platform.FaceMatching.dto;
+package com.digitalBanking.FaceMatching.dto;
 
 public class FaceMatchResponse {
 

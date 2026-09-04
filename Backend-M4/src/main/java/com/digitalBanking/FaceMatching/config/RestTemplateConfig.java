@@ -1,4 +1,4 @@
-package com.digitalBanking.platform.FaceMatching.config;
+package com.digitalBanking.FaceMatching.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

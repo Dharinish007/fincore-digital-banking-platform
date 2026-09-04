@@ -420,12 +420,14 @@ export class FaceComparisonCardComponent implements OnInit, OnDestroy {
   /**
    * Check if both images are selected and ready for comparison
    */
-  public get canCompare(): boolean {
-    const hasId = Boolean(this.idState.file || this.idState.previewUrl);
-    const hasSelfie = Boolean(this.selfieState.file || this.selfieState.previewUrl);
-    const isBusy = this.isProcessing || this.result?.status === 'PROCESSING';
-    return hasId && hasSelfie && !isBusy;
-  }
+ public get canCompare(): boolean {
+  const hasId = Boolean(this.idState.file);
+  const hasSelfie = Boolean(this.selfieState.file);
+
+  const isBusy = this.isProcessing;
+
+  return hasId && hasSelfie && !isBusy;
+}
 
   /**
    * Trigger Compare Faces execution

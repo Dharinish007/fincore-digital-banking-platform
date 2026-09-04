@@ -1,6 +1,6 @@
-package com.digitalBanking.platform.FaceMatching.service;
+package com.digitalBanking.FaceMatching.service;
 
-import com.digitalBanking.platform.FaceMatching.dto.FaceMatchResponse;
+import com.digitalBanking.FaceMatching.dto.FaceMatchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;

@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Locale;
+
 @RestController
 @RequestMapping("/api/document-ocr")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin("*")
 public class DocumentOcrController {
 
     private final DocumentOcrService documentOcrService;
@@ -22,10 +24,19 @@ public class DocumentOcrController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<DocumentOcrResponse> processDocument(
             @RequestParam("document") MultipartFile document,
-            @RequestParam("documentType") DocumentType documentType) {
+            @RequestParam("documentType") String documentType) {
 
-        DocumentOcrResponse response =
-                documentOcrService.processDocument(document, documentType);
+        DocumentType normalizedDocumentType;
+        try {
+            normalizedDocumentType = DocumentType.valueOf(
+                    documentType.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "Unsupported document type: " + documentType,
+                    e);
+        }
+
+        DocumentOcrResponse response = documentOcrService.processDocument(document, normalizedDocumentType);
 
         return ResponseEntity.ok(response);
     }
@@ -35,7 +46,6 @@ public class DocumentOcrController {
             @PathVariable Long id) {
 
         return ResponseEntity.ok(
-                documentOcrService.getDocumentById(id)
-        );
+                documentOcrService.getDocumentById(id));
     }
 }

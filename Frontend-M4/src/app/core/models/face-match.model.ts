@@ -1,6 +1,12 @@
-export type MatchConfidence = 'LOW' | 'MEDIUM' | 'HIGH';
-export type VerificationState = 'PROCESSING' | 'VERIFIED' | 'REJECTED' | 'REVIEW_REQUIRED' | 'ERROR';
-export type QualityStatus = 'PASS' | 'GOOD' | 'WARNING' | 'FAIL';
+export type MatchConfidence = "LOW" | "MEDIUM" | "HIGH";
+export type VerificationState =
+  | "IDLE"
+  | "PROCESSING"
+  | "VERIFIED"
+  | "REJECTED"
+  | "REVIEW_REQUIRED"
+  | "ERROR";
+export type QualityStatus = "PASS" | "GOOD" | "WARNING" | "FAIL";
 
 export interface FaceMatchResult {
   score: number;
@@ -25,6 +31,9 @@ export interface FaceMatchResult {
   timestamp?: string;
   errorMessage?: string;
   auditRef?: string;
+  distance?: number;
+  model?: string;
+  message?: string;
 }
 
 export interface UploadImageState {

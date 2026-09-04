@@ -75,8 +75,8 @@
           color: var(--color-success-light);
 
           .pulse-indicator {
-            background-color: #10B981;
-            box-shadow: 0 0 8px #10B981;
+            background-color: #10b981;
+            box-shadow: 0 0 8px #10b981;
             animation: pulseGlow 2s infinite ease-in-out;
           }
         }
@@ -87,8 +87,8 @@
           color: var(--color-primary-light);
 
           .pulse-indicator {
-            background-color: #3B82F6;
-            box-shadow: 0 0 8px #3B82F6;
+            background-color: #3b82f6;
+            box-shadow: 0 0 8px #3b82f6;
             animation: pulseGlow 1s infinite ease-in-out;
           }
         }
@@ -99,8 +99,8 @@
           color: var(--color-danger-light);
 
           .pulse-indicator {
-            background-color: #EF4444;
-            box-shadow: 0 0 8px #EF4444;
+            background-color: #ef4444;
+            box-shadow: 0 0 8px #ef4444;
           }
         }
 
@@ -110,48 +110,103 @@
           color: var(--color-warning-light);
 
           .pulse-indicator {
-            background-color: #F59E0B;
-            box-shadow: 0 0 8px #F59E0B;
+            background-color: #f59e0b;
+            box-shadow: 0 0 8px #f59e0b;
           }
         }
 
         &.error {
           background-color: rgba(148, 163, 184, 0.12);
           border: 1px solid rgba(148, 163, 184, 0.3);
-          color: #94A3B8;
+          color: #94a3b8;
 
           .pulse-indicator {
-            background-color: #94A3B8;
+            background-color: #94a3b8;
           }
         }
       }
     }
   }
 
-  .dashboard-sections {
+  .face-match-content {
     display: flex;
     flex-direction: column;
     gap: 20px;
 
-    .top-row-grid {
-      display: grid;
-      grid-template-columns: 1.8fr 1fr;
-      gap: 20px;
-      align-items: stretch;
-
-      .comparison-card-wrapper,
-      .score-card-wrapper {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-      }
+    .comparison-card-wrapper {
+      width: 100%;
     }
 
-    .section-row {
-      width: 100%;
+    .backend-result {
+      padding: 22px 24px;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-left: 4px solid var(--color-danger-light);
+      border-radius: var(--radius-lg);
+      background: var(--bg-card);
 
-      &.result-section {
-        margin-top: 4px;
+      &.match-found {
+        border-left-color: var(--color-success-light);
+      }
+      &.match-error {
+        border-left-color: #f59e0b;
+      }
+
+      .result-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .result-heading mat-icon {
+        color: var(--color-danger-light);
+      }
+      .match-found .result-heading mat-icon {
+        color: var(--color-success-light);
+      }
+      .match-error .result-heading mat-icon {
+        color: #f59e0b;
+      }
+      h2 {
+        margin: 0;
+        color: var(--text-white);
+        font-size: 1.15rem;
+      }
+      .result-message {
+        color: var(--text-secondary);
+        margin: 14px 0 0;
+      }
+      .result-values {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 12px;
+        margin: 18px 0 0;
+      }
+      .result-values div {
+        padding: 10px 12px;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: var(--radius-sm);
+      }
+      dt {
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      dd {
+        color: var(--text-white);
+        margin: 5px 0 0;
+        word-break: break-word;
+      }
+      .retry-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-top: 18px;
+        padding: 9px 14px;
+        border: 0;
+        border-radius: var(--radius-sm);
+        background: var(--color-primary);
+        color: white;
+        cursor: pointer;
       }
     }
   }
@@ -159,11 +214,6 @@
 
 @media (max-width: 1100px) {
   .face-match-page {
-    .dashboard-sections {
-      .top-row-grid {
-        grid-template-columns: 1fr;
-      }
-    }
   }
 }
 

@@ -1,385 +1,702 @@
-import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of, tap, timer } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { Injectable, inject } from "@angular/core";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  finalize,
+  map,
+  of,
+  tap,
+  timer,
+} from "rxjs";
+
+import { environment } from "../../../environments/environment";
+
 import {
   FaceMatchResult,
   FaceSourceImage,
   QualityCheckItem,
   SimilarityMetric,
   VerificationState,
-  MatchDetailsReport
-} from '../models/face-match.model';
+  MatchDetailsReport,
+} from "../models/face-match.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class FaceMatchService {
   private http = inject(HttpClient);
 
-  // Default initial result state
+  // ============================================================
+  // INITIAL UI STATE
+  // ============================================================
+
   private readonly initialResult: FaceMatchResult = {
-    score: 94.7,
+    score: 0,
     threshold: 80,
-    confidence: 'HIGH',
-    matched: true,
-    status: 'VERIFIED',
-    idFaceQuality: 95,
-    selfieFaceQuality: 92,
-    faceDetected: true,
-    blurScore: 91,
-    poseScore: 96,
-    facialFeatureSimilarity: 93.2,
-    poseConsistency: 96.1,
-    imageQualityAverage: 91.8,
-    idFaceDetected: true,
-    selfieFaceDetected: true,
-    facesDetectedCount: 2,
-    latencyMs: 38,
+    confidence: "LOW",
+    matched: false,
+    status: "IDLE",
+
+    idFaceQuality: 0,
+    selfieFaceQuality: 0,
+
+    faceDetected: false,
+    blurScore: 0,
+    poseScore: 0,
+
+    facialFeatureSimilarity: 0,
+    poseConsistency: 0,
+    imageQualityAverage: 0,
+
+    idFaceDetected: false,
+    selfieFaceDetected: false,
+    facesDetectedCount: 0,
+
+    latencyMs: 0,
     timestamp: new Date().toISOString(),
-    auditRef: 'FIN-KYC-94021-FM'
+
+    auditRef: "",
   };
+
+  // ============================================================
+  // DEFAULT SOURCE IMAGES
+  // ============================================================
 
   private readonly defaultSourceImages: FaceSourceImage = {
-    idPhotoUrl: 'assets/images/id-document-face.svg',
-    selfiePhotoUrl: 'assets/images/selfie-capture-face.svg',
-    idDocumentType: 'National Passport / Driver License',
-    idQuality: 95,
-    selfieQuality: 92,
-    idDetected: true,
-    selfieDetected: true,
-    captureTimestamp: new Date().toISOString()
+    idPhotoUrl: "",
+    selfiePhotoUrl: "",
+    idDocumentType: "ID Document",
+    idQuality: 0,
+    selfieQuality: 0,
+    idDetected: false,
+    selfieDetected: false,
+    captureTimestamp: new Date().toISOString(),
   };
 
-  private resultSubject = new BehaviorSubject<FaceMatchResult>(this.initialResult);
-  public result$: Observable<FaceMatchResult> = this.resultSubject.asObservable();
+  // ============================================================
+  // SUBJECTS
+  // ============================================================
 
-  private sourceImagesSubject = new BehaviorSubject<FaceSourceImage>(this.defaultSourceImages);
-  public sourceImages$: Observable<FaceSourceImage> = this.sourceImagesSubject.asObservable();
+  private resultSubject = new BehaviorSubject<FaceMatchResult>(
+    this.initialResult,
+  );
+
+  public result$: Observable<FaceMatchResult> =
+    this.resultSubject.asObservable();
+
+  private sourceImagesSubject = new BehaviorSubject<FaceSourceImage>(
+    this.defaultSourceImages,
+  );
+
+  public sourceImages$: Observable<FaceSourceImage> =
+    this.sourceImagesSubject.asObservable();
 
   private isComparingSubject = new BehaviorSubject<boolean>(false);
-  public isComparing$: Observable<boolean> = this.isComparingSubject.asObservable();
 
-  /**
-   * Retrieves the current face match result snapshot
-   */
+  public isComparing$: Observable<boolean> =
+    this.isComparingSubject.asObservable();
+
+  // ============================================================
+  // GET CURRENT RESULT
+  // ============================================================
+
   public getCurrentResult(): FaceMatchResult {
     return this.resultSubject.value;
   }
 
-  /**
-   * Updates the source preview URLs
-   */
-  public updateSourceImages(idUrl: string | null, selfieUrl: string | null): void {
+  // ============================================================
+  // UPDATE SOURCE IMAGE PREVIEWS
+  // ============================================================
+
+  public updateSourceImages(
+    idUrl: string | null,
+    selfieUrl: string | null,
+  ): void {
     const current = this.sourceImagesSubject.value;
+
     this.sourceImagesSubject.next({
       ...current,
-      idPhotoUrl: idUrl || '',
-      selfiePhotoUrl: selfieUrl || '',
-      captureTimestamp: new Date().toISOString()
+
+      idPhotoUrl: idUrl || "",
+      selfiePhotoUrl: selfieUrl || "",
+
+      captureTimestamp: new Date().toISOString(),
     });
   }
 
-  /**
-   * Sends both image files to the backend Face Match API endpoint via multipart/form-data.
-   * Does NOT manually set Content-Type so browser sets correct boundary.
-   */
-  public compareFaces(idFile: File, selfieFile: File): Observable<FaceMatchResult> {
+  // ============================================================
+  // REAL FACE MATCH API
+  // ANGULAR → SPRING BOOT
+  // ============================================================
+
+  public compareFaces(
+    idFile: File,
+    selfieFile: File,
+  ): Observable<FaceMatchResult> {
     this.isComparingSubject.next(true);
-    this.setVerificationState('PROCESSING');
+
+    this.setVerificationState("PROCESSING");
+
+    // ------------------------------------------------------------
+    // Create multipart/form-data
+    // ------------------------------------------------------------
 
     const formData = new FormData();
-    formData.append('idDocumentImage', idFile, idFile.name);
-    formData.append('selfieImage', selfieFile, selfieFile.name);
 
-    const endpointUrl = environment.faceMatchEndpoint || `${environment.apiUrl}/face-match`;
+    /*
+     * IMPORTANT:
+     *
+     * These names MUST match Spring Boot:
+     *
+     * @RequestParam("registeredImage")
+     * @RequestParam("selfieImage")
+     */
+
+    formData.append("registeredImage", idFile, idFile.name);
+
+    formData.append("selfieImage", selfieFile, selfieFile.name);
+
+    // ------------------------------------------------------------
+    // Spring Boot endpoint
+    // ------------------------------------------------------------
+
+    const endpointUrl = environment.faceMatchEndpoint.startsWith("http")
+      ? environment.faceMatchEndpoint
+      : `${environment.apiBaseUrl}${environment.faceMatchEndpoint}`;
+
+    console.log("Face Match API URL:", endpointUrl);
+    console.log("Registered Image:", idFile.name);
+    console.log("Selfie Image:", selfieFile.name);
+
+    // ------------------------------------------------------------
+    // HTTP POST
+    // ------------------------------------------------------------
 
     return this.http.post<Partial<FaceMatchResult>>(endpointUrl, formData).pipe(
-      map((response) => this.normalizeResult(response)),
-      tap((normalizedResult) => {
-        this.isComparingSubject.next(false);
+      // --------------------------------------------------------
+      // Convert backend response into UI model
+      // --------------------------------------------------------
+
+      map((response: any) => {
+        console.log("Face Match Backend Response:", response);
+
+        return this.normalizeResult(response);
+      }),
+
+      // --------------------------------------------------------
+      // Update UI
+      // --------------------------------------------------------
+
+      tap((normalizedResult: any) => {
         this.resultSubject.next(normalizedResult);
       }),
+
+      // --------------------------------------------------------
+      // Handle API errors
+      // --------------------------------------------------------
+
       catchError((error: HttpErrorResponse) => {
-        this.isComparingSubject.next(false);
+        console.error("Face Match API Error:", error);
+
         const errorResult = this.handleApiError(error);
+
         this.resultSubject.next(errorResult);
+
         return of(errorResult);
-      })
+      }),
+      finalize(() => this.isComparingSubject.next(false)),
     );
   }
 
-  /**
-   * Simulates comparison for testing/QA purposes with customizable target state
-   */
-  public compareFacesSimulated(targetState: VerificationState = 'VERIFIED'): Observable<FaceMatchResult> {
-    this.isComparingSubject.next(true);
-    this.setVerificationState('PROCESSING');
+  // ============================================================
+  // NORMALIZE BACKEND RESPONSE
+  // ============================================================
 
-    return timer(1500).pipe(
-      map(() => {
-        this.isComparingSubject.next(false);
-        this.setVerificationState(targetState);
-        return this.resultSubject.value;
-      })
-    );
-  }
-
-  /**
-   * Normalizes backend response object into a strictly-typed FaceMatchResult
-   */
   private normalizeResult(res: Partial<FaceMatchResult>): FaceMatchResult {
-    const score = typeof res.score === 'number' ? res.score : 94.7;
-    const threshold = typeof res.threshold === 'number' ? res.threshold : 80;
-    const matched = typeof res.matched === 'boolean' ? res.matched : score >= threshold;
+    const threshold = typeof res.threshold === "number" ? res.threshold : 80;
+    const score =
+      typeof res.score === "number"
+        ? res.score
+        : typeof res.distance === "number" && threshold > 0
+          ? Math.max(0, Math.min(100, (1 - res.distance / threshold) * 100))
+          : typeof res.matched === "boolean" && res.matched
+            ? 100
+            : 0;
 
-    let status: VerificationState = res.status || (matched ? 'VERIFIED' : 'REJECTED');
+    const matched =
+      typeof res.matched === "boolean" ? res.matched : score >= threshold;
+
+    let status: VerificationState;
+
     if (res.status) {
       status = res.status;
-    } else if (score >= threshold) {
-      status = 'VERIFIED';
+    } else if (res.message && typeof res.distance !== "number") {
+      status = "ERROR";
+    } else if (matched) {
+      status = "VERIFIED";
     } else if (score >= 70) {
-      status = 'REVIEW_REQUIRED';
+      status = "REVIEW_REQUIRED";
     } else {
-      status = 'REJECTED';
+      status = "REJECTED";
     }
 
+    // ------------------------------------------------------------
+    // Confidence
+    // ------------------------------------------------------------
+
     let confidence = res.confidence;
+
     if (!confidence) {
-      confidence = score >= 85 ? 'HIGH' : score >= 70 ? 'MEDIUM' : 'LOW';
+      confidence = score >= 85 ? "HIGH" : score >= 70 ? "MEDIUM" : "LOW";
     }
+
+    // ------------------------------------------------------------
+    // Return complete UI object
+    // ------------------------------------------------------------
 
     return {
       score,
+
       threshold,
+
       confidence,
+
       matched,
+
       status,
-      idFaceQuality: res.idFaceQuality ?? 95,
-      selfieFaceQuality: res.selfieFaceQuality ?? 92,
-      faceDetected: res.faceDetected ?? true,
-      blurScore: res.blurScore ?? 91,
-      poseScore: res.poseScore ?? 96,
+
+      idFaceQuality: res.idFaceQuality ?? 0,
+
+      selfieFaceQuality: res.selfieFaceQuality ?? 0,
+
+      faceDetected: res.faceDetected ?? false,
+
+      blurScore: res.blurScore ?? 0,
+
+      poseScore: res.poseScore ?? 0,
+
       visibilityScore: res.visibilityScore,
+
       occlusionScore: res.occlusionScore,
+
       facialFeatureSimilarity: res.facialFeatureSimilarity ?? score,
-      poseConsistency: res.poseConsistency ?? 96.1,
-      imageQualityAverage: res.imageQualityAverage ?? 91.8,
-      idFaceDetected: res.idFaceDetected ?? true,
-      selfieFaceDetected: res.selfieFaceDetected ?? true,
-      facesDetectedCount: res.facesDetectedCount ?? 2,
-      latencyMs: res.latencyMs ?? 38,
+
+      poseConsistency: res.poseConsistency ?? 0,
+
+      imageQualityAverage: res.imageQualityAverage ?? 0,
+
+      idFaceDetected: res.idFaceDetected ?? false,
+
+      selfieFaceDetected: res.selfieFaceDetected ?? false,
+
+      facesDetectedCount: res.facesDetectedCount ?? 0,
+
+      latencyMs: res.latencyMs ?? 0,
+
       timestamp: res.timestamp || new Date().toISOString(),
-      auditRef: res.auditRef || `FIN-KYC-${Math.floor(10000 + Math.random() * 90000)}-FM`,
-      errorMessage: res.errorMessage
+
+      auditRef: res.auditRef || "",
+
+      errorMessage: res.errorMessage || res.message,
+      distance: res.distance,
+      model: res.model,
     };
   }
 
-  /**
-   * Generates a user-friendly error result when the API call fails
-   */
+  // ============================================================
+  // API ERROR HANDLING
+  // ============================================================
+
   private handleApiError(error: HttpErrorResponse): FaceMatchResult {
-    let message = 'Face Match Could Not Be Completed. Unable to process the images. Please try again.';
+    let message = "Face Match Could Not Be Completed. Please try again.";
+
+    // ------------------------------------------------------------
+    // Backend unreachable
+    // ------------------------------------------------------------
+
     if (error.status === 0) {
-      message = 'Unable to connect to Face Match backend server. Please check backend connectivity or try again.';
-    } else if (error.status === 400) {
-      message = error.error?.message || 'Invalid image format or unreadable facial features. Please upload clearer images.';
-    } else if (error.status === 413) {
-      message = 'Uploaded image file size exceeds the allowed server limit. Please upload images under 10MB.';
-    } else if (error.error?.message) {
+      message =
+        "Unable to connect to Face Match backend server. " +
+        "Make sure Spring Boot is running.";
+    }
+
+    // ------------------------------------------------------------
+    // Bad request
+    // ------------------------------------------------------------
+    else if (error.status === 400) {
+      message =
+        error.error?.message ||
+        "Invalid image request. Please upload valid ID and selfie images.";
+    }
+
+    // ------------------------------------------------------------
+    // Unauthorized
+    // ------------------------------------------------------------
+    else if (error.status === 401) {
+      message = "You are not authorized to perform face verification.";
+    }
+
+    // ------------------------------------------------------------
+    // Forbidden
+    // ------------------------------------------------------------
+    else if (error.status === 403) {
+      message = "Face verification request was forbidden.";
+    }
+
+    // ------------------------------------------------------------
+    // Not found
+    // ------------------------------------------------------------
+    else if (error.status === 404) {
+      message =
+        "Face Match API endpoint was not found. " +
+        "Check the Spring Boot API URL.";
+    }
+
+    // ------------------------------------------------------------
+    // Payload too large
+    // ------------------------------------------------------------
+    else if (error.status === 413) {
+      message = "Uploaded image is too large. Please upload images under 10MB.";
+    }
+
+    // ------------------------------------------------------------
+    // Server error
+    // ------------------------------------------------------------
+    else if (error.status >= 500) {
+      message =
+        error.error?.message ||
+        "Face Match backend encountered an internal server error.";
+    }
+
+    // ------------------------------------------------------------
+    // Generic backend message
+    // ------------------------------------------------------------
+    else if (error.error?.message) {
       message = error.error.message;
     }
 
+    // ------------------------------------------------------------
+    // Return error result
+    // ------------------------------------------------------------
+
     return {
       ...this.resultSubject.value,
+
       score: 0,
+
       matched: false,
-      status: 'ERROR',
+
+      status: "ERROR",
+
       errorMessage: message,
-      timestamp: new Date().toISOString()
+
+      timestamp: new Date().toISOString(),
     };
   }
 
-  /**
-   * Retrieves the pre-match quality checks derived from the current result
-   */
+  // ============================================================
+  // QUALITY CHECKS
+  // ============================================================
+
   public getQualityChecks(result: FaceMatchResult): QualityCheckItem[] {
     return [
       {
-        id: 'id-detection',
-        title: 'ID Face Detection',
-        status: (result.idFaceDetected ?? true) ? 'PASS' : 'FAIL',
-        score: result.idFaceQuality ?? 95,
-        summary: (result.idFaceDetected ?? true) ? 'Single face detected' : 'No face found in ID',
-        details: (result.idFaceQuality ?? 95) >= 90 ? 'Face visibility: Excellent' : 'Face visibility: Moderate',
-        icon: 'badge'
+        id: "id-detection",
+
+        title: "ID Face Detection",
+
+        status: (result.idFaceDetected ?? false) ? "PASS" : "FAIL",
+
+        score: result.idFaceQuality ?? 0,
+
+        summary:
+          (result.idFaceDetected ?? false)
+            ? "Face detected in ID document"
+            : "No face found in ID document",
+
+        details:
+          (result.idFaceQuality ?? 0) >= 90
+            ? "Face visibility: Excellent"
+            : "Face visibility: Needs improvement",
+
+        icon: "badge",
       },
+
       {
-        id: 'selfie-detection',
-        title: 'Selfie Face Detection',
-        status: (result.selfieFaceDetected ?? true) ? 'PASS' : 'FAIL',
-        score: result.selfieFaceQuality ?? 92,
-        summary: (result.selfieFaceDetected ?? true) ? 'Single face detected' : 'Multiple / No faces found',
-        details: (result.selfieFaceQuality ?? 92) >= 90 ? 'Face visibility: Excellent' : 'Face visibility: Acceptable',
-        icon: 'face'
+        id: "selfie-detection",
+
+        title: "Selfie Face Detection",
+
+        status: (result.selfieFaceDetected ?? false) ? "PASS" : "FAIL",
+
+        score: result.selfieFaceQuality ?? 0,
+
+        summary:
+          (result.selfieFaceDetected ?? false)
+            ? "Face detected in selfie"
+            : "No face found in selfie",
+
+        details:
+          (result.selfieFaceQuality ?? 0) >= 90
+            ? "Face visibility: Excellent"
+            : "Face visibility: Needs improvement",
+
+        icon: "face",
       },
+
       {
-        id: 'blur-sharpness',
-        title: 'Blur / Sharpness',
-        status: (result.blurScore ?? 91) >= 85 ? 'GOOD' : (result.blurScore ?? 91) >= 70 ? 'WARNING' : 'FAIL',
-        score: result.blurScore ?? 91,
-        summary: (result.blurScore ?? 91) >= 85 ? 'Low blur detected across both images' : 'Minor blur detected on selfie',
-        details: `Sharpness index: ${result.blurScore ?? 91}% (Threshold: 75%)`,
-        icon: 'photo_camera'
+        id: "blur-sharpness",
+
+        title: "Blur / Sharpness",
+
+        status:
+          (result.blurScore ?? 0) >= 85
+            ? "GOOD"
+            : (result.blurScore ?? 0) >= 70
+              ? "WARNING"
+              : "FAIL",
+
+        score: result.blurScore ?? 0,
+
+        summary:
+          (result.blurScore ?? 0) >= 85
+            ? "Images have good sharpness"
+            : "Image sharpness needs improvement",
+
+        details: `Sharpness index: ${result.blurScore ?? 0}%`,
+
+        icon: "photo_camera",
       },
+
       {
-        id: 'pose-alignment',
-        title: 'Pose / Alignment',
-        status: (result.poseScore ?? 96) >= 85 ? 'GOOD' : (result.poseScore ?? 96) >= 70 ? 'WARNING' : 'FAIL',
-        score: result.poseScore ?? 96,
-        summary: (result.poseScore ?? 96) >= 85 ? 'Faces are aligned within acceptable angle' : 'Yaw/pitch angle deviation detected',
-        details: `Alignment coefficient: ${result.poseScore ?? 96}% (Roll: 0.8°, Pitch: 1.2°)`,
-        icon: 'center_focus_strong'
-      }
+        id: "pose-alignment",
+
+        title: "Pose / Alignment",
+
+        status:
+          (result.poseScore ?? 0) >= 85
+            ? "GOOD"
+            : (result.poseScore ?? 0) >= 70
+              ? "WARNING"
+              : "FAIL",
+
+        score: result.poseScore ?? 0,
+
+        summary:
+          (result.poseScore ?? 0) >= 85
+            ? "Faces are properly aligned"
+            : "Face angle deviation detected",
+
+        details: `Alignment score: ${result.poseScore ?? 0}%`,
+
+        icon: "center_focus_strong",
+      },
     ];
   }
 
-  /**
-   * Retrieves detailed similarity metrics array for dynamic template binding
-   */
+  // ============================================================
+  // SIMILARITY METRICS
+  // ============================================================
+
   public getSimilarityMetrics(result: FaceMatchResult): SimilarityMetric[] {
     return [
       {
-        id: 'face-sim',
-        label: 'Face Similarity',
+        id: "face-sim",
+
+        label: "Face Similarity",
+
         value: result.score,
+
         benchmark: result.threshold,
-        unit: '%',
-        color: '#3B82F6'
+
+        unit: "%",
+
+        color: "#3B82F6",
       },
+
       {
-        id: 'feature-sim',
-        label: 'Facial Feature Similarity',
+        id: "feature-sim",
+
+        label: "Facial Feature Similarity",
+
         value: result.facialFeatureSimilarity ?? result.score,
+
         benchmark: 80,
-        unit: '%',
-        color: '#60A5FA'
+
+        unit: "%",
+
+        color: "#60A5FA",
       },
+
       {
-        id: 'pose-const',
-        label: 'Pose Consistency',
-        value: result.poseConsistency ?? 96.1,
+        id: "pose-const",
+
+        label: "Pose Consistency",
+
+        value: result.poseConsistency ?? 0,
+
         benchmark: 80,
-        unit: '%',
-        color: '#10B981'
+
+        unit: "%",
+
+        color: "#10B981",
       },
+
       {
-        id: 'img-quality',
-        label: 'Image Quality',
-        value: result.imageQualityAverage ?? 91.8,
+        id: "img-quality",
+
+        label: "Image Quality",
+
+        value: result.imageQualityAverage ?? 0,
+
         benchmark: 75,
-        unit: '%',
-        color: '#38BDF8'
-      }
+
+        unit: "%",
+
+        color: "#38BDF8",
+      },
     ];
   }
 
-  /**
-   * Retrieves high-tech forensic details report for the modal inspector
-   */
+  // ============================================================
+  // MATCH DETAILS REPORT
+  // ============================================================
+
   public getMatchDetailsReport(result: FaceMatchResult): MatchDetailsReport {
     return {
-      auditRef: result.auditRef || 'FIN-KYC-94021-FM',
-      aiEngine: 'FinCore BioVision Neural Matcher v4.2 (ResNet-101 Embeddings)',
-      vectorEuclideanDistance: 0.284,
+      auditRef: result.auditRef || "N/A",
+
+      aiEngine: "Face Matching Engine",
+
+      vectorEuclideanDistance: 0,
+
       cosineSimilarity: +(result.score / 100).toFixed(4),
-      landmarksMatched: 124,
-      totalLandmarks: 128,
-      illuminationMatch: 93.4,
-      antiSpoofConfidence: 99.8,
-      processingTimeMs: result.latencyMs || 38,
-      decisionRule: `Score (${result.score}%) >= Threshold (${result.threshold}%) AND Confidence == HIGH`
+
+      landmarksMatched: 0,
+
+      totalLandmarks: 0,
+
+      illuminationMatch: result.imageQualityAverage ?? 0,
+
+      antiSpoofConfidence: 0,
+
+      processingTimeMs: result.latencyMs || 0,
+
+      decisionRule: `Score (${result.score}%) >= Threshold (${result.threshold}%)`,
     };
   }
 
-  /**
-   * Switch between required verification states (PROCESSING, VERIFIED, REJECTED, REVIEW_REQUIRED, ERROR)
-   */
+  // ============================================================
+  // VERIFICATION STATE
+  // ============================================================
+
   public setVerificationState(state: VerificationState): void {
     const current = this.resultSubject.value;
 
     switch (state) {
-      case 'PROCESSING':
+      case "PROCESSING":
         this.resultSubject.next({
           ...current,
-          status: 'PROCESSING',
-          errorMessage: undefined
+
+          status: "PROCESSING",
+
+          errorMessage: undefined,
         });
+
         break;
 
-      case 'VERIFIED':
-        this.resultSubject.next({
-          ...this.initialResult,
-          status: 'VERIFIED',
-          timestamp: new Date().toISOString()
-        });
-        break;
-
-      case 'REJECTED':
+      case "VERIFIED":
         this.resultSubject.next({
           ...current,
-          score: 62.4,
-          threshold: 80,
-          confidence: 'LOW',
+
+          status: "VERIFIED",
+
+          matched: true,
+
+          timestamp: new Date().toISOString(),
+        });
+
+        break;
+
+      case "REJECTED":
+        this.resultSubject.next({
+          ...current,
+
+          status: "REJECTED",
+
           matched: false,
-          status: 'REJECTED',
-          facialFeatureSimilarity: 58.1,
-          poseConsistency: 71.0,
-          imageQualityAverage: 88.0,
-          errorMessage: 'Facial similarity score (62.4%) is below the required 80.0% threshold.',
-          timestamp: new Date().toISOString()
+
+          timestamp: new Date().toISOString(),
         });
+
         break;
 
-      case 'REVIEW_REQUIRED':
+      case "REVIEW_REQUIRED":
         this.resultSubject.next({
           ...current,
-          score: 76.5,
-          threshold: 80,
-          confidence: 'MEDIUM',
+
+          status: "REVIEW_REQUIRED",
+
           matched: false,
-          status: 'REVIEW_REQUIRED',
-          facialFeatureSimilarity: 74.2,
-          poseConsistency: 81.3,
-          blurScore: 78,
-          poseScore: 79,
-          errorMessage: 'Borderline similarity score (76.5%) detected. Supervisor manual inspection required.',
-          timestamp: new Date().toISOString()
+
+          timestamp: new Date().toISOString(),
         });
+
         break;
 
-      case 'ERROR':
+      case "ERROR":
         this.resultSubject.next({
           ...current,
+
           score: 0,
+
           matched: false,
-          status: 'ERROR',
-          errorMessage: 'Face Match Could Not Be Completed. Unable to process the images. Please try again.',
-          timestamp: new Date().toISOString()
+
+          status: "ERROR",
+
+          errorMessage: "Face Match Could Not Be Completed.",
+
+          timestamp: new Date().toISOString(),
         });
+
         break;
     }
   }
 
-  /**
-   * Re-triggers AI analysis with a realistic processing phase
-   */
-  public triggerReanalysis(targetState: VerificationState = 'VERIFIED'): void {
-    this.setVerificationState('PROCESSING');
+  // ============================================================
+  // SIMULATED ANALYSIS
+  // USE ONLY FOR UI TESTING
+  // ============================================================
+
+  public compareFacesSimulated(
+    targetState: VerificationState = "VERIFIED",
+  ): Observable<FaceMatchResult> {
+    this.isComparingSubject.next(true);
+
+    this.setVerificationState("PROCESSING");
+
+    return timer(1500).pipe(
+      map(() => {
+        this.isComparingSubject.next(false);
+
+        this.setVerificationState(targetState);
+
+        return this.resultSubject.value;
+      }),
+    );
+  }
+
+  // ============================================================
+  // RETRY / REANALYSIS
+  // ============================================================
+
+  public triggerReanalysis(targetState: VerificationState = "VERIFIED"): void {
+    this.setVerificationState("PROCESSING");
+
     timer(1400).subscribe(() => {
       this.setVerificationState(targetState);
     });
   }
 }
-
-

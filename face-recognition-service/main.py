@@ -5,7 +5,13 @@ import uuid
 import cv2
 import traceback
 
+from liveness import router as liveness_router
+
+
 app = FastAPI()
+
+# Register liveness routes
+app.include_router(liveness_router)
 
 
 @app.get("/")
@@ -45,8 +51,15 @@ async def face_match(
         img1 = cv2.imread(registered_path)
         img2 = cv2.imread(selfie_path)
 
-        print("Image 1:", img1.shape if img1 is not None else "NOT READABLE")
-        print("Image 2:", img2.shape if img2 is not None else "NOT READABLE")
+        print(
+            "Image 1:",
+            img1.shape if img1 is not None else "NOT READABLE"
+        )
+
+        print(
+            "Image 2:",
+            img2.shape if img2 is not None else "NOT READABLE"
+        )
 
         if img1 is None or img2 is None:
             return {
@@ -86,6 +99,7 @@ async def face_match(
         }
 
     finally:
+
         if os.path.exists(registered_path):
             os.remove(registered_path)
 

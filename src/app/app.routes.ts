@@ -1,25 +1,45 @@
-import { Routes } from '@angular/router';
+import { Routes } from "@angular/router";
 
 export const routes: Routes = [
   {
-    path: '',
-    redirectTo: 'face-match',
-    pathMatch: 'full'
+    path: "",
+    redirectTo: "document-ocr",
+    pathMatch: "full",
   },
   {
-    path: 'face-match',
+    path: "document-ocr",
     loadComponent: () =>
-      import('./pages/face-match/face-match.component').then((m) => m.FaceMatchComponent),
-    title: 'Face Match Accuracy — FinCore Nexus'
+      import("./features/document-ocr/document-ocr.component").then(
+        (m) => m.DocumentOcrComponent,
+      ),
+    title: "Document OCR — FinCore Nexus",
   },
   {
-    path: 'verification-summary',
+    path: "liveness-detection",
     loadComponent: () =>
-      import('./pages/verification-summary/verification-summary.component').then((m) => m.VerificationSummaryComponent),
-    title: 'Verification Summary — FinCore Nexus'
+      import("./features/liveness-detection/liveness-detection.component").then(
+        (m) => m.LivenessDetectionComponent,
+      ),
+    title: "Liveness Detection — FinCore Nexus",
   },
   {
-    path: '**',
-    redirectTo: 'face-match'
-  }
+    path: "face-match",
+    loadComponent: () =>
+      import("./pages/face-match/face-match.component").then(
+        (m) => m.FaceMatchComponent,
+      ),
+    title: "Face Match Accuracy — FinCore Nexus",
+  },
+  {
+    path: "verification-summary",
+    loadComponent: () =>
+      import("./pages/verification-summary/verification-summary.component").then(
+        (m) => m.VerificationSummaryComponent,
+      ),
+    title: "Verification Summary — FinCore Nexus",
+  },
+  {
+    path: "**",
+    redirectTo: "face-match",
+  },
 ];
