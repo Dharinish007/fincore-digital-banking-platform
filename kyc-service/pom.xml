@@ -7,16 +7,18 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- Parent Backend Project -->
+    <!-- Spring Boot Parent -->
     <parent>
-        <groupId>com.fincore</groupId>
-        <artifactId>fincore-backend</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../backend/pom.xml</relativePath>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.5.5</version>
+        <relativePath/>
     </parent>
 
-    <!-- KYC Service -->
+    <!-- Project Information -->
+    <groupId>com.fincore.kyc</groupId>
     <artifactId>kyc-service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
 
     <name>kyc-service</name>
 
@@ -24,84 +26,128 @@
         FinCore Digital Banking Platform - KYC and Compliance Service
     </description>
 
+    <!-- Java Version -->
+    <properties>
+        <java.version>17</java.version>
+
+        <!-- SpringDoc -->
+        <springdoc.version>2.8.13</springdoc.version>
+
+        <!-- JWT -->
+        <jjwt.version>0.12.6</jjwt.version>
+    </properties>
+
+    <!-- Dependencies -->
     <dependencies>
 
-        <!-- Spring Web -->
+        <!-- ============================= -->
+        <!-- Spring Boot Web -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!-- ============================= -->
         <!-- Spring Security -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- ============================= -->
         <!-- Spring Data JPA -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
+        <!-- ============================= -->
         <!-- Validation -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
+        <!-- ============================= -->
         <!-- Actuator -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- ============================= -->
         <!-- PostgreSQL -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- H2 -->
+        <!-- ============================= -->
+        <!-- H2 Database -->
+        <!-- ============================= -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
+        <!-- ============================= -->
         <!-- Lombok -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
+        <!-- ============================= -->
         <!-- Swagger / OpenAPI -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- JWT -->
+        <!-- ============================= -->
+        <!-- JWT API -->
+        <!-- ============================= -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
+            <version>${jjwt.version}</version>
         </dependency>
 
+        <!-- ============================= -->
+        <!-- JWT Implementation -->
+        <!-- ============================= -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-impl</artifactId>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
 
+        <!-- ============================= -->
+        <!-- JWT Jackson -->
+        <!-- ============================= -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
+            <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>
 
+        <!-- ============================= -->
         <!-- Testing -->
+        <!-- ============================= -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -110,6 +156,7 @@
 
     </dependencies>
 
+    <!-- Build Configuration -->
     <build>
         <plugins>
 
