@@ -132,7 +132,8 @@ The **Document OCR** component processes the uploaded identity document and extr
 
 ### 📸 Screenshot
 
-<img width="412" height="202" alt="Document OCR (2)" src="https://github.com/user-attachments/assets/74cfdb36-ad45-4dbd-8d37-0d93ded6060b" />
+<img width="1600" height="918" alt="Document OCR" src="https://github.com/user-attachments/assets/1027ab28-477d-4846-9cc3-fa6879f19005" />
+
 
 ### 🔍 Features
 
@@ -155,7 +156,8 @@ The **Liveness Detection** component verifies whether the person captured throug
 
 ### 📸 Screenshot
 
-<img width="413" height="201" alt="Liveliness Detection (2)" src="https://github.com/user-attachments/assets/b9c215a4-17e6-46e4-9825-b4f15eb8b8f3" />
+<img width="1600" height="843" alt="Liveliness Detection" src="https://github.com/user-attachments/assets/942ef578-b524-40c7-8532-33c0ae0b9406" />
+
 
 
 ### 🔍 Features
@@ -177,7 +179,7 @@ The **Face Match Accuracy** component compares the customer's face and generates
 
 ### 📸 Screenshot
 
-<img width="413" height="202" alt="Facematch Accuracy" src="https://github.com/user-attachments/assets/88efebc1-359e-4ab0-83c1-b1e113efec97" />
+<img width="1600" height="836" alt="Face Match Accuracy" src="https://github.com/user-attachments/assets/b45d702d-30af-4b57-86ae-faffeb65bd65" />
 
 
 ### 🔍 Features
