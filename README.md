@@ -93,6 +93,55 @@ This enables better scalability, maintainability, security, and integration betw
 
 ---
 
+
+# 🤖 AI Models & Microservices
+
+Milestone 4 uses AI-based microservices for automated KYC and identity verification. The AI services communicate with the main Spring Boot backend through REST APIs.
+
+## 🔹 AI Models / Technologies
+
+| Component | Model / Technology | Purpose |
+|---|---|---|
+| 🤖 Document OCR | Tesseract OCR | Extracts text from uploaded identity documents |
+| 🧍 Liveness Detection | AI Liveness Model | Verifies whether the captured person is live |
+| 👤 Face Match Accuracy | VGG-Face | Compares faces and calculates similarity |
+
+## 🔹 Microservices
+
+| Microservice | Technology | Responsibility |
+|---|---|---|
+| 🤖 OCR Service | Python, FastAPI, Tesseract OCR | Document text extraction |
+| 🧍 Liveness Service | Python, FastAPI, AI Model | Liveness verification |
+| 👤 Face Recognition Service | Python, FastAPI, VGG-Face | Face comparison and matching |
+
+## 🔹 Backend Communication
+
+The Spring Boot backend communicates with the AI services through REST APIs.
+
+```text
+Angular Frontend
+       │
+       ▼
+Spring Boot Backend
+       │
+       ├──────────────► FastAPI OCR Service
+       │                    │
+       │                    ▼
+       │               Tesseract OCR
+       │
+       ├──────────────► FastAPI Liveness Service
+       │                    │
+       │                    ▼
+       │              Liveness AI Model
+       │
+       └──────────────► FastAPI Face Recognition Service
+                            │
+                            ▼
+                       DeepFace / VGG-Face
+
+```
+---
+
 # 📁 Project Structure
 
 ```text
