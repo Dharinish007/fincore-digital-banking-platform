@@ -7,11 +7,11 @@ import { Component } from '@angular/core';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-  appName = 'FinCore Nexus';
-  milestoneTitle = 'Milestone 3: Loan Management';
+  appName = 'Secure Digital Banking System';
+  milestoneTitle = 'Milestone 4: Loan Management';
   userRole = 'Bank Teller';
 
   onLogout(): void {
-    alert('Logged out from FinCore Nexus Banking System');
+    alert('Logged out from Secure Digital Banking System');
   }
 }
