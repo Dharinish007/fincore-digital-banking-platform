@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -20,5 +21,6 @@ public class Customer {
     private String email;
     private String phoneNumber;
     private String accountNumber;
+    private LocalDate dateOfBirth;
     private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -21,6 +21,8 @@ public class Transaction {
 
     private String transactionReference;
 
+    private Long customerId;
+
     private Long loanId;
 
     private BigDecimal amount;

@@ -1,5 +1,6 @@
 package com.example.milestone3.operations;
 
+import com.example.milestone3.audit.AuditLogService;
 import com.example.milestone3.operations.entity.Account;
 import com.example.milestone3.operations.entity.AccountStatement;
 import com.example.milestone3.operations.entity.LoanCollection;
@@ -30,6 +31,7 @@ public class OperationsService {
     private final LoanDisbursementRepo disbursementRepo;
     private final LoanCollectionRepo collectionRepo;
     private final CustomerRepo customerRepo;
+    private final AuditLogService auditLogService;
 
     public List<Account> accounts() { return accountRepo.findAll(); }
     public List<Customer> customers() { return customerRepo.findAll(); }
@@ -39,15 +41,23 @@ public class OperationsService {
         }
         Customer customer = new Customer();
         customer.setFullName(request.fullName()); customer.setEmail(request.email()); customer.setPhoneNumber(request.phoneNumber()); customer.setAccountNumber(request.accountNumber());
-        return customerRepo.save(customer);
+        Customer saved = customerRepo.save(customer);
+        auditLogService.record(null, "SYSTEM", "CUSTOMER_CREATED", "OPERATIONS", "CUSTOMER", saved.getId().toString(), "Customer created", "SUCCESS", null);
+        return saved;
     }
-    public List<AccountStatement> statement(Long accountId) { return statementRepo.findByAccountIdOrderByCreatedAtDesc(accountId); }
+    public List<AccountStatement> statement(Long accountId) {
+        List<AccountStatement> statements = statementRepo.findByAccountIdOrderByCreatedAtDesc(accountId);
+        auditLogService.record(null, "SYSTEM", "STATEMENT_GENERATED", "OPERATIONS", "ACCOUNT", accountId.toString(), "Account statement retrieved", "SUCCESS", null);
+        return statements;
+    }
 
     @Transactional
     public Account updateLifecycle(Long accountId, String status) {
         Account account = accountRepo.findById(accountId).orElseThrow(() -> new IllegalArgumentException("Account not found"));
         account.setStatus(status.toUpperCase());
-        return accountRepo.save(account);
+        Account saved = accountRepo.save(account);
+        auditLogService.record(null, "SYSTEM", "ACCOUNT_STATUS_UPDATED", "OPERATIONS", "ACCOUNT", accountId.toString(), "Account status updated to " + status, "SUCCESS", null);
+        return saved;
     }
 
     @Transactional
@@ -62,7 +72,9 @@ public class OperationsService {
         entry.setAccountId(accountId); entry.setReference("ADJ-" + UUID.randomUUID()); entry.setEntryType(request.entryType().toUpperCase());
         entry.setAmount(request.amount()); entry.setBalanceAfter(updatedBalance); entry.setDescription(request.description());
         statementRepo.save(entry);
-        return accountRepo.save(account);
+        Account saved = accountRepo.save(account);
+        auditLogService.record(null, "SYSTEM", "BALANCE_UPDATED", "OPERATIONS", "ACCOUNT", accountId.toString(), "Account balance adjusted", "SUCCESS", null);
+        return saved;
     }
 
     public OperationsDtos.EmiResult calculateEmi(OperationsDtos.EmiRequest request) {
@@ -85,7 +97,9 @@ public class OperationsService {
         LoanDisbursement item = new LoanDisbursement();
         item.setLoanId(loan.getId()); item.setAmount(request.amount()); item.setChannel(request.channel()); item.setReference("DISB-" + UUID.randomUUID());
         loan.setStatus("DISBURSED"); loanRepo.save(loan);
-        return disbursementRepo.save(item);
+        LoanDisbursement saved = disbursementRepo.save(item);
+        auditLogService.record(null, "SYSTEM", "LOAN_DISBURSED", "OPERATIONS", "LOAN", loan.getId().toString(), "Loan disbursement completed", "SUCCESS", null);
+        return saved;
     }
 
     @Transactional
@@ -95,6 +109,8 @@ public class OperationsService {
         LoanCollection item = new LoanCollection();
         item.setLoanId(loan.getId()); item.setScheduleId(request.scheduleId()); item.setAmount(request.amount()); item.setChannel(request.channel()); item.setReference("COL-" + UUID.randomUUID());
         loan.setTotalOutstanding(loan.getTotalOutstanding().subtract(request.amount()).max(BigDecimal.ZERO)); loanRepo.save(loan);
-        return collectionRepo.save(item);
+        LoanCollection saved = collectionRepo.save(item);
+        auditLogService.record(null, "SYSTEM", "LOAN_COLLECTION_RECORDED", "OPERATIONS", "LOAN", loan.getId().toString(), "Loan collection completed", "SUCCESS", null);
+        return saved;
     }
 }

@@ -16,16 +16,8 @@ export interface NavItem {
 })
 export class SidebarComponent {
   navItems: NavItem[] = [
-    { label: 'Fraud Detection', route: '/fraud-detection' },
-    { label: 'Settlement Engine', route: '/settlement-engine' },
-    { label: 'Notification Service', route: '/notification-service' },
-    { label: 'Loans', route: '/loans' },
-    { label: 'Accounts & Ledger', route: '/accounts' },
-    { label: 'Balance & Loan Operations', route: '/operations' },
-    { label: 'Payments', route: '/payments' },
-    { label: 'KYC & Verification', route: '/kyc' },
-    { label: 'Dashboard', route: '/dashboard' },
-    { label: 'Audit Trail', route: '/audit' },
-    { label: 'Settings', route: '/settings' }
+    { label: 'Liveness Verification', route: '/liveness' },
+    { label: 'Risk Assessment', route: '/risk' },
+    { label: 'Audit Logging', route: '/audit' }
   ];
 }

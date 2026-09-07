@@ -1,5 +1,8 @@
 package com.example.milestone3.fraudDetection;
 
+import com.example.milestone3.audit.AuditLogService;
+import com.example.milestone3.risk.RiskAssessment;
+import com.example.milestone3.risk.RiskAssessmentRepo;
 import com.example.milestone3.settlementEngine.entity.Loan;
 import com.example.milestone3.settlementEngine.entity.Transaction;
 import com.example.milestone3.settlementEngine.repo.LoanRepo;
@@ -21,6 +24,10 @@ public class FraudDetectionService {
     private FraudEventRepo fraudEventRepository;
     @Autowired
     private LoanRepo loanRepo;
+        @Autowired
+        private RiskAssessmentRepo riskAssessmentRepo;
+        @Autowired
+        private AuditLogService auditLogService;
     public record FraudResult(
             int score,
             String status,
@@ -123,5 +130,24 @@ public class FraudDetectionService {
         );
 
         fraudEventRepository.save(fraudEvent);
+
+        riskAssessmentRepo.save(new RiskAssessment(
+                null,
+                userId,
+                transaction.getId(),
+                result.score(),
+                result.status(),
+                String.join(", ", result.reasons()),
+                LocalDateTime.now()
+        ));
+
+        auditLogService.record(
+                "RISK_ENGINE",
+                "RISK_ASSESSMENT_CREATED",
+                "TRANSACTION",
+                transaction.getId().toString(),
+                "Decision " + result.status() + ", score " + result.score(),
+                null
+        );
     }
 }

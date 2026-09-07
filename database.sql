@@ -1,61 +1,4 @@
--- =========================================================
--- FinCore Digital Banking PostgreSQL Schema
--- Compatible with the Spring Boot backend entities
--- =========================================================
-
-CREATE TABLE IF NOT EXISTS loan (
-    id BIGSERIAL PRIMARY KEY,
-    customer_id BIGINT NOT NULL,
-    principal_outstanding NUMERIC(18,2) NOT NULL DEFAULT 0,
-    interest_outstanding NUMERIC(18,2) NOT NULL DEFAULT 0,
-    penalty_outstanding NUMERIC(18,2) NOT NULL DEFAULT 0,
-    total_outstanding NUMERIC(18,2) NOT NULL DEFAULT 0,
-    status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE'
-);
-
-CREATE TABLE IF NOT EXISTS transaction (
-    id BIGSERIAL PRIMARY KEY,
-    transaction_reference VARCHAR(100),
-    loan_id BIGINT NOT NULL,
-    amount NUMERIC(18,2) NOT NULL DEFAULT 0,
-    type VARCHAR(50),
-    status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_transaction_loan
-        FOREIGN KEY (loan_id) REFERENCES loan(id)
-);
-
-CREATE TABLE IF NOT EXISTS settlement (
-    id BIGSERIAL PRIMARY KEY,
-    transaction_id BIGINT NOT NULL,
-    loan_id BIGINT NOT NULL,
-    settled_amount NUMERIC(18,2) NOT NULL DEFAULT 0,
-    status VARCHAR(50) NOT NULL DEFAULT 'SETTLED',
-    settled_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_settlement_transaction
-        FOREIGN KEY (transaction_id) REFERENCES transaction(id),
-    CONSTRAINT fk_settlement_loan
-        FOREIGN KEY (loan_id) REFERENCES loan(id)
-);
-
-CREATE TABLE IF NOT EXISTS fraud_event (
-    id BIGSERIAL PRIMARY KEY,
-    user_id BIGINT,
-    transaction_id BIGINT,
-    fraud_score INTEGER,
-    status VARCHAR(50),
-    reason TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS notifications (
-    id BIGSERIAL PRIMARY KEY,
-    recipient VARCHAR(255) NOT NULL,
-    type VARCHAR(100),
-    message TEXT,
-    status VARCHAR(50),
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+-- FinCore security feature schema (PostgreSQL)
 
 CREATE TABLE IF NOT EXISTS customer (
     id BIGSERIAL PRIMARY KEY,
@@ -63,125 +6,156 @@ CREATE TABLE IF NOT EXISTS customer (
     email VARCHAR(255) NOT NULL UNIQUE,
     phone_number VARCHAR(30) NOT NULL,
     account_number VARCHAR(30),
+    date_of_birth DATE NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS account (
+CREATE TABLE IF NOT EXISTS transaction (
     id BIGSERIAL PRIMARY KEY,
-    account_number VARCHAR(30) NOT NULL UNIQUE,
+    transaction_reference VARCHAR(100) NOT NULL UNIQUE,
     customer_id BIGINT NOT NULL,
-    account_type VARCHAR(40) NOT NULL,
-    balance NUMERIC(18,2) NOT NULL DEFAULT 0.00,
-    status VARCHAR(30) NOT NULL DEFAULT 'ACTIVE',
-    opened_at DATE NOT NULL DEFAULT CURRENT_DATE,
-    closed_at DATE
-);
-
-CREATE TABLE IF NOT EXISTS account_statement (
-    id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT NOT NULL REFERENCES account(id),
-    reference VARCHAR(100) NOT NULL UNIQUE,
-    entry_type VARCHAR(30) NOT NULL,
-    amount NUMERIC(18,2) NOT NULL,
-    balance_after NUMERIC(18,2) NOT NULL,
-    description VARCHAR(255),
+    loan_id BIGINT,
+    amount NUMERIC(15,2) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+    location VARCHAR(150),
+    device_type VARCHAR(80),
+    international_transaction BOOLEAN NOT NULL DEFAULT FALSE,
+    new_device BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS loan_schedule (
+CREATE TABLE IF NOT EXISTS risk_assessment (
     id BIGSERIAL PRIMARY KEY,
-    loan_id BIGINT NOT NULL REFERENCES loan(id),
-    installment_number INTEGER NOT NULL,
-    due_date DATE NOT NULL,
-    principal_due NUMERIC(18,2) NOT NULL,
-    interest_due NUMERIC(18,2) NOT NULL,
-    total_due NUMERIC(18,2) NOT NULL,
+    customer_id BIGINT,
+    transaction_id BIGINT REFERENCES transaction(id),
+    risk_score INTEGER,
+    decision VARCHAR(30) NOT NULL,
+    reasons TEXT,
+    assessed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    amount NUMERIC(15,2),
+    transaction_type VARCHAR(50),
+    location VARCHAR(150),
+    device_type VARCHAR(80),
+    international_transaction BOOLEAN NOT NULL DEFAULT FALSE,
+    new_device BOOLEAN NOT NULL DEFAULT FALSE,
+    previous_transaction_count INTEGER NOT NULL DEFAULT 0,
+    failed_attempts INTEGER NOT NULL DEFAULT 0,
+    unusual_behavior BOOLEAN NOT NULL DEFAULT FALSE,
+    risk_level VARCHAR(20),
+    assessment_status VARCHAR(30),
+    customer_name VARCHAR(150),
+    annual_income NUMERIC(15,2),
+    account_balance NUMERIC(15,2),
+    account_type VARCHAR(50),
+    account_number VARCHAR(30),
+    employment_status VARCHAR(50),
+    loan_outstanding NUMERIC(15,2),
+    loan_count INTEGER,
+    transaction_pattern VARCHAR(50),
+    deposit_frequency VARCHAR(30),
+    ai_analysis TEXT,
+    ai_model VARCHAR(100),
+    analysis_source VARCHAR(30),
+    transaction_history TEXT
+);
+
+CREATE TABLE IF NOT EXISTS audit_log (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT,
+    username VARCHAR(100),
+    "user" VARCHAR(150),
+    action VARCHAR(100) NOT NULL,
+    module VARCHAR(50),
+    status VARCHAR(30),
+    entity VARCHAR(80),
+    entity_id VARCHAR(100),
+    details TEXT,
+    metadata TEXT,
+    ip VARCHAR(45),
+    "timestamp" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS liveness_verification (
+    id BIGSERIAL PRIMARY KEY,
+    customer_id BIGINT NOT NULL,
+    session_id VARCHAR(50) UNIQUE,
     status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
-    paid_at TIMESTAMP
+    confidence_score NUMERIC(5,2),
+    verification_method VARCHAR(50) NOT NULL DEFAULT 'SELFIE',
+    ip_address VARCHAR(45),
+    failure_reason TEXT,
+    verified_at TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS loan_disbursement (
-    id BIGSERIAL PRIMARY KEY,
-    loan_id BIGINT NOT NULL REFERENCES loan(id),
-    amount NUMERIC(18,2) NOT NULL,
-    channel VARCHAR(30) NOT NULL,
-    reference VARCHAR(100) NOT NULL UNIQUE,
-    status VARCHAR(30) NOT NULL DEFAULT 'COMPLETED',
-    disbursed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+INSERT INTO transaction (
+    id,
+    transaction_reference,
+    customer_id,
+    loan_id,
+    amount,
+    type,
+    status,
+    location,
+    device_type,
+    international_transaction,
+    new_device
+)
+VALUES
+    (1, 'TXN-2026-0001', 101, NULL, 125000.00, 'INTERNATIONAL_WIRE', 'PENDING', 'London, UK', 'Web Browser', TRUE, TRUE),
+    (2, 'TXN-2026-0002', 101, NULL, 8500.00, 'TRANSFER', 'SUCCESS', 'Mumbai, IN', 'Mobile App', FALSE, FALSE),
+    (3, 'TXN-2026-0003', 102, NULL, 45000.00, 'CRYPTO_EXCHANGE', 'PENDING', 'Singapore, SG', 'Web Browser', TRUE, TRUE),
+    (4, 'TXN-2026-0004', 103, NULL, 1200.00, 'BILL_PAYMENT', 'SUCCESS', 'Bengaluru, IN', 'Mobile App', FALSE, FALSE),
+    (5, 'TXN-2026-0005', 101, NULL, 27500.00, 'CASH_WITHDRAWAL', 'FAILED', 'New York, US', 'ATM', TRUE, TRUE)
+ON CONFLICT (id) DO NOTHING;
+
+SELECT setval(
+    pg_get_serial_sequence('transaction', 'id'),
+    GREATEST((SELECT COALESCE(MAX(id), 1) FROM transaction), 1),
+    TRUE
 );
 
-CREATE TABLE IF NOT EXISTS loan_collection (
-    id BIGSERIAL PRIMARY KEY,
-    loan_id BIGINT NOT NULL REFERENCES loan(id),
-    schedule_id BIGINT REFERENCES loan_schedule(id),
-    amount NUMERIC(18,2) NOT NULL,
-    channel VARCHAR(30) NOT NULL,
-    reference VARCHAR(100) NOT NULL UNIQUE,
-    status VARCHAR(30) NOT NULL DEFAULT 'RECEIVED',
-    collected_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+INSERT INTO customer (
+    id,
+    full_name,
+    email,
+    phone_number,
+    account_number,
+    date_of_birth
+)
+VALUES
+    (101, 'Aarav Sharma', 'aarav.sharma@example.com', '+91 98765 10001', 'ACC-101-2026', DATE '1990-08-15'),
+    (102, 'Maya Patel', 'maya.patel@example.com', '+91 98765 10002', 'ACC-102-2026', DATE '1988-03-22'),
+    (103, 'Rohan Mehta', 'rohan.mehta@example.com', '+91 98765 10003', 'ACC-103-2026', DATE '1985-11-05')
+ON CONFLICT (id) DO NOTHING;
 
--- =========================================================
--- INDEXES
--- =========================================================
+CREATE INDEX IF NOT EXISTS idx_risk_assessment_customer_id
+    ON risk_assessment (customer_id);
 
-CREATE INDEX IF NOT EXISTS idx_transaction_loan_id
-    ON transaction (loan_id);
+CREATE INDEX IF NOT EXISTS idx_risk_assessment_transaction_id
+    ON risk_assessment (transaction_id);
+
+CREATE INDEX IF NOT EXISTS idx_transaction_customer_id
+    ON transaction (customer_id);
+
+CREATE INDEX IF NOT EXISTS idx_transaction_status
+    ON transaction (status);
 
 CREATE INDEX IF NOT EXISTS idx_transaction_created_at
     ON transaction (created_at);
 
-CREATE INDEX IF NOT EXISTS idx_settlement_transaction_id
-    ON settlement (transaction_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_timestamp
+    ON audit_log ("timestamp");
 
-CREATE INDEX IF NOT EXISTS idx_notifications_recipient
-    ON notifications (recipient);
+CREATE INDEX IF NOT EXISTS idx_audit_log_action
+    ON audit_log (action);
 
-CREATE INDEX IF NOT EXISTS idx_fraud_event_transaction_id
-    ON fraud_event (transaction_id);
+CREATE INDEX IF NOT EXISTS idx_audit_log_module_status
+    ON audit_log (module, status);
 
-CREATE INDEX IF NOT EXISTS idx_account_statement_account_id ON account_statement (account_id);
-CREATE INDEX IF NOT EXISTS idx_loan_schedule_loan_id ON loan_schedule (loan_id);
-CREATE INDEX IF NOT EXISTS idx_loan_collection_loan_id ON loan_collection (loan_id);
+CREATE INDEX IF NOT EXISTS idx_liveness_verification_customer_id
+    ON liveness_verification (customer_id);
 
--- =========================================================
--- SEED DATA
--- =========================================================
-
-INSERT INTO loan (id, customer_id, principal_outstanding, interest_outstanding, penalty_outstanding, total_outstanding, status)
-VALUES
-    (1, 1, 50000.00, 2000.00, 500.00, 52500.00, 'ACTIVE')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO transaction (id, loan_id, amount, type, status, created_at)
-VALUES
-    (1, 1, 150000.00, 'TRANSFER', 'SUCCESS', CURRENT_TIMESTAMP),
-    (2, 1, 10000.00, 'TRANSFER', 'SUCCESS', CURRENT_TIMESTAMP),
-    (3, 1, 15000.00, 'TRANSFER', 'SUCCESS', CURRENT_TIMESTAMP),
-    (4, 1, 20000.00, 'TRANSFER', 'SUCCESS', CURRENT_TIMESTAMP),
-    (5, 1, 12000.00, 'TRANSFER', 'SUCCESS', CURRENT_TIMESTAMP),
-    (6, 1, 18000.00, 'TRANSFER', 'SUCCESS', CURRENT_TIMESTAMP)
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO fraud_event (user_id, transaction_id, fraud_score, status, reason, created_at)
-VALUES
-    (1, 1, 72, 'UNDER_REVIEW', 'Large transaction amount', CURRENT_TIMESTAMP)
-ON CONFLICT DO NOTHING;
-
-INSERT INTO notifications (recipient, type, message, status, created_at)
-VALUES
-    ('user1@example.com', 'EMAIL', 'Loan disbursed successfully', 'SENT', CURRENT_TIMESTAMP),
-    ('ops@fincore.com', 'EMAIL', 'Fraud alert reviewed', 'SENT', CURRENT_TIMESTAMP)
-ON CONFLICT DO NOTHING;
-
-INSERT INTO account (id, account_number, customer_id, account_type, balance, status)
-VALUES (1, 'ACC-8849-1001', 1, 'SAVINGS', 452100.00, 'ACTIVE')
-ON CONFLICT (id) DO NOTHING;
-
-INSERT INTO account_statement (account_id, reference, entry_type, amount, balance_after, description)
-VALUES (1, 'STMT-10001', 'CREDIT', 500000.00, 452100.00, 'Opening balance')
-ON CONFLICT (reference) DO NOTHING;
-
-INSERT INTO loan_schedule (loan_id, installment_number, due_date, principal_due, interest_due, total_due, status)
-VALUES (1, 1, CURRENT_DATE + INTERVAL '30 days', 16000.00, 2000.00, 18000.00, 'PENDING')
-ON CONFLICT DO NOTHING;
+CREATE INDEX IF NOT EXISTS idx_liveness_verification_status
+    ON liveness_verification (status);
