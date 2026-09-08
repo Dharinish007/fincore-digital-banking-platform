@@ -16,14 +16,14 @@ Risk and audit features remain available at `/risk` and `/audit`. The frontend c
 4. Start the backend:
 
 ```powershell
-cd Milestone3-Backend\milestone-3
+cd Milestone3-Backend\milestone-4
 .\mvnw.cmd spring-boot:run
 ```
 
 5. Start the frontend:
 
 ```powershell
-cd Frontend-milestone3
+cd Frontend-milestone4
 npm ci
 npm start
 ```
