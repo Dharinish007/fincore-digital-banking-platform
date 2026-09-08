@@ -1,0 +1,76 @@
+<div class="module-container">
+  <!-- Toast Notification -->
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <div class="header-action-row">
+    <h2 class="page-title">Risk Assessment</h2>
+    <p class="camera-help">Rule-based assessment of customer, account, transaction, loan, and database history details.</p>
+  </div>
+
+  <div class="table-card">
+    <h3 class="card-header-title">Database Transactions for Risk Assessment</h3>
+    <p class="camera-help">The five newest transactions are loaded from the transaction table. Select one to calculate and save its risk result.</p>
+    @if (selectedTransactionId) {
+      <p class="selection-status">Selected transaction: #{{ selectedTransactionId }}</p>
+    }
+    <table class="data-table">
+      <thead><tr><th>Transaction ID</th><th>Customer ID</th><th>Amount (INR)</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>
+        @for (transaction of riskTransactions; track transaction.transactionId) {
+          <tr [class.selected-row]="selectedTransactionId === transaction.transactionId" (click)="selectRiskTransaction(transaction)">
+            <td>#{{ transaction.transactionId }}</td>
+            <td>{{ transaction.customerId || '-' }}</td>
+            <td>{{ transaction.amount | number:'1.2-2' }}</td>
+            <td>{{ transaction.transactionType || 'FUND_TRANSFER' }}</td>
+            <td>{{ transaction.status }}</td>
+            <td><button type="button" class="action-btn" (click)="$event.stopPropagation(); selectRiskTransaction(transaction)">Select</button></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="6" class="empty-state">No database transactions are available.</td></tr>
+        }
+      </tbody>
+    </table>
+    <div class="action-buttons" style="margin-top: 16px;">
+      <button class="action-btn primary-btn" (click)="assessRisk()" [disabled]="loadingAssessment || !selectedTransactionId">
+        {{ loadingAssessment ? 'Calculating risk…' : 'Recalculate Risk' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Risk Analysis Result -->
+  @if (assessmentResult) {
+    <div class="table-card ai-result-card risk-completion-card">
+      <div class="risk-completion-heading">
+        <div>
+          <span class="completion-eyebrow">ASSESSMENT COMPLETE</span>
+          <h3 class="card-header-title">Risk Assessment Completed</h3>
+        </div>
+        <span class="completion-check">✓</span>
+      </div>
+
+      <div class="risk-summary-row">
+        <div class="risk-score-box" [class.score-low]="assessmentResult.riskScore < 40" [class.score-med]="assessmentResult.riskScore >= 40 && assessmentResult.riskScore < 70" [class.score-high]="assessmentResult.riskScore >= 70">
+          <span class="risk-score-value">{{ assessmentResult.riskScore }}</span>
+          <span class="risk-score-label">/ 100</span>
+        </div>
+        <div class="risk-completion-details">
+          <div class="completion-metric">
+            <span class="label">Risk score</span>
+            <strong>{{ assessmentResult.riskScore }}/100</strong>
+          </div>
+          <div class="completion-metric">
+            <span class="label">Risk level</span>
+            <span class="badge" [class]="riskLevelBadgeClass(assessmentResult.riskLevel)">{{ assessmentResult.riskLevel }}</span>
+          </div>
+          <div class="completion-status">Risk assessment completed</div>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

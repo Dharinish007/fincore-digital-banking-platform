@@ -1,0 +1,87 @@
+.challenge-panel {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0;
+  padding: 14px;
+  border: 1px solid var(--border-color, #dbe4ef);
+  border-radius: 8px;
+  background: var(--surface-muted, #f6f8fb);
+}
+
+.challenge-panel span,
+.challenge-panel small {
+  color: var(--text-muted, #64748b);
+}
+
+.progress-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #dbe4ef;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: #168a72;
+  transition: width 180ms ease;
+}
+.toast-banner {
+  display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; border-radius: 8px; font-weight: 500; font-size: 0.9rem; animation: slideDown 0.3s ease;
+}
+.toast-danger { background-color: #7f1d1d; color: #fecaca; border: 1px solid #b91c1c; }
+.toast-success { background-color: #065f46; color: #a7f3d0; border: 1px solid #047857; }
+.toast-info { background-color: #075985; color: #bae6fd; border: 1px solid #0284c7; }
+.toast-close { background: transparent; border: none; color: inherit; font-size: 1.1rem; cursor: pointer; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+.camera-layout { display: flex; gap: 24px; align-items: center; }
+.camera-frame { position: relative; width: min(100%, 480px); aspect-ratio: 16 / 10; overflow: hidden; background: #080b12; border: 1px solid var(--border-color); border-radius: 8px; }
+.camera-frame video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.camera-heading, .result-heading, .challenge-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.camera-heading .card-header-title, .result-heading .card-header-title { margin-bottom: 0; }
+.eyebrow { display: block; color: #38bdf8; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 6px; }
+.camera-status, .result-status { display: inline-flex; align-items: center; gap: 8px; padding: 7px 10px; border: 1px solid #3b4259; border-radius: 999px; color: var(--text-muted); font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
+.status-dot { width: 7px; height: 7px; border-radius: 50%; background: #94a3b8; }
+.status-live { color: #a7f3d0; border-color: #047857; background: #064e3b; }
+.status-live .status-dot { background: #34d399; box-shadow: 0 0 0 4px rgba(52, 211, 153, 0.14); }
+.status-error { color: #fecaca; border-color: #b91c1c; background: #450a0a; }
+.status-error .status-dot { background: #f87171; }
+.camera-placeholder { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 8px; color: var(--text-muted); text-align: center; }
+.camera-placeholder strong { color: #f1f5f9; font-size: 1rem; }
+.camera-placeholder-icon { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid #38bdf8; border-radius: 50%; color: #38bdf8; font-size: 1.5rem; }
+.face-guide { position: absolute; width: 42%; height: 78%; left: 29%; top: 11%; border: 2px dashed #38bdf8; border-radius: 48%; pointer-events: none; }
+.face-detected-badge { position: absolute; left: 12px; top: 12px; padding: 6px 9px; border-radius: 999px; background: #064e3b; border: 1px solid #34d399; color: #a7f3d0; font-size: 0.75rem; font-weight: 700; }
+.camera-details { display: flex; flex-direction: column; gap: 14px; min-width: 220px; }
+.camera-help { color: var(--text-muted); line-height: 1.5; margin: 0; }
+.camera-checks { display: grid; gap: 8px; }
+.check-row { display: grid; grid-template-columns: 24px 1fr auto; align-items: center; gap: 8px; padding: 9px 10px; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-muted); font-size: 0.82rem; }
+.check-row strong { color: #fbbf24; font-size: 0.75rem; }
+.check-row.check-complete { border-color: #047857; color: #d1fae5; background: rgba(6, 78, 59, 0.35); }
+.check-row.check-complete strong { color: #34d399; }
+.check-icon { display: grid; place-items: center; width: 20px; height: 20px; border: 1px solid #64748b; border-radius: 50%; font-size: 0.7rem; font-weight: 700; }
+.check-complete .check-icon { border-color: #34d399; color: #34d399; }
+.verification-steps { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0; }
+.step { padding: 8px 12px; border: 1px solid var(--border-color); color: var(--text-muted); border-radius: 6px; }
+.active-step { color: #a7f3d0; border-color: #047857; background: #064e3b; }
+.completion-card { border-left: 3px solid #34d399; }
+.result-card { border-left: 3px solid #64748b; }
+.result-success { border-left-color: #34d399; }
+.result-failed { border-left-color: #f87171; }
+.result-status-success { color: #a7f3d0; border-color: #047857; background: #064e3b; }
+.result-status-failed { color: #fecaca; border-color: #b91c1c; background: #450a0a; }
+.result-summary { display: flex; align-items: center; gap: 20px; margin: 20px 0; padding: 18px; border: 1px solid var(--border-color); border-radius: 8px; background: #171a25; }
+.confidence-score { display: grid; gap: 2px; min-width: 110px; }
+.confidence-score strong { color: #38bdf8; font-size: 2rem; line-height: 1; }
+.confidence-score span, .result-meta-grid span { color: var(--text-muted); font-size: 0.75rem; }
+.result-copy { color: #cbd5e1; }
+.result-meta-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.result-meta-grid > div { display: grid; gap: 5px; padding: 12px; border: 1px solid var(--border-color); border-radius: 6px; min-width: 0; }
+.result-meta-grid strong { overflow-wrap: anywhere; color: #f1f5f9; font-size: 0.85rem; }
+.result-reason { grid-column: 1 / -1; border-color: #7f1d1d !important; }
+.result-reason strong { color: #fca5a5; font-weight: 500; }
+.result-actions { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border-color); }
+.danger-action { color: #fecaca; border-color: #b91c1c; background: #450a0a; }
+.danger-action:hover { color: #ffffff; border-color: #f87171; background: #7f1d1d; }
+@media (max-width: 700px) { .camera-layout { flex-direction: column; align-items: stretch; } .camera-frame { width: 100%; } }
+@media (max-width: 560px) { .camera-heading, .result-heading, .challenge-heading, .result-summary { flex-direction: column; align-items: stretch; } .result-meta-grid { grid-template-columns: 1fr; } .result-reason { grid-column: auto; } }
