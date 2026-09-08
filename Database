@@ -1,4 +1,4 @@
--- FinCore security feature schema (PostgreSQL)
+--  security feature schema (PostgreSQL)
 
 CREATE TABLE IF NOT EXISTS customer (
     id BIGSERIAL PRIMARY KEY,
