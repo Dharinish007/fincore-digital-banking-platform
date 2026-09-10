@@ -1,94 +1,208 @@
-# 🏦 FinCore Digital Banking Platform
+# 💳 Secure Digital Banking Platform — Milestone 3
 
-> An enterprise-grade digital banking management platform built to support
-> secure banking operations, seamless financial transactions, accurate data
-> management, and scalable banking services.
+> **Payment initiation, Beneficiary verification & Fraud Check**
 
 ---
 
 ## 📌 Introduction
 
-FinCore is a comprehensive digital banking management platform designed to
-simplify and modernize core banking operations. It provides a centralized
-system for managing customer accounts, financial transactions, and banking
-data while focusing on security, accuracy, reliability, and scalability.
+Milestone 3 extends the **FinCore Digital Banking Platform** with secure digital payment functionality, beneficiary management, and fraud detection.
 
-The platform follows a modular architecture with dedicated frontend,
-backend, and database layers, enabling seamless integration and efficient
-management of banking services.
+The module is designed to support a complete payment workflow while maintaining integration with the existing customer and account information developed in previous milestones.
 
 ---
 
-## ⚙️ Key Features
+## 🎯 Objectives
 
-- 🏦 **Account Creation**– Create and validate customer bank accounts.
-- 📊 **Balance Accuracy** – Monitor balances and identify discrepancies.
-- 🔄 **Transaction Atomicity** – Maintain consistent and reliable transactions.
+* Enable secure digital payments and fund transfers
+* Manage customer beneficiaries
+* Maintain payment and transaction information
+* Perform fraud detection and risk analysis
+* Integrate payment operations with existing banking data
+* Provide a structured and scalable database foundation
 
 ---
 
-## 🛠️ Technology Stack
+## 🚀 Key Components
 
-| Layer | Technology |
-|---|---|
-| 🖥️ Frontend | Angular 19/20 |
-| ⚙️ Backend | Java, Spring Boot, REST API |
-| 🗄️ Database | MySQL |
-| 🔧 DB Management | XAMPP, phpMyAdmin |
-| 📦 Build Tool | Maven |
-| 🔗 Version Control | Git & GitHub |
+### 👤 1. Beneficiary  Verification
 
-## 📁 Project Structure
+Allows customers to add and manage beneficiaries for making digital payments and fund transfers.
 
-├── frontend/       # Angular Application
-├── backend/        # Spring Boot REST API
-├── DB/             # SQL Scripts
+**Key functionality:**
+
+* Add beneficiary
+* Store beneficiary banking details
+* Manage beneficiary status
+* Connect beneficiaries with existing customers
+
+### 📸 Screenshot
+
+<img width="1600" height="900" alt="Beneficiary verification" src="https://github.com/user-attachments/assets/13642f4f-ec38-4459-99c9-2f9328febb52" />
+
+
+```text
+![Beneficiary Management](./screenshots/beneficiary-management.png)
+```
+
+---
+
+### 💳 2. Payment Initiation
+
+Handles digital payment and fund-transfer operations between customer accounts and registered beneficiaries.
+
+**Key functionality:**
+
+* Select beneficiary
+* Enter payment amount
+* Initiate payment
+* Generate transaction reference
+* Track payment status
+* Maintain payment history
+
+### 📸 Screenshot
+
+<img width="1600" height="900" alt="Payment Initiation" src="https://github.com/user-attachments/assets/e9eee296-720c-4ab2-83e1-2534e5e49ebd" />
+
+
+```text
+![Payment & Fund Transfer](./screenshots/payment-transfer.png)
+```
+
+---
+
+### 🛡️ 3. Fraud Check
+
+The fraud detection component analyses payment activity and identifies potentially suspicious transactions.
+
+**Key functionality:**
+
+* Analyse payment transactions
+* Calculate risk score
+* Identify risk level
+* Detect suspicious transactions
+* Flag potentially fraudulent payments
+* Store fraud-check results
+
+### 📸 Screenshot
+
+<img width="1600" height="781" alt="Fraud check" src="https://github.com/user-attachments/assets/e21c1449-2efe-4af3-a69b-2ed0d5b2029c" />
+
+
+```text
+![Fraud Detection](./screenshots/fraud-detection.png)
+```
+
+---
+
+# 🔄 M3 Payment Flow
+
+```text
+Customer
+   ↓
+Select / Add Beneficiary
+   ↓
+Enter Payment Details
+   ↓
+Initiate Payment
+   ↓
+Fraud Detection
+   ↓
+Risk Analysis
+   ↓
+┌─────────────────────────────┐
+│                             │
+▼                             ▼
+Low / Safe Risk          High / Suspicious Risk
+│                             │
+▼                             ▼
+Payment Success          Verification / Block
+```
+
+---
+
+# 🗄️ Database Integration
+
+Milestone 3 is integrated with the existing **`digital_banking`** database used in the previous milestones.
+
+The module maintains relationships with existing customer and account information instead of creating an isolated banking system.
+
+### Integration
+
+```text
+M1 / M2
+Customer + Account
+        │
+        ▼
+       M3
+        │
+ ┌──────┼──────────┐
+ ▼      ▼          ▼
+Beneficiary   Payment   Fraud Detection
+```
+
+---
+
+# 🧩 Entity Relationship Diagram
+
+The ER diagram represents the relationship between the existing banking entities and the Milestone 3 payment and fraud-detection components.
+
+### 📊 ER Diagram
+
+<img width="1536" height="1024" alt="DB ER diagram M3" src="https://github.com/user-attachments/assets/3be3be1c-93a9-434a-a703-c7fe7e8a4976" />
+
+
+---
+
+# 🛠️ Technologies Used
+
+| Technology     | Purpose                       |
+| -------------- | ----------------------------- |
+| **MySQL**      | Database Management           |
+| **SQL**        | Database Design & Queries     |
+| **PHP**        | Database Connectivity         |
+| **XAMPP**      | Local Development Environment |
+| **phpMyAdmin** | Database Administration       |
+
+---
+
+# 📁 Project Structure
+
+```text
+M3/
+│
+├── DB/
+│   ├── SQL Files
+│   └── Queries
+│
+├── PHP/
+│   ├── Database Connection
+│   └── Payment Operations
+│
+├── screenshots/
+│   ├── beneficiary-management.png
+│   ├── payment-transfer.png
+│   ├── fraud-detection.png
+│   └── m3-er-diagram.png
+│
 └── README.md
+```
 
-## 🚀 Quick Start
-* 🖥️ Frontend -
-cd frontend/balance-accuracy-app
-npm install
-npm start
-
-Runs on: http://localhost:4200
-
-* ⚙️ Backend -
-cd backend
-./mvnw spring-boot:run
-
-Runs on: http://localhost:8080
-
-* 🗄️ Database -
-Database: MySQL
-Name: digital_banking
-Environment: XAMPP / phpMyAdmin
-Port: 3306
-
-## 🏦 Account Creation
-
-<img width="1600" height="829" alt="WhatsApp Image 2026-08-09 at 9 09 35 PM" src="https://github.com/user-attachments/assets/6841c68f-31a2-4f09-81d1-730731a79d00" />
-
-## 🔄 Transaction Atomicity
-
-<img width="1600" height="825" alt="WhatsApp Image 2026-08-09 at 9 09 34 PM" src="https://github.com/user-attachments/assets/d9d10ebf-a445-414f-81f3-5ca0597f76fc" />
+---
 
 
-## 📊 Balance Accuracy Dashboard
 
-<img width="1600" height="832" alt="WhatsApp Image 2026-08-09 at 9 09 34 PM (1)" src="https://github.com/user-attachments/assets/59e11c70-fd63-48dc-a565-97af09a5d357" />
+# 👥 Team
 
-## 🧩 Database ER Model
+| Team Member    | Role     |
+| -------------- | -------- |
+| **Manikandan** | Frontend |
+| **Pavithra**   | Frontend |
+| **Kousalya**   | Frontend |
+| **Nithish**    | Backend  |
+| **Jeevana**    | Backend  |
+| **Raghvendra** | Database |
 
-<img width="1264" height="843" alt="Gemini_Generated_Image_an2mdaan2mdaan2m" src="https://github.com/user-attachments/assets/ddafe67c-4830-4607-b77b-0283ca6c5ded" />
 
-## 👥 Team Members
 
-| 👤 Team Member | 💼 Role |
-|---|---|
-| **Manikandan** | Frontend Developer |
-| **Pavithra** | Frontend Developer |
-| **Kousalya** | Frontend Developer |
-| **Nithish** | Backend Developer |
-| **Jeevana** | Backend Developer |
-| **Raghvendra** | Database Developer |
+
