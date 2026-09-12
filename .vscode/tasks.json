@@ -1,0 +1,208 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "FinCore: API Gateway (8080)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/api-gateway"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Customer Service (8081)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/customer-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Account Service (8082)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/account-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Transaction Service (8083)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/transaction-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Dashboard Service (8084)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/dashboard-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Loan Service (8085)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/loan-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Beneficiary Service (8086)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/beneficiary-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Payment Service (8087)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/payment-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: IMPS-NEFT-UPI Service (8088)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/imps-neft-upi-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: KYC Service (8089)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/kyc-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Face Match Service (8090)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/face-match-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-backend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "FinCore: Angular Frontend (4200)",
+      "type": "shell",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend_fincore"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "group": "fincore-frontend",
+        "reveal": "always",
+        "panel": "new"
+      }
+    },
+    {
+      "label": "Run All FinCore Services (Antigravity Terminals)",
+      "dependsOn": [
+        "FinCore: API Gateway (8080)",
+        "FinCore: Customer Service (8081)",
+        "FinCore: Account Service (8082)",
+        "FinCore: Transaction Service (8083)",
+        "FinCore: Dashboard Service (8084)",
+        "FinCore: Loan Service (8085)",
+        "FinCore: Beneficiary Service (8086)",
+        "FinCore: Payment Service (8087)",
+        "FinCore: IMPS-NEFT-UPI Service (8088)",
+        "FinCore: KYC Service (8089)",
+        "FinCore: Face Match Service (8090)",
+        "FinCore: Angular Frontend (4200)"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
