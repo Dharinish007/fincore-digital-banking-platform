@@ -54,6 +54,31 @@ spring:
           predicates:
             - Path=/api/v1/loans/**, /api/v1/loan-products/**, /api/v1/loan-applications/**
 
+        - id: beneficiary-service-route
+          uri: ${services.beneficiary-service.url:http://localhost:8086}
+          predicates:
+            - Path=/api/v1/beneficiaries/**, /api/beneficiaries/**
+
+        - id: payment-service-route
+          uri: ${services.payment-service.url:http://localhost:8087}
+          predicates:
+            - Path=/api/v1/payments/**, /api/payments/**
+
+        - id: payment-mode-service-route
+          uri: ${services.imps-neft-upi-service.url:http://localhost:8088}
+          predicates:
+            - Path=/api/v1/payment-modes/**, /api/payment-modes/**
+
+        - id: kyc-service-route
+          uri: ${services.kyc-service.url:http://localhost:8089}
+          predicates:
+            - Path=/api/v1/kyc/**, /api/kyc/**
+
+        - id: face-match-service-route
+          uri: ${services.face-match-service.url:http://localhost:8090}
+          predicates:
+            - Path=/api/v1/face-match/**, /api/face-match/**
+
 # Configurable Downstream Service URLs
 services:
   customer-service:
@@ -66,6 +91,16 @@ services:
     url: http://localhost:8084
   loan-service:
     url: http://localhost:8085
+  beneficiary-service:
+    url: http://localhost:8086
+  payment-service:
+    url: http://localhost:8087
+  imps-neft-upi-service:
+    url: http://localhost:8088
+  kyc-service:
+    url: http://localhost:8089
+  face-match-service:
+    url: http://localhost:8090
 
 management:
   endpoints:
