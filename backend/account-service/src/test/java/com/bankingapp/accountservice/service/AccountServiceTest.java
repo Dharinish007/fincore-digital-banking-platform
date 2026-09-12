@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.mockito.ArgumentMatchers;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -252,7 +253,7 @@ class AccountServiceTest {
                 .build();
         UserContextHolder.setContext(customerContext);
 
-        when(accountRepository.findAll(any(Specification.class))).thenReturn(List.of(mockAccount));
+        when(accountRepository.findAll(ArgumentMatchers.<Specification<Account>>any())).thenReturn(List.of(mockAccount));
 
         List<AccountResponse> accounts = accountService.getAllAccounts(100L);
 
@@ -299,7 +300,7 @@ class AccountServiceTest {
                 .build();
         UserContextHolder.setContext(employeeContext);
 
-        when(accountRepository.findAll(any(Specification.class))).thenReturn(List.of(mockAccount));
+        when(accountRepository.findAll(ArgumentMatchers.<Specification<Account>>any())).thenReturn(List.of(mockAccount));
 
         List<AccountResponse> accounts = accountService.getAllAccounts(200L);
 
