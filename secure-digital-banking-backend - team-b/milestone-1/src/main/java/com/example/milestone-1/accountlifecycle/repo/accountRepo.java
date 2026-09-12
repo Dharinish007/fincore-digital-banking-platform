@@ -1,0 +1,18 @@
+package com.example.fincoredigitalbankingmanagementplatform2.accountlifecycle.repo;
+
+import com.example.fincoredigitalbankingmanagementplatform2.accountlifecycle.entity.accountEntity;
+import com.example.fincoredigitalbankingmanagementplatform2.accountlifecycle.entity.userEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface accountRepo extends JpaRepository<accountEntity,Integer> {
+    long countByStatus(String status);
+    Optional<accountEntity> findByAccountNumber(String accountNumber);
+    Optional<accountEntity> findByAccountNumberAndCustomerId(
+            String accountNumber,
+            userEntity customerId
+    );
+}
