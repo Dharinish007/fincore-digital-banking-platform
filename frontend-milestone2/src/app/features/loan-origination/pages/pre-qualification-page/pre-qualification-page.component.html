@@ -1,143 +1,217 @@
-<div class="page-header">
-  <div>
-    <p class="page-subtitle">Loan Origination • Pre-Qualification</p>
-    <h2 class="page-title">Borrower Readiness &amp; Eligibility Check</h2>
-  </div>
-</div>
+<div class="pre-qualification-view">
 
-<div class="card form-card">
-  <form [formGroup]="form" (ngSubmit)="checkQualification()">
-    
-    <!-- Section 1: Personal Details -->
-    <h3 class="section-title">
-      <span class="material-icons">person</span> Borrower Profile Information
-    </h3>
+  <!-- ── Flow Tracker Header ── -->
+  <div class="flow-header-card">
+    <div class="header-text-group">
+      <div class="workflow-breadcrumb">
+        <span class="step-indicator">STAGE 2 OF 4</span>
+        <span class="sep">•</span>
+        <span>INITIAL BORROWER READINESS ASSESSMENT</span>
+      </div>
+      <h1 class="page-title">Loan Pre-Qualification Assessment</h1>
+      <p class="page-subtitle">
+        Enter essential borrower financial indicators to evaluate debt capacity and creditworthiness before initiating full loan origination.
+      </p>
+    </div>
+    <div class="tracker-wrapper">
+      <app-progress-tracker currentStage="Pre-Qualification"></app-progress-tracker>
+    </div>
+  </div>
+
+  <!-- ── Assessment Form ── -->
+  <div class="card form-card" [formGroup]="form">
+    <div class="form-section-title">
+      <span class="sec-icon">👤</span> Borrower &amp; Loan Parameters
+    </div>
+
     <div class="form-grid">
-      <div class="form-group">
-        <label>Full Name <span class="req">*</span></label>
-        <input formControlName="fullName" placeholder="Borrower full name" />
-        <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="form-error">
-          Full Name is required
-        </div>
+      <!-- Customer ID -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('customerId')">
+        <label>Customer ID <span class="req">*</span></label>
+        <input type="number" formControlName="customerId" placeholder="e.g. 101" />
+        <div *ngIf="isFieldInvalid('customerId')" class="form-error">Customer ID is required</div>
       </div>
 
-      <div class="form-group">
+      <!-- Full Name -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('fullName')">
+        <label>Full Name <span class="req">*</span></label>
+        <input formControlName="fullName" placeholder="e.g. Aarav Sharma" />
+        <div *ngIf="isFieldInvalid('fullName')" class="form-error">Full name is required</div>
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('dateOfBirth')">
         <label>Date of Birth <span class="req">*</span></label>
         <input type="date" formControlName="dateOfBirth" />
-        <div *ngIf="form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched" class="form-error">
-          Date of Birth is required
-        </div>
+        <div *ngIf="isFieldInvalid('dateOfBirth')" class="form-error">Date of birth is required</div>
       </div>
 
-      <div class="form-group">
+      <!-- Mobile Number -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('mobile')">
         <label>Mobile Number <span class="req">*</span></label>
         <input formControlName="mobile" placeholder="+91 98765 43210" />
-        <div *ngIf="form.get('mobile')?.invalid && form.get('mobile')?.touched" class="form-error">
-          Valid 10-digit mobile number required
-        </div>
+        <div *ngIf="isFieldInvalid('mobile')" class="form-error">Valid mobile number is required</div>
       </div>
 
-      <div class="form-group">
+      <!-- Email -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('email')">
         <label>Email Address <span class="req">*</span></label>
         <input type="email" formControlName="email" placeholder="borrower@example.com" />
-        <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="form-error">
-          Valid email address required
-        </div>
+        <div *ngIf="isFieldInvalid('email')" class="form-error">Valid email address is required</div>
       </div>
 
-      <div class="form-group">
+      <!-- Loan Type -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('loanType')">
+        <label>Loan Product / Type <span class="req">*</span></label>
+        <select formControlName="loanType">
+          <option *ngFor="let t of loanTypes" [value]="t.value">{{ t.label }}</option>
+        </select>
+        <div *ngIf="isFieldInvalid('loanType')" class="form-error">Loan type is required</div>
+      </div>
+
+      <!-- Requested Amount -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('requestedAmount')">
+        <label>Requested Loan Amount (₹) <span class="req">*</span></label>
+        <input type="number" formControlName="requestedAmount" step="10000" placeholder="e.g. 3000000" />
+        <div *ngIf="isFieldInvalid('requestedAmount')" class="form-error">Min requested amount is ₹25,000</div>
+      </div>
+
+      <!-- Employment Type -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('employmentType')">
         <label>Employment Type <span class="req">*</span></label>
         <select formControlName="employmentType">
-          <option value="">Select Employment Type</option>
-          <option value="Salaried">Salaried</option>
-          <option value="Self-Employed">Self-Employed</option>
-          <option value="Freelancer">Freelancer</option>
-          <option value="Retired">Retired</option>
+          <option value="Salaried">Salaried (Corporate / Govt)</option>
+          <option value="Self-Employed">Self-Employed Professional / Business</option>
+          <option value="Freelancer">Independent Consultant / Freelancer</option>
+          <option value="Retired">Retired / Pensioner</option>
         </select>
-        <div *ngIf="form.get('employmentType')?.invalid && form.get('employmentType')?.touched" class="form-error">
-          Employment type is required
-        </div>
+        <div *ngIf="isFieldInvalid('employmentType')" class="form-error">Employment type is required</div>
+      </div>
+
+      <!-- Monthly Income -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('monthlyIncome')">
+        <label>Monthly Net Income (₹) <span class="req">*</span></label>
+        <input type="number" formControlName="monthlyIncome" step="1000" placeholder="e.g. 125000" />
+        <div *ngIf="isFieldInvalid('monthlyIncome')" class="form-error">Valid monthly income is required (> ₹10,000)</div>
+      </div>
+
+      <!-- Existing Monthly EMIs -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('existingEmi')">
+        <label>Existing Monthly EMIs / Obligations (₹)</label>
+        <input type="number" formControlName="existingEmi" step="500" placeholder="e.g. 15000" />
+      </div>
+
+      <!-- Credit Score -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('creditScore')">
+        <label>Credit / CIBIL Score (300 - 900) <span class="req">*</span></label>
+        <input type="number" formControlName="creditScore" min="300" max="900" placeholder="e.g. 760" />
+        <div *ngIf="isFieldInvalid('creditScore')" class="form-error">Score must be between 300 and 900</div>
       </div>
     </div>
 
-    <!-- Section 2: Financial Details & Loan Requirements -->
-    <h3 class="section-title" style="margin-top: 28px;">
-      <span class="material-icons">account_balance_wallet</span> Financials &amp; Loan Requirement
-    </h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Gross Monthly Income (₹) <span class="req">*</span></label>
-        <input type="number" formControlName="monthlyIncome" placeholder="e.g. 85000" />
-        <div *ngIf="form.get('monthlyIncome')?.invalid && form.get('monthlyIncome')?.touched" class="form-error">
-          Enter a valid positive monthly income
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Existing Monthly Obligations (₹)</label>
-        <input type="number" formControlName="existingObligations" placeholder="e.g. 15000" />
-        <div *ngIf="form.get('existingObligations')?.invalid && form.get('existingObligations')?.touched" class="form-error">
-          Enter a valid amount
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Loan Type <span class="req">*</span></label>
-        <select formControlName="loanType">
-          <option value="">Select Loan Category</option>
-          <option value="Home">Home Loan</option>
-          <option value="Personal">Personal Loan</option>
-          <option value="Vehicle">Vehicle Loan</option>
-          <option value="Education">Education Loan</option>
-          <option value="Gold">Gold Loan</option>
-          <option value="Other">Other Loan</option>
-        </select>
-        <div *ngIf="form.get('loanType')?.invalid && form.get('loanType')?.touched" class="form-error">
-          Loan type selection is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Requested Loan Amount (₹) <span class="req">*</span></label>
-        <input type="number" formControlName="requestedLoanAmount" placeholder="e.g. 3500000" />
-        <div *ngIf="form.get('requestedLoanAmount')?.invalid && form.get('requestedLoanAmount')?.touched" class="form-error">
-          Requested loan amount is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Preferred Tenure (Months) <span class="req">*</span></label>
-        <select formControlName="preferredTenure">
-          <option value="">Select Tenure</option>
-          <option value="12">12 Months (1 Year)</option>
-          <option value="24">24 Months (2 Years)</option>
-          <option value="36">36 Months (3 Years)</option>
-          <option value="60">60 Months (5 Years)</option>
-          <option value="120">120 Months (10 Years)</option>
-          <option value="180">180 Months (15 Years)</option>
-          <option value="240">240 Months (20 Years)</option>
-        </select>
-        <div *ngIf="form.get('preferredTenure')?.invalid && form.get('preferredTenure')?.touched" class="form-error">
-          Tenure is required
-        </div>
-      </div>
-    </div>
-
-    <!-- Actions -->
+    <!-- Form Actions -->
     <div class="form-actions">
-      <button type="button" class="primary-button" (click)="checkQualification()">
-        <span class="material-icons">fact_check</span> Evaluate Pre-Qualification
+      <button type="button" class="ghost-button" (click)="reset()">
+        ↺ Reset Form
       </button>
-      <button type="button" class="secondary-button" (click)="continueToApplication()">
-        <span class="material-icons">arrow_forward</span> Continue to Application
+      <button type="button" class="primary-button check-btn" (click)="checkQualification()" id="btn-check-prequal">
+        <span class="icon">⚡</span> Run Eligibility Assessment
       </button>
-      <button type="button" class="ghost-button" (click)="reset()">Reset Form</button>
+    </div>
+  </div>
+
+  <!-- ── Result Card (Displayed on evaluation) ── -->
+  <div *ngIf="isEvaluated" class="assessment-result-container">
+    
+    <!-- ELIGIBLE STATE -->
+    <div *ngIf="isEligible" class="result-card card eligible-card" id="prequal-eligible-result">
+      <div class="result-header">
+        <div class="status-indicator-badge success-badge">
+          <span class="badge-icon">✓</span> PRE-QUALIFIED / ELIGIBLE
+        </div>
+        <span class="decision-code">System Decision: PASS</span>
+      </div>
+
+      <div class="result-body">
+        <h3 class="result-heading">Applicant is Pre-Qualified for {{ form.value.loanType }} Loan</h3>
+        <p class="result-summary">{{ statusMessage }}</p>
+
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-label">MAX ELIGIBLE CAPACITY</span>
+            <span class="metric-val highlight">₹{{ maxEligibleAmount | number }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">ESTIMATED INTEREST RATE</span>
+            <span class="metric-val">{{ estimatedRate }}% p.a.</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">ESTIMATED MONTHLY EMI</span>
+            <span class="metric-val">₹{{ estimatedEmi | number }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">DEBT-TO-INCOME (DTI)</span>
+            <span class="metric-val">{{ dtiRatio }}% (Healthy)</span>
+          </div>
+        </div>
+
+        <div class="action-handover-panel">
+          <div class="handover-text">
+            <strong>Ready for complete intake?</strong>
+            <span>Click below to carry this pre-qualified borrower's parameters directly into New Application (Stage 3).</span>
+          </div>
+          <button type="button" class="btn-proceed" (click)="proceedToNewApplication()" id="btn-proceed-to-app">
+            Proceed to New Application ➔
+          </button>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="statusMessage" class="alert" [class.success]="statusType === 'success'" [class.error]="statusType === 'error'" [class.info]="statusType === 'info'">
-      {{ statusMessage }}
+    <!-- INELIGIBLE STATE -->
+    <div *ngIf="!isEligible" class="result-card card ineligible-card" id="prequal-ineligible-result">
+      <div class="result-header">
+        <div class="status-indicator-badge error-badge">
+          <span class="badge-icon">✕</span> NOT ELIGIBLE AT CURRENT PARAMETERS
+        </div>
+        <span class="decision-code declined">System Decision: DECLINED</span>
+      </div>
+
+      <div class="result-body">
+        <h3 class="result-heading">Pre-Qualification Criteria Not Met</h3>
+        <p class="result-summary">{{ statusMessage }}</p>
+
+        <div class="ineligible-details-box">
+          <div class="reason-title">Primary Decline Factors:</div>
+          <div class="reason-content">{{ rejectionReason }}</div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-label">CALCULATED MAX CAPACITY</span>
+            <span class="metric-val muted-val">₹{{ maxEligibleAmount | number }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">DTI RATIO</span>
+            <span class="metric-val" [class.warning]="dtiRatio > 55">{{ dtiRatio }}%</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">CREDIT SCORE</span>
+            <span class="metric-val" [class.warning]="form.value.creditScore < 650">{{ form.value.creditScore }}</span>
+          </div>
+        </div>
+
+        <div class="advice-box">
+          <strong>💡 Recommended corrective actions:</strong>
+          <ul>
+            <li>Reduce requested loan amount to within the maximum eligible ceiling of ₹{{ maxEligibleAmount | number }}.</li>
+            <li>Clear existing short-term personal obligations to reduce DTI below 50%.</li>
+            <li>Add an earning co-applicant / guarantor during the next review.</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-  </form>
+  </div>
+
 </div>
 

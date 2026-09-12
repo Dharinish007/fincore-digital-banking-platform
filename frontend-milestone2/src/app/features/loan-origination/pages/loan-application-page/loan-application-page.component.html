@@ -1,197 +1,721 @@
-<div class="page-header">
-  <div>
-    <p class="page-subtitle">Loan Origination • New Application</p>
-    <h2 class="page-title">Create Borrower Loan Application</h2>
+<div class="loan-application-view">
+
+  <!-- ── Flow Tracker Header ── -->
+  <div class="flow-header-card">
+    <div class="header-text-group">
+      <div class="workflow-breadcrumb">
+        <span class="step-indicator">STAGE 3 OF 4</span>
+        <span class="sep">•</span>
+        <span>FULL LOAN ORIGINATION INTAKE</span>
+      </div>
+      <h1 class="page-title">New Loan Application</h1>
+      <p class="page-subtitle">
+        Enter comprehensive borrower, KYC, employment, loan structure, financial, and documentation parameters for origination sanction.
+      </p>
+    </div>
+    <div class="tracker-wrapper">
+      <app-progress-tracker currentStage="New Application"></app-progress-tracker>
+    </div>
   </div>
-</div>
 
-<div class="card form-card">
-  <form [formGroup]="form">
-    
-    <!-- Section 1: Personal Profile Details -->
-    <h3 class="section-title">
-      <span class="material-icons">person_outline</span> Personal &amp; Contact Information
-    </h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Full Name <span class="req">*</span></label>
-        <input formControlName="fullName" placeholder="Borrower full name" />
-        <div *ngIf="form.get('fullName')?.invalid && form.get('fullName')?.touched" class="form-error">
-          Full Name is required
-        </div>
-      </div>
+  <!-- ── Pre-Qualification Handover Banner (If loaded) ── -->
+  <div *ngIf="preQualLoadedNotice" class="banner prequal-banner">
+    <div class="banner-icon">✓</div>
+    <div class="banner-body">
+      <strong>Pre-Qualification Assessment Linked</strong>
+      <p>{{ preQualLoadedNotice }}</p>
+    </div>
+  </div>
 
-      <div class="form-group">
-        <label>Date of Birth <span class="req">*</span></label>
-        <input type="date" formControlName="dateOfBirth" />
-        <div *ngIf="form.get('dateOfBirth')?.invalid && form.get('dateOfBirth')?.touched" class="form-error">
-          Date of Birth is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Gender <span class="req">*</span></label>
-        <select formControlName="gender">
-          <option value="">Select Gender</option>
-          <option value="Female">Female</option>
-          <option value="Male">Male</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Mobile Number <span class="req">*</span></label>
-        <input formControlName="mobile" placeholder="+91 98765 43210" />
-        <div *ngIf="form.get('mobile')?.invalid && form.get('mobile')?.touched" class="form-error">
-          Valid mobile number required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Email Address <span class="req">*</span></label>
-        <input type="email" formControlName="email" placeholder="example@mail.com" />
-        <div *ngIf="form.get('email')?.invalid && form.get('email')?.touched" class="form-error">
-          Valid email required
-        </div>
-      </div>
-
-      <div class="form-group" style="grid-column: 1 / -1;">
-        <label>Address <span class="req">*</span></label>
-        <input formControlName="address" placeholder="Residential street address" />
-      </div>
-
-      <div class="form-group">
-        <label>City <span class="req">*</span></label>
-        <input formControlName="city" placeholder="City" />
-      </div>
-
-      <div class="form-group">
-        <label>State <span class="req">*</span></label>
-        <input formControlName="state" placeholder="State" />
-      </div>
-
-      <div class="form-group">
-        <label>Pincode <span class="req">*</span></label>
-        <input formControlName="pincode" placeholder="Postal pincode" />
+  <!-- ── Success Notification ── -->
+  <div *ngIf="submissionSuccess" class="banner success-banner" id="app-submission-success">
+    <div class="banner-icon">✓</div>
+    <div class="banner-body">
+      <h4>Application Successfully Submitted!</h4>
+      <p>{{ statusMessage }}</p>
+      <div class="banner-meta">
+        <span><strong>Application ID:</strong> #LO-{{ applicationId }}</span>
+        <span><strong>Status:</strong> <span class="badge-status-pending">Pending</span></span>
+        <span><strong>Stage:</strong> Application Processing</span>
+        <span><strong>Applicant:</strong> {{ form.value.fullName }}</span>
       </div>
     </div>
-
-    <!-- Section 2: Employment & Income -->
-    <h3 class="section-title" style="margin-top: 28px;">
-      <span class="material-icons">work_outline</span> Employment &amp; Income Details
-    </h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Employment Type <span class="req">*</span></label>
-        <select formControlName="employmentType">
-          <option value="">Select Employment Type</option>
-          <option value="Salaried">Salaried</option>
-          <option value="Self-Employed">Self-Employed</option>
-          <option value="Freelancer">Freelancer</option>
-          <option value="Retired">Retired</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label>Employer / Business Name <span class="req">*</span></label>
-        <input formControlName="employerName" placeholder="Organization name" />
-      </div>
-
-      <div class="form-group">
-        <label>Job Designation <span class="req">*</span></label>
-        <input formControlName="jobTitle" placeholder="Title / Designation" />
-      </div>
-
-      <div class="form-group">
-        <label>Work Experience</label>
-        <input formControlName="workExperience" placeholder="e.g. 5 years" />
-      </div>
-
-      <div class="form-group">
-        <label>Gross Monthly Income (₹) <span class="req">*</span></label>
-        <input type="number" formControlName="monthlyIncome" placeholder="Monthly income" />
-        <div *ngIf="form.get('monthlyIncome')?.invalid && form.get('monthlyIncome')?.touched" class="form-error">
-          Valid monthly income is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Other Monthly Income (₹)</label>
-        <input type="number" formControlName="otherIncome" placeholder="Other income (optional)" />
-      </div>
-    </div>
-
-    <!-- Section 3: Loan Requirement Details -->
-    <h3 class="section-title" style="margin-top: 28px;">
-      <span class="material-icons">monetization_on</span> Backend-Aligned Loan Specifications
-    </h3>
-    <div class="form-grid">
-      <div class="form-group">
-        <label>Loan Type <span class="req">*</span></label>
-        <select formControlName="loanType">
-          <option value="">Select Category</option>
-          <option value="Personal">Personal Loan</option>
-          <option value="Home">Home Loan</option>
-          <option value="Vehicle">Vehicle Loan</option>
-          <option value="Education">Education Loan</option>
-          <option value="Gold">Gold Loan</option>
-          <option value="Other">Other Loan</option>
-        </select>
-        <div *ngIf="form.get('loanType')?.invalid && form.get('loanType')?.touched" class="form-error">
-          Loan type selection is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Requested Loan Amount (₹) <span class="req">*</span></label>
-        <input type="number" formControlName="requestedLoanAmount" placeholder="e.g. 500000" />
-        <div *ngIf="form.get('requestedLoanAmount')?.invalid && form.get('requestedLoanAmount')?.touched" class="form-error">
-          Requested loan amount is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Tenure (Months) <span class="req">*</span></label>
-        <select formControlName="tenureMonths">
-          <option value="">Select Tenure</option>
-          <option value="12">12 Months (1 Year)</option>
-          <option value="24">24 Months (2 Years)</option>
-          <option value="36">36 Months (3 Years)</option>
-          <option value="60">60 Months (5 Years)</option>
-          <option value="120">120 Months (10 Years)</option>
-          <option value="180">180 Months (15 Years)</option>
-          <option value="240">240 Months (20 Years)</option>
-        </select>
-        <div *ngIf="form.get('tenureMonths')?.invalid && form.get('tenureMonths')?.touched" class="form-error">
-          Tenure is required
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label>Interest Rate (% p.a.) <span class="req">*</span></label>
-        <input type="number" step="0.1" formControlName="interestRate" placeholder="e.g. 10.5" />
-      </div>
-
-      <div class="form-group" style="grid-column: 1 / -1;">
-        <label>Loan Purpose</label>
-        <input formControlName="purpose" placeholder="e.g. Home renovation / Debt consolidation" />
-      </div>
-    </div>
-
-    <!-- Actions -->
-    <div class="form-actions">
-      <button type="button" class="primary-button" (click)="submitApplication()" [disabled]="loading">
-        <span class="material-icons">send</span> Submit Loan Application
+    <div class="banner-action">
+      <button type="button" class="btn btn-outline" (click)="reset()">
+        + Start Another Application
       </button>
-      <button type="button" class="secondary-button" (click)="saveDraft()">
-        <span class="material-icons">save</span> Save Draft
+      <button type="button" class="btn btn-primary" (click)="goToApplications()" id="btn-goto-applications">
+        View in Applications ➔
       </button>
-      <button type="button" class="ghost-button" (click)="reset()">Reset</button>
+    </div>
+  </div>
+
+  <!-- ── Draft Saved Notification ── -->
+  <div *ngIf="draftSaved && !submissionSuccess" class="banner info-banner">
+    <div class="banner-icon">📝</div>
+    <div class="banner-body">
+      <h4>Draft Saved Successfully</h4>
+      <p>{{ statusMessage }}</p>
+      <div class="banner-meta">
+        <span><strong>Draft ID:</strong> #LO-{{ applicationId }}</span>
+        <span><strong>Status:</strong> <span class="badge-status-draft">Draft</span></span>
+      </div>
+    </div>
+    <div class="banner-action">
+      <button type="button" class="btn btn-outline" (click)="goToApplications()">
+        View Draft in Applications ➔
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Error Notification ── -->
+  <div *ngIf="errorMessage" class="banner error-banner">
+    <div class="banner-icon">!</div>
+    <div class="banner-body">
+      <h4>Incomplete Form Validation</h4>
+      <p>{{ errorMessage }}</p>
+    </div>
+  </div>
+
+  <!-- ── 8-Section Navigation Tabs ── -->
+  <div class="section-tabs-bar">
+    <button
+      type="button"
+      *ngFor="let s of sections"
+      class="section-tab-btn"
+      [class.active]="activeSection === s.id"
+      (click)="setSection(s.id)"
+      [id]="'tab-section-' + s.id"
+    >
+      <span class="tab-icon">{{ s.icon }}</span>
+      <span class="tab-label">{{ s.id }}. {{ s.label }}</span>
+    </button>
+  </div>
+
+  <!-- ── Main Application Form Container ── -->
+  <div class="form-container card" [formGroup]="form">
+
+    <!-- ──────────────── SECTION 1: APPLICANT DETAILS ──────────────── -->
+    <div *ngIf="activeSection === 1" class="section-container">
+      <div class="section-header">
+        <div class="sec-title-wrap">
+          <span class="sec-badge">1 / 7</span>
+          <h3>Applicant Details</h3>
+        </div>
+        <span class="mandatory-hint"><span class="req">*</span> Mandatory borrower identification</span>
+      </div>
+
+      <div class="form-grid-3col">
+        <div class="form-field" [class.has-error]="isFieldInvalid('fullName')">
+          <label>Full Legal Name <span class="req">*</span></label>
+          <input formControlName="fullName" placeholder="e.g. Aarav Sharma" />
+          <div *ngIf="isFieldInvalid('fullName')" class="error-text">Full name is required as per government ID.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('dateOfBirth')">
+          <label>Date of Birth <span class="req">*</span></label>
+          <input type="date" formControlName="dateOfBirth" />
+          <div *ngIf="isFieldInvalid('dateOfBirth')" class="error-text">Date of birth is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('gender')">
+          <label>Gender <span class="req">*</span></label>
+          <select formControlName="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other / Non-binary</option>
+          </select>
+          <div *ngIf="isFieldInvalid('gender')" class="error-text">Gender selection is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('mobile')">
+          <label>Mobile Number <span class="req">*</span></label>
+          <input formControlName="mobile" placeholder="+91 98765 43210" />
+          <div *ngIf="isFieldInvalid('mobile')" class="error-text">Enter a valid 10-15 digit contact number.</div>
+        </div>
+
+        <div class="form-field full-width" [class.has-error]="isFieldInvalid('email')">
+          <label>Primary Email Address <span class="req">*</span></label>
+          <input type="email" formControlName="email" placeholder="aarav.sharma@example.com" />
+          <div *ngIf="isFieldInvalid('email')" class="error-text">Valid email is required for communication.</div>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="statusMessage" class="alert" [class.success]="statusType === 'success'" [class.error]="statusType === 'error'" [class.info]="statusType === 'info'">
-      {{ statusMessage }}
+    <!-- ──────────────── SECTION 2: KYC DETAILS ──────────────── -->
+    <div *ngIf="activeSection === 2" class="section-container">
+      <div class="section-header">
+        <div class="sec-title-wrap">
+          <span class="sec-badge">2 / 7</span>
+          <h3>KYC &amp; Address Verification</h3>
+        </div>
+        <span class="mandatory-hint"><span class="req">*</span> Strict compliance regulatory checks</span>
+      </div>
+
+      <div class="form-grid-3col">
+        <div class="form-field" [class.has-error]="isFieldInvalid('idType')">
+          <label>Government ID Document Type <span class="req">*</span></label>
+          <select formControlName="idType">
+            <option value="Aadhaar Card">Aadhaar Card (UIDAI)</option>
+            <option value="PAN Card">Permanent Account Number (PAN)</option>
+            <option value="Passport">Passport</option>
+            <option value="Voter ID">Voter Identification Card</option>
+          </select>
+          <div *ngIf="isFieldInvalid('idType')" class="error-text">Document type is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('idNumber')">
+          <label>Government ID Number <span class="req">*</span></label>
+          <input formControlName="idNumber" placeholder="e.g. XXXX-XXXX-4829" />
+          <div *ngIf="isFieldInvalid('idNumber')" class="error-text">Valid document number is required.</div>
+        </div>
+
+        <div class="form-field full-width" [class.has-error]="isFieldInvalid('address')">
+          <label>Residential Street Address <span class="req">*</span></label>
+          <input formControlName="address" placeholder="Flat / House No, Street, Landmark" />
+          <div *ngIf="isFieldInvalid('address')" class="error-text">Residential address is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('city')">
+          <label>City / Town <span class="req">*</span></label>
+          <input formControlName="city" placeholder="e.g. Mumbai" />
+          <div *ngIf="isFieldInvalid('city')" class="error-text">City is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('state')">
+          <label>State / Province <span class="req">*</span></label>
+          <input formControlName="state" placeholder="e.g. Maharashtra" />
+          <div *ngIf="isFieldInvalid('state')" class="error-text">State is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('pincode')">
+          <label>Postal PIN Code <span class="req">*</span></label>
+          <input formControlName="pincode" placeholder="e.g. 400705" />
+          <div *ngIf="isFieldInvalid('pincode')" class="error-text">Enter valid 6-digit postal code.</div>
+        </div>
+      </div>
     </div>
-  </form>
+
+    <!-- ──────────────── SECTION 3: EMPLOYMENT & INCOME ──────────────── -->
+    <div *ngIf="activeSection === 3" class="section-container">
+      <div class="section-header">
+        <div class="sec-title-wrap">
+          <span class="sec-badge">3 / 7</span>
+          <h3>Employment &amp; Income Assessment</h3>
+        </div>
+        <span class="mandatory-hint"><span class="req">*</span> Income capacity indicators</span>
+      </div>
+
+      <div class="form-grid-3col">
+        <div class="form-field" [class.has-error]="isFieldInvalid('employmentType')">
+          <label>Employment Nature <span class="req">*</span></label>
+          <select formControlName="employmentType">
+            <option value="Salaried">Salaried (Full-Time Regular)</option>
+            <option value="Self-Employed">Self-Employed Professional / Business Owner</option>
+            <option value="Freelancer">Independent Consultant / Freelancer</option>
+            <option value="Retired">Retired / Pensioner</option>
+          </select>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('employerName')">
+          <label>Employer / Company / Firm Name <span class="req">*</span></label>
+          <input formControlName="employerName" placeholder="e.g. Tata Consultancy Services" />
+          <div *ngIf="isFieldInvalid('employerName')" class="error-text">Employer name is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('jobTitle')">
+          <label>Designation / Job Title <span class="req">*</span></label>
+          <input formControlName="jobTitle" placeholder="e.g. Senior Tech Lead" />
+          <div *ngIf="isFieldInvalid('jobTitle')" class="error-text">Designation is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('workExperience')">
+          <label>Total Experience (Years) <span class="req">*</span></label>
+          <input type="number" formControlName="workExperience" min="0" placeholder="e.g. 8" />
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('monthlyIncome')">
+          <label>Net Monthly Income (₹) <span class="req">*</span></label>
+          <input type="number" formControlName="monthlyIncome" step="1000" placeholder="e.g. 145000" />
+          <div *ngIf="isFieldInvalid('monthlyIncome')" class="error-text">Monthly income must be > ₹10,000.</div>
+        </div>
+
+        <div class="form-field">
+          <label>Additional / Secondary Income (₹)</label>
+          <input type="number" formControlName="otherIncome" step="1000" placeholder="e.g. 12000" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────── SECTION 4: LOAN DETAILS ──────────────── -->
+    <div *ngIf="activeSection === 4" class="section-container">
+      <div class="section-header">
+        <div class="sec-title-wrap">
+          <span class="sec-badge">4 / 7</span>
+          <h3>Loan Parameter Configuration</h3>
+        </div>
+        <span class="mandatory-hint"><span class="req">*</span> Core backend entity parameters</span>
+      </div>
+
+      <div class="form-grid-2col">
+        <!-- Customer ID -->
+        <div class="form-field" [class.has-error]="isFieldInvalid('customerId')">
+          <label>Core Banking Customer ID <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-prefix">ID</span>
+            <input type="number" formControlName="customerId" min="1" placeholder="101" />
+          </div>
+          <div *ngIf="isFieldInvalid('customerId')" class="error-text">Valid Customer ID is required.</div>
+        </div>
+
+        <!-- Loan Type -->
+        <div class="form-field" [class.has-error]="isFieldInvalid('loanType')">
+          <label>Loan Product Type <span class="req">*</span></label>
+          <select formControlName="loanType">
+            <option *ngFor="let t of loanTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+        </div>
+
+        <!-- Loan Amount -->
+        <div class="form-field" [class.has-error]="isFieldInvalid('loanAmount')">
+          <label>Requested Loan Amount (₹) <span class="req">*</span></label>
+          <div class="input-wrap">
+            <span class="input-prefix">₹</span>
+            <input type="number" formControlName="loanAmount" step="10000" placeholder="e.g. 3500000" />
+          </div>
+          <div *ngIf="isFieldInvalid('loanAmount')" class="error-text">Loan amount must be greater than zero.</div>
+        </div>
+
+        <!-- Tenure Months -->
+        <div class="form-field" [class.has-error]="isFieldInvalid('tenureMonths')">
+          <label>Loan Tenure (Months) <span class="req">*</span></label>
+          <div class="input-wrap">
+            <input type="number" formControlName="tenureMonths" placeholder="240" />
+            <span class="input-suffix">Months</span>
+          </div>
+          <div class="tenure-pills">
+            <button
+              type="button"
+              *ngFor="let p of tenurePresets"
+              class="pill-btn"
+              [class.active]="form.get('tenureMonths')?.value === p.months"
+              (click)="setTenure(p.months)"
+            >
+              {{ p.label }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Interest Rate -->
+        <div class="form-field" [class.has-error]="isFieldInvalid('interestRate')">
+          <label>Applied Interest Rate (% p.a.) <span class="req">*</span></label>
+          <div class="input-wrap">
+            <input type="number" formControlName="interestRate" step="0.05" placeholder="7.35" />
+            <span class="input-suffix">%</span>
+          </div>
+          <div *ngIf="isFieldInvalid('interestRate')" class="error-text">Interest rate cannot be negative.</div>
+        </div>
+
+        <!-- Loan Purpose -->
+        <div class="form-field full-width">
+          <label>Specific Loan Purpose</label>
+          <textarea formControlName="purpose" rows="2" placeholder="e.g. Primary residential purchase, renovation, education..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────── SECTION 5: FINANCIAL DETAILS ──────────────── -->
+    <div *ngIf="activeSection === 5" class="section-container">
+      <div class="section-header">
+        <div class="sec-title-wrap">
+          <span class="sec-badge">5 / 7</span>
+          <h3>Banking &amp; Financial Details</h3>
+        </div>
+        <span class="mandatory-hint"><span class="req">*</span> Disbursement and deduction details</span>
+      </div>
+
+      <div class="form-grid-3col">
+        <div class="form-field" [class.has-error]="isFieldInvalid('bankName')">
+          <label>Primary Bank Name <span class="req">*</span></label>
+          <input formControlName="bankName" placeholder="e.g. HDFC Bank" />
+          <div *ngIf="isFieldInvalid('bankName')" class="error-text">Bank name is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('accountNumber')">
+          <label>Disbursement Account Number <span class="req">*</span></label>
+          <input formControlName="accountNumber" placeholder="e.g. 501004392819" />
+          <div *ngIf="isFieldInvalid('accountNumber')" class="error-text">Account number is required.</div>
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('ifscCode')">
+          <label>IFSC Code <span class="req">*</span></label>
+          <input formControlName="ifscCode" placeholder="e.g. HDFC0001042" />
+          <div *ngIf="isFieldInvalid('ifscCode')" class="error-text">IFSC code is required.</div>
+        </div>
+
+        <div class="form-field">
+          <label>Existing Monthly Obligations / EMIs (₹)</label>
+          <input type="number" formControlName="existingEmi" step="500" placeholder="15000" />
+        </div>
+
+        <div class="form-field" [class.has-error]="isFieldInvalid('creditScore')">
+          <label>Bureau Credit Score (300 - 900) <span class="req">*</span></label>
+          <input type="number" formControlName="creditScore" min="300" max="900" placeholder="782" />
+          <div *ngIf="isFieldInvalid('creditScore')" class="error-text">Score must be between 300 and 900.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────────────── SECTION 6: DOCUMENT UPLOAD ──────────────── -->
+    <div *ngIf="activeSection === 6" class="section-container">
+      <div class="section-header">
+        <div class="sec-title-wrap">
+          <span class="sec-badge">6 / 7</span>
+          <h3>Document Verification &amp; Upload</h3>
+        </div>
+        <span class="mandatory-hint">Digital verification repository (PDF, JPG, PNG, DOCX up to 15MB)</span>
+      </div>
+
+      <!-- Upload Progress / Notification -->
+      <div class="doc-upload-summary-bar">
+        <div class="summary-meta">
+          <div class="summary-stats">
+            <span class="count-pill">
+              {{ mandatoryDocsUploadedCount }} / {{ mandatoryDocsCount }} Mandatory Attached
+            </span>
+            <span class="status-note" [class.all-good]="mandatoryDocsUploadedCount === mandatoryDocsCount">
+              {{ mandatoryDocsUploadedCount === mandatoryDocsCount ? '✓ All mandatory documents verified & ready' : 'Please upload all mandatory documents' }}
+            </span>
+          </div>
+          <span class="percent-label">{{ uploadProgressPercent }}% Complete</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" [style.width.%]="uploadProgressPercent"></div>
+        </div>
+      </div>
+
+      <!-- Upload Success Alert -->
+      <div *ngIf="uploadNotification" class="doc-alert-success">
+        <span>✓</span> {{ uploadNotification }}
+      </div>
+
+      <!-- Global Drag & Drop Zone -->
+      <div
+        class="upload-dropzone"
+        [class.dragover]="isDragging"
+        (dragover)="onDragOver($event)"
+        (dragleave)="onDragLeave($event)"
+        (drop)="onDrop($event)"
+        (click)="globalFileInput.click()"
+      >
+        <input
+          type="file"
+          #globalFileInput
+          style="display: none;"
+          multiple
+          (change)="onGlobalFilesSelected($event)"
+          accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+        />
+        <div class="dropzone-icon">📁</div>
+        <div class="dropzone-body">
+          <div class="dropzone-title">
+            Drag &amp; drop files here, or <span class="browse-link">browse from your computer</span>
+          </div>
+          <div class="dropzone-sub">
+            Files are automatically attached to pending checklist items or added as supporting records
+          </div>
+        </div>
+      </div>
+
+      <!-- Document Item List -->
+      <div class="docs-list">
+        <div *ngFor="let doc of documents" class="doc-row-card" [class.has-file]="doc.fileName">
+          <input
+            type="file"
+            #rowFileInput
+            style="display: none;"
+            (change)="onFileSelected($event, doc)"
+            accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
+          />
+
+          <div class="doc-info">
+            <span class="doc-file-icon">
+              {{ doc.type.includes('JPEG') || doc.type.includes('PNG') ? '🖼️' : '📄' }}
+            </span>
+            <div class="doc-text-block">
+              <div class="doc-name">
+                {{ doc.name }}
+                <span *ngIf="doc.mandatory" class="doc-req-pill">Mandatory</span>
+                <span *ngIf="!doc.mandatory" class="doc-opt-pill">Optional</span>
+              </div>
+              <div class="doc-meta">
+                Format: {{ doc.type }}
+                <span *ngIf="doc.fileName"> &bull; Attached: <code>{{ doc.fileName }}</code> ({{ doc.fileSize }})</span>
+                <span *ngIf="doc.uploadedAt"> &bull; {{ doc.uploadedAt }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="doc-actions">
+            <span
+              class="doc-status-badge"
+              [class.verified]="doc.status === 'Verified'"
+              [class.uploaded]="doc.status === 'Uploaded'"
+              [class.uploading]="doc.status === 'Uploading'"
+              [class.pending]="doc.status === 'Pending'"
+            >
+              <span *ngIf="doc.status === 'Uploading'" class="spinner-small"></span>
+              {{ doc.status }}
+            </span>
+
+            <!-- Actions when file is uploaded -->
+            <div *ngIf="doc.fileName" class="doc-btn-group">
+              <button
+                type="button"
+                class="btn-doc-action"
+                title="Preview Document"
+                (click)="openDocPreview(doc, $event)"
+              >
+                👁 Preview
+              </button>
+              <button
+                type="button"
+                class="btn-doc-action"
+                title="Download Document"
+                (click)="downloadDoc(doc, $event)"
+              >
+                📥
+              </button>
+              <button
+                type="button"
+                class="btn-doc-action"
+                title="Replace File"
+                (click)="rowFileInput.click()"
+              >
+                ↺ Replace
+              </button>
+              <button
+                type="button"
+                class="btn-doc-action btn-danger"
+                title="Remove File"
+                (click)="removeDoc(doc, $event)"
+              >
+                ✕
+              </button>
+            </div>
+
+            <!-- Actions when file is pending -->
+            <button
+              *ngIf="!doc.fileName"
+              type="button"
+              class="btn-doc-upload-primary"
+              (click)="rowFileInput.click()"
+            >
+              📁 Choose &amp; Upload File
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add Additional Document Slot -->
+      <div class="add-doc-toolbar">
+        <button type="button" class="btn-add-doc" (click)="addCustomDocPrompt()">
+          + Add Additional Supporting Document
+        </button>
+      </div>
+    </div>
+
+    <!-- ──────────────── SECTION 7: REVIEW & SUBMIT ──────────────── -->
+    <div *ngIf="activeSection === 7" class="section-container">
+      <div class="section-header">
+        <div class="sec-title-wrap">
+          <span class="sec-badge">7 / 7</span>
+          <h3>Review &amp; Final Submission</h3>
+        </div>
+        <span class="mandatory-hint">Verify all parameters prior to core ledger dispatch</span>
+      </div>
+
+      <div class="review-summary-grid">
+        <!-- Applicant & KYC Summary -->
+        <div class="summary-card">
+          <h4>👤 Applicant &amp; KYC Profile</h4>
+          <div class="sum-row"><span>Full Name:</span> <strong>{{ form.value.fullName }}</strong></div>
+          <div class="sum-row"><span>DOB &amp; Gender:</span> <span>{{ form.value.dateOfBirth }} &bull; {{ form.value.gender }}</span></div>
+          <div class="sum-row"><span>Mobile &amp; Email:</span> <span>{{ form.value.mobile }} &bull; {{ form.value.email }}</span></div>
+          <div class="sum-row"><span>ID Document:</span> <span>{{ form.value.idType }} ({{ form.value.idNumber }})</span></div>
+          <div class="sum-row"><span>Address:</span> <span>{{ form.value.address }}, {{ form.value.city }}, {{ form.value.state }} - {{ form.value.pincode }}</span></div>
+        </div>
+
+        <!-- Employment & Income -->
+        <div class="summary-card">
+          <h4>💼 Employment &amp; Capacity</h4>
+          <div class="sum-row"><span>Nature:</span> <span>{{ form.value.employmentType }}</span></div>
+          <div class="sum-row"><span>Employer:</span> <strong>{{ form.value.employerName }}</strong></div>
+          <div class="sum-row"><span>Designation:</span> <span>{{ form.value.jobTitle }} ({{ form.value.workExperience }} yrs exp)</span></div>
+          <div class="sum-row"><span>Monthly Income:</span> <strong class="green-text">₹{{ form.value.monthlyIncome | number }}</strong></div>
+          <div class="sum-row"><span>Bureau Credit Score:</span> <strong>{{ form.value.creditScore }} (Good / Strong)</strong></div>
+        </div>
+
+        <!-- Attached Verification Documents Summary -->
+        <div class="summary-card">
+          <h4>📄 Scrutinized Verification Documents ({{ totalDocsUploadedCount }} Attached)</h4>
+          <div *ngFor="let doc of documents" class="sum-row">
+            <span>{{ doc.name }}:</span>
+            <strong [class.green-text]="doc.status === 'Verified' || doc.status === 'Uploaded'">
+              {{ doc.fileName ? doc.fileName : 'Not Attached' }}
+              <small *ngIf="doc.fileSize">({{ doc.fileSize }})</small>
+            </strong>
+          </div>
+        </div>
+
+        <!-- Loan Sanction Terms -->
+        <div class="summary-card highlight-border">
+          <h4>💰 Proposed Loan Sanction Parameters</h4>
+          <div class="kpi-mini-row">
+            <div class="kpi-mini">
+              <span class="label">LOAN PRODUCT</span>
+              <span class="val">{{ form.value.loanType }} Loan</span>
+            </div>
+            <div class="kpi-mini">
+              <span class="label">SANCTION AMOUNT</span>
+              <span class="val green-text">₹{{ form.value.loanAmount | number }}</span>
+            </div>
+            <div class="kpi-mini">
+              <span class="label">TENURE</span>
+              <span class="val">{{ form.value.tenureMonths }} Months</span>
+            </div>
+            <div class="kpi-mini">
+              <span class="label">INTEREST RATE</span>
+              <span class="val">{{ form.value.interestRate }}% p.a.</span>
+            </div>
+            <div class="kpi-mini">
+              <span class="label">DISBURSEMENT BANK</span>
+              <span class="val">{{ form.value.bankName }}</span>
+            </div>
+          </div>
+          <div class="purpose-quote">
+            <em>Purpose: "{{ form.value.purpose || 'Not specified' }}"</em>
+          </div>
+        </div>
+      </div>
+
+      <div class="submit-action-box">
+        <div class="ack-checkbox-row">
+          <span class="lock-icon">🔒</span>
+          <span>By submitting, you certify that borrower verification documents and declarations have been scrutinized.</span>
+        </div>
+        <button
+          type="button"
+          class="btn-submit-primary"
+          [disabled]="isSubmitting || form.invalid"
+          (click)="submitApplication()"
+          id="btn-submit-loan-app"
+        >
+          <span *ngIf="isSubmitting" class="spinner"></span>
+          {{ isSubmitting ? 'Submitting to Core Registry...' : '✓ Confirm & Submit Application' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- ──────────────── FORM FOOTER NAVIGATION ──────────────── -->
+    <div class="form-footer-nav">
+      <div class="footer-left">
+        <button type="button" class="btn btn-ghost" (click)="saveAsDraft()" id="btn-save-draft">
+          💾 Save as Draft
+        </button>
+        <button type="button" class="btn btn-ghost" (click)="reset()">
+          ↺ Reset
+        </button>
+      </div>
+
+      <div class="footer-right">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          *ngIf="activeSection > 1"
+          (click)="prevSection()"
+        >
+          ← Previous
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          *ngIf="activeSection < 7"
+          (click)="nextSection()"
+        >
+          Next: {{ sections[activeSection]?.label }} →
+        </button>
+
+        <button
+          type="button"
+          class="btn btn-submit-final"
+          *ngIf="activeSection === 7"
+          [disabled]="isSubmitting || form.invalid"
+          (click)="submitApplication()"
+        >
+          {{ isSubmitting ? 'Submitting...' : 'Submit Application ➔' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ──────────────── DOCUMENT PREVIEW MODAL ──────────────── -->
+  <div *ngIf="showDocPreviewModal && previewDocItem" class="modal-backdrop" (click)="closeDocPreviewModal()">
+    <div class="preview-modal-dialog" (click)="$event.stopPropagation()">
+      <div class="preview-modal-header">
+        <div class="header-left">
+          <span class="preview-icon">
+            {{ previewDocItem.fileType?.startsWith('image/') || previewDocItem.fileName?.endsWith('.jpg') || previewDocItem.fileName?.endsWith('.png') ? '🖼️' : '📄' }}
+          </span>
+          <div>
+            <h3>{{ previewDocItem.name }}</h3>
+            <p class="preview-sub">{{ previewDocItem.fileName }} &bull; {{ previewDocItem.fileSize }}</p>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="closeDocPreviewModal()">✕</button>
+      </div>
+
+      <div class="preview-modal-body">
+        <!-- Image Preview if available -->
+        <div *ngIf="previewDocItem.fileUrl && (previewDocItem.fileType?.startsWith('image/') || previewDocItem.fileName?.endsWith('.jpg') || previewDocItem.fileName?.endsWith('.png') || previewDocItem.fileName?.endsWith('.jpeg'))" class="image-preview-container">
+          <img [src]="previewDocItem.fileUrl" alt="Document Preview" class="doc-preview-img" />
+        </div>
+
+        <!-- Generic Document Inspection Card -->
+        <div *ngIf="!previewDocItem.fileType?.startsWith('image/') && !previewDocItem.fileName?.endsWith('.jpg') && !previewDocItem.fileName?.endsWith('.png') && !previewDocItem.fileName?.endsWith('.jpeg')" class="doc-card-preview">
+          <div class="doc-badge-giant">📑</div>
+          <h4>{{ previewDocItem.fileName }}</h4>
+          <p class="doc-compliance-text">Scrutinized and logged under FinCore Digital KYC Repository standards.</p>
+          
+          <div class="doc-verify-checksum">
+            <div class="checksum-item">
+              <span class="lbl">Category</span>
+              <span class="val">{{ previewDocItem.name }}</span>
+            </div>
+            <div class="checksum-item">
+              <span class="lbl">Audit Status</span>
+              <span class="val status-ok">✓ {{ previewDocItem.status }}</span>
+            </div>
+            <div class="checksum-item">
+              <span class="lbl">File Size</span>
+              <span class="val">{{ previewDocItem.fileSize }}</span>
+            </div>
+            <div class="checksum-item">
+              <span class="lbl">Security Hash</span>
+              <span class="val"><code>SHA-256-{{ previewDocItem.id }}-VFD</code></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDocPreviewModal()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="downloadDoc(previewDocItem)">📥 Download File</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 

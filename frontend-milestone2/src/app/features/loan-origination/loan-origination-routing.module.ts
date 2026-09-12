@@ -20,10 +20,10 @@ const routes: Routes = [
       { path: 'pre-qualification', component: PreQualificationPageComponent },
       { path: 'loan-application', component: LoanApplicationPageComponent },
       { path: 'applications', component: ApplicationsPageComponent },
-      { path: 'processing', component: ApplicationProcessingPageComponent },
-      { path: 'underwriting', component: UnderwritingPageComponent },
-      { path: 'quality-control', component: QualityControlPageComponent },
-      { path: 'loan-funding', component: LoanFundingPageComponent },
+      { path: 'processing', redirectTo: 'applications', pathMatch: 'full' },
+      { path: 'underwriting', redirectTo: 'applications', pathMatch: 'full' },
+      { path: 'quality-control', redirectTo: 'applications', pathMatch: 'full' },
+      { path: 'loan-funding', redirectTo: 'applications', pathMatch: 'full' },
       { path: 'credit-check', component: CreditCheckPageComponent }
     ]
   }

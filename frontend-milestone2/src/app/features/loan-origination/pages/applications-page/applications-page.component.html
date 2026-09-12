@@ -1,87 +1,286 @@
-<div class="page-header">
-  <div>
-    <p class="page-subtitle">Loan Origination • Applications</p>
-    <h2 class="page-title">Manage Loan Applications Portfolio</h2>
-  </div>
-</div>
+<div class="applications-page-view">
 
-<div class="card form-card">
-  <div class="form-grid" style="grid-template-columns: repeat(3, 1fr);">
-    <div class="form-group">
-      <label>Search Borrower / Loan ID</label>
-      <input [(ngModel)]="search" (input)="applyFilters()" placeholder="Search by name, customer ID or loan ID" />
+  <!-- ── Flow Tracker Header ── -->
+  <div class="flow-header-card">
+    <div class="header-text-group">
+      <div class="workflow-breadcrumb">
+        <span class="step-indicator">STAGE 4 OF 4</span>
+        <span class="sep">•</span>
+        <span>CENTRAL ORIGINATION REGISTRY &amp; PORTFOLIO</span>
+      </div>
+      <h1 class="page-title">Loan Applications Portfolio</h1>
+      <p class="page-subtitle">
+        Manage, filter, track status, and inspect complete origination details for all submitted and in-progress loan applications.
+      </p>
     </div>
-    <div class="form-group">
-      <label>Loan Type Filter</label>
-      <select [(ngModel)]="loanType" (change)="applyFilters()">
-        <option value="">All Categories</option>
-        <option value="Home">Home Loan</option>
-        <option value="Personal">Personal Loan</option>
-        <option value="Vehicle">Vehicle Loan</option>
-        <option value="Education">Education Loan</option>
-        <option value="Gold">Gold Loan</option>
-        <option value="Other">Other Loan</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label>Application Status Filter</label>
-      <select [(ngModel)]="status" (change)="applyFilters()">
-        <option value="">All Statuses</option>
-        <option value="Pending">Pending</option>
-        <option value="Approved">Approved</option>
-        <option value="Rejected">Rejected</option>
-      </select>
+    <div class="header-action-group">
+      <button class="btn-primary-header" (click)="startNewApplication()" id="btn-app-start-new">
+        <span class="icon">⚡</span> Start Pre-Qualification ➔
+      </button>
     </div>
   </div>
 
-  <div class="form-actions">
-    <button type="button" class="ghost-button" (click)="resetFilters()">
-      <span class="material-icons">filter_alt_off</span> Reset Filters
-    </button>
-  </div>
-</div>
+  <!-- ── Search & Filter Panel ── -->
+  <div class="card filter-card">
+    <div class="filter-grid">
+      <!-- Search -->
+      <div class="filter-field search-field">
+        <label>Search Registry</label>
+        <div class="search-input-wrap">
+          <input
+            [(ngModel)]="search"
+            (input)="applyFilters()"
+            placeholder="Search by customer name or ID (e.g. Aarav, LO-1001)..."
+            id="input-search-apps"
+          />
+        </div>
+      </div>
 
-<div class="card">
-  <div class="table-wrapper" style="overflow-x: auto;">
-    <table class="table" style="width: 100%; border-collapse: collapse;">
-      <thead>
-        <tr style="border-bottom: 1px solid var(--border-color); text-align: left;">
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Loan ID</th>
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Customer ID</th>
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Customer Name</th>
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Loan Type</th>
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Loan Amount</th>
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Tenure</th>
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase;">Status</th>
-          <th style="padding: 12px; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; text-align: right;">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let app of filtered" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-          <td style="padding: 12px; font-weight: 600; color: #60a5fa;">LN{{ app.loanId }}</td>
-          <td style="padding: 12px;">C-{{ app.customerId }}</td>
-          <td style="padding: 12px; font-weight: 500;">{{ app.customerName || 'Aditi Sharma' }}</td>
-          <td style="padding: 12px;">{{ app.loanType }} Loan</td>
-          <td style="padding: 12px; font-weight: 600;">₹{{ app.loanAmount | number }}</td>
-          <td style="padding: 12px;">{{ app.tenureMonths }} Months</td>
-          <td style="padding: 12px;">
-            <span class="badge" [class.badge-approved]="app.applicationStatus === 'Approved'" [class.badge-review]="app.applicationStatus === 'Pending'" [class.badge-rejected]="app.applicationStatus === 'Rejected'">
-              {{ app.applicationStatus }}
-            </span>
-          </td>
-          <td style="padding: 12px; text-align: right;">
-            <button type="button" class="secondary-button" (click)="viewApplication(app)" style="padding: 6px 12px; font-size: 0.78rem;">
-              Process
-            </button>
-          </td>
-        </tr>
-        <tr *ngIf="!filtered.length">
-          <td colspan="8" style="padding: 24px; text-align: center; color: var(--text-secondary);">
-            No loan applications found matching your criteria.
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <!-- Loan Type -->
+      <div class="filter-field">
+        <label>Loan Product</label>
+        <select [(ngModel)]="loanType" (change)="applyFilters()">
+          <option value="">All Products</option>
+          <option value="Home">Home Loan</option>
+          <option value="Personal">Personal Loan</option>
+          <option value="Vehicle">Vehicle Loan</option>
+          <option value="Education">Education Loan</option>
+          <option value="Gold">Gold Loan</option>
+        </select>
+      </div>
+
+      <!-- Status -->
+      <div class="filter-field">
+        <label>Application Status</label>
+        <select [(ngModel)]="status" (change)="applyFilters()">
+          <option value="">All Statuses</option>
+          <option value="Draft">Draft</option>
+          <option value="Pending">Pending Review</option>
+          <option value="Under Review">Under Review</option>
+          <option value="Approved">Approved</option>
+          <option value="Funded">Funded</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+      <!-- Sort -->
+      <div class="filter-field">
+        <label>Sort Metric</label>
+        <select [(ngModel)]="sortField" (change)="applyFilters()">
+          <option value="applicationDate">Date</option>
+          <option value="requestedAmount">Loan Amount</option>
+        </select>
+      </div>
+
+      <!-- Sort Direction -->
+      <div class="filter-field">
+        <label>Order</label>
+        <select [(ngModel)]="sortDirection" (change)="applyFilters()">
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
+      </div>
+
+      <!-- Reset -->
+      <div class="filter-field reset-field">
+        <label>&nbsp;</label>
+        <button class="btn-clear-filters" (click)="resetFilters()">
+          ↺ Reset Filters
+        </button>
+      </div>
+    </div>
   </div>
+
+  <!-- ── Applications Table Card ── -->
+  <div class="card table-card">
+    <div class="table-card-header">
+      <div class="table-title">
+        <span>📋</span> Active Origination Applications
+        <span class="count-badge">{{ filtered.length }} Total Records</span>
+      </div>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="banking-table">
+        <thead>
+          <tr>
+            <th>APPLICATION ID</th>
+            <th>CUSTOMER NAME</th>
+            <th>LOAN TYPE</th>
+            <th>LOAN AMOUNT</th>
+            <th>APPLICATION DATE</th>
+            <th>STATUS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of filtered" class="app-row" [class.selected]="selectedApp?.id === app.id">
+            <td>
+              <button type="button" class="btn-id-link" (click)="openDetails(app)">
+                {{ app.id || ('LO-' + app.loanId) }}
+              </button>
+            </td>
+            <td class="customer-cell">
+              <strong>{{ app.fullName || ('Customer #' + app.customerId) }}</strong>
+              <div *ngIf="app.city" class="sub-location">{{ app.city }}, {{ app.state }}</div>
+            </td>
+            <td>
+              <span class="type-badge">{{ app.loanType }}</span>
+            </td>
+            <td class="amount-cell">
+              ₹{{ (app.loanAmount || app.requestedAmount) | number }}
+            </td>
+            <td class="date-cell">
+              {{ app.applicationDate || 'Recent' }}
+            </td>
+            <td>
+              <span
+                class="status-pill"
+                [class.status-approved]="app.status === 'Approved' || app.status === 'Funded'"
+                [class.status-pending]="app.status === 'Pending' || app.status === 'Under Review'"
+                [class.status-draft]="app.status === 'Draft'"
+                [class.status-rejected]="app.status === 'Rejected'"
+              >
+                {{ app.status }}
+              </span>
+            </td>
+            <td class="actions-cell">
+              <button
+                type="button"
+                class="btn-action btn-view"
+                (click)="openDetails(app)"
+                title="View Full Application Details"
+              >
+                View
+              </button>
+
+              <button
+                type="button"
+                *ngIf="app.status === 'Draft' || app.status === 'Pending'"
+                class="btn-action btn-edit"
+                (click)="editDraft(app)"
+                title="Edit / Resume Application"
+              >
+                Edit
+              </button>
+
+              <button
+                type="button"
+                *ngIf="app.status === 'Draft'"
+                class="btn-action btn-delete"
+                (click)="deleteDraft(app)"
+                title="Delete Draft"
+              >
+                ✕
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filtered.length === 0">
+            <td colspan="7" class="empty-state-cell">
+              <div class="empty-state">
+                <span class="empty-icon">🔍</span>
+                <p>No loan applications found matching the selected filters.</p>
+                <button class="btn-clear-filters" (click)="resetFilters()">Clear Filters</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Application Details Modal / Drawer ── -->
+  <div *ngIf="selectedApp" class="modal-backdrop" (click)="closeDetails()">
+    <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-header-left">
+          <div class="modal-id-badge">
+            {{ selectedApp.id || ('LO-' + selectedApp.loanId) }}
+          </div>
+          <div>
+            <h2 class="modal-title">{{ selectedApp.fullName || ('Customer #' + selectedApp.customerId) }}</h2>
+            <div class="modal-meta-row">
+              <span>Customer ID: #{{ selectedApp.customerId }}</span>
+              <span>&bull;</span>
+              <span>Applied: {{ selectedApp.applicationDate }}</span>
+              <span>&bull;</span>
+              <span
+                class="status-pill mini"
+                [class.status-approved]="selectedApp.status === 'Approved' || selectedApp.status === 'Funded'"
+                [class.status-pending]="selectedApp.status === 'Pending' || selectedApp.status === 'Under Review'"
+                [class.status-draft]="selectedApp.status === 'Draft'"
+              >
+                {{ selectedApp.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close-modal" (click)="closeDetails()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Key Metrics Row -->
+        <div class="modal-metrics-grid">
+          <div class="metric-box">
+            <span class="lbl">SANCTION AMOUNT</span>
+            <span class="val green">₹{{ (selectedApp.loanAmount || selectedApp.requestedAmount) | number }}</span>
+          </div>
+          <div class="metric-box">
+            <span class="lbl">LOAN PRODUCT</span>
+            <span class="val">{{ selectedApp.loanType }} Loan</span>
+          </div>
+          <div class="metric-box">
+            <span class="lbl">TENURE</span>
+            <span class="val">{{ selectedApp.tenureMonths || 120 }} Months</span>
+          </div>
+          <div class="metric-box">
+            <span class="lbl">INTEREST RATE</span>
+            <span class="val">{{ selectedApp.interestRate }}% p.a.</span>
+          </div>
+        </div>
+
+        <!-- Details Grid -->
+        <div class="details-section-grid">
+          <!-- Applicant & KYC -->
+          <div class="detail-block">
+            <h4>👤 Borrower &amp; Contact</h4>
+            <div class="d-row"><span>Full Name:</span> <strong>{{ selectedApp.fullName }}</strong></div>
+            <div class="d-row"><span>Mobile:</span> <span>{{ selectedApp.mobile || '+91 98765 43210' }}</span></div>
+            <div class="d-row"><span>Email:</span> <span>{{ selectedApp.email || 'customer@fincore.bank' }}</span></div>
+            <div class="d-row"><span>Location:</span> <span>{{ selectedApp.city || 'Mumbai' }}, {{ selectedApp.state || 'Maharashtra' }}</span></div>
+          </div>
+
+          <!-- Employment & Financials -->
+          <div class="detail-block">
+            <h4>💼 Employment &amp; Capacity</h4>
+            <div class="d-row"><span>Employment:</span> <span>{{ selectedApp.employmentType || 'Salaried' }}</span></div>
+            <div class="d-row"><span>Employer:</span> <span>{{ selectedApp.employerName || 'Corporate Enterprise' }}</span></div>
+            <div class="d-row"><span>Monthly Income:</span> <strong>₹{{ (selectedApp.monthlyIncome || 120000) | number }}</strong></div>
+            <div class="d-row"><span>Credit Score:</span> <strong class="green">{{ selectedApp.creditScore || 760 }}</strong></div>
+          </div>
+        </div>
+
+        <!-- Purpose -->
+        <div class="purpose-card" *ngIf="selectedApp.purpose">
+          <strong>Loan Purpose:</strong>
+          <p>{{ selectedApp.purpose }}</p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeDetails()">Close</button>
+        <button
+          type="button"
+          *ngIf="selectedApp.status === 'Draft' || selectedApp.status === 'Pending'"
+          class="btn btn-primary"
+          (click)="editDraft(selectedApp)"
+        >
+          Edit / Continue Application ➔
+        </button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
