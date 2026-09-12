@@ -1,0 +1,106 @@
+.risk-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  .breadcrumb {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-blue-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--fc-slate-900);
+  }
+
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--fc-slate-500);
+    margin-top: 4px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.risk-hero-card {
+  padding: 24px;
+  background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);
+  border: 1px solid #BFDBFE;
+
+  .score-circular-badge {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #10B981;
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.2);
+
+    .score-num {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .score-sub {
+      font-size: 11px;
+      font-weight: 600;
+      opacity: 0.85;
+    }
+  }
+}
+
+.risk-factors-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+
+  .factor-card {
+    background: var(--fc-slate-50);
+    border: 1px solid var(--fc-slate-200);
+    border-radius: var(--fc-radius-md);
+    padding: 16px;
+
+    .factor-weight {
+      font-size: 11px;
+      color: var(--fc-slate-400);
+    }
+
+    .progress-track {
+      height: 5px;
+      background: var(--fc-slate-200);
+      border-radius: 9999px;
+      overflow: hidden;
+
+      .progress-fill {
+        height: 100%;
+        border-radius: 9999px;
+      }
+    }
+  }
+}
+
+.text-blue-600 { color: var(--fc-blue-600); }
+.text-rose-600 { color: var(--fc-rose-600); }

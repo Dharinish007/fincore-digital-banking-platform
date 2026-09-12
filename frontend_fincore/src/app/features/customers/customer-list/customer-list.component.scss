@@ -1,0 +1,176 @@
+.customer-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  .breadcrumb {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-blue-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--fc-slate-900);
+  }
+
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--fc-slate-500);
+    margin-top: 4px;
+  }
+}
+
+.table-filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .filter-input {
+    width: 280px;
+  }
+
+  .filter-select {
+    width: 160px;
+  }
+}
+
+.customer-info-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .avatar-letter {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%);
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &.large {
+      width: 44px;
+      height: 44px;
+      font-size: 16px;
+    }
+  }
+}
+
+.contact-cell {
+  font-size: 13px;
+  color: var(--fc-slate-800);
+}
+
+.risk-pill {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+
+  &.risk-low {
+    background: #ECFDF5;
+    color: #065F46;
+  }
+  &.risk-medium {
+    background: #FFFBEB;
+    color: #B45309;
+  }
+  &.risk-high {
+    background: #FFF1F2;
+    color: #BE123C;
+  }
+  &.risk-critical {
+    background: #4C0519;
+    color: #FFE4E6;
+  }
+}
+
+.action-buttons-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.form-section-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--fc-slate-900);
+  border-bottom: 1px solid var(--fc-slate-200);
+  padding-bottom: 6px;
+  margin-bottom: 14px;
+}
+
+.summary-box {
+  background: var(--fc-slate-50);
+  border: 1px solid var(--fc-slate-200);
+  border-radius: var(--fc-radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+
+  .lbl {
+    font-size: 11px;
+    color: var(--fc-slate-500);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .val {
+    font-size: 15px;
+    color: var(--fc-slate-900);
+    margin-top: 4px;
+  }
+}
+
+.detail-section-card {
+  border: 1px solid var(--fc-slate-200);
+  border-radius: var(--fc-radius-md);
+  padding: 16px;
+  background: var(--fc-white);
+
+  .section-heading {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--fc-slate-900);
+    margin-bottom: 12px;
+    border-bottom: 1px solid var(--fc-slate-100);
+    padding-bottom: 6px;
+  }
+}
+
+.account-pill-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+
+  .account-pill-card {
+    background: var(--fc-slate-50);
+    border: 1px solid var(--fc-slate-200);
+    border-radius: 8px;
+    padding: 12px;
+  }
+}
+
+.text-blue-600 { color: var(--fc-blue-600); }

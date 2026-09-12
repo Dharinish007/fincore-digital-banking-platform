@@ -1,0 +1,153 @@
+.account-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  .breadcrumb {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-blue-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--fc-slate-900);
+  }
+
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--fc-slate-500);
+    margin-top: 4px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.table-filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .filter-input { width: 280px; }
+  .filter-select { width: 160px; }
+}
+
+.acct-number-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.balance-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.branch-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.account-type-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+
+  &.savings { background: #EFF6FF; color: #1D4ED8; }
+  &.current { background: #ECFEFF; color: #0E7490; }
+  &.salary { background: #ECFDF5; color: #047857; }
+  &.fixed-deposit { background: #FFFBEB; color: #B45309; }
+}
+
+.action-buttons-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.current-state-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--fc-slate-50);
+  padding: 12px 16px;
+  border-radius: var(--fc-radius-md);
+  border: 1px solid var(--fc-slate-200);
+
+  .lbl {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-slate-500);
+  }
+
+  .balance-tag {
+    margin-left: auto;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--fc-slate-900);
+  }
+}
+
+.lifecycle-options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .lifecycle-option-btn {
+    text-align: left;
+    padding: 14px 18px;
+    border-radius: var(--fc-radius-md);
+    border: 1px solid var(--fc-slate-200);
+    background: var(--fc-white);
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    .title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--fc-slate-900);
+    }
+
+    .desc {
+      font-size: 12px;
+      color: var(--fc-slate-500);
+      margin-top: 3px;
+    }
+
+    &:hover {
+      border-color: var(--fc-blue-600);
+      background: var(--fc-blue-50);
+      transform: translateX(4px);
+    }
+
+    &.frozen-btn:hover {
+      border-color: var(--fc-rose-500);
+      background: var(--fc-rose-50);
+    }
+  }
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13.5px;
+}

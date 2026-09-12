@@ -1,0 +1,106 @@
+.payment-dash-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  .breadcrumb {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-blue-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--fc-slate-900);
+  }
+
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--fc-slate-500);
+    margin-top: 4px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.pay-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+
+  .kpi-card {
+    background: var(--fc-white);
+    border: 1px solid var(--fc-slate-200);
+    border-radius: var(--fc-radius-md);
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--fc-shadow-xs);
+
+    .lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--fc-slate-500);
+    }
+
+    .val {
+      font-size: 20px;
+      font-weight: 800;
+      margin: 6px 0 2px;
+    }
+
+    .sub {
+      font-size: 10.5px;
+      color: var(--fc-slate-400);
+    }
+  }
+}
+
+.score-tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+
+  &.clean {
+    background: #ECFDF5;
+    color: #065F46;
+  }
+
+  &.suspicious {
+    background: #FFF1F2;
+    color: #BE123C;
+  }
+}
+
+.text-blue-600 { color: var(--fc-blue-600); }
+.text-emerald-600 { color: var(--fc-emerald-600); }
+.text-indigo-600 { color: #4F46E5; }
+.text-cyan-600 { color: var(--fc-cyan-500); }
+.text-rose-600 { color: var(--fc-rose-600); }
+.text-amber-600 { color: var(--fc-amber-600); }

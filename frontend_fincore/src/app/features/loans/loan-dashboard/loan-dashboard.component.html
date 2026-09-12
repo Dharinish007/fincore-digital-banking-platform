@@ -1,0 +1,286 @@
+<div class="loans-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Credit & Lending</div>
+      <h1 class="page-title">Retail & Corporate Loan Management</h1>
+      <p class="page-subtitle">Origination pipeline, automated credit risk scoring, EMI amortization & RBI NPA surveillance.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="openApplyModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        New Loan Application
+      </button>
+
+      <a routerLink="/emi-calculator" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+          <line x1="8" y1="6" x2="16" y2="6"></line>
+        </svg>
+        Interactive EMI Calculator
+      </a>
+    </div>
+  </div>
+
+  <!-- Loan Portfolio KPI Cards -->
+  <div class="loan-kpi-grid">
+    <div class="loan-kpi-card">
+      <span class="lbl">Total Active Portfolio</span>
+      <div class="val tabular-nums text-blue-600">₹4,120 Cr</div>
+      <span class="sub">+3.1% MoM growth</span>
+    </div>
+
+    <div class="loan-kpi-card">
+      <span class="lbl">Approved Accounts</span>
+      <div class="val tabular-nums text-emerald-600">745,210</div>
+      <span class="sub">94.2% approval rate</span>
+    </div>
+
+    <div class="loan-kpi-card">
+      <span class="lbl">Upcoming EMI Due (Sep 2026)</span>
+      <div class="val tabular-nums text-amber-600">₹38.4 Cr</div>
+      <span class="sub">Auto-debit mandate active</span>
+    </div>
+
+    <div class="loan-kpi-card">
+      <span class="lbl">Gross NPA Ratio</span>
+      <div class="val tabular-nums text-rose-600">1.18%</div>
+      <span class="sub">Benchmark: &lt; 2.50% (RBI Safe)</span>
+    </div>
+  </div>
+
+  <!-- Visual 8-Step Origination & Servicing Stepper -->
+  <div class="fc-card">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          Automated Loan Origination & Servicing Lifecycle
+        </div>
+        <div class="fc-card-subtitle">End-to-end multi-tier microservice state machine</div>
+      </div>
+    </div>
+
+    <div class="fc-card-body">
+      <div class="stepper-track">
+        <div class="step-node" *ngFor="let step of workflowSteps" [ngClass]="step.status">
+          <div class="step-circle">{{ step.number }}</div>
+          <div class="step-title">{{ step.title }}</div>
+          <div class="step-desc">{{ step.desc }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Active Loans Table -->
+  <div class="fc-card">
+    <div class="fc-card-header">
+      <div class="fc-card-title">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="7" width="20" height="14" rx="2"></rect>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+        </svg>
+        Active Loan Portfolio
+      </div>
+      <span class="text-sm text-muted">Real-time CIBIL and NPA status tracking</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Loan Reference</th>
+            <th>Borrower & ID</th>
+            <th>Type</th>
+            <th>Principal Amount</th>
+            <th>Interest & Tenure</th>
+            <th>Monthly EMI</th>
+            <th>Outstanding</th>
+            <th>Credit Score</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of loans">
+            <td class="font-mono text-sm font-semibold text-blue-600">{{ l.loanId }}</td>
+            <td>
+              <div class="borrower-cell">
+                <span class="font-semibold">{{ l.customerName }}</span>
+                <span class="text-xs text-muted font-mono">{{ l.customerId }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-info">{{ l.loanType }}</span>
+            </td>
+            <td class="font-semibold tabular-nums">₹{{ l.principalAmount | number }}</td>
+            <td>
+              <div class="rate-cell">
+                <span class="rate-text">{{ l.interestRate }}% p.a.</span>
+                <span class="text-xs text-muted">{{ l.tenureMonths }} mos ({{ l.tenureMonths / 12 | number:'1.0-1' }} yrs)</span>
+              </div>
+            </td>
+            <td class="font-semibold tabular-nums text-slate-900">₹{{ l.emiAmount | number }}</td>
+            <td class="font-semibold tabular-nums" [class.text-rose-600]="l.isNPA">
+              ₹{{ l.outstandingAmount | number }}
+            </td>
+            <td>
+              <span
+                class="score-pill"
+                [class.high]="l.creditScore >= 750"
+                [class.mid]="l.creditScore >= 650 && l.creditScore < 750"
+                [class.low]="l.creditScore < 650">
+                {{ l.creditScore }} CIBIL
+              </span>
+            </td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="l.status === 'Approved' || l.status === 'Disbursed'"
+                [class.badge-warning]="l.status === 'Under Review' || l.status === 'Applied'"
+                [class.badge-danger]="l.status === 'NPA' || l.status === 'Rejected'">
+                {{ l.status }}
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <button class="btn btn-secondary btn-sm" (click)="openWorkflow(l)">
+                Manage
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Apply Loan Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showApplyModal">
+    <div class="fc-modal-dialog modal-lg">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Retail & Commercial Loan Origination</h3>
+          <p class="text-sm text-muted">Configure principal, tenure, and credit underwriting parameters.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeApplyModal()">✕</button>
+      </div>
+
+      <form [formGroup]="loanForm" (ngSubmit)="submitLoanApplication()">
+        <div class="fc-modal-body">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-group">
+              <label>Applicant <span class="required">*</span></label>
+              <select class="form-control" formControlName="customerId">
+                <option *ngFor="let c of customers" [value]="c.customerId">
+                  {{ c.firstName }} {{ c.lastName }} ({{ c.customerId }} - Risk: {{ c.riskCategory }})
+                </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Loan Product <span class="required">*</span></label>
+              <select class="form-control" formControlName="loanType">
+                <option value="Home Loan">Home Loan (8.45% p.a. - up to 30 yrs)</option>
+                <option value="Vehicle Loan">Vehicle Loan (8.90% p.a. - up to 7 yrs)</option>
+                <option value="Business Loan">Business / Commercial Loan (11.25% p.a.)</option>
+                <option value="Personal Loan">Personal Loan (12.50% p.a.)</option>
+                <option value="Education Loan">Education Loan (9.15% p.a.)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-4 mt-2">
+            <div class="form-group">
+              <label>Principal Amount (INR) <span class="required">*</span></label>
+              <input type="number" class="form-control font-mono text-base" formControlName="principalAmount" />
+            </div>
+
+            <div class="form-group">
+              <label>Annual Interest Rate (%) <span class="required">*</span></label>
+              <input type="number" step="0.05" class="form-control font-mono" formControlName="interestRate" />
+            </div>
+
+            <div class="form-group">
+              <label>Tenure (Months) <span class="required">*</span></label>
+              <input type="number" class="form-control font-mono" formControlName="tenureMonths" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Credit Bureau Score (CIBIL / Experian) <span class="required">*</span></label>
+            <input type="number" class="form-control font-mono" formControlName="creditScore" />
+          </div>
+
+          <!-- Dynamic EMI Preview Callout -->
+          <div class="emi-calculation-preview mt-4">
+            <div class="preview-title">Automated EMI Assessment</div>
+            <div class="flex justify-between items-center mt-2">
+              <div>
+                <span class="preview-sub">Computed Monthly Installment:</span>
+                <div class="preview-emi tabular-nums">₹{{ computedEmi | number }} / mo</div>
+              </div>
+              <div class="text-right">
+                <span class="preview-sub">Tenure in Years:</span>
+                <div class="font-semibold text-base">{{ loanForm.get('tenureMonths')?.value / 12 | number:'1.0-1' }} Years</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fc-modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeApplyModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Sanction & Approve Loan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Loan Action / Workflow Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showWorkflowModal && selectedLoan">
+    <div class="fc-modal-dialog">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Loan Underwriting & Actions</h3>
+          <p class="text-sm text-muted font-mono">{{ selectedLoan.loanId }} • {{ selectedLoan.customerName }}</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeWorkflow()">✕</button>
+      </div>
+
+      <div class="fc-modal-body">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div class="summary-box">
+            <span class="lbl">Principal</span>
+            <span class="val font-semibold">₹{{ selectedLoan.principalAmount | number }}</span>
+          </div>
+          <div class="summary-box">
+            <span class="lbl">Outstanding</span>
+            <span class="val font-semibold text-rose-600">₹{{ selectedLoan.outstandingAmount | number }}</span>
+          </div>
+        </div>
+
+        <div class="action-desc mb-4 text-sm text-slate-700">
+          Authorize banking actions on this loan facility:
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <button class="btn btn-success" (click)="disburse(selectedLoan)" [disabled]="selectedLoan.status === 'Disbursed'">
+            Disburse Loan Funds (NEFT Direct Credit)
+          </button>
+
+          <button class="btn btn-danger" (click)="markNPA(selectedLoan)" [disabled]="selectedLoan.isNPA">
+            Classify as NPA (Non-Performing Asset)
+          </button>
+        </div>
+      </div>
+
+      <div class="fc-modal-footer">
+        <button class="btn btn-secondary" (click)="closeWorkflow()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
