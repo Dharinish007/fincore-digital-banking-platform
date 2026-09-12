@@ -171,9 +171,10 @@ Configured routes:
 
 | Gateway URL Prefix | Destination Service | Port |
 |---|---|---:|
-| `/milestone-3/**` | milestone-3 | 8082 |
-| `/milestone2-loan-management/**` | milestone2-loan-management | 8083 |
-| `/Secure-Digital-banking-milestone-4/**` | Secure-Digital-banking-milestone-4 | 8081 |
+| `/M1/**` | milestone-1 | 8084 |
+| `/M3/**` | milestone-3 | 8082 |
+| `/M2/**` | milestone2-loan-management | 8083 |
+| `/M4/**` | Secure-Digital-banking-milestone-4 | 8081 |
 
 The Gateway uses load-balanced URIs (`lb://...`) and Eureka for discovery. `StripPrefix=1` removes the service prefix before forwarding the request.
 
@@ -181,7 +182,7 @@ Example:
 ```text
 Client:  http://localhost:8080/milestone-3/fraud/...
 Gateway forwards to:
-         http://milestone-3/fraud/...
+         http://M3/fraud/...
 ```
 
 Note: The FinCore account service is configured with Eureka but is not currently included in the API Gateway route file. Add a route if it should be accessed through port 8080.
@@ -392,9 +393,10 @@ Loan Management:       http://localhost:8083
 
 Gateway testing:
 ```text
-http://localhost:8080/milestone-3/...
-http://localhost:8080/milestone2-loan-management/...
-http://localhost:8080/Secure-Digital-banking-milestone-4/...
+http://localhost:8080/M3/...
+http://localhost:8080/M2/...
+http://localhost:8080/M4/...
+http://localhost:8080/M1/...
 ```
 
 Use the exact controller mappings defined in each module when constructing endpoint URLs.
@@ -435,18 +437,10 @@ Check:
 - JDBC driver dependency.
 - Database permissions.
 
-## 12. Future Improvements
 
-- Add the FinCore route to API Gateway.
-- Centralize JWT validation at the Gateway and secure downstream APIs.
-- Replace development H2 databases with persistent databases.
-- Move secrets to environment variables or a secret manager for every service.
-- Add centralized logging and distributed tracing.
-- Add API documentation using OpenAPI/Swagger.
-- Add Docker Compose for one-command startup.
-- Add health checks and resilience patterns such as circuit breakers and retries.
-- Add integration tests covering complete cross-service workflows.
-
-## 13. Summary
+## 12. Summary
 
 This backend follows a microservices architecture where each business capability is isolated into a separate Spring Boot application. Eureka handles discovery, the API Gateway provides a unified entry point, and OpenFeign enables service-to-service communication. Together, the modules cover account management, loans, payments, notifications, fraud detection, settlement, liveness verification, risk assessment, and audit logging.
+
+## Contributor
+Janhvi Pandey
