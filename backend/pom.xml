@@ -27,6 +27,11 @@
         <module>transaction-service</module>
         <module>dashboard-service</module>
         <module>loan-service</module>
+        <module>beneficiary-service</module>
+        <module>payment-service</module>
+        <module>imps-neft-upi-service</module>
+        <module>kyc-service</module>
+        <module>face-match-service</module>
     </modules>
 
     <properties>
