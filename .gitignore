@@ -31,3 +31,7 @@ Thumbs.db
 
 # Angular
 .angular/
+
+# Python
+__pycache__/
+*.pyc
