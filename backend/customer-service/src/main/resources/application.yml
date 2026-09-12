@@ -6,7 +6,7 @@ spring:
     name: customer-service
 
   profiles:
-    active: postgres
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
   jackson:
     serialization:
