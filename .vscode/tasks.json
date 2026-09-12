@@ -2,7 +2,7 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "FinCore: API Gateway (8080)",
+      "label": "1. API Gateway (8080)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -11,13 +11,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Customer Service (8081)",
+      "label": "2. Customer Service (8081)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -26,13 +27,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Account Service (8082)",
+      "label": "3. Account Service (8082)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -41,13 +43,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Transaction Service (8083)",
+      "label": "4. Transaction Service (8083)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -56,13 +59,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Dashboard Service (8084)",
+      "label": "5. Dashboard Service (8084)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -71,13 +75,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Loan Service (8085)",
+      "label": "6. Loan Service (8085)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -86,13 +91,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Beneficiary Service (8086)",
+      "label": "7. Beneficiary Service (8086)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -101,13 +107,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Payment Service (8087)",
+      "label": "8. Payment Service (8087)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -116,13 +123,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: IMPS-NEFT-UPI Service (8088)",
+      "label": "9. IMPS-NEFT-UPI Service (8088)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -131,13 +139,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: KYC Service (8089)",
+      "label": "10. KYC Service (8089)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -146,13 +155,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Face Match Service (8090)",
+      "label": "11. Face Match Service (8090)",
       "type": "shell",
       "command": "mvn spring-boot:run",
       "options": {
@@ -161,13 +171,14 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-backend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
-      "label": "FinCore: Angular Frontend (4200)",
+      "label": "12. Angular Frontend (4200)",
       "type": "shell",
       "command": "npm start",
       "options": {
@@ -176,26 +187,27 @@
       "isBackground": true,
       "problemMatcher": [],
       "presentation": {
-        "group": "fincore-frontend",
         "reveal": "always",
-        "panel": "new"
+        "panel": "new",
+        "focus": false,
+        "clear": false
       }
     },
     {
       "label": "Run All FinCore Services (Antigravity Terminals)",
       "dependsOn": [
-        "FinCore: API Gateway (8080)",
-        "FinCore: Customer Service (8081)",
-        "FinCore: Account Service (8082)",
-        "FinCore: Transaction Service (8083)",
-        "FinCore: Dashboard Service (8084)",
-        "FinCore: Loan Service (8085)",
-        "FinCore: Beneficiary Service (8086)",
-        "FinCore: Payment Service (8087)",
-        "FinCore: IMPS-NEFT-UPI Service (8088)",
-        "FinCore: KYC Service (8089)",
-        "FinCore: Face Match Service (8090)",
-        "FinCore: Angular Frontend (4200)"
+        "1. API Gateway (8080)",
+        "2. Customer Service (8081)",
+        "3. Account Service (8082)",
+        "4. Transaction Service (8083)",
+        "5. Dashboard Service (8084)",
+        "6. Loan Service (8085)",
+        "7. Beneficiary Service (8086)",
+        "8. Payment Service (8087)",
+        "9. IMPS-NEFT-UPI Service (8088)",
+        "10. KYC Service (8089)",
+        "11. Face Match Service (8090)",
+        "12. Angular Frontend (4200)"
       ],
       "dependsOrder": "parallel",
       "problemMatcher": [],
