@@ -1,0 +1,188 @@
+.module-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1100px;
+}
+
+.page-title {
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.kpi-card {
+  background-color: #1b1d28;
+  border: 1px solid #262938;
+  border-radius: 6px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-label {
+  font-size: 0.8rem;
+  color: #7d899b;
+}
+
+.kpi-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.green-text {
+  color: #34d399;
+  font-size: 0.8rem;
+}
+
+.content-card {
+  background-color: #1b1d28;
+  border: 1px solid #262938;
+  border-radius: 6px;
+  padding: 20px 24px;
+}
+
+.card-title, .card-header-title {
+  font-size: 1.05rem;
+  color: #cbd5e1;
+  border-bottom: 1px solid #262938;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  margin: 4px 0 0 0;
+}
+
+.header-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.milestones-hub-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.milestone-hub-card {
+  background: #13151f;
+  border: 1px solid #262938;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.milestone-hub-card:hover {
+  transform: translateY(-2px);
+  border-color: #38bdf8;
+}
+
+.mhc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.mhc-tag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.tag-m1 { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+.tag-m2 { background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); }
+.tag-m3 { background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3); }
+.tag-m4 { background: rgba(251, 146, 60, 0.15); color: #fb923c; border: 1px solid rgba(251, 146, 60, 0.3); }
+
+.mhc-icon {
+  font-size: 1.25rem;
+}
+
+.milestone-hub-card h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f8fafc;
+  margin: 0 0 6px 0;
+}
+
+.milestone-hub-card p {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  line-height: 1.35;
+  margin: 0 0 14px 0;
+  flex-grow: 1;
+}
+
+.mhc-links {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-top: 1px solid #1e2230;
+  padding-top: 10px;
+}
+
+.mhc-link {
+  font-size: 0.82rem;
+  color: #38bdf8;
+  text-decoration: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: background 0.15s, color 0.15s;
+}
+
+.mhc-link:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+}
+
+.mhc-link.text-red {
+  color: #f87171;
+}
+
+.mhc-link.text-red:hover {
+  background: rgba(248, 113, 113, 0.15);
+  color: #fca5a5;
+}
+
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.activity-list li {
+  display: flex;
+  gap: 16px;
+  font-size: 0.9rem;
+}
+
+.activity-time {
+  color: #38bdf8;
+  min-width: 100px;
+}
+
+.activity-desc {
+  color: #cbd5e1;
+}
+

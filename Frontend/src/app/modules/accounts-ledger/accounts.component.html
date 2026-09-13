@@ -1,0 +1,105 @@
+<div class="module-container">
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <h2 class="page-title">Accounts & Ledger Management</h2>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Active Savings Accounts</span>
+      <div class="kpi-value">8,42,100</div>
+      <span class="kpi-subtext green-text">Core Banking Node</span>
+    </div>
+    <div class="kpi-card">
+      <span class="kpi-label">Selected Account Balance</span>
+      <div class="kpi-value">₹{{ selectedAccount.balance.toLocaleString('en-IN') }}</div>
+      <span class="kpi-subtext blue-text">{{ selectedAccount.accNo }}</span>
+    </div>
+  </div>
+
+  <div class="details-card">
+    <h3 class="card-header-title">Account Details - {{ selectedAccount.accNo }}</h3>
+    <div class="detail-rows">
+      <div class="detail-row">
+        <span class="label">Account Holder:</span> <span class="val">{{ selectedAccount.name }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Type:</span> <span class="val">{{ selectedAccount.type }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Balance:</span> <span class="val green-text">₹{{ selectedAccount.balance.toLocaleString('en-IN') }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">IFSC Code:</span> <span class="val highlight">{{ selectedAccount.ifsc }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Branch:</span> <span class="val">{{ selectedAccount.branch }}</span>
+        <span class="pipe">|</span>
+        <span class="label">Status:</span> <span class="badge" [class.approved-badge]="selectedAccount.status === 'Active'" [class.danger-badge]="selectedAccount.status === 'Frozen'" [class.warn-badge]="selectedAccount.status === 'Dormant'">{{ selectedAccount.status }}</span>
+      </div>
+      <div class="detail-row action-row">
+        <span class="label">Action:</span>
+        <div class="action-buttons">
+          <button class="action-btn primary-btn" (click)="openDeposit()">[Credit Deposit (₹)]</button>
+          <button class="action-btn" (click)="openWithdraw()">[Debit Withdrawal (₹)]</button>
+          <button class="action-btn danger-text" (click)="toggleAccountFreeze()">[{{ selectedAccount.status === 'Frozen' ? 'Unfreeze Account' : 'Freeze Account' }}]</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <h3 class="card-header-title">Core Banking Account Registry</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Account No</th>
+          <th>Account Holder</th>
+          <th>Type</th>
+          <th>Balance (₹)</th>
+          <th>IFSC</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (acc of accounts; track acc.accNo) {
+          <tr (click)="selectAccount(acc)" [class.selected-row]="selectedAccount.accNo === acc.accNo">
+            <td class="alert-id">{{ acc.accNo }}</td>
+            <td>{{ acc.name }}</td>
+            <td>{{ acc.type }}</td>
+            <td><strong>₹{{ acc.balance.toLocaleString('en-IN') }}</strong></td>
+            <td>{{ acc.ifsc }}</td>
+            <td>
+              <span class="badge" [class.approved-badge]="acc.status === 'Active'" [class.danger-badge]="acc.status === 'Frozen'" [class.warn-badge]="acc.status === 'Dormant'">
+                {{ acc.status }}
+              </span>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  @if (showDepositModal || showWithdrawModal) {
+    <div class="modal-backdrop" (click)="closeModals()">
+      <div class="modal-content small-modal" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>{{ showDepositModal ? 'Deposit Funds (₹)' : 'Withdraw Funds (₹)' }}</h3>
+          <button class="close-btn" (click)="closeModals()">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px;">Account: <strong>{{ selectedAccount.accNo }}</strong> (Holder: {{ selectedAccount.name }})</p>
+          <div class="form-group">
+            <label>Amount (₹)</label>
+            <input type="number" [(ngModel)]="txAmount" class="form-input" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeModals()">Cancel</button>
+          <button class="btn-primary" (click)="showDepositModal ? processDeposit() : processWithdraw()">Submit Transaction</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

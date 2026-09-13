@@ -1,0 +1,147 @@
+<div class="servicing-container">
+  <div class="card servicing-card" *ngIf="selectedLoan">
+    <div class="card-header">
+      <div class="header-left-group">
+        <span class="card-icon">⚡</span>
+        <h3>Loan Service - Origination & Servicing</h3>
+      </div>
+
+      <!-- Quick Loan Switcher -->
+      <div class="loan-switcher">
+        <select [ngModel]="selectedLoan.loanId" (ngModelChange)="selectLoan($event)">
+          <option *ngFor="let l of loans" [value]="l.loanId">
+            Loan: {{ l.loanId }} ({{ l.customerName }})
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Action Banner Message -->
+    <div *ngIf="actionMessage" class="action-alert">
+      <span>✅ {{ actionMessage }}</span>
+      <button (click)="actionMessage = null" class="close-alert">✕</button>
+    </div>
+
+    <div class="servicing-content">
+      <!-- Line 1: Loan ID, Type, Principal -->
+      <div class="servicing-line">
+        <span class="field-label">Loan:</span>
+        <span class="field-value font-mono text-cyan">{{ selectedLoan.loanId }}</span>
+        <span class="sep">|</span>
+        <span class="field-label">Type:</span>
+        <span class="field-value">{{ selectedLoan.loanType }}</span>
+        <span class="sep">|</span>
+        <span class="field-label">Principal:</span>
+        <span class="field-value text-white font-bold">{{ formatCurrency(selectedLoan.sanctionedAmount) }}</span>
+      </div>
+
+      <!-- Line 2: Customer, Credit Score, Status -->
+      <div class="servicing-line">
+        <span class="field-label">Customer:</span>
+        <span class="field-value text-white">{{ selectedLoan.customerName }}</span>
+        <span class="sep">|</span>
+        <span class="field-label">Credit Score:</span>
+        <span class="field-value text-green font-bold">{{ selectedLoan.creditScore }}</span>
+        <span class="sep">|</span>
+        <span class="field-value text-green badge-subtle">{{ selectedLoan.status }}</span>
+      </div>
+
+      <!-- Line 3: EMI, Tenure, Rate -->
+      <div class="servicing-line">
+        <span class="field-label">EMI:</span>
+        <span class="field-value text-amber font-bold">{{ formatCurrency(selectedLoan.monthlyEmi) }}</span>
+        <span class="sep">|</span>
+        <span class="field-label">Tenure:</span>
+        <span class="field-value">{{ selectedLoan.tenureMonths }} months</span>
+        <span class="sep">|</span>
+        <span class="field-label">Rate:</span>
+        <span class="field-value text-cyan">{{ selectedLoan.interestRate }}%</span>
+      </div>
+
+      <!-- Line 4: Disbursement Event & Saga -->
+      <div class="servicing-line">
+        <span class="field-label">Disbursement:</span>
+        <span class="field-value text-purple font-mono">Kafka event</span>
+        <span class="sep">|</span>
+        <span class="field-label">Saga:</span>
+        <span class="field-value text-cyan font-mono">{{ selectedLoan.kafkaSagaStatus }}</span>
+      </div>
+
+      <!-- Line 5: EMI Schedule & Auto-debit -->
+      <div class="servicing-line">
+        <span class="field-label">EMI Schedule:</span>
+        <span class="field-value">{{ selectedLoan.tenureMonths }} installments</span>
+        <span class="sep">|</span>
+        <span class="field-value text-green" *ngIf="selectedLoan.autoDebitEnabled">Auto-debit enabled</span>
+        <span class="field-value text-secondary" *ngIf="!selectedLoan.autoDebitEnabled">Manual debit</span>
+      </div>
+
+      <!-- Line 6: Status & Next EMI -->
+      <div class="servicing-line">
+        <span class="field-label">Status:</span>
+        <span class="field-value font-bold" [ngClass]="selectedLoan.status === 'OVERDUE' ? 'text-red' : 'text-green'">{{ selectedLoan.status }}</span>
+        <span class="sep">|</span>
+        <span class="field-label">EMI Status:</span>
+        <span class="field-value font-bold" [ngClass]="selectedLoan.status === 'OVERDUE' || selectedLoan.emiStatus === 'OVERDUE' ? 'text-red' : (selectedLoan.emiStatus === 'PARTIAL' ? 'text-amber' : 'text-green')">{{ selectedLoan.emiStatus || 'DUE' }}</span>
+        <span class="sep">|</span>
+        <span class="field-label">Next EMI:</span>
+        <span class="field-value text-white font-medium">{{ selectedLoan.nextEmiDate }}</span>
+      </div>
+
+      <!-- Line 7: Interactive Actions -->
+      <div class="servicing-line actions-line">
+        <span class="field-label">Action:</span>
+        <div class="action-btn-group">
+          <button class="act-btn" (click)="openSchedule()">[View Schedule]</button>
+          <button class="act-btn" (click)="openPrepayModal()">[Prepay]</button>
+          <button class="act-btn act-btn-danger" (click)="openForecloseModal()">[Foreclose]</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prepayment Modal -->
+  <div class="modal-overlay" *ngIf="activeModal === 'PREPAY'">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4>Prepay Loan Principal</h4>
+        <button (click)="closeModal()" class="close-modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc">Enter the partial lump-sum prepayment amount for Loan <strong>{{ selectedLoan?.loanId }}</strong>.</p>
+        <div class="form-group">
+          <label>Prepayment Amount (₹)</label>
+          <input type="number" [(ngModel)]="prepayAmount" placeholder="e.g. 25000" />
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="processPrepayment()">Confirm Prepayment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Foreclosure Modal -->
+  <div class="modal-overlay" *ngIf="activeModal === 'FORECLOSE'">
+    <div class="modal-card border-danger">
+      <div class="modal-header">
+        <h4 class="text-red">Confirm Loan Foreclosure</h4>
+        <button (click)="closeModal()" class="close-modal">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-desc text-warning">
+          ⚠️ Are you sure you want to <strong>FORECLOSE</strong> Loan <strong>{{ selectedLoan?.loanId }}</strong>?
+          This will settle all remaining principal and mark the loan account as CLOSED.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+        <button class="btn btn-danger" (click)="processForeclosure()">Yes, Foreclose Loan</button>
+      </div>
+    </div>
+  </div>
+</div>

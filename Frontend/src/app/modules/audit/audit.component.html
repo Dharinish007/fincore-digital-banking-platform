@@ -1,0 +1,289 @@
+<div class="module-container">
+  @if (toastMessage) {
+    <div class="toast-banner toast-success">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <!-- Header Action Row -->
+  <div class="header-action-row">
+    <div>
+      <h2 class="page-title">Enterprise Audit Trail & Compliance Log</h2>
+      <p class="subtitle">Unified immutable event stream across Core Banking, Loans, Settlement, AI Risk & Biometrics</p>
+    </div>
+    <div class="action-buttons">
+      <button type="button" class="action-btn" (click)="loadAuditLogs()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 4v6h-6"/>
+          <path d="M1 20v-6h6"/>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+        </svg>
+        Refresh Stream
+      </button>
+      <button type="button" class="action-btn primary-btn" (click)="exportAuditReport()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Export ISO-27001 Audit
+      </button>
+    </div>
+  </div>
+
+  <!-- Cross-Module KPI Metric Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">TOTAL AUDIT EVENTS</span>
+      <div class="kpi-value">{{ totalLogs }}</div>
+      <span class="kpi-subtext blue-text">Immutable System Log</span>
+    </div>
+
+    <div class="kpi-card" (click)="setQuickModuleFilter('RISK')" style="cursor: pointer;">
+      <span class="kpi-label">AI RISK & BIOMETRICS</span>
+      <div class="kpi-value text-purple">{{ riskAndLivenessCount }}</div>
+      <span class="kpi-subtext green-text">Liveness & Scoring Audits</span>
+    </div>
+
+    <div class="kpi-card" (click)="setQuickModuleFilter('OPERATIONS')" style="cursor: pointer;">
+      <span class="kpi-label">CORE OPERATIONS & STATEMENTS</span>
+      <div class="kpi-value">{{ operationsCount }}</div>
+      <span class="kpi-subtext blue-text">Accounts, Balances & Statements</span>
+    </div>
+
+    <div class="kpi-card" (click)="setQuickModuleFilter('LOAN')" style="cursor: pointer;">
+      <span class="kpi-label">LOANS & COLLECTIONS</span>
+      <div class="kpi-value">{{ loanCount }}</div>
+      <span class="kpi-subtext warn-text">EMI, Disbursement & Recovery</span>
+    </div>
+
+    <div class="kpi-card" (click)="setQuickModuleFilter('SETTLEMENT')" style="cursor: pointer;">
+      <span class="kpi-label">SETTLEMENT & FRAUD</span>
+      <div class="kpi-value">{{ settlementAndFraudCount }}</div>
+      <span class="kpi-subtext red-text">Interbank Clearing & Anomaly</span>
+    </div>
+  </div>
+
+  <!-- Quick Module Filter Navigation Bar -->
+  <div class="quick-module-bar">
+    <span class="quick-title">Filter by Module:</span>
+    <div class="module-chips">
+      <button type="button" class="module-chip" [class.active]="moduleFilter === ''" (click)="setQuickModuleFilter('')">
+        🌐 All Modules
+      </button>
+      <button type="button" class="module-chip chip-risk" [class.active]="moduleFilter === 'RISK'" (click)="setQuickModuleFilter('RISK')">
+        🧠 AI Risk Assessment
+      </button>
+      <button type="button" class="module-chip chip-liveness" [class.active]="moduleFilter === 'LIVENESS'" (click)="setQuickModuleFilter('LIVENESS')">
+        🛡️ Biometric Liveness
+      </button>
+      <button type="button" class="module-chip chip-security" [class.active]="moduleFilter === 'SECURITY'" (click)="setQuickModuleFilter('SECURITY')">
+        🔐 Passcode & Security
+      </button>
+      <button type="button" class="module-chip chip-ops" [class.active]="moduleFilter === 'OPERATIONS'" (click)="setQuickModuleFilter('OPERATIONS')">
+        🏦 Core Banking Operations
+      </button>
+      <button type="button" class="module-chip chip-statement" [class.active]="moduleFilter === 'STATEMENT'" (click)="setQuickModuleFilter('STATEMENT')">
+        📄 Statement Generation
+      </button>
+      <button type="button" class="module-chip chip-loan" [class.active]="moduleFilter === 'LOAN'" (click)="setQuickModuleFilter('LOAN')">
+        💳 Loan Management & EMI
+      </button>
+      <button type="button" class="module-chip chip-settle" [class.active]="moduleFilter === 'SETTLEMENT'" (click)="setQuickModuleFilter('SETTLEMENT')">
+        ⚖️ Interbank Settlement
+      </button>
+      <button type="button" class="module-chip chip-fraud" [class.active]="moduleFilter === 'FRAUD'" (click)="setQuickModuleFilter('FRAUD')">
+        🚨 Fraud Detection
+      </button>
+      <button type="button" class="module-chip chip-auth" [class.active]="moduleFilter === 'AUTH'" (click)="setQuickModuleFilter('AUTH')">
+        🔑 Auth & Sessions
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Filter Toolbar & Audit Table Card -->
+  <div class="table-card">
+    <div class="table-filter-bar">
+      <div class="filter-inputs">
+        <input 
+          type="text" 
+          [(ngModel)]="searchTerm" 
+          (keyup.enter)="applyFilters()"
+          placeholder="Search action, user, entity, details..." 
+          class="form-input search-input" 
+        />
+
+        <select [(ngModel)]="moduleFilter" (change)="applyFilters()" class="form-select select-module">
+          @for (mod of availableModules; track mod.value) {
+            <option [value]="mod.value">{{ mod.label }}</option>
+          }
+        </select>
+
+        <select [(ngModel)]="statusFilter" (change)="applyFilters()" class="form-select select-status">
+          <option value="">All Statuses</option>
+          <option value="SUCCESS">Success</option>
+          <option value="FAILED">Failed</option>
+        </select>
+
+        <div class="date-range-group">
+          <input type="date" [(ngModel)]="fromDate" class="form-input date-input" title="From Date" />
+          <span class="date-sep">to</span>
+          <input type="date" [(ngModel)]="toDate" class="form-input date-input" title="To Date" />
+        </div>
+
+        <button type="button" class="action-btn primary-btn" (click)="applyFilters()">Filter</button>
+        <button type="button" class="action-btn" (click)="resetFilters()">Reset</button>
+      </div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th (click)="sortBy('id')" class="sortable">ID</th>
+            <th (click)="sortBy('createdAt')" class="sortable">Timestamp</th>
+            <th>Operator</th>
+            <th (click)="sortBy('module')" class="sortable">Module</th>
+            <th (click)="sortBy('action')" class="sortable">Action</th>
+            <th>Target Entity</th>
+            <th>Details</th>
+            <th>Status</th>
+            <th>Client IP</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (item of filteredLogs; track item.id) {
+            <tr (click)="inspectLog(item)" class="table-row clickable-row">
+              <td class="font-mono">{{ item.id || '-' }}</td>
+              <td class="cell-time">{{ item.createdAt | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+              <td>
+                <div class="user-pill">
+                  <span class="avatar-dot"></span>
+                  <strong>{{ item.username || item.actor || 'SYSTEM' }}</strong>
+                </div>
+              </td>
+              <td>
+                <span class="module-badge" [ngClass]="getModuleBadgeClass(item)">
+                  {{ item.module || item.entityType }}
+                </span>
+              </td>
+              <td>
+                <span class="action-tag font-mono">{{ item.action }}</span>
+              </td>
+              <td class="font-mono font-bold">{{ item.entityType }}: {{ item.entityId || '-' }}</td>
+              <td class="cell-details" [title]="item.details || ''">{{ item.details || '-' }}</td>
+              <td>
+                <span class="status-chip" [class.status-ok]="item.status === 'SUCCESS'" [class.status-err]="item.status === 'FAILED'">
+                  {{ item.status || 'SUCCESS' }}
+                </span>
+              </td>
+              <td class="font-mono text-muted">{{ item.ipAddress || '127.0.0.1' }}</td>
+              <td>
+                <button type="button" class="btn-inspect" (click)="$event.stopPropagation(); inspectLog(item)">
+                  Inspect
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="10" class="empty-state">No audit logs matching selected module and criteria.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-row">
+      <span class="pagination-info">
+        Showing page <strong>{{ page + 1 }}</strong> of <strong>{{ totalPages }}</strong> ({{ totalLogs }} records logged)
+      </span>
+      <div class="pagination-buttons">
+        <button type="button" class="action-btn" (click)="previousPage()" [disabled]="page === 0">Previous</button>
+        <button type="button" class="action-btn" (click)="nextPage()" [disabled]="page + 1 >= totalPages">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit Log Inspector Modal -->
+  @if (selectedLog) {
+    <div class="modal-backdrop" (click)="closeModal()">
+      <div class="modal-content modal-inspector" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="modal-title-group">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            <div>
+              <h3>AUDIT LOG ENTRY INSPECTOR</h3>
+              <div class="modal-subtitle">Log ID #{{ selectedLog.id }} • ISO-27001 Cryptographic Trace</div>
+            </div>
+          </div>
+          <button type="button" class="close-btn" (click)="closeModal()">✕</button>
+        </div>
+
+        <div class="modal-body inspector-grid">
+          <div class="insp-row">
+            <span class="insp-label">EVENT TIMESTAMP:</span>
+            <span class="insp-val font-mono">{{ selectedLog.createdAt | date:'yyyy-MM-dd HH:mm:ss.SSS' }}</span>
+          </div>
+
+          <div class="insp-row">
+            <span class="insp-label">PLATFORM MODULE:</span>
+            <span class="insp-val">
+              <span class="module-badge" [ngClass]="getModuleBadgeClass(selectedLog)">
+                {{ selectedLog.module || selectedLog.entityType }}
+              </span>
+            </span>
+          </div>
+
+          <div class="insp-row">
+            <span class="insp-label">TRIGGERED ACTION:</span>
+            <span class="insp-val font-mono text-cyan">{{ selectedLog.action }}</span>
+          </div>
+
+          <div class="insp-row">
+            <span class="insp-label">OPERATOR / ACTOR:</span>
+            <span class="insp-val font-bold">{{ selectedLog.username || selectedLog.actor || 'SYSTEM' }}</span>
+          </div>
+
+          <div class="insp-row">
+            <span class="insp-label">TARGET ENTITY:</span>
+            <span class="insp-val font-mono">{{ selectedLog.entityType }} #{{ selectedLog.entityId || 'N/A' }}</span>
+          </div>
+
+          <div class="insp-row">
+            <span class="insp-label">EXECUTION STATUS:</span>
+            <span class="insp-val">
+              <span class="status-chip" [class.status-ok]="selectedLog.status === 'SUCCESS'" [class.status-err]="selectedLog.status === 'FAILED'">
+                {{ selectedLog.status || 'SUCCESS' }}
+              </span>
+            </span>
+          </div>
+
+          <div class="insp-row">
+            <span class="insp-label">CLIENT / NODE IP:</span>
+            <span class="insp-val font-mono">{{ selectedLog.ipAddress || '127.0.0.1' }}</span>
+          </div>
+
+          <div class="insp-row full-width">
+            <span class="insp-label">DETAILED AUDIT PAYLOAD:</span>
+            <div class="insp-box">{{ selectedLog.details || 'No additional details logged' }}</div>
+          </div>
+
+          <div class="insp-row full-width" *ngIf="selectedLog.metadata">
+            <span class="insp-label">SYSTEM METADATA / TELEMETRY:</span>
+            <pre class="insp-code">{{ selectedLog.metadata }}</pre>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="action-btn" (click)="closeModal()">Close Inspector</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

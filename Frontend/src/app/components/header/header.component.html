@@ -1,0 +1,68 @@
+<header class="fincore-header">
+  <div class="header-left">
+    <a routerLink="/dashboard" class="brand-link">
+      <div class="brand-shield">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 8v8"/>
+          <path d="M8 12h8"/>
+        </svg>
+        <span class="shield-tag">FC</span>
+      </div>
+      <div class="brand-text-block">
+        <span class="brand-name">FinCore <span class="brand-highlight">Banking</span></span>
+        <span class="brand-tagline">Integrated Platform</span>
+      </div>
+    </a>
+
+    <div class="system-node-badge">
+      <span class="pulse-dot"></span>
+      <span class="node-text">PROD-CLUSTER | RUNNING</span>
+    </div>
+  </div>
+
+  <div class="header-right">
+    <!-- Masking Toggle Quick Button -->
+    <button 
+      type="button" 
+      class="hdr-action-btn"
+      [class.active]="accountService.isDataMasked()"
+      (click)="toggleMasking()"
+      title="Toggle Account Number Data Masking">
+      <span>{{ accountService.isDataMasked() ? '🔒 Masked' : '👁️ Unmasked' }}</span>
+    </button>
+
+    <!-- Theme Mode Toggle Quick Button -->
+    <button 
+      type="button" 
+      class="hdr-action-btn"
+      (click)="toggleTheme()"
+      title="Toggle Day / Night Interface Mode">
+      <span>{{ themeService.mode() === 'NIGHT' ? '🌙 Night' : '☀️ Day' }}</span>
+    </button>
+
+    <div class="hdr-divider"></div>
+
+    <!-- User Profile Session Pill with Sign Out Button -->
+    <div class="user-session-card">
+      <div class="user-avatar">{{ authService.currentAdmin()?.avatar || 'FC' }}</div>
+      <div class="user-meta">
+        <span class="user-name">{{ authService.currentAdmin()?.name || 'Administrator' }}</span>
+        <span class="user-role">{{ authService.currentAdmin()?.role || 'Full Access' }}</span>
+      </div>
+      <button 
+        type="button" 
+        class="btn-logout" 
+        (click)="authService.logout()" 
+        title="Sign Out of Session">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
+        </svg>
+        <span>Logout</span>
+      </button>
+    </div>
+  </div>
+</header>
+

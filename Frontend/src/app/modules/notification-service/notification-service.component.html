@@ -1,0 +1,183 @@
+<div class="module-container">
+  <!-- Toast Notification Banner -->
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <!-- Header Row -->
+  <div class="header-action-row">
+    <div>
+      <h2 class="page-title">Notification Service</h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">
+        Enter notification type, recipient details, and message to store directly in PostgreSQL database table <code style="color: #38bdf8;">notifications</code>.
+      </p>
+    </div>
+  </div>
+
+  <!-- Form: Ask the user for Notification Type, To Who, and Message -->
+  <div class="details-card" style="border: 1px solid #1e293b; background: #0f172a; border-radius: 8px; padding: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+      <h3 class="card-header-title" style="margin: 0; border: none; font-size: 1.15rem; color: #f8fafc;">
+        ✉️ Enter Notification Details
+      </h3>
+      <span style="font-size: 0.8rem; color: #94a3b8; background: #1e293b; padding: 4px 12px; border-radius: 20px;">
+        Database Table: <code style="color: #38bdf8;">notifications</code>
+      </span>
+    </div>
+
+    <!-- 1. Notification Type -->
+    <div class="form-group" style="margin-bottom: 18px;">
+      <label style="display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">
+        1. Select Notification Type:
+      </label>
+      <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+        <label style="display: flex; align-items: center; gap: 8px; background: #1e293b; padding: 10px 20px; border-radius: 6px; cursor: pointer; border: 1px solid #334155;"
+               [style.border-color]="notificationType === 'SMS' ? '#38bdf8' : '#334155'"
+               [style.background]="notificationType === 'SMS' ? '#1e3a5f' : '#1e293b'">
+          <input type="radio" name="notifType" value="SMS" [(ngModel)]="notificationType" (change)="onTypeChange()" />
+          <span style="color: #f1f5f9; font-weight: 600;">📱 SMS (Mobile Text)</span>
+        </label>
+
+        <label style="display: flex; align-items: center; gap: 8px; background: #1e293b; padding: 10px 20px; border-radius: 6px; cursor: pointer; border: 1px solid #334155;"
+               [style.border-color]="notificationType === 'EMAIL' ? '#38bdf8' : '#334155'"
+               [style.background]="notificationType === 'EMAIL' ? '#1e3a5f' : '#1e293b'">
+          <input type="radio" name="notifType" value="EMAIL" [(ngModel)]="notificationType" (change)="onTypeChange()" />
+          <span style="color: #f1f5f9; font-weight: 600;">✉️ EMAIL (Advisory Message)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- 2. To Who (Recipient Details) -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 18px;">
+      <div class="form-group">
+        <label style="display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          2. Enter Details (To Who):
+        </label>
+        <input type="text"
+               [(ngModel)]="recipient"
+               [placeholder]="notificationType === 'SMS' ? 'e.g. +91 98765 43210 (Mobile Number)' : 'e.g. customer@example.com (Email Address)'"
+               class="form-input"
+               style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 0.95rem;" />
+        <span style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px; display: block;">
+          {{ notificationType === 'SMS' ? 'Phone number to whom SMS notification is sent' : 'Email address to whom email notification is sent' }}
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Quick-Select Database Customer:
+        </label>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          @for (cust of customers; track cust.id) {
+            <button type="button"
+                    (click)="selectCustomer(cust)"
+                    class="action-btn"
+                    style="font-size: 0.82rem; padding: 6px 12px; background: #1e293b; border: 1px solid #475569; color: #e2e8f0; border-radius: 4px; cursor: pointer;">
+              👤 {{ cust.fullName }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Notification Message -->
+    <div class="form-group" style="margin-bottom: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <label style="font-size: 0.88rem; font-weight: 600; color: #cbd5e1;">
+          3. Notification Message Content:
+        </label>
+        <div style="display: flex; gap: 6px;">
+          <button type="button" (click)="applyTemplate('EMI')" class="action-btn" style="font-size: 0.75rem; padding: 3px 8px; background: #1e293b; border: 1px dashed #38bdf8; color: #38bdf8; border-radius: 4px; cursor: pointer;">
+            [EMI Alert Template]
+          </button>
+          <button type="button" (click)="applyTemplate('CREDIT')" class="action-btn" style="font-size: 0.75rem; padding: 3px 8px; background: #1e293b; border: 1px dashed #34d399; color: #34d399; border-radius: 4px; cursor: pointer;">
+            [Credit Alert Template]
+          </button>
+          <button type="button" (click)="applyTemplate('OTP')" class="action-btn" style="font-size: 0.75rem; padding: 3px 8px; background: #1e293b; border: 1px dashed #fbbf24; color: #fbbf24; border-radius: 4px; cursor: pointer;">
+            [2FA OTP Template]
+          </button>
+        </div>
+      </div>
+      <textarea [(ngModel)]="message"
+                rows="3"
+                placeholder="Enter notification message text to dispatch..."
+                class="form-textarea"
+                style="width: 100%; padding: 12px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-family: inherit; font-size: 0.92rem;"></textarea>
+    </div>
+
+    <!-- Submit Action Button -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 16px;">
+      <button class="action-btn primary-btn"
+              (click)="sendNotification()"
+              [disabled]="isSending"
+              style="padding: 10px 26px; font-size: 0.95rem; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+        <span>🚀 {{ isSending ? 'Sending...' : 'Send Notification & Save to Database' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Display Recent 2 Notification Messages Sent -->
+  <div class="table-card" style="background: #111827; border: 1px solid #1f2937; border-radius: 8px; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <h3 class="card-header-title" style="margin: 0; border: none; font-size: 1.15rem; color: #f8fafc;">
+          📬 Recent 2 Notification Messages Sent
+        </h3>
+        <span style="font-size: 0.8rem; color: #94a3b8;">
+          Showing latest 2 messages retrieved directly from database table <code style="color: #38bdf8;">notifications</code>
+        </span>
+      </div>
+      <button class="action-btn" (click)="loadNotifications()" style="padding: 6px 14px; font-size: 0.85rem;">
+        🔄 Refresh
+      </button>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      @for (item of recent2Notifications; track item.id; let idx = $index) {
+        <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; position: relative; border-left: 4px solid #38bdf8;"
+             [style.border-left-color]="item.channel === 'SMS' ? '#fbbf24' : '#38bdf8'">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="background: #1e293b; color: #94a3b8; font-size: 0.78rem; font-weight: 700; padding: 2px 8px; border-radius: 4px;">
+                #{{ idx + 1 }} Recent Message
+              </span>
+              <span class="badge"
+                    [style.background]="item.channel === 'SMS' ? '#78350f' : '#1e3a8a'"
+                    [style.color]="item.channel === 'SMS' ? '#fde68a' : '#bfdbfe'"
+                    style="font-weight: 700; padding: 3px 10px; border-radius: 4px;">
+                {{ item.channel === 'SMS' ? '📱 SMS' : '✉️ EMAIL' }}
+              </span>
+              <span style="font-size: 0.85rem; color: #cbd5e1;">
+                To: <strong style="color: #fff;">{{ item.recipient }}</strong>
+              </span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge approved-badge">{{ item.status }}</span>
+              <span style="font-size: 0.8rem; color: var(--text-muted);">
+                {{ item.sentTime || 'Just now' }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Message Body Content -->
+          <div style="background: #090e17; padding: 12px 16px; border-radius: 6px; border: 1px solid #1e293b; color: #f1f5f9; font-size: 0.92rem; line-height: 1.5;">
+            {{ item.message }}
+          </div>
+
+          <div style="margin-top: 8px; font-size: 0.75rem; color: #64748b; display: flex; justify-content: space-between;">
+            <span>Database Reference: <code style="color: #38bdf8;">{{ item.id }}</code></span>
+            <span>Channel: {{ item.channel }} Gateway</span>
+          </div>
+        </div>
+      } @empty {
+        <div style="text-align: center; color: var(--text-muted); padding: 32px; background: #0f172a; border-radius: 8px; border: 1px dashed #334155;">
+          No notifications found in database table. Use the form above to send a notification.
+        </div>
+      }
+    </div>
+  </div>
+</div>

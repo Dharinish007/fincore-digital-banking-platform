@@ -1,0 +1,120 @@
+<div class="module-container">
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span>{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">X</button>
+    </div>
+  }
+
+  <h2 class="page-title">Liveness Verification</h2>
+  <p class="camera-help">Enter your customer ID, enable your camera, and complete the liveness checks. Only verification metadata is stored; camera video, face data, and passcodes are never stored.</p>
+
+  <div class="details-card customer-card">
+    <div class="detail-row">
+      <label class="label" for="customerId">Customer ID</label>
+      <input id="customerId" class="form-input" type="number" min="1" [(ngModel)]="customerId" (change)="loadLivenessHistory()" placeholder="Enter your customer ID" />
+    </div>
+  </div>
+
+  <div class="verification-steps">
+    <span class="step" [class.active-step]="verificationStep === 'CHOOSE'">1. Choose Method</span>
+    <span class="step" [class.active-step]="verificationStep === 'FACE' || verificationStep === 'PASSCODE'">2. Verification</span>
+    <span class="step" [class.active-step]="verificationStep === 'COMPLETE'">3. Verification Complete</span>
+  </div>
+
+  <div class="details-card method-card">
+    <h3 class="card-header-title">Choose Verification Method</h3>
+    <div class="action-buttons">
+      <button class="action-btn" [class.primary-btn]="verificationMethod === 'FACE'" (click)="chooseMethod('FACE')">Face Verification</button>
+      <button class="action-btn" [class.primary-btn]="verificationMethod === 'PASSCODE'" (click)="chooseMethod('PASSCODE')">Passcode Verification</button>
+    </div>
+  </div>
+
+  @if (verificationMethod === 'FACE') {
+  <div class="details-card camera-card">
+    <div class="camera-heading">
+      <div>
+        <span class="eyebrow">BIOMETRIC CHECK</span>
+        <h3 class="card-header-title">Face Verification</h3>
+      </div>
+      <span class="camera-status" [class.status-live]="cameraStatus === 'CONNECTED'" [class.status-error]="cameraStatus === 'DENIED'">
+        <span class="status-dot"></span>
+        {{ cameraStatus === 'CONNECTED' ? 'Camera live' : cameraStatus === 'DENIED' ? 'Access denied' : 'Camera required' }}
+      </span>
+    </div>
+    <div class="camera-layout">
+      <div class="camera-frame">
+        <video #cameraPreview autoplay muted playsinline aria-label="Live face verification camera"></video>
+        <div class="face-guide" aria-hidden="true"></div>
+        @if (cameraStatus !== 'CONNECTED') {
+          <div class="camera-placeholder">
+            <span class="camera-placeholder-icon">+</span>
+            <strong>Enable your camera</strong>
+            <span>Position your face inside the guide</span>
+          </div>
+        }
+        @if (cameraStatus === 'CONNECTED' && faceStatus === 'DETECTED') {
+          <div class="face-detected-badge">Face detected</div>
+        }
+      </div>
+      <div class="camera-details">
+        <div class="camera-checks">
+          <div class="check-row" [class.check-complete]="cameraStatus === 'CONNECTED'"><span class="check-icon">{{ cameraStatus === 'CONNECTED' ? '✓' : '1' }}</span><span>Camera permission</span><strong>{{ cameraStatus === 'CONNECTED' ? 'Ready' : 'Required' }}</strong></div>
+          <div class="check-row" [class.check-complete]="faceStatus === 'DETECTED'"><span class="check-icon">{{ faceStatus === 'DETECTED' ? '✓' : '2' }}</span><span>Single face detected</span><strong>{{ faceStatus === 'DETECTED' ? 'Ready' : 'Waiting' }}</strong></div>
+        </div>
+        <p class="camera-help">Keep exactly one face centered inside the guide. Allow camera access, then start verification to receive your three liveness challenges. Video is processed in the browser and never stored.</p>
+        <div class="challenge-panel">
+          <div class="challenge-heading"><strong>Movement challenge</strong><span>{{ currentChallenge }}/3 complete</span></div>
+          <span>{{ challengeMessage }}</span>
+          <div class="progress-track"><span [style.width.%]="(currentChallenge / 3) * 100"></span></div>
+          <small>{{ verificationStarted ? secondsRemaining + ' seconds remaining' : 'Start verification to begin' }}</small>
+        </div>
+        <div class="action-buttons">
+          <button class="action-btn primary-btn camera-action" (click)="requestCameraAccess()" [disabled]="cameraStatus === 'CONNECTED'">{{ cameraStatus === 'DENIED' ? 'Retry Camera Access' : 'Enable Camera' }}</button>
+          <button class="action-btn primary-btn" (click)="startVerification()" [disabled]="cameraStatus !== 'CONNECTED' || !customerId">Start Face Verification</button>
+          <button class="action-btn" (click)="stopCamera()" [disabled]="cameraStatus !== 'CONNECTED'">Stop Camera</button>
+          <button class="action-btn primary-btn" (click)="verifyLiveness()" [disabled]="livenessLoading || !verificationStarted || cameraStatus !== 'CONNECTED' || faceStatus !== 'DETECTED' || !allChallengesPassed">{{ livenessLoading ? 'Verifying...' : 'Submit Face Result' }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+  @if (verificationMethod === 'PASSCODE' && verificationStep === 'PASSCODE') {
+    <div class="details-card">
+      <h3 class="card-header-title">Passcode Verification</h3>
+      <p class="camera-help">Enter your date of birth as the passcode in DDMMYYYY format. Example: 15 August 1990 becomes 15081990.</p>
+      <div class="detail-row action-row">
+        <label class="label" for="dateOfBirthPasscode">Passcode</label>
+        <input id="dateOfBirthPasscode" class="form-input passcode-input" type="password" inputmode="numeric" maxlength="8" [(ngModel)]="passcodeInput" placeholder="DDMMYYYY" />
+        <button class="action-btn primary-btn" (click)="verifyPasscode()" [disabled]="passcodeLoading || !customerId || passcodeInput.length !== 8">{{ passcodeLoading ? 'Verifying...' : 'Verify Passcode' }}</button>
+      </div>
+    </div>
+  }
+
+  @if (verificationStep === 'COMPLETE' && livenessResult?.status === 'VERIFIED') {
+    <div class="details-card completion-card">
+      <h3 class="card-header-title">Verification Complete</h3>
+      <p class="green-text">Your identity verification was successful. You can now review a transaction risk assessment and audit activity.</p>
+      <div class="action-buttons">
+        <a class="action-btn primary-btn" routerLink="/risk">Assess a Transaction</a>
+      </div>
+    </div>
+  }
+
+  @if (verificationStep === 'COMPLETE' && livenessResult?.status === 'VERIFIED') {
+    <div class="details-card result-card result-success">
+      <div class="result-heading">
+        <div>
+          <span class="eyebrow">LIVENESS VERIFICATION</span>
+          <h3 class="card-header-title">Verification Completed</h3>
+        </div>
+        <span class="result-status result-status-success">VERIFIED</span>
+      </div>
+      <div class="result-summary">
+        <div class="confidence-score"><strong>{{ livenessResult?.confidenceScore ?? 0 }}%</strong><span>confidence</span></div>
+        <div class="result-copy">Your liveness verification was completed successfully.</div>
+      </div>
+    </div>
+  }
+</div>

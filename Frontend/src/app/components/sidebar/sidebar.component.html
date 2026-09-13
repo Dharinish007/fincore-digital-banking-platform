@@ -1,0 +1,35 @@
+<aside class="fincore-sidebar">
+  <nav class="sidebar-nav">
+    @for (section of navSections; track section.title) {
+      <div class="nav-section">
+        <div class="section-title">{{ section.title }}</div>
+        <ul class="nav-list">
+          @for (item of section.items; track item.route) {
+            <li class="nav-item-wrapper">
+              <a 
+                [routerLink]="item.route" 
+                routerLinkActive="active" 
+                class="nav-link"
+              >
+                <span class="nav-icon">{{ item.icon }}</span>
+                <span class="nav-text">{{ item.label }}</span>
+                @if (item.badge) {
+                  <span class="nav-badge" [class.badge-ai]="item.badge === 'AI'">{{ item.badge }}</span>
+                }
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="sf-info">
+      <div class="sf-label">FinCore Suite</div>
+      <div class="sf-version">v4.0.0 Enterprise</div>
+    </div>
+  </div>
+</aside>
+
+
