@@ -568,10 +568,16 @@ The repository includes pre-configured `.gitignore` files at the root, frontend,
 
 
 Contributors
+
 Bharathi Bhat
+
 Chava Ramya
+
 Shanmukha Sai
+
 Raziya
+
 Janhvi Pandey
+
 Indu Patil
 
