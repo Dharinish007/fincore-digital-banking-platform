@@ -67,3 +67,8 @@ psql -h <HOST> -U <USERNAME> -d <DB> -f milestone-3-enterprise-settlement.sql
 # Milestone 4: Security & Liveness
 psql -h <HOST> -U <USERNAME> -d <DB> -f milestone-4-security-liveness.sql
 ```
+
+
+Contributor
+
+Indu Patil
