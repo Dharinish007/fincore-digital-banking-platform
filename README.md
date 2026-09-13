@@ -564,6 +564,9 @@ The repository includes pre-configured `.gitignore` files at the root, frontend,
 - `node_modules/`, `dist/`, `.angular/`, npm debug logs
 - `target/`, `.class`, `.jar`, `.war`, crash logs
 - `.idea/`, `.vscode/`, `.DS_Store`, `Thumbs.db`, `.env` files
+
+
+
 Contributors
 Bharathi Bhat
 Chava Ramya
