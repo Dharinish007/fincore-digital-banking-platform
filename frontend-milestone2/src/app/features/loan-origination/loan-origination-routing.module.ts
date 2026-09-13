@@ -9,8 +9,6 @@ import { ApplicationProcessingPageComponent } from './pages/application-processi
 import { UnderwritingPageComponent } from './pages/underwriting-page/underwriting-page.component';
 import { QualityControlPageComponent } from './pages/quality-control-page/quality-control-page.component';
 import { LoanFundingPageComponent } from './pages/loan-funding-page/loan-funding-page.component';
-import { CreditCheckPageComponent } from './pages/credit-check-page/credit-check-page.component';
-
 const routes: Routes = [
   {
     path: '',
@@ -23,8 +21,7 @@ const routes: Routes = [
       { path: 'processing', redirectTo: 'applications', pathMatch: 'full' },
       { path: 'underwriting', redirectTo: 'applications', pathMatch: 'full' },
       { path: 'quality-control', redirectTo: 'applications', pathMatch: 'full' },
-      { path: 'loan-funding', redirectTo: 'applications', pathMatch: 'full' },
-      { path: 'credit-check', component: CreditCheckPageComponent }
+      { path: 'loan-funding', redirectTo: 'applications', pathMatch: 'full' }
     ]
   }
 ];

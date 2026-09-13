@@ -49,12 +49,8 @@ export class LoanApplicationPageComponent implements OnInit {
 
   sections = [
     { id: 1, label: 'Applicant Details', icon: '👤' },
-    { id: 2, label: 'KYC Details', icon: '🪪' },
-    { id: 3, label: 'Employment & Income', icon: '💼' },
-    { id: 4, label: 'Loan Details', icon: '💰' },
-    { id: 5, label: 'Financial Details', icon: '🏦' },
-    { id: 6, label: 'Document Upload', icon: '📄' },
-    { id: 7, label: 'Review & Submit', icon: '🔍' }
+    { id: 2, label: 'Loan Details', icon: '💰' },
+    { id: 3, label: 'Review & Submit', icon: '🔍' }
   ];
 
   loanTypes: { label: string; value: LoanType }[] = [
@@ -76,13 +72,7 @@ export class LoanApplicationPageComponent implements OnInit {
     { label: '20 Years (240m)', months: 240 }
   ];
 
-  documents: UploadedDoc[] = [
-    { id: 'id_proof', name: 'Identity Proof (Aadhaar / Passport / PAN)', type: 'PDF / JPEG', mandatory: true, status: 'Verified', fileName: 'aadhaar_front_back.pdf', fileSize: '1.2 MB' },
-    { id: 'addr_proof', name: 'Address Proof (Electricity Bill / Voter ID)', type: 'PDF / JPEG', mandatory: true, status: 'Uploaded', fileName: 'utility_bill_july.pdf', fileSize: '840 KB' },
-    { id: 'income_proof', name: 'Income Proof (Latest 3 Months Payslips / Form 16)', type: 'PDF', mandatory: true, status: 'Uploaded', fileName: 'payslips_q2.pdf', fileSize: '2.4 MB' },
-    { id: 'bank_stmt', name: 'Bank Statement (Last 6 Months)', type: 'PDF', mandatory: true, status: 'Uploaded', fileName: 'hdfc_bank_statement.pdf', fileSize: '3.1 MB' },
-    { id: 'emp_proof', name: 'Employment Verification Letter', type: 'PDF', mandatory: false, status: 'Pending' }
-  ];
+  documents: UploadedDoc[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -98,37 +88,22 @@ export class LoanApplicationPageComponent implements OnInit {
       mobile: ['+91 98765 43210', [Validators.required, Validators.pattern('^\\+?[0-9\\s\\-]{10,15}$')]],
       email: ['aarav.sharma@example.com', [Validators.required, Validators.email]],
 
-      // 2. KYC Details
-      idType: ['Aadhaar Card', Validators.required],
-      idNumber: ['XXXX-XXXX-4829', Validators.required],
-      address: ['Flat 402, Lotus Orchid, Palm Beach Road', Validators.required],
-      city: ['Mumbai', Validators.required],
-      state: ['Maharashtra', Validators.required],
-      pincode: ['400705', [Validators.required, Validators.pattern('^[0-9]{6}$')]],
-
-      // 3. Employment & Income
-      employmentType: ['Salaried', Validators.required],
-      employerName: ['Tata Consultancy Services', Validators.required],
-      jobTitle: ['Senior Tech Lead', Validators.required],
-      workExperience: [8, [Validators.required, Validators.min(0)]],
-      monthlyIncome: [145000, [Validators.required, Validators.min(10000)]],
-      otherIncome: [12000, [Validators.min(0)]],
-
-      // 4. Loan Details
+      // 2. Loan Details
       customerId: [101, [Validators.required, Validators.min(1)]],
       loanType: ['Home', Validators.required],
       loanAmount: [3500000, [Validators.required, Validators.min(10000)]],
       tenureMonths: [240, [Validators.required, Validators.min(1)]],
       interestRate: [7.35, [Validators.required, Validators.min(0)]],
-      purpose: ['Primary residential property acquisition in Navi Mumbai'],
-
-      // 5. Financial Details
-      bankName: ['HDFC Bank', Validators.required],
-      accountNumber: ['501004392819', Validators.required],
-      ifscCode: ['HDFC0001042', Validators.required],
-      existingEmi: [15000, [Validators.min(0)]],
-      creditScore: [782, [Validators.required, Validators.min(300), Validators.max(900)]]
+      purpose: ['Primary residential property acquisition in Navi Mumbai']
     });
+  }
+
+  get estimatedMonthlyEmi(): number {
+    const p = Number(this.form.value.loanAmount) || 0;
+    const r = (Number(this.form.value.interestRate) || 0) / (12 * 100);
+    const n = Number(this.form.value.tenureMonths) || 1;
+    if (p <= 0 || r <= 0 || n <= 0) return 0;
+    return Math.round((p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
   }
 
   ngOnInit() {
@@ -160,15 +135,11 @@ export class LoanApplicationPageComponent implements OnInit {
         mobile: preQual.mobile,
         email: preQual.email,
         loanType: preQual.loanType,
-        loanAmount: preQual.requestedAmount,
-        employmentType: preQual.employmentType,
-        monthlyIncome: preQual.monthlyIncome,
-        existingEmi: preQual.existingEmi || 0,
-        creditScore: preQual.creditScore || 750,
+        loanAmount: preQual.requestedAmount || this.form.value.loanAmount,
         interestRate: preQual.estimatedRate || 7.5
       });
 
-      this.preQualLoadedNotice = `Pre-qualification parameters carried over for borrower "${preQual.fullName}" (${preQual.loanType} Loan, ₹${preQual.requestedAmount.toLocaleString()}).`;
+      this.preQualLoadedNotice = `Pre-qualification parameters carried over for borrower "${preQual.fullName}" (${preQual.loanType} Loan).`;
       this.mockData.clearPendingPreQualification();
     }
   }
@@ -178,7 +149,7 @@ export class LoanApplicationPageComponent implements OnInit {
   }
 
   nextSection() {
-    if (this.activeSection < 7) {
+    if (this.activeSection < 3) {
       this.activeSection++;
     }
   }
@@ -395,6 +366,8 @@ export class LoanApplicationPageComponent implements OnInit {
       id: `LO-${generatedId}`,
       customerId: val.customerId || 101,
       fullName: val.fullName || 'Draft Borrower',
+      dateOfBirth: val.dateOfBirth,
+      gender: val.gender,
       email: val.email,
       mobile: val.mobile,
       loanType: val.loanType || 'Personal',
@@ -406,19 +379,6 @@ export class LoanApplicationPageComponent implements OnInit {
       applicationStatus: 'Draft',
       status: 'Draft',
       stage: 'Loan Application',
-      city: val.city,
-      state: val.state,
-      employmentType: val.employmentType,
-      employerName: val.employerName,
-      jobTitle: val.jobTitle,
-      monthlyIncome: Number(val.monthlyIncome),
-      creditScore: Number(val.creditScore),
-      documents: this.documents.map(d => ({
-        name: d.name,
-        type: d.type,
-        status: d.status === 'Verified' ? 'Verified' : d.status === 'Uploaded' ? 'Uploaded' : 'Pending',
-        fileName: d.fileName
-      })),
       applicationDate: new Date().toISOString().split('T')[0]
     };
 
@@ -447,7 +407,7 @@ export class LoanApplicationPageComponent implements OnInit {
     this.statusMessage = '';
 
     if (this.form.invalid) {
-      this.errorMessage = 'Please complete all mandatory fields across all sections before submitting.';
+      this.errorMessage = 'Please complete all mandatory fields before submitting.';
       return;
     }
 
@@ -478,6 +438,8 @@ export class LoanApplicationPageComponent implements OnInit {
           id: `LO-${this.applicationId}`,
           loanId: Number(this.applicationId),
           fullName: val.fullName,
+          dateOfBirth: val.dateOfBirth,
+          gender: val.gender,
           email: val.email,
           mobile: val.mobile,
           loanType: val.loanType,
@@ -489,19 +451,6 @@ export class LoanApplicationPageComponent implements OnInit {
           applicationStatus: 'Pending',
           status: 'Pending',
           stage: 'Application Processing',
-          city: val.city,
-          state: val.state,
-          employmentType: val.employmentType,
-          employerName: val.employerName,
-          jobTitle: val.jobTitle,
-          monthlyIncome: Number(val.monthlyIncome),
-          creditScore: Number(val.creditScore),
-          documents: this.documents.map(d => ({
-            name: d.name,
-            type: d.type,
-            status: d.status === 'Verified' ? 'Verified' : d.status === 'Uploaded' ? 'Uploaded' : 'Pending',
-            fileName: d.fileName
-          })),
           applicationDate: createdLoan.applicationDate || new Date().toISOString().split('T')[0]
         };
         this.mockData.addApplication(appRecord);
@@ -520,6 +469,8 @@ export class LoanApplicationPageComponent implements OnInit {
           id: `LO-${generatedId}`,
           customerId: payload.customerId,
           fullName: val.fullName,
+          dateOfBirth: val.dateOfBirth,
+          gender: val.gender,
           email: val.email,
           mobile: val.mobile,
           loanType: payload.loanType,
@@ -531,19 +482,6 @@ export class LoanApplicationPageComponent implements OnInit {
           applicationStatus: 'Pending',
           status: 'Pending',
           stage: 'Application Processing',
-          city: val.city,
-          state: val.state,
-          employmentType: val.employmentType,
-          employerName: val.employerName,
-          jobTitle: val.jobTitle,
-          monthlyIncome: Number(val.monthlyIncome),
-          creditScore: Number(val.creditScore),
-          documents: this.documents.map(d => ({
-            name: d.name,
-            type: d.type,
-            status: d.status === 'Verified' ? 'Verified' : d.status === 'Uploaded' ? 'Uploaded' : 'Pending',
-            fileName: d.fileName
-          })),
           applicationDate: new Date().toISOString().split('T')[0]
         };
         this.mockData.addApplication(fallbackApp);
@@ -558,29 +496,12 @@ export class LoanApplicationPageComponent implements OnInit {
       gender: 'Male',
       mobile: '',
       email: '',
-      idType: 'Aadhaar Card',
-      idNumber: '',
-      address: '',
-      city: '',
-      state: '',
-      pincode: '',
-      employmentType: 'Salaried',
-      employerName: '',
-      jobTitle: '',
-      workExperience: 0,
-      monthlyIncome: null,
-      otherIncome: 0,
       customerId: 101,
       loanType: 'Home',
       loanAmount: null,
       tenureMonths: 120,
       interestRate: 8.5,
-      purpose: '',
-      bankName: 'HDFC Bank',
-      accountNumber: '',
-      ifscCode: '',
-      existingEmi: 0,
-      creditScore: 750
+      purpose: ''
     });
     this.submitted = false;
     this.submissionSuccess = false;

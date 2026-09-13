@@ -83,9 +83,9 @@ export interface PreQualificationData {
   mobile: string;
   email: string;
   loanType: LoanType;
-  requestedAmount: number;
+  requestedAmount?: number;
   employmentType: string;
-  monthlyIncome: number;
+  monthlyIncome?: number;
   existingEmi?: number;
   creditScore?: number;
   maxEligibleAmount?: number;

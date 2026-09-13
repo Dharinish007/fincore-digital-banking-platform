@@ -41,14 +41,10 @@ export class PreQualificationPageComponent {
     this.form = this.fb.group({
       customerId: [101, [Validators.required, Validators.min(1)]],
       fullName: ['Aarav Sharma', Validators.required],
-      dateOfBirth: ['1990-05-14', Validators.required],
       mobile: ['+91 98765 43210', [Validators.required, Validators.pattern('^\\+?[0-9\\s\\-]{10,15}$')]],
       email: ['aarav.sharma@example.com', [Validators.required, Validators.email]],
       loanType: ['Home', Validators.required],
-      requestedAmount: [3000000, [Validators.required, Validators.min(25000)]],
       employmentType: ['Salaried', Validators.required],
-      monthlyIncome: [125000, [Validators.required, Validators.min(10000)]],
-      existingEmi: [15000, [Validators.min(0)]],
       creditScore: [760, [Validators.required, Validators.min(300), Validators.max(900)]]
     });
   }
@@ -70,26 +66,8 @@ export class PreQualificationPageComponent {
     }
 
     const val = this.form.value;
-    const income = Number(val.monthlyIncome) || 0;
-    const existing = Number(val.existingEmi) || 0;
-    const requested = Number(val.requestedAmount) || 0;
     const score = Number(val.creditScore) || 600;
     const type = val.loanType as LoanType;
-
-    // Debt-to-Income (DTI) ratio
-    this.dtiRatio = Math.round((existing / income) * 100);
-
-    // Multiplier based on loan type
-    let multiplier = 50; // default
-    if (type === 'Home') multiplier = 60;
-    else if (type === 'Personal') multiplier = 20;
-    else if (type === 'Vehicle') multiplier = 30;
-    else if (type === 'Education') multiplier = 40;
-    else if (type === 'Gold') multiplier = 25;
-
-    // Max loan capacity (discounted by existing obligations)
-    const capacityFactor = Math.max(0.1, (100 - this.dtiRatio) / 100);
-    this.maxEligibleAmount = Math.round(income * multiplier * capacityFactor);
 
     // Estimated Interest rate based on credit score & type
     if (score >= 780) this.estimatedRate = type === 'Home' ? 7.25 : 8.00;
@@ -97,39 +75,21 @@ export class PreQualificationPageComponent {
     else if (score >= 650) this.estimatedRate = type === 'Home' ? 8.50 : 9.75;
     else this.estimatedRate = 12.00;
 
-    // Estimated EMI for a standard term (e.g. 10 years / 120 months)
-    const r = this.estimatedRate / (12 * 100);
-    const n = type === 'Home' ? 240 : (type === 'Personal' ? 60 : 84);
-    this.estimatedEmi = Math.round((requested * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
-
     // Eligibility Rules
     const isCreditSufficient = score >= 650;
-    const isDtiAcceptable = this.dtiRatio <= 55;
-    const isAmountWithinCap = requested <= this.maxEligibleAmount;
 
     this.isEvaluated = true;
 
-    if (isCreditSufficient && isDtiAcceptable && isAmountWithinCap) {
+    if (isCreditSufficient) {
       this.isEligible = true;
       this.statusType = 'success';
-      this.statusMessage = 'Borrower pre-qualified successfully! Financial profile meets underwriting thresholds.';
+      this.statusMessage = 'Borrower pre-qualified successfully! Credit score and profile meet underwriting thresholds.';
       this.rejectionReason = '';
     } else {
       this.isEligible = false;
       this.statusType = 'error';
       this.statusMessage = 'Pre-Qualification declined: Applicant parameters do not meet minimum eligibility criteria.';
-      
-      const reasons: string[] = [];
-      if (!isCreditSufficient) {
-        reasons.push(`Credit score (${score}) is below the required 650 minimum score threshold.`);
-      }
-      if (!isDtiAcceptable) {
-        reasons.push(`High Debt-to-Income ratio (${this.dtiRatio}%). Monthly obligations exceed 55% of monthly income.`);
-      }
-      if (!isAmountWithinCap) {
-        reasons.push(`Requested amount (₹${requested.toLocaleString()}) exceeds the maximum eligible ceiling of ₹${this.maxEligibleAmount.toLocaleString()}.`);
-      }
-      this.rejectionReason = reasons.join(' ');
+      this.rejectionReason = `Credit score (${score}) is below the required 650 minimum score threshold.`;
     }
   }
 
@@ -140,17 +100,11 @@ export class PreQualificationPageComponent {
     const preQualData: PreQualificationData = {
       customerId: val.customerId,
       fullName: val.fullName,
-      dateOfBirth: val.dateOfBirth,
       mobile: val.mobile,
       email: val.email,
       loanType: val.loanType,
-      requestedAmount: Number(val.requestedAmount),
       employmentType: val.employmentType,
-      monthlyIncome: Number(val.monthlyIncome),
-      existingEmi: Number(val.existingEmi),
       creditScore: Number(val.creditScore),
-      maxEligibleAmount: this.maxEligibleAmount,
-      estimatedEmi: this.estimatedEmi,
       estimatedRate: this.estimatedRate,
       isEligible: true
     };
@@ -166,14 +120,10 @@ export class PreQualificationPageComponent {
     this.form.reset({
       customerId: 101,
       fullName: '',
-      dateOfBirth: '',
       mobile: '',
       email: '',
       loanType: 'Home',
-      requestedAmount: 1000000,
       employmentType: 'Salaried',
-      monthlyIncome: 75000,
-      existingEmi: 0,
       creditScore: 750
     });
     this.isEvaluated = false;

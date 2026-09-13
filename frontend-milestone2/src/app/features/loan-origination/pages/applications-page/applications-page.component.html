@@ -30,7 +30,7 @@
           <input
             [(ngModel)]="search"
             (input)="applyFilters()"
-            placeholder="Search by customer name or ID (e.g. Aarav, LO-1001)..."
+            placeholder="Search by employee name or ID (e.g. Aarav, LO-1001)..."
             id="input-search-apps"
           />
         </div>
@@ -105,7 +105,7 @@
         <thead>
           <tr>
             <th>APPLICATION ID</th>
-            <th>CUSTOMER NAME</th>
+            <th>EMPLOYEE NAME</th>
             <th>LOAN TYPE</th>
             <th>LOAN AMOUNT</th>
             <th>APPLICATION DATE</th>
@@ -121,7 +121,7 @@
               </button>
             </td>
             <td class="customer-cell">
-              <strong>{{ app.fullName || ('Customer #' + app.customerId) }}</strong>
+              <strong>{{ app.fullName || ('Employee #' + app.customerId) }}</strong>
               <div *ngIf="app.city" class="sub-location">{{ app.city }}, {{ app.state }}</div>
             </td>
             <td>
@@ -199,9 +199,9 @@
             {{ selectedApp.id || ('LO-' + selectedApp.loanId) }}
           </div>
           <div>
-            <h2 class="modal-title">{{ selectedApp.fullName || ('Customer #' + selectedApp.customerId) }}</h2>
+            <h2 class="modal-title">{{ selectedApp.fullName || ('Employee #' + selectedApp.customerId) }}</h2>
             <div class="modal-meta-row">
-              <span>Customer ID: #{{ selectedApp.customerId }}</span>
+              <span>Employee ID: #{{ selectedApp.customerId }}</span>
               <span>&bull;</span>
               <span>Applied: {{ selectedApp.applicationDate }}</span>
               <span>&bull;</span>

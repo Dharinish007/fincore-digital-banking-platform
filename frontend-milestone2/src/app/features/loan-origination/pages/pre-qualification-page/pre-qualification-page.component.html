@@ -1,20 +1,12 @@
 <div class="pre-qualification-view">
 
-  <!-- ── Flow Tracker Header ── -->
+  <!-- ── Page Header ── -->
   <div class="flow-header-card">
     <div class="header-text-group">
-      <div class="workflow-breadcrumb">
-        <span class="step-indicator">STAGE 2 OF 4</span>
-        <span class="sep">•</span>
-        <span>INITIAL BORROWER READINESS ASSESSMENT</span>
-      </div>
       <h1 class="page-title">Loan Pre-Qualification Assessment</h1>
       <p class="page-subtitle">
         Enter essential borrower financial indicators to evaluate debt capacity and creditworthiness before initiating full loan origination.
       </p>
-    </div>
-    <div class="tracker-wrapper">
-      <app-progress-tracker currentStage="Pre-Qualification"></app-progress-tracker>
     </div>
   </div>
 
@@ -25,11 +17,11 @@
     </div>
 
     <div class="form-grid">
-      <!-- Customer ID -->
+      <!-- Employee ID -->
       <div class="form-group" [class.has-error]="isFieldInvalid('customerId')">
-        <label>Customer ID <span class="req">*</span></label>
+        <label>Employee ID <span class="req">*</span></label>
         <input type="number" formControlName="customerId" placeholder="e.g. 101" />
-        <div *ngIf="isFieldInvalid('customerId')" class="form-error">Customer ID is required</div>
+        <div *ngIf="isFieldInvalid('customerId')" class="form-error">Employee ID is required</div>
       </div>
 
       <!-- Full Name -->
@@ -37,13 +29,6 @@
         <label>Full Name <span class="req">*</span></label>
         <input formControlName="fullName" placeholder="e.g. Aarav Sharma" />
         <div *ngIf="isFieldInvalid('fullName')" class="form-error">Full name is required</div>
-      </div>
-
-      <!-- Date of Birth -->
-      <div class="form-group" [class.has-error]="isFieldInvalid('dateOfBirth')">
-        <label>Date of Birth <span class="req">*</span></label>
-        <input type="date" formControlName="dateOfBirth" />
-        <div *ngIf="isFieldInvalid('dateOfBirth')" class="form-error">Date of birth is required</div>
       </div>
 
       <!-- Mobile Number -->
@@ -69,13 +54,6 @@
         <div *ngIf="isFieldInvalid('loanType')" class="form-error">Loan type is required</div>
       </div>
 
-      <!-- Requested Amount -->
-      <div class="form-group" [class.has-error]="isFieldInvalid('requestedAmount')">
-        <label>Requested Loan Amount (₹) <span class="req">*</span></label>
-        <input type="number" formControlName="requestedAmount" step="10000" placeholder="e.g. 3000000" />
-        <div *ngIf="isFieldInvalid('requestedAmount')" class="form-error">Min requested amount is ₹25,000</div>
-      </div>
-
       <!-- Employment Type -->
       <div class="form-group" [class.has-error]="isFieldInvalid('employmentType')">
         <label>Employment Type <span class="req">*</span></label>
@@ -86,19 +64,6 @@
           <option value="Retired">Retired / Pensioner</option>
         </select>
         <div *ngIf="isFieldInvalid('employmentType')" class="form-error">Employment type is required</div>
-      </div>
-
-      <!-- Monthly Income -->
-      <div class="form-group" [class.has-error]="isFieldInvalid('monthlyIncome')">
-        <label>Monthly Net Income (₹) <span class="req">*</span></label>
-        <input type="number" formControlName="monthlyIncome" step="1000" placeholder="e.g. 125000" />
-        <div *ngIf="isFieldInvalid('monthlyIncome')" class="form-error">Valid monthly income is required (> ₹10,000)</div>
-      </div>
-
-      <!-- Existing Monthly EMIs -->
-      <div class="form-group" [class.has-error]="isFieldInvalid('existingEmi')">
-        <label>Existing Monthly EMIs / Obligations (₹)</label>
-        <input type="number" formControlName="existingEmi" step="500" placeholder="e.g. 15000" />
       </div>
 
       <!-- Credit Score -->
@@ -138,20 +103,20 @@
 
         <div class="metrics-grid">
           <div class="metric-item">
-            <span class="metric-label">MAX ELIGIBLE CAPACITY</span>
-            <span class="metric-val highlight">₹{{ maxEligibleAmount | number }}</span>
+            <span class="metric-label">CREDIT / CIBIL SCORE</span>
+            <span class="metric-val highlight">{{ form.value.creditScore }}</span>
           </div>
           <div class="metric-item">
             <span class="metric-label">ESTIMATED INTEREST RATE</span>
             <span class="metric-val">{{ estimatedRate }}% p.a.</span>
           </div>
           <div class="metric-item">
-            <span class="metric-label">ESTIMATED MONTHLY EMI</span>
-            <span class="metric-val">₹{{ estimatedEmi | number }}</span>
+            <span class="metric-label">LOAN PRODUCT</span>
+            <span class="metric-val">{{ form.value.loanType }} Loan</span>
           </div>
           <div class="metric-item">
-            <span class="metric-label">DEBT-TO-INCOME (DTI)</span>
-            <span class="metric-val">{{ dtiRatio }}% (Healthy)</span>
+            <span class="metric-label">EMPLOYMENT TYPE</span>
+            <span class="metric-val">{{ form.value.employmentType }}</span>
           </div>
         </div>
 
@@ -187,25 +152,29 @@
 
         <div class="metrics-grid">
           <div class="metric-item">
-            <span class="metric-label">CALCULATED MAX CAPACITY</span>
-            <span class="metric-val muted-val">₹{{ maxEligibleAmount | number }}</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">DTI RATIO</span>
-            <span class="metric-val" [class.warning]="dtiRatio > 55">{{ dtiRatio }}%</span>
-          </div>
-          <div class="metric-item">
             <span class="metric-label">CREDIT SCORE</span>
             <span class="metric-val" [class.warning]="form.value.creditScore < 650">{{ form.value.creditScore }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">REQUIRED MINIMUM SCORE</span>
+            <span class="metric-val">650</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">LOAN PRODUCT</span>
+            <span class="metric-val">{{ form.value.loanType }} Loan</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">EMPLOYMENT TYPE</span>
+            <span class="metric-val">{{ form.value.employmentType }}</span>
           </div>
         </div>
 
         <div class="advice-box">
           <strong>💡 Recommended corrective actions:</strong>
           <ul>
-            <li>Reduce requested loan amount to within the maximum eligible ceiling of ₹{{ maxEligibleAmount | number }}.</li>
-            <li>Clear existing short-term personal obligations to reduce DTI below 50%.</li>
-            <li>Add an earning co-applicant / guarantor during the next review.</li>
+            <li>Improve credit bureau rating above the 650 minimum score threshold before re-evaluation.</li>
+            <li>Resolve any overdue loan or credit card balances with reporting agencies.</li>
+            <li>Add an earning co-applicant / guarantor with a strong credit profile during the loan application.</li>
           </ul>
         </div>
       </div>

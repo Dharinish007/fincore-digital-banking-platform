@@ -11,8 +11,8 @@
     <h3><span class="material-icons">description</span> Application Overview</h3>
     <div *ngIf="application" class="detail-list">
       <div class="detail-item"><span>Application Reference ID</span><strong>LN{{ application.loanId || 1001 }}</strong></div>
-      <div class="detail-item"><span>Customer ID</span><strong>C-{{ application.customerId }}</strong></div>
-      <div class="detail-item"><span>Customer Name</span><strong>{{ application.customerName || 'Aditi Sharma' }}</strong></div>
+      <div class="detail-item"><span>Employee ID</span><strong>EMP-{{ application.customerId }}</strong></div>
+      <div class="detail-item"><span>Employee Name</span><strong>{{ application.customerName || 'Aditi Sharma' }}</strong></div>
       <div class="detail-item"><span>Loan Category</span><strong>{{ application.loanType }}</strong></div>
       <div class="detail-item"><span>Requested Loan Amount</span><strong>₹{{ application.loanAmount | number }}</strong></div>
       <div class="detail-item"><span>Tenure</span><strong>{{ application.tenureMonths }} Months</strong></div>
