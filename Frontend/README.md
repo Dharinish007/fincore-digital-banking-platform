@@ -115,3 +115,15 @@ The compiled build output will be stored in the `Frontend/dist/` directory.
 The frontend communicates with the Spring Boot backend REST APIs via `Frontend/src/app/services/api.service.ts`:
 - **Default Backend URL**: `http://localhost:8080`
 - Configurable endpoints for `/api/customers`, `/api/accounts`, `/api/loans`, `/api/settlement`, `/api/fraud`, `/api/risk`, `/api/liveness`, and `/api/audit`.
+
+
+
+Contributors
+
+Bharathi Bhat
+
+Chaava Ramya
+
+Shanmukha Sai
+
+Raziya
