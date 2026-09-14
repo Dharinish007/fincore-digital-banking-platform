@@ -1,14 +1,18 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { LoanApplication, LoanOriginationPayload } from '../models/application.model';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { environment } from "../../../environments/environment";
+import {
+  LoanApplication,
+  LoanOriginationPayload,
+} from "../models/application.model";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class LoanOriginationService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = `${environment.apiUrl}/api/loan-origination`;
 
   constructor(private http: HttpClient) {}
 
@@ -16,7 +20,9 @@ export class LoanOriginationService {
    * Submit loan origination application to backend:
    * POST /api/loan-origination
    */
-  createLoanApplication(payload: LoanOriginationPayload): Observable<LoanApplication> {
+  createLoanApplication(
+    payload: LoanOriginationPayload,
+  ): Observable<LoanApplication> {
     return this.http.post<LoanApplication>(this.apiUrl, payload);
   }
 
@@ -25,7 +31,15 @@ export class LoanOriginationService {
    * GET /api/loan-origination
    */
   getAllLoanApplications(): Observable<LoanApplication[]> {
-    return this.http.get<LoanApplication[]>(this.apiUrl);
+    return this.http
+      .get<LoanApplication[]>(this.apiUrl)
+      .pipe(
+        map((applications) =>
+          applications.map((application) =>
+            this.normalizeApplication(application),
+          ),
+        ),
+      );
   }
 
   /**
@@ -41,6 +55,19 @@ export class LoanOriginationService {
    * GET /api/loan-origination/customer/{customerId}
    */
   getLoansByCustomerId(customerId: number): Observable<LoanApplication[]> {
-    return this.http.get<LoanApplication[]>(`${this.apiUrl}/customer/${customerId}`);
+    return this.http.get<LoanApplication[]>(
+      `${this.apiUrl}/customer/${customerId}`,
+    );
+  }
+
+  private normalizeApplication(application: LoanApplication): LoanApplication {
+    const status = application.applicationStatus || "Pending";
+    return {
+      ...application,
+      id: application.id || `LO-${application.loanId}`,
+      requestedAmount: application.requestedAmount || application.loanAmount,
+      status,
+      stage: status === "Draft" ? "Loan Application" : "Application Processing",
+    };
   }
 }

@@ -1,14 +1,26 @@
-export type LoanType = 'Personal' | 'Home' | 'Vehicle' | 'Education' | 'Gold' | 'Other';
+export type LoanType =
+  | "Personal"
+  | "Home"
+  | "Vehicle"
+  | "Education"
+  | "Gold"
+  | "Other";
 
 export type ApplicationStage =
-  | 'Pre-Qualification'
-  | 'Loan Application'
-  | 'Application Processing'
-  | 'Underwriting'
-  | 'Quality Control'
-  | 'Loan Funding';
+  | "Pre-Qualification"
+  | "Loan Application"
+  | "Application Processing"
+  | "Underwriting"
+  | "Quality Control"
+  | "Loan Funding";
 
-export type ApplicationStatus = 'Draft' | 'Under Review' | 'Approved' | 'Rejected' | 'Funded' | 'Pending';
+export type ApplicationStatus =
+  | "Draft"
+  | "Under Review"
+  | "Approved"
+  | "Rejected"
+  | "Funded"
+  | "Pending";
 
 /**
  * Direct payload matching backend LoanOrigination entity (POST /api/loan-origination)
@@ -20,6 +32,12 @@ export interface LoanOriginationPayload {
   tenureMonths: number;
   interestRate: number;
   purpose?: string;
+  fullName?: string;
+  dateOfBirth?: string;
+  gender?: string;
+  mobile?: string;
+  email?: string;
+  applicationStatus?: ApplicationStatus;
 }
 
 /**
@@ -69,7 +87,12 @@ export interface LoanApplication {
   coApplicantRelation?: string;
   coApplicantMobile?: string;
   coApplicantIncome?: number;
-  documents?: { name: string; type: string; status: 'Uploaded' | 'Pending' | 'Verified'; fileName?: string }[];
+  documents?: {
+    name: string;
+    type: string;
+    status: "Uploaded" | "Pending" | "Verified";
+    fileName?: string;
+  }[];
   approvedAmount?: number;
   approvedTenure?: string;
   fundingAccount?: string;

@@ -3,10 +3,11 @@ package com.fincore.BankingManagement.LoanOrigination.entity.service;
 import com.fincore.BankingManagement.CreditCheck.entity.Customer;
 import com.fincore.BankingManagement.LoanOrigination.entity.ApplicationStatus;
 import com.fincore.BankingManagement.LoanOrigination.entity.LoanOrigination;
+
 import com.fincore.BankingManagement.LoanOrigination.entity.Repository.CustomerRepo;
+import com.fincore.BankingManagement.LoanOrigination.entity.Repository.LoanOriginationRepository;
 import com.fincore.BankingManagement.LoanOrigination.entity.dto.LoanApplicationRequest;
 import com.fincore.BankingManagement.LoanOrigination.entity.dto.LoanApplicationResponse;
-import com.fincore.BankingManagement.LoanOrigination.entity.Repository.LoanOriginationRepository;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -34,6 +35,14 @@ public class LoanOriginationService {
                 // =====================================================
                 // 1. Validate Loan Type
                 // =====================================================
+
+                if (request == null) {
+                        throw new IllegalArgumentException("Request body is required");
+                }
+
+                if (request.getCustomerId() == null || request.getCustomerId() <= 0) {
+                        throw new IllegalArgumentException("Customer ID must be greater than zero");
+                }
 
                 if (request.getLoanType() == null) {
                         throw new IllegalArgumentException(
@@ -74,29 +83,17 @@ public class LoanOriginationService {
                 Long customerId = request.getCustomerId();
                 String customerName = request.getCustomerName();
 
-                if (customerName == null) {
+                if (customerName == null || customerName.isBlank()) {
                         customerName = request.getFullName();
                 }
 
-                if (customerName == null) {
+                if (customerName == null || customerName.isBlank()) {
                         customerName = "Unknown Customer";
                 }
 
-                // Try to find customer if customerId is provided
-                if (customerId != null) {
-                        try {
-                                Customer customer = customerRepository.findById(
-                                                Math.toIntExact(customerId)).orElse(null);
-
-                                if (customer != null) {
-                                        customerName = customer.getFullName();
-                                }
-                        } catch (Exception e) {
-                                // Customer not found, use provided name
-                        }
-                } else {
-                        // Generate a default customer ID if not provided
-                        customerId = 999999L; // Default ID
+                Customer customer = customerRepository.findById(customerId).orElse(null);
+                if (customer != null && customer.getFullName() != null) {
+                        customerName = customer.getFullName();
                 }
 
                 // =====================================================
@@ -125,8 +122,9 @@ public class LoanOriginationService {
                 if (request.getDateOfBirth() != null) {
                         try {
                                 loan.setDateOfBirth(LocalDate.parse(request.getDateOfBirth()));
-                        } catch (Exception e) {
-                                // Invalid date format
+                        } catch (java.time.format.DateTimeParseException exception) {
+                                throw new IllegalArgumentException("Date of birth must use yyyy-MM-dd format",
+                                                exception);
                         }
                 }
 
@@ -159,13 +157,8 @@ public class LoanOriginationService {
 
                 // Set application status
                 ApplicationStatus status = ApplicationStatus.PENDING;
-                if (request.getApplicationStatus() != null) {
-                        try {
-                                status = ApplicationStatus.valueOf(
-                                                request.getApplicationStatus().toUpperCase());
-                        } catch (Exception e) {
-                                status = ApplicationStatus.PENDING;
-                        }
+                if (request.getApplicationStatus() != null && !request.getApplicationStatus().isBlank()) {
+                        status = ApplicationStatus.fromValue(request.getApplicationStatus());
                 }
                 loan.setApplicationStatus(status);
 

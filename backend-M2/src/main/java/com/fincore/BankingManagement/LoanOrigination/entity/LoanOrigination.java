@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "loan_origination")
+@Table(name = "loan_application")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,12 +18,13 @@ public class LoanOrigination {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "loan_id")
     private Long loanId;
 
-    @Column(nullable = false)
+    @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
-    @Column(nullable = false)
+    @Column(name = "customer_name")
     private String customerName;
 
     // =====================================================
@@ -87,16 +88,16 @@ public class LoanOrigination {
     // Loan Information
     // =====================================================
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "loan_type", nullable = false)
     private LoanType loanType;
 
-    @Column(nullable = false, precision = 15, scale = 2)
+    @Column(name = "loan_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal loanAmount;
 
-    @Column(nullable = false)
+    @Column(name = "tenure_months", nullable = false)
     private Integer tenureMonths;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(name = "interest_rate", nullable = false, precision = 5, scale = 2)
     private BigDecimal interestRate;
 
     @Column(name = "purpose", length = 500)
@@ -106,7 +107,7 @@ public class LoanOrigination {
     // Application Status
     // =====================================================
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "application_status", nullable = false)
     private ApplicationStatus applicationStatus;
 
     @Column(name = "application_date")
@@ -115,10 +116,10 @@ public class LoanOrigination {
     // =====================================================
     // Audit Timestamps
     // =====================================================
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     // =====================================================
@@ -141,5 +142,9 @@ public class LoanOrigination {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
+    }
+
+    public void setLoanType(LoanType loanType) {
+        this.loanType = loanType;
     }
 }

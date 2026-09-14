@@ -1,6 +1,7 @@
 package com.fincore.BankingManagement.LoanOrigination.entity.controller;
 
 import com.fincore.BankingManagement.LoanOrigination.entity.ApplicationStatus;
+
 import com.fincore.BankingManagement.LoanOrigination.entity.LoanOrigination;
 import com.fincore.BankingManagement.LoanOrigination.entity.dto.LoanApplicationRequest;
 import com.fincore.BankingManagement.LoanOrigination.entity.dto.LoanApplicationResponse;
@@ -103,15 +104,13 @@ public class LoanOriginationController {
         // =====================================================
         @GetMapping("/status/{status}")
         public ResponseEntity<List<LoanApplicationResponse>> getLoansByStatus(
-                        @PathVariable ApplicationStatus status) {
+                        @PathVariable String status) {
                 try {
-                        List<LoanOrigination> loans = service.getLoansByStatus(status);
+                        List<LoanOrigination> loans = service.getLoansByStatus(ApplicationStatus.fromValue(status));
                         List<LoanApplicationResponse> responses = service.convertToResponseList(loans);
                         return ResponseEntity.ok(responses);
-                } catch (Exception e) {
-                        return ResponseEntity
-                                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                        .build();
+                } catch (IllegalArgumentException e) {
+                        return ResponseEntity.badRequest().build();
                 }
         }
 
@@ -121,11 +120,13 @@ public class LoanOriginationController {
         @PutMapping("/{loanId}/status")
         public ResponseEntity<LoanApplicationResponse> updateLoanStatus(
                         @PathVariable Long loanId,
-                        @RequestParam ApplicationStatus status) {
+                        @RequestParam String status) {
                 try {
-                        LoanOrigination loan = service.updateLoanStatus(loanId, status);
+                        LoanOrigination loan = service.updateLoanStatus(loanId, ApplicationStatus.fromValue(status));
                         LoanApplicationResponse response = service.convertToResponse(loan);
                         return ResponseEntity.ok(response);
+                } catch (IllegalArgumentException e) {
+                        return ResponseEntity.badRequest().build();
                 } catch (RuntimeException e) {
                         return ResponseEntity
                                         .status(HttpStatus.NOT_FOUND)

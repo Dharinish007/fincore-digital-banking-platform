@@ -11,7 +11,7 @@ export type LoanType =
   | "Education"
   | "Gold"
   | "Other";
-export type ApplicationStatus =
+  export type ApplicationStatus =
   | "Pending"
   | "Approved"
   | "Rejected"
@@ -35,6 +35,7 @@ export interface LoanApplicationPayload {
 @Injectable({
   providedIn: "root",
 })
+
 export class LoanOriginationService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/api/loan-origination`;
@@ -52,6 +53,7 @@ export class LoanOriginationService {
       applicationStatus: "Pending",
       applicationDate: "2026-08-01",
     },
+
     {
       loanId: 1002,
       customerId: 2002,
@@ -82,7 +84,7 @@ export class LoanOriginationService {
     this.initialLoans,
   );
 
-  /** POST /api/loan-origination */
+  /** POST /api/loan-origination*/
   createLoanApplication(
     data: LoanApplicationPayload,
   ): Observable<LoanApplicationPayload> {
@@ -94,11 +96,9 @@ export class LoanOriginationService {
       purpose: data.purpose || "Loan requirement",
       applicationStatus: data.applicationStatus || "Pending",
     };
-
     return this.http.post<LoanApplicationPayload>(this.apiUrl, payload).pipe(
       tap((created) => this.addLocalRecord(created)),
       catchError(() => {
-        // Fallback: create in-memory record when backend is offline
         const fallbackRecord: LoanApplicationPayload = {
           ...payload,
           loanId: 1000 + Math.floor(Math.random() * 9000),
@@ -124,7 +124,7 @@ export class LoanOriginationService {
     );
   }
 
-  /** GET /api/loan-origination/{loanId} */
+
   getLoanApplicationById(
     loanId: number,
   ): Observable<LoanApplicationPayload | null> {
@@ -153,7 +153,6 @@ export class LoanOriginationService {
       );
   }
 
-  /** GET /api/loan-origination/status/{status} */
   getLoansByStatus(
     status: ApplicationStatus,
   ): Observable<LoanApplicationPayload[]> {

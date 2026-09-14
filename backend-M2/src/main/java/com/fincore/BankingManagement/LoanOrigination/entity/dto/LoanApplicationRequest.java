@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class LoanApplicationRequest {
 
-    // Customer ID (optional - can be created without existing customer)
+    // Customer ID is required because loan_application references customer.
     private Long customerId;
 
     // Personal Information
