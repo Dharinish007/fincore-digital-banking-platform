@@ -1,0 +1,9 @@
+<div class="progress-tracker">
+  <div
+    class="step"
+    *ngFor="let step of steps"
+    [class.active]="step === currentStage"
+  >
+    <span class="step-label">{{ step }}</span>
+  </div>
+</div>

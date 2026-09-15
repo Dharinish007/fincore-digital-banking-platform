@@ -1,0 +1,52 @@
+<div class="fincore-card face-quality-container">
+  <!-- Card Header -->
+  <div class="card-header">
+    <div class="title-with-icon">
+      <mat-icon class="card-icon">verified</mat-icon>
+      <h3>Face Detection & Quality</h3>
+    </div>
+    <p class="subtitle">Pre-match quality checks for both source images</p>
+  </div>
+
+  <!-- Dynamic Grid of Quality Check Cards -->
+  <div class="quality-grid">
+    <div
+      *ngFor="let item of qualityChecks"
+      class="quality-item-card"
+      [ngClass]="getStatusClass(item.status)"
+    >
+      <div class="item-header">
+        <div class="title-row">
+          <mat-icon class="item-icon">{{ item.icon }}</mat-icon>
+          <span class="item-title">{{ item.title }}</span>
+        </div>
+        <div class="status-badge" [ngClass]="item.status.toLowerCase()">
+          <span class="check-symbol" *ngIf="item.status === 'PASS' || item.status === 'GOOD'">✓</span>
+          <span class="check-symbol" *ngIf="item.status === 'WARNING'">⚠</span>
+          <span class="check-symbol" *ngIf="item.status === 'FAIL'">✕</span>
+          <span>{{ item.status }}</span>
+        </div>
+      </div>
+
+      <!-- Score & Progress Bar -->
+      <div class="item-metric">
+        <div class="metric-top">
+          <span class="metric-desc">{{ item.summary }}</span>
+          <span class="metric-pct">{{ item.score }}%</span>
+        </div>
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            [style.width.%]="item.score"
+            [ngClass]="getStatusClass(item.status)"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Explanation details -->
+      <div class="item-explanation">
+        <span class="details-text">{{ item.details }}</span>
+      </div>
+    </div>
+  </div>
+</div>

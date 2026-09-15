@@ -1,0 +1,207 @@
+.app-header {
+  height: 64px;
+  background-color: var(--bg-header); /* #0D47A1 */
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 100;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    .sidebar-toggle {
+      color: #ffffff;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .logo-icon {
+        width: 38px;
+        height: 38px;
+        background: #1565C0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff;
+
+        mat-icon {
+          font-size: 22px;
+          width: 22px;
+          height: 22px;
+        }
+      }
+
+      .brand-text {
+        display: flex;
+        flex-direction: column;
+
+        .brand-name {
+          font-size: 1.1rem;
+          font-weight: 700;
+          letter-spacing: 0.03em;
+          color: #ffffff;
+
+          .accent {
+            color: #90CAF9;
+          }
+        }
+
+        .brand-tag {
+          font-size: 0.65rem;
+          color: #BBDEFB;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+        }
+      }
+    }
+
+    .header-divider {
+      width: 1px;
+      height: 28px;
+      background-color: rgba(255, 255, 255, 0.25);
+      margin: 0 6px;
+    }
+
+    .module-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #E3F2FD;
+
+      .module-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        color: #64B5F6;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+
+    .system-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      color: #E0E0E0;
+
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #10B981;
+        box-shadow: 0 0 8px #10B981;
+      }
+    }
+
+    .icon-btn {
+      color: #ffffff;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .avatar-container {
+        .avatar {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          border: 2px solid #64B5F6;
+        }
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+
+        .user-name {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: #ffffff;
+        }
+
+        .user-role {
+          font-size: 0.7rem;
+          color: #BBDEFB;
+        }
+      }
+
+      .chevron {
+        color: #BBDEFB;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+/* Dark Menu Customizations */
+::ng-deep .dark-menu {
+  background-color: #1E293B !important;
+  border: 1px solid #334155 !important;
+  color: #ffffff !important;
+
+  .menu-header {
+    padding: 10px 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #9CA3AF;
+    border-bottom: 1px solid #334155;
+  }
+
+  .mat-mdc-menu-item {
+    color: #F9FAFB !important;
+
+    mat-icon {
+      color: #9CA3AF !important;
+      margin-right: 12px !important;
+    }
+
+    .text-error { color: #EF4444 !important; }
+    .text-success { color: #10B981 !important; }
+    .text-warn { color: #F59E0B !important; }
+  }
+
+  .logout-item {
+    border-top: 1px solid #334155;
+    color: #EF4444 !important;
+    mat-icon { color: #EF4444 !important; }
+  }
+}
+
+@media (max-width: 900px) {
+  .brand-text, .header-divider, .system-status, .user-info {
+    display: none !important;
+  }
+}

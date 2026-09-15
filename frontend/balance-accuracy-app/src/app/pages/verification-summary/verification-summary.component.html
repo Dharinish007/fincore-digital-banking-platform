@@ -1,0 +1,99 @@
+<div class="summary-page" *ngIf="result$ | async as result">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb-trail">
+        <span>KYC Verification</span>
+        <mat-icon class="bc-sep">chevron_right</mat-icon>
+        <span class="active-crumb">Verification Decision</span>
+      </div>
+      <h1 class="page-title">KYC Decision Summary</h1>
+      <p class="page-subtitle">Consolidated verification assessment and customer onboarding decision</p>
+    </div>
+    <div class="status-badge-ready">
+      <mat-icon>verified_user</mat-icon>
+      <span>FINAL DECISION STAGE</span>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <!-- KYC Stages Checklist -->
+    <div class="summary-card stages-card">
+      <div class="card-header">
+        <div class="title-with-icon">
+          <mat-icon>checklist</mat-icon>
+          <h3>Verification Pipeline Audits</h3>
+        </div>
+        <span class="audit-tag">Ref: {{ result.auditRef }}</span>
+      </div>
+
+      <div class="stages-list">
+        <div *ngFor="let s of kycStages" class="stage-row">
+          <div class="stage-icon-wrap">
+            <mat-icon>{{ s.icon }}</mat-icon>
+          </div>
+          <div class="stage-info">
+            <span class="stage-title">{{ s.title }}</span>
+            <span class="stage-sub">{{ s.subtitle }}</span>
+          </div>
+          <div class="stage-badge-wrap">
+            <span class="stage-score mono">{{ s.score }}</span>
+            <span class="stage-badge">✓ {{ s.status }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Approval Decisioning Card -->
+    <div class="summary-card decision-card">
+      <div class="card-header">
+        <div class="title-with-icon">
+          <mat-icon>gavel</mat-icon>
+          <h3>Compliance Authorization</h3>
+        </div>
+      </div>
+
+      <div class="decision-content">
+        <div class="score-banner">
+          <div class="banner-top">
+            <span>Overall KYC Risk Rating</span>
+            <span class="risk-low">LOW RISK</span>
+          </div>
+          <p class="banner-desc">
+            All biometrics and Face Match Accuracy ({{ result.score }}%) cleared threshold standards.
+          </p>
+        </div>
+
+        <div class="customer-info-box">
+          <div class="info-row">
+            <span>Customer ID</span>
+            <strong class="mono">CUST-98214-X</strong>
+          </div>
+          <div class="info-row">
+            <span>Identity Match</span>
+            <strong class="text-green">Alexander J. Vance</strong>
+          </div>
+          <div class="info-row">
+            <span>Decision Date</span>
+            <strong class="mono">{{ result.timestamp | date:'medium' }}</strong>
+          </div>
+        </div>
+
+        <div class="action-buttons-wrap">
+          <button class="btn-back" (click)="backToFaceMatch()">
+            <mat-icon>arrow_back</mat-icon>
+            <span>Back to Face Match</span>
+          </button>
+
+          <button
+            class="btn-approve"
+            [class.approved]="isApproved"
+            (click)="approveKyc()"
+          >
+            <mat-icon>{{ isApproved ? 'check' : 'task_alt' }}</mat-icon>
+            <span>{{ isApproved ? 'Account Approved ✓' : 'Approve & Open Account' }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
