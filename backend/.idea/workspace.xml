@@ -5,11 +5,268 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/fincore-digital-banking-platform.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/SQL/01_create_database.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/SQL/02_create_tables.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/SQL/03_insert_sample_data.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/SQL/04_balance_accuracy.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/SQL/05_transaction_atomicity.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/Screenshot 2026-08-08 222910.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/Screenshot 2026-08-08 222922.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/Screenshot 2026-08-08 222938.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/Screenshot 2026-08-08 222954.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/Screenshot 2026-08-08 223026.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/php/check_balance.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/php/create_account.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/php/db_connect.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/php/deposit.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/php/transaction_history.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/php/transfer.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DB/php/withdraw.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionController/TransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionController/TransactionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingManagementApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingManagementApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/TransactionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/AccountNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/GlobalHandleException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionController/TransactionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransactionDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/AccountRepositery/AccountRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/CustomerRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/TransactionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/Controller/BeneficiaryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/Repository/BeneficiaryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/dto/BeneficiaryRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/dto/BeneficiaryResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/dto/GetByBeneficiaryIdResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/enums/Beneficiary_type.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/enums/Gender.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/enums/Status.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Beneficiary/service/BeneficiaryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/Controller/CreditCheckController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/Repository/CreditCheckRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/Repository/CustomerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/Repository/LoanApplicationRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/Repository/LoanHistoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/Service/CreditCheckServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/dto/CreditCheckRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/dto/CreditCheckResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/dto/CustomerLookupResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/dto/PreviousLoanResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/entity/CreditCheck.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/entity/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/entity/EmiCalculation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/entity/LoanApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/entity/LoanHistory.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/enums/ApplicationStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/enums/CreditStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/enums/LoanStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/enums/LoanType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/CreditCheck/enums/PreviousLoanStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/EMI/controller/EMICalculationController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/EMI/dto/EMICalculationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/EMI/dto/EMICalculationResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/EMI/entity/EMICalculation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/EMI/repository/EMICalculationRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/EMI/service/EMICalculationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Entities/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Entities/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Entities/Transaction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/FraudCheck/Controller/FraudCheckController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/FraudCheck/Repository/FraudCheckRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/FraudCheck/enums/FraudStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/FraudCheck/models/FraudCheck.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/FraudCheck/service/FraudCheckService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/ApplicationStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/LoanOrigination.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/LoanType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/Repository/CustomerRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/Repository/LoanOriginationRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/controller/LoanOriginationController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/dto/LoanApplicationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/dto/LoanApplicationResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/service/LoanOriginationService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/LoanOrigination/entity/service/LoanProductService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/Controller/PaymentController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/Repository/PaymentRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/dto/PaymentRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/dto/PaymentResponseDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/entity/Payment.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/enums/PaymentMode.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/enums/PaymentStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/enums/PaymentType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Payment/service/PaymentService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/DTOs/AccountCreationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/repository/CustomerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/controller/BalanceAccuracyController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/dto/BalanceAccuracyAccountDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/repository/BalanceAccuracyRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/balanceaccuracy/service/BalanceAccuracyService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/config/CorsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/models/beneficiary.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Screenshots/AccoutCreation.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Screenshots/BalanceAccuracy.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Screenshots/FundsTransfer.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/.idea/backend.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/Screenshots/AccountNotFound.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/Screenshots/InsufficientBalance.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/Screenshots/MoneyTransFerSuccess.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingManagementApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/AccountType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/Enums/TransactionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/AccountNotFoundException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/Exception/GlobalHandleException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/Impl/TransactionServiceImp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionController/TransactionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/TransactionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransactionDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/dto/TransferResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/AccountRepositery/AccountRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/CustomerRepo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/BankingServices/repository/TransactionRepository/TransactionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/Entities/Account.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/Entities/Customer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/Entities/Transaction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/account/DTOs/AccountCreationRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/account/controller/AccountController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/account/repository/AccoRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/account/repository/CustomerRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/account/service/AccountService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/balanceaccuracy/controller/BalanceAccuracyController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/balanceaccuracy/dto/BalanceAccuracyAccountDTO.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/balanceaccuracy/repository/BalanceAccuracyRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/balanceaccuracy/service/BalanceAccuracyService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/java/com/fincore/BankingManagement/config/CorsConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../backend/src/test/java/com/fincore/BankingManagement/BankingManagementApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/.editorconfig" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/.vscode/extensions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/.vscode/launch.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/.vscode/tasks.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/public/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/app.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/app.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/app.component.spec.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/app.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/app.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/models/account.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/models/audit-log.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/models/filter.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/models/summary-stats.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/models/transaction.model.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/services/account.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/services/balance-accuracy.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/services/export.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/services/transaction.service.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/core/validators/custom-validators.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/environments/environment.prod.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/accounts/components/new-account/new-account.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/accounts/components/new-account/new-account.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/accounts/components/new-account/new-account.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/accuracy-table/accuracy-table.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/accuracy-table/accuracy-table.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/accuracy-table/accuracy-table.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/analytics-charts/analytics-charts.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/analytics-charts/analytics-charts.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/analytics-charts/analytics-charts.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/audit-log-dialog/audit-log-dialog.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/audit-log-dialog/audit-log-dialog.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/audit-log-dialog/audit-log-dialog.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/balance-accuracy-dashboard.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/detail-drawer/detail-drawer.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/detail-drawer/detail-drawer.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/detail-drawer/detail-drawer.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/filter-section/filter-section.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/filter-section/filter-section.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/filter-section/filter-section.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/freeze-dialog/freeze-dialog.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/freeze-dialog/freeze-dialog.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/freeze-dialog/freeze-dialog.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/header/header.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/header/header.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/open-account/open-account.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/open-account/open-account.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/open-account/open-account.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/sidebar/sidebar.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/sidebar/sidebar.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/summary-cards/summary-cards.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/summary-cards/summary-cards.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/summary-cards/summary-cards.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/verify-dialog/verify-dialog.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/verify-dialog/verify-dialog.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/verify-dialog/verify-dialog.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/initiate-transaction/initiate-transaction.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/initiate-transaction/initiate-transaction.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/initiate-transaction/initiate-transaction.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/profile/profile.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/profile/profile.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/profile/profile.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/reports/reports.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/reports/reports.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/reports/reports.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/settings/settings.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/settings/settings.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/settings/settings.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/support/support.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/support/support.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/support/support.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-confirmation/transaction-confirmation.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-confirmation/transaction-confirmation.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-confirmation/transaction-confirmation.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-dashboard/transaction-dashboard.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-dashboard/transaction-dashboard.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-dashboard/transaction-dashboard.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-details/transaction-details.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-details/transaction-details.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-details/transaction-details.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-history/transaction-history.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-history/transaction-history.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-history/transaction-history.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-status/transaction-status.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-status/transaction-status.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/features/transactions/components/transaction-status/transaction-status.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/app/shared/components/status-badge/status-badge.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/main.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/src/styles.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/tmp_post_test.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/tsconfig.app.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/balance-accuracy-app/tsconfig.spec.json" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,21 +332,41 @@
   &quot;keyToString&quot;: {
     &quot;Application.BankingManagementApplication.executor&quot;: &quot;Run&quot;,
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
     &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;Spring Boot.BankingManagementApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
     &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
     &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;team-c&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.12300122&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\practice\BankingManagement\fincore-digital-banking-platform\Integration\backend\src\main\resources" />
+      <recent name="D:\practice\BankingManagement\fincore-digital-banking-platform\Integration\backend\src\main\java\com\fincore\BankingManagement" />
+      <recent name="D:\practice\BankingManagement\fincore-digital-banking-platform\Integration\backend\src\main\java\com\fincore\BankingManagement\Milestone1" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="Transaction Automicity" />
@@ -102,11 +379,21 @@
       <option name="filePath" />
       <method v="2" />
     </configuration>
+    <configuration name="BankingManagementApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="26" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <module name="BankingManagement" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.fincore.BankingManagement.BankingManagementApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.31033.145" />
+        <option value="bundled-jdk-30f59d01ecdd-34e2839f716b-intellij.indexing.shared.core-IU-262.9437.185" />
+        <option value="bundled-js-predefined-d6986cc7102b-4abd2a77f808-JavaScript-IU-262.9437.185" />
       </set>
     </attachedChunks>
   </component>
@@ -119,5 +406,8 @@
       <updated>1785997600910</updated>
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
   </component>
 </project>
