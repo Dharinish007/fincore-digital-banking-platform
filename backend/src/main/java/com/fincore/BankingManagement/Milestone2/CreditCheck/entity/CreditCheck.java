@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity;
 
-import com.fincore.BankingManagement.CreditCheck.enums.CreditStatus;
-import com.fincore.BankingManagement.CreditCheck.enums.PreviousLoanStatus;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.enums.CreditStatus;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.enums.PreviousLoanStatus;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

@@ -1,9 +1,9 @@
 package com.fincore.BankingManagement.Milestone1.account.balanceaccuracy.service;
 
-import com.fincore.BankingManagement.BankingServices.Enums.TransactionType;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.Enums.TransactionType;
 import com.fincore.BankingManagement.Entities.Transaction;
 import com.fincore.BankingManagement.Entities.Account;
-import com.fincore.BankingManagement.balanceaccuracy.repository.BalanceAccuracyRepository;
+import com.fincore.BankingManagement.Milestone1.account.balanceaccuracy.repository.BalanceAccuracyRepository;
 
 import org.springframework.stereotype.Service;
 

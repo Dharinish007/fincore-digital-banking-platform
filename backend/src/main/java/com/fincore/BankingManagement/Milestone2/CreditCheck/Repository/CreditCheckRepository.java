@@ -1,6 +1,6 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.Repository;
 
-import com.fincore.BankingManagement.CreditCheck.entity.CreditCheck;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.CreditCheck;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.List;

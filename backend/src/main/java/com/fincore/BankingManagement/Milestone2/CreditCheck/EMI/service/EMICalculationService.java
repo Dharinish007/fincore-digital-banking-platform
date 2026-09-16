@@ -1,9 +1,9 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.service;
 
-import com.fincore.BankingManagement.EMI.dto.EMICalculationRequest;
-import com.fincore.BankingManagement.EMI.dto.EMICalculationResponse;
-import com.fincore.BankingManagement.EMI.entity.EMICalculation;
-import com.fincore.BankingManagement.EMI.repository.EMICalculationRepository;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.dto.EMICalculationRequest;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.dto.EMICalculationResponse;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.entity.EMICalculation;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.repository.EMICalculationRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

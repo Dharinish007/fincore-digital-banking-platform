@@ -1,8 +1,8 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity.service;
 
-import com.fincore.BankingManagement.LoanOrigination.entity.LoanType;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanType;
 
-import com.fincore.BankingManagement.LoanOrigination.entity.dto.LoanApplicationRequest;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto.LoanApplicationRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

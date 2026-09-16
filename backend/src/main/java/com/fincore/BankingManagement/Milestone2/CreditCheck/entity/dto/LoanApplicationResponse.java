@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto;
 
-import com.fincore.BankingManagement.LoanOrigination.entity.ApplicationStatus;
-import com.fincore.BankingManagement.LoanOrigination.entity.LoanType;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.ApplicationStatus;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.Milestone1.account.DTOs;
 
-import com.fincore.BankingManagement.BankingServices.Enums.AccountStatus;
-import com.fincore.BankingManagement.BankingServices.Enums.AccountType;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.Enums.AccountStatus;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.Enums.AccountType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

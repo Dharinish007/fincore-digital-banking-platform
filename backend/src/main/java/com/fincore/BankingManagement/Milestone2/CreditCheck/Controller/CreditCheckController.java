@@ -1,9 +1,9 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.Controller;
 
-import com.fincore.BankingManagement.CreditCheck.Service.CreditCheckServiceImpl;
-import com.fincore.BankingManagement.CreditCheck.dto.CreditCheckRequest;
-import com.fincore.BankingManagement.CreditCheck.dto.CreditCheckResponse;
-import com.fincore.BankingManagement.CreditCheck.dto.CustomerLookupResponse;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.Service.CreditCheckServiceImpl;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.dto.CreditCheckRequest;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.dto.CreditCheckResponse;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.dto.CustomerLookupResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,11 +1,11 @@
 package com.fincore.BankingManagement.Milestone1.account.service;
 
 import com.fincore.BankingManagement.Entities.Customer;
-import com.fincore.BankingManagement.BankingServices.repository.TransactionRepository.CustomerRepo;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.repository.TransactionRepository.CustomerRepo;
 import com.fincore.BankingManagement.Entities.Account;
-import com.fincore.BankingManagement.account.DTOs.AccountCreationRequest;
-import com.fincore.BankingManagement.account.repository.AccoRepository;
-import com.fincore.BankingManagement.account.repository.CustomerRepository;
+import com.fincore.BankingManagement.Milestone1.account.DTOs.AccountCreationRequest;
+import com.fincore.BankingManagement.Milestone1.account.repository.AccoRepository;
+import com.fincore.BankingManagement.Milestone1.account.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

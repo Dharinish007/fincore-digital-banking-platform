@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.Milestone1.account.BankingServices;
 
-import com.fincore.BankingManagement.BankingServices.dto.TransferRequest;
-import com.fincore.BankingManagement.BankingServices.dto.TransferResponse;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.dto.TransferRequest;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.dto.TransferResponse;
 import org.springframework.http.ResponseEntity;
 
 import javax.security.auth.login.AccountNotFoundException;

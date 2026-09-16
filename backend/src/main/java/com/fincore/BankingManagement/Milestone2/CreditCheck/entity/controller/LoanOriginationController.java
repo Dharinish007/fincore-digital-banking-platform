@@ -1,11 +1,11 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity.controller;
 
-import com.fincore.BankingManagement.LoanOrigination.entity.ApplicationStatus;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.ApplicationStatus;
 
-import com.fincore.BankingManagement.LoanOrigination.entity.LoanOrigination;
-import com.fincore.BankingManagement.LoanOrigination.entity.dto.LoanApplicationRequest;
-import com.fincore.BankingManagement.LoanOrigination.entity.dto.LoanApplicationResponse;
-import com.fincore.BankingManagement.LoanOrigination.entity.service.LoanOriginationService;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanOrigination;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto.LoanApplicationRequest;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto.LoanApplicationResponse;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.service.LoanOriginationService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;

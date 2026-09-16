@@ -1,9 +1,9 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Repository;
 
-import com.fincore.BankingManagement.LoanOrigination.entity.ApplicationStatus;
-import com.fincore.BankingManagement.LoanOrigination.entity.LoanType;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.ApplicationStatus;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanType;
 
-import com.fincore.BankingManagement.LoanOrigination.entity.LoanOrigination;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanOrigination;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

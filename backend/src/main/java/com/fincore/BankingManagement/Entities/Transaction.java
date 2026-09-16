@@ -1,5 +1,5 @@
 package com.fincore.BankingManagement.Entities;
-import com.fincore.BankingManagement.BankingServices.Enums.TransactionType;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.Enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

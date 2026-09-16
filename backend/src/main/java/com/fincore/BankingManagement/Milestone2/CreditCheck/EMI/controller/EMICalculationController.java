@@ -1,8 +1,8 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.controller;
 
-import com.fincore.BankingManagement.EMI.dto.EMICalculationRequest;
-import com.fincore.BankingManagement.EMI.dto.EMICalculationResponse;
-import com.fincore.BankingManagement.EMI.service.EMICalculationService;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.dto.EMICalculationRequest;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.dto.EMICalculationResponse;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.EMI.service.EMICalculationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
