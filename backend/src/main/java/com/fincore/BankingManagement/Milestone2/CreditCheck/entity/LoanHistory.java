@@ -1,5 +1,6 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity;
 
+import com.fincore.BankingManagement.Entities.Customer;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;

@@ -1,18 +1,14 @@
 package com.fincore.BankingManagement.Milestone3.fraudcheck.service;
-
 import java.time.LocalDateTime;
 import java.util.Optional;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fincore.BankingManagement.Milestone3.fraudcheck.Repository.FraudCheckRepository;
 import com.fincore.BankingManagement.Milestone3.fraudcheck.enums.FraudStatus;
 import com.fincore.BankingManagement.Milestone3.fraudcheck.models.FraudCheck;
 import com.fincore.BankingManagement.Milestone3.paymentinitiation.enums.PaymentStatus;
 import com.fincore.BankingManagement.Milestone3.paymentinitiation.entity.Payment;
 import com.fincore.BankingManagement.Milestone3.paymentinitiation.Repository.PaymentRepository;
-
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 @Service
 public class FraudCheckService {
 

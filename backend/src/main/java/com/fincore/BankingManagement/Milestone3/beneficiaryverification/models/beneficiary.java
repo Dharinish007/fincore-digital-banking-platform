@@ -1,8 +1,8 @@
 package com.fincore.BankingManagement.Milestone3.beneficiaryverification.models;
-
+import com.fincore.BankingManagement.Entities.Customer;
 import com.fincore.BankingManagement.Milestone3.beneficiaryverification.enums.Beneficiary_type;
 import com.fincore.BankingManagement.Milestone3.beneficiaryverification.enums.Status;
-import com.fincore.BankingManagement.Entities.Customer;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

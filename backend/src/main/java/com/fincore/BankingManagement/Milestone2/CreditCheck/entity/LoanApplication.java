@@ -1,5 +1,6 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity;
 
+import com.fincore.BankingManagement.Entities.Customer;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.enums.ApplicationStatus;
 import jakarta.persistence.*;
 

@@ -1,5 +1,6 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.Service;
 
+import com.fincore.BankingManagement.Entities.Customer;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.CreditCheckRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.CreditCheckCustomerRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.LoanApplicationRepository;
@@ -9,7 +10,6 @@ import com.fincore.BankingManagement.Milestone2.CreditCheck.dto.CreditCheckRespo
 import com.fincore.BankingManagement.Milestone2.CreditCheck.dto.CustomerLookupResponse;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.dto.PreviousLoanResponse;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.CreditCheck;
-import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Customer;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanApplication;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanHistory;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.enums.ApplicationStatus;

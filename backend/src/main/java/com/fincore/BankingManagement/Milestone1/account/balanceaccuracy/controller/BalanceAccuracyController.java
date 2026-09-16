@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.Milestone1.account.balanceaccuracy.controller;
 
-import com.fincore.BankingManagement.Milestone1.account.BankingServices.repository.TransactionRepository.AccountRepositery.AccountRepository;
 import com.fincore.BankingManagement.Entities.Customer;
+import com.fincore.BankingManagement.Milestone1.account.BankingServices.repository.TransactionRepository.AccountRepositery.AccountRepository;
 import com.fincore.BankingManagement.Milestone1.account.BankingServices.Enums.AccountStatus;
 import com.fincore.BankingManagement.Entities.Account;
 import com.fincore.BankingManagement.Milestone1.account.balanceaccuracy.service.BalanceAccuracyService;

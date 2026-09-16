@@ -1,18 +1,15 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.entity.service;
 
-import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Customer;
+import com.fincore.BankingManagement.Entities.Customer;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.CreditCheckCustomerRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.ApplicationStatus;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanOrigination;
-
-import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Repository.CreditCheckCustomerRepo;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Repository.LoanOriginationRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto.LoanApplicationRequest;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto.LoanApplicationResponse;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -26,7 +23,7 @@ public class LoanOriginationService {
 
         private final LoanProductService loanProductService;
 
-        private final CreditCheckCustomerRepo customerRepository;
+        private final CreditCheckCustomerRepository customerRepository;
 
         @Transactional
         public LoanOrigination createLoanApplication(
