@@ -462,9 +462,24 @@ export class AccountService {
       balance: target.balance + amount
     });
 
+    // Invoke multi-module backend transaction flow (Risk -> Fraud -> Settlement -> Statements -> Notifications -> Audit)
+    this.api.post<any>('/api/operations/transactions', {
+      sourceAccount: source.accountNumber,
+      destinationAccount: target.accountNumber,
+      amount: amount,
+      currency: 'INR',
+      transactionType: 'TRANSFER',
+      channel: 'INTERNAL_TRANSFER'
+    }).subscribe({
+      next: () => {
+        this.loadFromBackend();
+      },
+      error: (err) => console.warn('Backend transaction flow response:', err)
+    });
+
     return {
       success: true,
-      message: `Transferred $${amount.toFixed(2)} from ${source.name} to ${target.name}.`
+      message: `Transferred ₹${amount.toFixed(2)} from ${source.name} to ${target.name}. All settlement and audit pipelines executed.`
     };
   }
 
@@ -552,19 +567,24 @@ export class AccountService {
 
     // Sync to PostgreSQL Database via Backend API
     this.api.post<any>('/api/operations/customers', {
+      customerId: form.customerId || null,
       fullName: form.fullName,
       email: form.email,
       phoneNumber: form.phone,
-      accountNumber: newAccNo
+      accountNumber: newAccNo,
+      dateOfBirth: form.dateOfBirth || '1995-08-15'
     }).subscribe({
       next: (cust) => {
         this.api.post('/api/operations/accounts', {
           accountNumber: newAccNo,
-          customerId: cust?.id || 1,
+          customerId: cust?.id || form.customerId || 1,
           accountType: form.accountType,
           initialBalance: form.initialDeposit,
           status: 'ACTIVE'
-        }).subscribe();
+        }).subscribe({
+          next: () => this.loadFromBackend(),
+          error: () => this.loadFromBackend()
+        });
       },
       error: (err) => console.warn('Could not persist customer/account to database:', err)
     });

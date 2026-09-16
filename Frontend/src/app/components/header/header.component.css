@@ -69,6 +69,45 @@
   font-weight: 600;
 }
 
+.role-header-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1.5px solid #3b82f6;
+  padding: 4px 12px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.role-text {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.account-pill-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.acc-lbl {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #94a3b8;
+}
+
+.acc-no {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
 .system-node-badge {
   display: flex;
   align-items: center;
@@ -84,7 +123,7 @@
   height: 8px;
   background-color: #4ade80;
   border-radius: 50%;
-  box-shadow: 0 0 8px #4ade80;
+  box-shadow: 0 0 8px currentColor;
   animation: pulse 2s infinite;
 }
 

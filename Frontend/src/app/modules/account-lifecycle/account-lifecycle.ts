@@ -271,16 +271,26 @@ import { AccountStatus, OnboardingForm, MonthlyBalancePoint } from '../../models
             <!-- Step 1: Personal Details -->
             <div *ngIf="step() === 1" class="step-content">
               <div class="f-group">
-                <label>Full Legal Name</label>
+                <label>Full Legal Name *</label>
                 <input type="text" [(ngModel)]="form.fullName" placeholder="e.g. Eleanor Vance" class="f-input" />
               </div>
               <div class="f-grid-2">
                 <div class="f-group">
-                  <label>Email Address</label>
+                  <label>Date of Birth (DOB) *</label>
+                  <input type="date" [(ngModel)]="form.dateOfBirth" class="f-input" />
+                </div>
+                <div class="f-group">
+                  <label>Customer ID (Optional)</label>
+                  <input type="number" [(ngModel)]="form.customerId" placeholder="Auto-generated" class="f-input" />
+                </div>
+              </div>
+              <div class="f-grid-2">
+                <div class="f-group">
+                  <label>Email Address *</label>
                   <input type="email" [(ngModel)]="form.email" placeholder="eleanor@example.com" class="f-input" />
                 </div>
                 <div class="f-group">
-                  <label>Phone Number</label>
+                  <label>Phone Number *</label>
                   <input type="text" [(ngModel)]="form.phone" placeholder="+1 (555) 000-1122" class="f-input" />
                 </div>
               </div>
@@ -572,6 +582,7 @@ export class AccountLifecycleComponent {
     phone: '',
     ssn: '',
     address: '',
+    dateOfBirth: '1995-08-15',
     accountType: 'SAVINGS',
     initialDeposit: 500,
     overdraftOptIn: true,

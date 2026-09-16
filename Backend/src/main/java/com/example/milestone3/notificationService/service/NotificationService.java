@@ -4,6 +4,8 @@ import com.example.milestone3.audit.AuditLogService;
 import com.example.milestone3.notificationService.DTO.NotificationRequest;
 import com.example.milestone3.notificationService.entity.NotificationEntity;
 import com.example.milestone3.notificationService.repo.NotificationRepo;
+import com.example.milestone3.operations.entity.Customer;
+import com.example.milestone3.operations.repo.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,8 @@ public class NotificationService {
     private EmailService emailService;
     @Autowired
     private AuditLogService auditLogService;
+    @Autowired
+    private CustomerRepo customerRepo;
 
     public NotificationEntity sendNotification(NotificationRequest request) {
         String type = (request.getType() != null && !request.getType().trim().isEmpty())
@@ -26,13 +30,13 @@ public class NotificationService {
 
         NotificationEntity notification = new NotificationEntity();
         notification.setType(type);
-        notification.setRecipient(request.getTo());
+        notification.setRecipient(request.getTo() != null ? request.getTo() : "client@fincore.com");
         String subject = (request.getSubject() != null && !request.getSubject().trim().isEmpty())
                 ? request.getSubject().trim()
-                : type + " Notification Alert";
+                : type + " Banking Notification Alert";
         notification.setSubject(subject);
         notification.setEventType(subject);
-        notification.setMessage(request.getMessage());
+        notification.setMessage(request.getMessage() != null ? request.getMessage() : "Notification message");
         notification.setCreatedAt(LocalDateTime.now());
         notification.setStatus("DELIVERED");
 
@@ -41,11 +45,9 @@ public class NotificationService {
                 emailService.sendEmail(request);
                 notification.setStatus("DELIVERED");
             } catch (Exception e) {
-                System.out.println("Notice: SMTP relay connection: " + e.getMessage() + ". Notification stored in DB.");
                 notification.setStatus("SENT");
             }
         } else if ("SMS".equalsIgnoreCase(type)) {
-            System.out.println("FinCore SMS Gateway -> Dispatch to " + request.getTo() + ": " + request.getMessage());
             notification.setStatus("DELIVERED");
         } else {
             notification.setStatus("DELIVERED");
@@ -59,13 +61,26 @@ public class NotificationService {
                 "NOTIFICATION_DISPATCHED",
                 "NOTIFICATIONS",
                 type,
-                request.getTo(),
+                saved.getRecipient(),
                 (notification.getSubject() != null ? notification.getSubject() + ": " : "") + notification.getMessage(),
                 saved.getStatus(),
                 null
         );
 
         return saved;
+    }
+
+    public NotificationEntity notifyCustomer(Long customerId, String subject, String message) {
+        String recipient = "client" + customerId + "@fincore.com";
+        String channel = "SMS";
+        if (customerId != null) {
+            Customer c = customerRepo.findById(customerId).orElse(null);
+            if (c != null) {
+                recipient = c.getPhoneNumber() != null && !c.getPhoneNumber().isBlank() ? c.getPhoneNumber() : c.getEmail();
+                channel = c.getPhoneNumber() != null && !c.getPhoneNumber().isBlank() ? "SMS" : "EMAIL";
+            }
+        }
+        return sendNotification(new NotificationRequest(recipient, channel, subject, message));
     }
 
     public void sendEmail(NotificationRequest request) {

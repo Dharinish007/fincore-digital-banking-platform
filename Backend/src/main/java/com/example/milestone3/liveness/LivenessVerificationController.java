@@ -16,10 +16,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.milestone3.operations.repo.CustomerRepo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
+import org.springframework.http.HttpStatus;
+
+import com.example.milestone3.notificationService.service.NotificationService;
+import com.example.milestone3.operations.entity.Account;
+import com.example.milestone3.operations.repo.AccountRepo;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -27,17 +34,28 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class LivenessVerificationController {
     private final LivenessVerificationRepo repository;
+    private final CustomerRepo customerRepository;
     private final AuditLogService auditLogService;
+    private final NotificationService notificationService;
+    private final AccountRepo accountRepo;
 
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<LivenessVerification>> getCustomerVerifications(@PathVariable Long customerId) {
+    public ResponseEntity<?> getCustomerVerifications(@PathVariable Long customerId) {
+        if (!customerRepository.existsById(customerId)) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found", "message", "User with Customer ID #" + customerId + " not found in database."));
+        }
         return ResponseEntity.ok(repository.findByCustomerIdOrderByCreatedAtDesc(customerId));
     }
 
-        @PostMapping("/start")
-        public ResponseEntity<LivenessVerification> start(@Valid @RequestBody StartLivenessRequest request,
-                                                          HttpServletRequest httpRequest) {
-            String clientIp = httpRequest.getRemoteAddr();
+    @PostMapping("/start")
+    public ResponseEntity<?> start(@Valid @RequestBody StartLivenessRequest request,
+                                   HttpServletRequest httpRequest) {
+        String clientIp = httpRequest.getRemoteAddr();
+        if (!customerRepository.existsById(request.customerId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found", "message", "User with Customer ID #" + request.customerId() + " not found in database."));
+        }
         LivenessVerification verification = new LivenessVerification(
             null, request.customerId(), "VER-" + UUID.randomUUID(), "PENDING", null,
                     "LIVENESS_CHECK", clientIp, null, null, LocalDateTime.now());
@@ -45,12 +63,16 @@ public class LivenessVerificationController {
         auditLogService.record("CUSTOMER", "LIVENESS_STARTED", "LIVENESS_VERIFICATION",
             saved.getId().toString(), "Verification session started", clientIp);
         return ResponseEntity.ok(saved);
-        }
+    }
 
     @PostMapping("/verify")
-    public ResponseEntity<LivenessVerification> verify(@Valid @RequestBody LivenessRequest request,
-                                                       HttpServletRequest httpRequest) {
+    public ResponseEntity<?> verify(@Valid @RequestBody LivenessRequest request,
+                                    HttpServletRequest httpRequest) {
         String clientIp = httpRequest.getRemoteAddr();
+        if (!customerRepository.existsById(request.customerId())) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found", "message", "User with Customer ID #" + request.customerId() + " not found in database."));
+        }
         boolean passed = request.confidenceScore().compareTo(new BigDecimal("80")) >= 0;
         LivenessVerification verification = request.verificationId() == null
             ? new LivenessVerification(null, request.customerId(), "VER-" + UUID.randomUUID(),
@@ -67,6 +89,30 @@ public class LivenessVerificationController {
         verification.setFailureReason(passed ? null : "Liveness confidence is below the verification threshold");
         verification.setVerifiedAt(passed ? LocalDateTime.now() : null);
         LivenessVerification saved = repository.save(verification);
+
+        if (passed) {
+            // Activate any pending accounts
+            List<Account> customerAccounts = accountRepo.findByCustomerId(request.customerId());
+            for (Account acc : customerAccounts) {
+                if ("PENDING_VERIFICATION".equalsIgnoreCase(acc.getStatus()) || "PENDING".equalsIgnoreCase(acc.getStatus())) {
+                    acc.setStatus("ACTIVE");
+                    accountRepo.save(acc);
+                }
+            }
+
+            notificationService.notifyCustomer(
+                    request.customerId(),
+                    "Biometric Liveness Verified",
+                    "Success! Biometric liveness check passed (" + request.confidenceScore() + "% confidence). Your accounts are now fully active."
+            );
+        } else {
+            notificationService.notifyCustomer(
+                    request.customerId(),
+                    "Liveness Verification Failed",
+                    "Security Notice: Biometric liveness verification fell below threshold (" + request.confidenceScore() + "%). Please retry."
+            );
+        }
+
         auditLogService.record(
                 "CUSTOMER",
                 passed ? "LIVENESS_VERIFICATION_PASSED" : "LIVENESS_VERIFICATION_FAILED",

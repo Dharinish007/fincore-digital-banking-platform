@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AdminAuthService } from '../../services/admin-auth.service';
+import { AdminAuthService, UserRole } from '../../services/admin-auth.service';
 
 @Component({
   selector: 'app-admin-login',
@@ -22,7 +22,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
             <span class="logo-text-fc">FC</span>
           </div>
           <h1 class="brand-title">FinCore <span class="highlight">Banking</span></h1>
-          <p class="brand-subtitle">Integrated Digital Banking & Enterprise Suite</p>
+          <p class="brand-subtitle">Unified Multi-Role Digital Banking Platform</p>
         </div>
 
         <!-- Auth Mode Toggle Tabs -->
@@ -66,7 +66,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
         <!-- ================= SIGN IN FORM ================= -->
         <form *ngIf="authMode() === 'LOGIN'" (ngSubmit)="onLoginSubmit()" class="login-form">
           <div class="form-group">
-            <label for="username">Username or Corporate Email</label>
+            <label for="username">Username, Email or Account ID</label>
             <div class="input-icon-wrapper">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -77,7 +77,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
                 id="username" 
                 [(ngModel)]="loginIdentifier" 
                 name="loginIdentifier" 
-                placeholder="e.g. admin1 or alex@fincore.com"
+                placeholder="e.g. customer1, admin1, staff1, loan1, fraud1, auditor1"
                 required
               />
             </div>
@@ -86,7 +86,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
           <div class="form-group">
             <div class="label-row">
               <label for="password">Password</label>
-              <span class="hint-pwd">Demo: admin123</span>
+              <span class="hint-pwd">Demo: admin123 / customer123</span>
             </div>
             <div class="input-icon-wrapper">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -115,17 +115,62 @@ import { AdminAuthService } from '../../services/admin-auth.service';
             </svg>
           </button>
 
-          <!-- 1-Click Demo Profiles -->
+          <!-- 1-Click Demo Profiles for All 6 Roles -->
           <div class="quick-demo-section">
-            <span class="quick-label">⚡ Quick 1-Click Demo Access:</span>
+            <span class="quick-label">⚡ 1-Click Role Access (Select Role):</span>
             <div class="demo-pills">
-              <button type="button" class="demo-pill" (click)="authService.quickLogin('admin1')">
-                <span class="pill-avatar">AV</span>
-                <span class="pill-text"><strong>Alex Vance</strong> (Auditor)</span>
+              <!-- 1. CUSTOMER -->
+              <button type="button" class="demo-pill pill-cust" (click)="authService.quickLoginRole('CUSTOMER')">
+                <span class="pill-avatar cust-bg">JS</span>
+                <div class="pill-text">
+                  <strong>John Smith</strong>
+                  <span class="role-sub">CUSTOMER</span>
+                </div>
               </button>
-              <button type="button" class="demo-pill" (click)="authService.quickLogin('admin2')">
-                <span class="pill-avatar">SC</span>
-                <span class="pill-text"><strong>Sarah Connor</strong> (Risk Dir.)</span>
+
+              <!-- 2. ADMIN -->
+              <button type="button" class="demo-pill pill-adm" (click)="authService.quickLoginRole('ADMIN')">
+                <span class="pill-avatar adm-bg">AV</span>
+                <div class="pill-text">
+                  <strong>Alex Vance</strong>
+                  <span class="role-sub">ADMIN</span>
+                </div>
+              </button>
+
+              <!-- 3. BANK STAFF -->
+              <button type="button" class="demo-pill pill-stf" (click)="authService.quickLoginRole('BANK_STAFF')">
+                <span class="pill-avatar stf-bg">PV</span>
+                <div class="pill-text">
+                  <strong>Pooja Verma</strong>
+                  <span class="role-sub">BANK STAFF</span>
+                </div>
+              </button>
+
+              <!-- 4. LOAN OFFICER -->
+              <button type="button" class="demo-pill pill-loan" (click)="authService.quickLoginRole('LOAN_OFFICER')">
+                <span class="pill-avatar loan-bg">DM</span>
+                <div class="pill-text">
+                  <strong>David Miller</strong>
+                  <span class="role-sub">LOAN OFFICER</span>
+                </div>
+              </button>
+
+              <!-- 5. FRAUD OFFICER -->
+              <button type="button" class="demo-pill pill-frd" (click)="authService.quickLoginRole('FRAUD_OFFICER')">
+                <span class="pill-avatar frd-bg">ER</span>
+                <div class="pill-text">
+                  <strong>Elena Rostova</strong>
+                  <span class="role-sub">FRAUD OFFICER</span>
+                </div>
+              </button>
+
+              <!-- 6. AUDITOR -->
+              <button type="button" class="demo-pill pill-aud" (click)="authService.quickLoginRole('AUDITOR')">
+                <span class="pill-avatar aud-bg">MT</span>
+                <div class="pill-text">
+                  <strong>Marcus Thorne</strong>
+                  <span class="role-sub">AUDITOR</span>
+                </div>
               </button>
             </div>
           </div>
@@ -134,7 +179,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
         <!-- ================= SIGN UP FORM ================= -->
         <form *ngIf="authMode() === 'SIGNUP'" (ngSubmit)="onSignupSubmit()" class="login-form">
           <div class="form-group">
-            <label for="fullName">Full Name</label>
+            <label for="fullName">Full Legal Name</label>
             <div class="input-icon-wrapper">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -152,7 +197,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
           </div>
 
           <div class="form-group">
-            <label for="corporateEmail">Corporate Email</label>
+            <label for="corporateEmail">Email Address</label>
             <div class="input-icon-wrapper">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
@@ -163,7 +208,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
                 id="corporateEmail" 
                 [(ngModel)]="signupEmail" 
                 name="signupEmail" 
-                placeholder="e.g. v.rao@fincore.com"
+                placeholder="e.g. v.rao@example.com"
                 required
               />
             </div>
@@ -183,12 +228,14 @@ import { AdminAuthService } from '../../services/admin-auth.service';
             </div>
 
             <div class="form-group" style="flex: 1;">
-              <label for="signupRole">Department Role</label>
+              <label for="signupRole">User Role</label>
               <select id="signupRole" [(ngModel)]="signupRole" name="signupRole" class="form-select-plain">
-                <option value="Senior Banking Officer">Banking Officer</option>
-                <option value="Compliance & Risk Director">Risk & Compliance</option>
-                <option value="Senior Banking Auditor">Audit Inspector</option>
-                <option value="Branch Operations Specialist">Branch Operations</option>
+                <option value="CUSTOMER">Customer (Retail Banking)</option>
+                <option value="ADMIN">Administrator (Full Access)</option>
+                <option value="BANK_STAFF">Bank Staff (Operations)</option>
+                <option value="LOAN_OFFICER">Loan Officer (Credit)</option>
+                <option value="FRAUD_OFFICER">Fraud Officer (Risk/AML)</option>
+                <option value="AUDITOR">Auditor (Compliance/Read-Only)</option>
               </select>
             </div>
           </div>
@@ -226,7 +273,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
         </form>
 
         <div class="card-footer">
-          <span class="security-lock">🔒 FinCore FinSec 256-Bit TLS Encryption Active</span>
+          <span class="security-lock">🔒 FinCore FinSec RBAC 256-Bit TLS Active</span>
         </div>
 
       </div>
@@ -243,12 +290,12 @@ import { AdminAuthService } from '../../services/admin-auth.service';
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
     }
     .login-card {
-      background: rgba(30, 41, 59, 0.9);
-      backdrop-filter: blur(18px);
+      background: rgba(30, 41, 59, 0.95);
+      backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 20px;
       width: 100%;
-      max-width: 460px;
+      max-width: 520px;
       padding: 2.25rem;
       box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 40px rgba(59, 130, 246, 0.15);
       color: #f8fafc;
@@ -450,7 +497,7 @@ import { AdminAuthService } from '../../services/admin-auth.service';
       box-shadow: 0 6px 20px rgba(5, 150, 105, 0.6);
     }
 
-    /* Demo Access Pills */
+    /* Demo Access Pills for 6 Roles */
     .quick-demo-section {
       margin-top: 0.75rem;
       padding-top: 1rem;
@@ -468,8 +515,11 @@ import { AdminAuthService } from '../../services/admin-auth.service';
     }
     .demo-pills {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 8px;
+    }
+    @media (max-width: 500px) {
+      .demo-pills { grid-template-columns: 1fr 1fr; }
     }
     .demo-pill {
       background: #0f172a;
@@ -488,21 +538,36 @@ import { AdminAuthService } from '../../services/admin-auth.service';
       border-color: #38bdf8;
       background: #1e293b;
       color: #ffffff;
+      transform: translateY(-1px);
     }
     .pill-avatar {
       width: 24px;
       height: 24px;
       border-radius: 50%;
-      background: #2563eb;
       color: #ffffff;
       font-size: 0.65rem;
       font-weight: 800;
       display: grid;
       place-items: center;
+      flex-shrink: 0;
     }
+    .cust-bg { background: #0284c7; }
+    .adm-bg { background: #8b5cf6; }
+    .stf-bg { background: #6366f1; }
+    .loan-bg { background: #10b981; }
+    .frd-bg { background: #f59e0b; }
+    .aud-bg { background: #06b6d4; }
+
     .pill-text {
       font-size: 0.72rem;
       line-height: 1.2;
+      display: flex;
+      flex-direction: column;
+    }
+    .role-sub {
+      font-size: 0.62rem;
+      color: #94a3b8;
+      font-weight: 700;
     }
     .card-footer {
       margin-top: 1.5rem;
@@ -530,7 +595,7 @@ export class AdminLoginComponent {
   signupName = '';
   signupEmail = '';
   signupPhone = '';
-  signupRole = 'Senior Banking Officer';
+  signupRole: UserRole = 'CUSTOMER';
   signupPassword = '';
   showSignupPassword = signal<boolean>(false);
 

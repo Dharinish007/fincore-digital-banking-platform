@@ -41,17 +41,27 @@ public class PasscodeController {
         String clientIp = httpRequest.getRemoteAddr();
         LocalDateTime now = LocalDateTime.now();
         Customer customer = customerRepository.findById(request.customerId()).orElse(null);
-        boolean matchesDateOfBirth = customer != null
-                && customer.getDateOfBirth() != null
-                && customer.getDateOfBirth().format(DOB_FORMAT).equals(request.passcode());
+        if (customer == null) {
+            recordAudit("PASSCODE_VERIFICATION_NOT_FOUND", request, clientIp);
+            return org.springframework.http.ResponseEntity.status(org.springframework.http.HttpStatus.NOT_FOUND)
+                    .body(result(false, "User with Customer ID #" + request.customerId() + " not found in database.", null));
+        }
+
+        if (customer.getDateOfBirth() == null) {
+            LivenessVerification saved = saveLivenessResult(request, "FAILED", "Customer does not have a registered date of birth.", now, clientIp);
+            recordAudit("PASSCODE_VERIFICATION_NO_DOB", request, clientIp);
+            return ResponseEntity.ok(result(false, "Customer does not have a registered date of birth in database.", saved));
+        }
+
+        boolean matchesDateOfBirth = customer.getDateOfBirth().format(DOB_FORMAT).equals(request.passcode());
         if (matchesDateOfBirth) {
             LivenessVerification saved = saveLivenessResult(request, "VERIFIED", null, now, clientIp);
             recordAudit("PASSCODE_VERIFICATION_SUCCESS", request, clientIp);
-            return ResponseEntity.ok(result(true, "Date of birth verified.", saved));
+            return ResponseEntity.ok(result(true, "Date of birth verified successfully for " + customer.getFullName() + ".", saved));
         }
         LivenessVerification saved = saveLivenessResult(request, "FAILED", "Date of birth did not match.", now, clientIp);
         recordAudit("PASSCODE_VERIFICATION_FAILED", request, clientIp);
-        return ResponseEntity.ok(result(false, "Date of birth did not match.", saved));
+        return ResponseEntity.ok(result(false, "Date of birth did not match registered customer record.", saved));
     }
 
     private LivenessVerification saveLivenessResult(PasscodeRequest request, String status, String reason,

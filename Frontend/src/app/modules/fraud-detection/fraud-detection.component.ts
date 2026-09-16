@@ -76,8 +76,33 @@ export class FraudDetectionComponent implements OnInit {
   toastType: 'success' | 'danger' | 'info' = 'info';
   showRulesModal: boolean = false;
 
+  customers: any[] = [];
+
   ngOnInit(): void {
+    this.loadCustomers();
     this.loadRecentFraudActivities();
+  }
+
+  loadCustomers(): void {
+    this.api.get<any[]>('/api/operations/customers').subscribe({
+      next: (custs) => {
+        if (custs && custs.length > 0) {
+          this.customers = custs;
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  onCustomerSelect(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    const custId = Number(target.value);
+    if (!custId) return;
+    const found = this.customers.find(c => c.id === custId);
+    if (found) {
+      this.inputCustomerId = found.id;
+      this.inputCustomerName = found.fullName || found.name || `Customer #${found.id}`;
+    }
   }
 
   /**

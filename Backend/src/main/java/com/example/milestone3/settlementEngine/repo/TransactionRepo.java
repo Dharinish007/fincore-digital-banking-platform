@@ -10,15 +10,16 @@ import java.util.List;
 
 public interface TransactionRepo extends JpaRepository<Transaction,Long> {
     List<Transaction> findTop5ByOrderByCreatedAtDescIdDesc();
+    List<Transaction> findAllByOrderByCreatedAtDescIdDesc();
 
     @Query("""
         SELECT COUNT(t)
         FROM Transaction t
-        WHERE t.loanId IN (
+        WHERE (t.customerId = :userId OR (t.loanId IS NOT NULL AND t.loanId IN (
             SELECT l.id
             FROM Loan l
             WHERE l.customerId = :userId
-        )
+        )))
         AND t.createdAt >= :time
     """)
     long countRecentTransactions(
@@ -28,17 +29,16 @@ public interface TransactionRepo extends JpaRepository<Transaction,Long> {
 
     /**
      * Retrieves the full transaction history for a customer (transactions
-     * belonging to any loan owned by the customer). Used by the Risk
-     * Assessment module to give the AI model additional transaction context.
+     * directly assigned to customerId or belonging to any loan owned by the customer).
      */
     @Query("""
         SELECT t
         FROM Transaction t
-        WHERE t.loanId IN (
+        WHERE (t.customerId = :userId OR (t.loanId IS NOT NULL AND t.loanId IN (
             SELECT l.id
             FROM Loan l
             WHERE l.customerId = :userId
-        )
+        )))
         ORDER BY t.createdAt DESC, t.id DESC
     """)
     List<Transaction> findTransactionsByCustomerId(@Param("userId") Long userId);

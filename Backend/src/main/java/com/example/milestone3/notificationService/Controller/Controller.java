@@ -45,4 +45,9 @@ public class Controller {
     public List<NotificationEntity> history(@RequestParam(required = false) String recipient) {
         return notificationService.getHistory(recipient);
     }
+
+    @GetMapping("/customer/{customerId}")
+    public List<NotificationEntity> customerNotifications(@PathVariable Long customerId) {
+        return notificationService.getAllNotifications();
+    }
 }

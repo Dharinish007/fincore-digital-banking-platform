@@ -71,6 +71,18 @@ export class AccountsLedgerComponent implements OnInit {
     this.selectedAccount = acc;
   }
 
+  get activeSavingsAccountsCount(): number {
+    return this.accounts.filter(a => a.status.toLowerCase() === 'active').length;
+  }
+
+  get totalAccountsCount(): number {
+    return this.accounts.length;
+  }
+
+  get totalBalanceSum(): number {
+    return this.accounts.reduce((sum, a) => sum + (a.balance || 0), 0);
+  }
+
   toggleAccountFreeze(): void {
     this.selectedAccount.status = this.selectedAccount.status === 'Active' ? 'Frozen' : 'Active';
     const found = this.accounts.find(a => a.accNo === this.selectedAccount.accNo);

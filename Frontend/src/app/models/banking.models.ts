@@ -142,6 +142,8 @@ export interface OnboardingForm {
   phone: string;
   ssn: string;
   address: string;
+  dateOfBirth?: string;
+  customerId?: number;
   accountType: AccountType;
   initialDeposit: number;
   overdraftOptIn: boolean;

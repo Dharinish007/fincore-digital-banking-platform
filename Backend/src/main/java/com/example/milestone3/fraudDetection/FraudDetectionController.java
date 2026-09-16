@@ -6,15 +6,10 @@ import com.example.milestone3.settlementEngine.repo.TransactionRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -44,7 +39,6 @@ public class FraudDetectionController {
     public ResponseEntity<List<Transaction>> getAllTransactions() {
         return ResponseEntity.ok(transactionRepository.findAll());
     }
-
 
     @PostMapping("/check/{transactionId}")
     public ResponseEntity<FraudDetectionService.FraudResult> checkTransaction(
@@ -78,5 +72,34 @@ public class FraudDetectionController {
         FraudDetectionService.FraudEvaluationResponse response =
                 fraudDetectionService.evaluateAndSave(request);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/decision/approve/{transactionId}")
+    public ResponseEntity<?> approveHold(@PathVariable Long transactionId) {
+        Transaction txn = fraudDetectionService.approveHold(transactionId);
+        return ResponseEntity.ok(Map.of(
+                "message", "Transaction #" + txn.getTransactionReference() + " approved and settled successfully.",
+                "transaction", txn
+        ));
+    }
+
+    @PostMapping("/decision/block/{transactionId}")
+    public ResponseEntity<?> blockHold(@PathVariable Long transactionId, @RequestBody(required = false) Map<String, String> body) {
+        String reason = body != null ? body.get("reason") : "Blocked by Fraud Officer";
+        Transaction txn = fraudDetectionService.blockHold(transactionId, reason);
+        return ResponseEntity.ok(Map.of(
+                "message", "Transaction #" + txn.getTransactionReference() + " has been blocked.",
+                "transaction", txn
+        ));
+    }
+
+    @PostMapping("/decision/escalate/{transactionId}")
+    public ResponseEntity<?> escalateCase(@PathVariable Long transactionId, @RequestBody(required = false) Map<String, String> body) {
+        String reason = body != null ? body.get("reason") : "Escalated to AML Level 3";
+        Transaction txn = fraudDetectionService.escalateCase(transactionId, reason);
+        return ResponseEntity.ok(Map.of(
+                "message", "Transaction #" + txn.getTransactionReference() + " escalated to Level-3 AML team.",
+                "transaction", txn
+        ));
     }
 }

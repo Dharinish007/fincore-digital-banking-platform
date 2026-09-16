@@ -72,7 +72,19 @@
     </div>
 
     <!-- Row 1: Customer Details -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Select Registered Customer (DB):
+        </label>
+        <select (change)="onCustomerSelect($event)" class="form-select" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff;">
+          <option value="">-- Choose Customer --</option>
+          @for (cust of customers; track cust.id) {
+            <option [value]="cust.id">{{ cust.fullName || cust.name }} (ID: #{{ cust.id }})</option>
+          }
+        </select>
+      </div>
+
       <div class="form-group">
         <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
           Customer Full Name:

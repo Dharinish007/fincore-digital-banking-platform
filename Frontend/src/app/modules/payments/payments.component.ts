@@ -111,6 +111,19 @@ export class PaymentsComponent implements OnInit {
       error: (err) => console.warn('Payment debit sync fallback:', err)
     });
 
+    // Persist Transaction entity in database
+    this.api.post('/api/operations/transactions', {
+      customerId: 1,
+      amount: this.newAmount,
+      type: this.newChannel.includes('IMPS') ? 'IMPS' : (this.newChannel.includes('NEFT') ? 'NEFT' : 'FUND_TRANSFER'),
+      status: 'SUCCESS',
+      transactionReference: newTxId,
+      description: `Payment to ${this.newRecipient}`
+    }).subscribe({
+      next: () => this.loadPaymentsFromDatabase(),
+      error: (err) => console.warn('Transaction DB persist fallback:', err)
+    });
+
     // Record in Audit Trail
     this.api.post('/api/audit', {
       username: 'SYSTEM_OPERATOR',

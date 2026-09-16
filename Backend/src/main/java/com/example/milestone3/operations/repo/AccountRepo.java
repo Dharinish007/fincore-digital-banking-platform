@@ -9,4 +9,8 @@ public interface AccountRepo extends JpaRepository<Account, Long> {
     Optional<Account> findByAccountNumber(String accountNumber);
 
     List<Account> findByCustomerId(Long customerId);
+
+    List<Account> findAllByOrderByIdAsc();
+
+    List<Account> findAllByOrderByIdDesc();
 }

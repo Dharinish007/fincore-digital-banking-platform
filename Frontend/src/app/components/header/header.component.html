@@ -11,13 +11,24 @@
       </div>
       <div class="brand-text-block">
         <span class="brand-name">FinCore <span class="brand-highlight">Banking</span></span>
-        <span class="brand-tagline">Integrated Platform</span>
+        <span class="brand-tagline">Integrated RBAC Platform</span>
       </div>
     </a>
 
-    <div class="system-node-badge">
-      <span class="pulse-dot"></span>
-      <span class="node-text">PROD-CLUSTER | RUNNING</span>
+    <!-- Role Indicator Badge -->
+    <div class="role-header-pill" [style.borderColor]="authService.getRoleBadgeColor()" [style.backgroundColor]="authService.getRoleBadgeColor() + '20'">
+      <span class="pulse-dot" [style.backgroundColor]="authService.getRoleBadgeColor()"></span>
+      <span class="role-text" [style.color]="authService.getRoleBadgeColor()">{{ authService.activeRole().replace('_', ' ') }} PORTAL</span>
+    </div>
+
+    <div class="system-node-badge" *ngIf="!authService.isCustomer()">
+      <span class="node-text">PROD-CLUSTER | CONNECTED</span>
+    </div>
+
+    <!-- Active Customer Account Pill -->
+    <div class="account-pill-header" *ngIf="authService.isCustomer() && authService.currentAdmin()?.accountNumber">
+      <span class="acc-lbl">ACCOUNT:</span>
+      <span class="acc-no font-mono">{{ accountService.maskAccountNumber(authService.currentAdmin()!.accountNumber!) }}</span>
     </div>
   </div>
 
@@ -45,10 +56,10 @@
 
     <!-- User Profile Session Pill with Sign Out Button -->
     <div class="user-session-card">
-      <div class="user-avatar">{{ authService.currentAdmin()?.avatar || 'FC' }}</div>
+      <div class="user-avatar" [style.backgroundColor]="authService.getRoleBadgeColor()">{{ authService.currentAdmin()?.avatar || 'FC' }}</div>
       <div class="user-meta">
         <span class="user-name">{{ authService.currentAdmin()?.name || 'Administrator' }}</span>
-        <span class="user-role">{{ authService.currentAdmin()?.role || 'Full Access' }}</span>
+        <span class="user-role" [style.color]="authService.getRoleBadgeColor()">{{ authService.currentAdmin()?.roleTitle || authService.activeRole() }}</span>
       </div>
       <button 
         type="button" 
@@ -65,4 +76,3 @@
     </div>
   </div>
 </header>
-

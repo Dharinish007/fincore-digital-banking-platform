@@ -36,6 +36,9 @@ export class NotificationServiceComponent implements OnInit {
   recipient: string = '+91 98765 43210';
   message: string = 'Dear John Smith, ₹18,470 debited for Home Loan EMI #1 from ACC-8849-1001. Balance: ₹4,52,100.00.';
 
+  selectedCustomerId: number | null = null;
+  selectedCustomer: CustomerContact | null = null;
+
   customers: CustomerContact[] = [];
   notificationLogs: NotificationLog[] = [];
   isSending = false;
@@ -53,12 +56,16 @@ export class NotificationServiceComponent implements OnInit {
       next: (custs) => {
         if (custs && custs.length > 0) {
           this.customers = custs;
+          if (!this.selectedCustomer) {
+            this.onCustomerSelect(this.customers[0].id);
+          }
         } else {
           this.customers = [
             { id: 1, fullName: 'John Smith', phoneNumber: '+91 98765 43210', email: 'john.smith@example.com', accountNumber: 'ACC-8849-1001' },
             { id: 2, fullName: 'Sarah Jenkins', phoneNumber: '+91 98765 43211', email: 'sarah.jenkins@example.com', accountNumber: 'ACC-8849-1002' },
             { id: 3, fullName: 'TechCorp Industries', phoneNumber: '+91 98765 43212', email: 'finance@techcorp.example.com', accountNumber: 'ACC-8849-1003' }
           ];
+          this.onCustomerSelect(this.customers[0].id);
         }
       },
       error: () => {
@@ -67,6 +74,7 @@ export class NotificationServiceComponent implements OnInit {
           { id: 2, fullName: 'Sarah Jenkins', phoneNumber: '+91 98765 43211', email: 'sarah.jenkins@example.com', accountNumber: 'ACC-8849-1002' },
           { id: 3, fullName: 'TechCorp Industries', phoneNumber: '+91 98765 43212', email: 'finance@techcorp.example.com', accountNumber: 'ACC-8849-1003' }
         ];
+        this.onCustomerSelect(this.customers[0].id);
       }
     });
   }
@@ -106,7 +114,9 @@ export class NotificationServiceComponent implements OnInit {
   }
 
   onTypeChange(): void {
-    if (this.customers.length > 0) {
+    if (this.selectedCustomer) {
+      this.recipient = this.notificationType === 'SMS' ? this.selectedCustomer.phoneNumber : this.selectedCustomer.email;
+    } else if (this.customers.length > 0) {
       const c = this.customers[0];
       this.recipient = this.notificationType === 'SMS' ? c.phoneNumber : c.email;
     } else {
@@ -114,26 +124,39 @@ export class NotificationServiceComponent implements OnInit {
     }
   }
 
+  onCustomerSelect(custId: number | null): void {
+    this.selectedCustomerId = custId;
+    const found = this.customers.find(c => c.id === custId);
+    if (found) {
+      this.selectedCustomer = found;
+      this.selectCustomer(found);
+    } else {
+      this.selectedCustomer = null;
+    }
+  }
+
   selectCustomer(cust: CustomerContact): void {
+    this.selectedCustomerId = cust.id;
+    this.selectedCustomer = cust;
     if (this.notificationType === 'SMS') {
       this.recipient = cust.phoneNumber;
     } else {
       this.recipient = cust.email;
     }
-    this.message = `Dear ${cust.fullName}, your FinCore account ${cust.accountNumber} has a new notification: `;
+    this.message = `Dear ${cust.fullName}, your FinCore account ${cust.accountNumber || 'ACC-8849-001'} has a new notification: Transaction processed successfully.`;
   }
 
   applyTemplate(templateKey: string): void {
-    const cust = this.customers[0] || { fullName: 'John Smith', accountNumber: 'ACC-8849-1001' };
+    const cust = this.selectedCustomer || this.customers[0] || { fullName: 'John Smith', accountNumber: 'ACC-8849-1001' };
     switch (templateKey) {
       case 'EMI':
-        this.message = `Dear ${cust.fullName}, ₹18,470 has been debited for Home Loan EMI #1 from account ${cust.accountNumber}. Available Balance: ₹4,52,100.00.`;
+        this.message = `Dear ${cust.fullName}, ₹18,470 has been debited for Home Loan EMI #1 from account ${cust.accountNumber || 'ACC-8849-1001'}. Available Balance: ₹4,52,100.00.`;
         break;
       case 'CREDIT':
-        this.message = `Dear ${cust.fullName}, your account ${cust.accountNumber} has been credited with ₹50,000.00 via IMPS / UPI ref TXN-2026-0002.`;
+        this.message = `Dear ${cust.fullName}, your account ${cust.accountNumber || 'ACC-8849-1001'} has been credited with ₹50,000.00 via IMPS / UPI ref TXN-2026-0002.`;
         break;
       case 'OTP':
-        this.message = `Your FinCore Digital Banking 2FA OTP for fund transfer authentication is 849201. Valid for 5 minutes. Do not share.`;
+        this.message = `Dear ${cust.fullName}, your FinCore Digital Banking 2FA OTP for fund transfer authentication is 849201. Valid for 5 minutes. Do not share.`;
         break;
     }
   }

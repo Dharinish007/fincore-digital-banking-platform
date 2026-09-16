@@ -7,67 +7,448 @@
     </div>
   }
 
+  <!-- Header Section -->
   <div class="header-action-row">
-    <h2 class="page-title">AI Risk Assessment (Milestone 4)</h2>
-    <p class="camera-help">Rule-based assessment of customer, account, transaction, loan, and database history details.</p>
-  </div>
+    <div>
+      <h2 class="page-title">AI & Rule-Based Risk Assessment</h2>
+      <p class="camera-help">Unified risk analysis evaluating customer profiles, account dynamics, transaction patterns, loan exposure, and historical activity.</p>
+    </div>
 
-  <div class="table-card">
-    <h3 class="card-header-title">Database Transactions for Risk Assessment</h3>
-    <p class="camera-help">The five newest transactions are loaded from the transaction table. Select one to calculate and save its risk result.</p>
-    @if (selectedTransactionId) {
-      <p class="selection-status">Selected transaction: #{{ selectedTransactionId }}</p>
-    }
-    <table class="data-table">
-      <thead><tr><th>Transaction ID</th><th>Customer ID</th><th>Amount (INR)</th><th>Type</th><th>Status</th><th>Action</th></tr></thead>
-      <tbody>
-        @for (transaction of riskTransactions; track transaction.transactionId) {
-          <tr [class.selected-row]="selectedTransactionId === transaction.transactionId" (click)="selectRiskTransaction(transaction)">
-            <td>#{{ transaction.transactionId }}</td>
-            <td>{{ transaction.customerId || '-' }}</td>
-            <td>{{ transaction.amount | number:'1.2-2' }}</td>
-            <td>{{ transaction.transactionType || 'FUND_TRANSFER' }}</td>
-            <td>{{ transaction.status }}</td>
-            <td><button type="button" class="action-btn" (click)="$event.stopPropagation(); selectRiskTransaction(transaction)">Select</button></td>
-          </tr>
-        } @empty {
-          <tr><td colspan="6" class="empty-state">No database transactions are available.</td></tr>
-        }
-      </tbody>
-    </table>
-    <div class="action-buttons" style="margin-top: 16px;">
-      <button class="action-btn primary-btn" (click)="assessRisk()" [disabled]="loadingAssessment || !selectedTransactionId">
-        {{ loadingAssessment ? 'Calculating risk…' : 'Recalculate Risk' }}
+    <div class="header-btns">
+      <button type="button" class="btn-action primary-btn" (click)="showCreateCustomerModal = true">
+        + New Customer & Account
+      </button>
+      <button type="button" class="btn-action accent-btn" (click)="showCreateTransactionModal = true">
+        + Add New Transaction
+      </button>
+      <button type="button" class="btn-action outline-btn" (click)="refreshAll()">
+        🔄 Refresh
       </button>
     </div>
   </div>
 
-  <!-- Risk Analysis Result -->
-  @if (assessmentResult) {
-    <div class="table-card ai-result-card risk-completion-card">
-      <div class="risk-completion-heading">
+  <!-- Navigation Tabs -->
+  <div class="tab-nav">
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'transactions'" (click)="activeTab = 'transactions'">
+      💳 Database Transactions ({{ riskTransactions.length }})
+    </button>
+    <button type="button" class="tab-btn" [class.active]="activeTab === 'history'" (click)="activeTab = 'history'">
+      📜 Assessment History Log ({{ riskAssessments.length }})
+    </button>
+  </div>
+
+  <!-- Tab 1: Database Transactions -->
+  @if (activeTab === 'transactions') {
+    <div class="table-card">
+      <div class="card-title-row">
         <div>
-          <span class="completion-eyebrow">ASSESSMENT COMPLETE</span>
-          <h3 class="card-header-title">Risk Assessment Completed</h3>
+          <h3 class="card-header-title">Live Transactions in Database</h3>
+          <p class="camera-help">Select any transaction below to automatically trigger real-time risk assessment and view full breakdown.</p>
         </div>
-        <span class="completion-check">✓</span>
+        @if (selectedTransactionId) {
+          <span class="selection-pill">Selected: Transaction #{{ selectedTransactionId }}</span>
+        }
       </div>
 
-      <div class="risk-summary-row">
-        <div class="risk-score-box" [class.score-low]="assessmentResult.riskScore < 40" [class.score-med]="assessmentResult.riskScore >= 40 && assessmentResult.riskScore < 70" [class.score-high]="assessmentResult.riskScore >= 70">
-          <span class="risk-score-value">{{ assessmentResult.riskScore }}</span>
-          <span class="risk-score-label">/ 100</span>
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Txn ID</th>
+              <th>Customer</th>
+              <th>Amount (INR)</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Created At</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (transaction of riskTransactions; track transaction.transactionId) {
+              <tr [class.selected-row]="selectedTransactionId === transaction.transactionId" (click)="selectRiskTransaction(transaction)">
+                <td class="font-mono">#{{ transaction.transactionId }}</td>
+                <td>
+                  <strong>{{ getCustomerName(transaction.customerId) }}</strong>
+                  <div class="sub-text">Cust ID: {{ transaction.customerId || 'N/A' }}</div>
+                </td>
+                <td class="amount-cell">₹ {{ transaction.amount | number:'1.2-2' }}</td>
+                <td><span class="type-tag">{{ transaction.transactionType || 'FUND_TRANSFER' }}</span></td>
+                <td>
+                  <span class="badge" [class.approved-badge]="transaction.status === 'SUCCESS'" [class.danger-badge]="transaction.status === 'FAILED' || transaction.status === 'DECLINED'" [class.warn-badge]="transaction.status === 'PENDING'">
+                    {{ transaction.status }}
+                  </span>
+                </td>
+                <td class="date-cell">{{ transaction.createdAt ? (transaction.createdAt | date:'short') : 'Just now' }}</td>
+                <td>
+                  <button type="button" class="btn-select" (click)="$event.stopPropagation(); selectRiskTransaction(transaction)">
+                    Evaluate Risk
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="7" class="empty-state">
+                  No database transactions found. Click "+ Add New Transaction" to create one.
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="action-buttons" style="margin-top: 16px; display: flex; gap: 12px;">
+        <button class="action-btn primary-btn" (click)="assessRisk()" [disabled]="loadingAssessment || !selectedTransactionId">
+          {{ loadingAssessment ? 'Running Risk Engine…' : '⚡ Re-assess Selected Transaction' }}
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Tab 2: Assessment History Log -->
+  @if (activeTab === 'history') {
+    <div class="table-card">
+      <div class="card-title-row">
+        <div>
+          <h3 class="card-header-title">Saved Risk Assessment Records</h3>
+          <p class="camera-help">Historical risk assessments recorded by the FinCore rule engine in PostgreSQL.</p>
         </div>
-        <div class="risk-completion-details">
-          <div class="completion-metric">
-            <span class="label">Risk score</span>
-            <strong>{{ assessmentResult.riskScore }}/100</strong>
+      </div>
+
+      <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Customer</th>
+              <th>Txn ID</th>
+              <th>Amount (INR)</th>
+              <th>Score</th>
+              <th>Level</th>
+              <th>Decision</th>
+              <th>Assessed At</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of riskAssessments; track item.id) {
+              <tr (click)="selectSavedAssessment(item)">
+                <td class="font-mono">#{{ item.id }}</td>
+                <td>{{ item.customerName || ('Customer #' + item.customerId) }}</td>
+                <td class="font-mono">#{{ item.transactionId || '-' }}</td>
+                <td class="amount-cell">₹ {{ (item.amount || 0) | number:'1.2-2' }}</td>
+                <td><strong>{{ item.riskScore }}/100</strong></td>
+                <td>
+                  <span class="badge" [class]="riskLevelBadgeClass(item.riskLevel)">{{ item.riskLevel }}</span>
+                </td>
+                <td>
+                  <span class="decision-pill" [class]="decisionBadgeClass(item.decision)">{{ item.decision }}</span>
+                </td>
+                <td class="date-cell">{{ item.assessedAt ? (item.assessedAt | date:'medium') : '-' }}</td>
+                <td>
+                  <button type="button" class="btn-select" (click)="$event.stopPropagation(); selectSavedAssessment(item)">
+                    View Result
+                  </button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="9" class="empty-state">No saved assessments found yet.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- Risk Analysis Result Detailed Display -->
+  @if (assessmentResult) {
+    <div class="result-dashboard">
+      <!-- 1. Result Header / Hero Banner -->
+      <div class="hero-result-card" [class]="'hero-' + (assessmentResult.riskLevel || 'LOW').toLowerCase()">
+        <div class="hero-top-row">
+          <div>
+            <span class="hero-eyebrow">FINCORE RISK ENGINE RESULT • ID #{{ assessmentResult.id || 'NEW' }}</span>
+            <h2 class="hero-title">Transaction Risk Assessment Report</h2>
+            <div class="hero-timestamp">
+              Assessed on {{ assessmentResult.assessedAt ? (assessmentResult.assessedAt | date:'medium') : 'Just now' }}
+              • Source: <span class="badge-source">{{ assessmentResult.analysisSource || 'RULE_ENGINE' }}</span>
+            </div>
           </div>
-          <div class="completion-metric">
-            <span class="label">Risk level</span>
-            <span class="badge" [class]="riskLevelBadgeClass(assessmentResult.riskLevel)">{{ assessmentResult.riskLevel }}</span>
+
+          <div class="hero-decision-badge" [class]="decisionBadgeClass(assessmentResult.decision)">
+            <span class="decision-icon">
+              {{ (assessmentResult.decision === 'APPROVED' || assessmentResult.decision === 'APPROVE') ? '✓' : ((assessmentResult.decision === 'BLOCKED' || assessmentResult.decision === 'REJECT') ? '🚫' : '⚠️') }}
+            </span>
+            <div class="decision-text">
+              <span class="d-label">FINAL DECISION</span>
+              <strong class="d-val">{{ assessmentResult.decision }}</strong>
+            </div>
           </div>
-          <div class="completion-status">Risk assessment completed</div>
+        </div>
+
+        <div class="hero-score-bar-grid">
+          <div class="score-display-box" [class]="'score-' + (assessmentResult.riskLevel || 'LOW').toLowerCase()">
+            <div class="score-number">{{ assessmentResult.riskScore }}</div>
+            <div class="score-scale">/ 100</div>
+            <div class="score-level-badge" [class]="riskLevelBadgeClass(assessmentResult.riskLevel)">
+              {{ assessmentResult.riskLevel }} RISK
+            </div>
+          </div>
+
+          <div class="score-meter-container">
+            <div class="meter-labels">
+              <span>Low (0-39)</span>
+              <span>Medium (40-64)</span>
+              <span>High (65-84)</span>
+              <span>Critical (85-100)</span>
+            </div>
+            <div class="meter-track">
+              <div class="meter-fill" [style.width.%]="assessmentResult.riskScore" [class]="'meter-' + (assessmentResult.riskLevel || 'LOW').toLowerCase()"></div>
+            </div>
+            <div class="meter-explanation">
+              <strong>Risk Score Breakdown:</strong> Higher scores indicate increased likelihood of fraud, velocity spikes, excessive leverage, or unusual behavior.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Detailed Breakdown Grid -->
+      <div class="result-grid">
+        <!-- Triggered Risk Factors -->
+        <div class="result-card">
+          <div class="card-header">
+            <span class="card-icon">⚡</span>
+            <h4>Triggered Risk Factors & Signals</h4>
+          </div>
+          <div class="reasons-list">
+            @for (reason of splitReasons(assessmentResult.reasons); track reason) {
+              <div class="reason-item">
+                <span class="reason-bullet">▸</span>
+                <span class="reason-text">{{ reason }}</span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Customer & Account Profile Snapshot -->
+        <div class="result-card">
+          <div class="card-header">
+            <span class="card-icon">👤</span>
+            <h4>Customer & Account Context</h4>
+          </div>
+          <div class="details-list">
+            <div class="detail-item">
+              <span class="detail-label">Customer Name:</span>
+              <span class="detail-value highlight">{{ assessmentResult.customerName || getCustomerName(assessmentResult.customerId) }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Customer ID:</span>
+              <span class="detail-value font-mono">#{{ assessmentResult.customerId }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Account Number:</span>
+              <span class="detail-value font-mono">{{ assessmentResult.accountNumber || 'ACC-8849-1001' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Account Type:</span>
+              <span class="detail-value">{{ assessmentResult.accountType || 'SAVINGS' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Account Balance:</span>
+              <span class="detail-value text-green font-mono">₹ {{ (assessmentResult.accountBalance || 452100) | number:'1.2-2' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Annual Income:</span>
+              <span class="detail-value font-mono">₹ {{ (assessmentResult.annualIncome || 1200000) | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction & Financial Exposure -->
+        <div class="result-card">
+          <div class="card-header">
+            <span class="card-icon">📊</span>
+            <h4>Transaction & Exposure Metrics</h4>
+          </div>
+          <div class="details-list">
+            <div class="detail-item">
+              <span class="detail-label">Evaluated Transaction:</span>
+              <span class="detail-value font-mono">#{{ assessmentResult.transactionId || selectedTransactionId || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Transaction Amount:</span>
+              <span class="detail-value highlight font-mono">₹ {{ (assessmentResult.amount || 0) | number:'1.2-2' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Transaction Type:</span>
+              <span class="detail-value type-tag">{{ assessmentResult.transactionType }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Active Loans Count:</span>
+              <span class="detail-value">{{ assessmentResult.loanCount || 0 }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Total Loan Outstanding:</span>
+              <span class="detail-value text-amber font-mono">₹ {{ (assessmentResult.loanOutstanding || 0) | number:'1.2-2' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">Historical Txn Count:</span>
+              <span class="detail-value font-mono">{{ assessmentResult.previousTransactionCount }} transactions</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI & Rule Engine Analysis Explanation -->
+        <div class="result-card full-width-card">
+          <div class="card-header">
+            <span class="card-icon">🧠</span>
+            <h4>FinCore Rule Engine Analysis & Audit Record</h4>
+          </div>
+          <p class="ai-text">
+            {{ assessmentResult.aiAnalysis || 'This assessment was calculated by the FinCore rule engine using customer financial parameters, account history, velocity heuristics, and loan exposure.' }}
+          </p>
+          @if (assessmentResult.transactionHistory) {
+            <div class="history-snapshot-box">
+              <span class="sub-label">Historical Transactions Snapshot Evaluated:</span>
+              <div class="snapshot-content font-mono">{{ assessmentResult.transactionHistory }}</div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal 1: Create New Customer & Account -->
+  @if (showCreateCustomerModal) {
+    <div class="modal-backdrop" (click)="showCreateCustomerModal = false">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Create New Customer & Bank Account</h3>
+          <button type="button" class="close-btn" (click)="showCreateCustomerModal = false">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <p class="modal-desc">Registers a new customer into the core database and automatically creates a linked active bank account.</p>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Customer Full Name *</label>
+              <input type="text" [(ngModel)]="newCustomer.fullName" placeholder="e.g. Vikram Sharma" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Date of Birth (DOB) * (Used for Liveness Verification)</label>
+              <input type="date" [(ngModel)]="newCustomer.dateOfBirth" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Customer ID (Optional / Leave blank for Auto-gen)</label>
+              <input type="number" [(ngModel)]="newCustomer.customerId" placeholder="Auto-generated if blank" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" [(ngModel)]="newCustomer.email" placeholder="e.g. vikram@example.com" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="text" [(ngModel)]="newCustomer.phoneNumber" placeholder="e.g. +91 98765 12345" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Account Type *</label>
+              <select [(ngModel)]="newCustomer.accountType" class="form-control">
+                <option value="SAVINGS">Savings Account</option>
+                <option value="CURRENT">Current Account</option>
+                <option value="CHECKING">Checking Account</option>
+                <option value="COMMERCIAL">Commercial Account</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Initial Deposit / Balance (₹) *</label>
+              <input type="number" [(ngModel)]="newCustomer.initialBalance" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Reported Annual Income (₹)</label>
+              <input type="number" [(ngModel)]="newCustomer.annualIncome" class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="showCreateCustomerModal = false">Cancel</button>
+          <button type="button" class="btn-submit" (click)="createCustomerAndAccount()">
+            ✓ Create Customer & Account
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal 2: Add New Transaction to Database -->
+  @if (showCreateTransactionModal) {
+    <div class="modal-backdrop" (click)="showCreateTransactionModal = false">
+      <div class="modal-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Add New Transaction to Database</h3>
+          <button type="button" class="close-btn" (click)="showCreateTransactionModal = false">✕</button>
+        </div>
+
+        <div class="modal-body">
+          <p class="modal-desc">Directly records a new transaction in PostgreSQL for immediate risk analysis and settlement.</p>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Select Customer *</label>
+              <select [(ngModel)]="newTransaction.customerId" class="form-control">
+                @for (c of customers; track c.id) {
+                  <option [value]="c.id">{{ c.fullName }} (ID: {{ c.id }})</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Transaction Amount (₹) *</label>
+              <input type="number" [(ngModel)]="newTransaction.amount" class="form-control" />
+            </div>
+
+            <div class="form-group">
+              <label>Transaction Type *</label>
+              <select [(ngModel)]="newTransaction.type" class="form-control">
+                <option value="FUND_TRANSFER">Fund Transfer (IMPS/NEFT)</option>
+                <option value="UPI">UPI Instant Payment</option>
+                <option value="INTERNATIONAL_WIRE">International Wire (High Risk)</option>
+                <option value="CRYPTO_EXCHANGE">Crypto Exchange Purchase (High Risk)</option>
+                <option value="CASH_WITHDRAWAL">Cash Withdrawal</option>
+                <option value="DEPOSIT">Account Deposit</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Transaction Status *</label>
+              <select [(ngModel)]="newTransaction.status" class="form-control">
+                <option value="SUCCESS">SUCCESS (Completed)</option>
+                <option value="PENDING">PENDING (In Progress)</option>
+                <option value="FAILED">FAILED (Verification Error)</option>
+              </select>
+            </div>
+
+            <div class="form-group full-width">
+              <label>Description / Memo</label>
+              <input type="text" [(ngModel)]="newTransaction.description" placeholder="e.g. Vendor supply payment" class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-cancel" (click)="showCreateTransactionModal = false">Cancel</button>
+          <button type="button" class="btn-submit" (click)="createTransaction()">
+            ✓ Add Transaction & Assess Risk
+          </button>
         </div>
       </div>
     </div>

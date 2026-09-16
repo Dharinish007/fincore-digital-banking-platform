@@ -1,153 +1,640 @@
 <div class="module-container">
-  <div class="header-action-row">
-    <div>
-      <h2 class="page-title">Executive Banking & Saga Dashboard</h2>
-      <p class="subtitle">Real-time enterprise overview across all FinCore banking modules</p>
+  <!-- Toast Notification Alert -->
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-success]="toastType === 'success'" [class.toast-danger]="toastType === 'danger'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-icon">{{ toastType === 'success' ? '✅' : toastType === 'danger' ? '⚠️' : 'ℹ️' }}</span>
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button type="button" class="toast-close" (click)="toastMessage = null">✕</button>
     </div>
-  </div>
+  }
 
-  <!-- Executive KPIs in Rupees -->
-  <div class="kpi-grid">
-    @for (m of metrics; track m.title) {
-      <div class="kpi-card">
-        <span class="kpi-label">{{ m.title }}</span>
-        <div class="kpi-value">{{ m.value }}</div>
-        <span class="kpi-subtext green-text">{{ m.trend }}</span>
-        <span style="font-size: 0.75rem; color: var(--text-muted);">{{ m.subtext }}</span>
+  <!-- Welcome / Role Banner -->
+  <div class="role-welcome-card" [style.border-left-color]="auth.getRoleBadgeColor()">
+    <div class="welcome-left">
+      <div class="user-avatar-pill" [style.background]="auth.getRoleBadgeColor()">
+        {{ auth.currentAdmin()?.avatar || 'FC' }}
       </div>
-    }
-  </div>
-
-  <!-- Integrated FinCore Suite Modules Quick Hub -->
-  <div class="content-card">
-    <h3 class="card-header-title">FinCore Integrated Platform Hub (All Modules)</h3>
-    <div class="milestones-hub-grid">
-      <!-- M1 -->
-      <div class="milestone-hub-card">
-        <div class="mhc-header">
-          <span class="mhc-tag tag-m1">MILESTONE 1</span>
-          <span class="mhc-icon">🏦</span>
-        </div>
-        <h4>Core Banking & Operations</h4>
-        <p>Customer accounts, lifecycle management, balance adjustments and formal statement exports.</p>
-        <div class="mhc-links">
-          <a routerLink="/core-dashboard" class="mhc-link">⚡ Core Operations</a>
-          <a routerLink="/accounts" class="mhc-link">Account Lifecycle</a>
-          <a routerLink="/balance" class="mhc-link">Balance Management</a>
-          <a routerLink="/statements" class="mhc-link">Statement Generation</a>
-        </div>
-      </div>
-
-      <!-- M2 -->
-      <div class="milestone-hub-card">
-        <div class="mhc-header">
-          <span class="mhc-tag tag-m2">MILESTONE 2</span>
-          <span class="mhc-icon">💳</span>
-        </div>
-        <h4>Loan Portal & Servicing</h4>
-        <p>Loan servicing, reducing-balance EMI calculation, tranche disbursement, and collections.</p>
-        <div class="mhc-links">
-          <a routerLink="/loans" class="mhc-link">Loan Servicing</a>
-          <a routerLink="/loans/emi" class="mhc-link">🧮 EMI Calculator</a>
-          <a routerLink="/loans/disbursement" class="mhc-link">💸 Loan Disbursement</a>
-          <a routerLink="/loans/collections" class="mhc-link">Repayment Collections</a>
-        </div>
-      </div>
-
-      <!-- M3 -->
-      <div class="milestone-hub-card">
-        <div class="mhc-header">
-          <span class="mhc-tag tag-m3">MILESTONE 3</span>
-          <span class="mhc-icon">⚖️</span>
-        </div>
-        <h4>Enterprise Clearing & Settlement</h4>
-        <p>Bilateral netting, interbank RTGS clearing, enterprise ledger, customer advisories, and fraud anomalies.</p>
-        <div class="mhc-links">
-          <a routerLink="/settlement" class="mhc-link">Settlement Engine</a>
-          <a routerLink="/payments" class="mhc-link">Interbank Payments</a>
-          <a routerLink="/ledger" class="mhc-link">Enterprise Ledger</a>
-          <a routerLink="/notifications" class="mhc-link">Notification Service</a>
-          <a routerLink="/fraud-detection" class="mhc-link text-red">🚨 Fraud Detection</a>
-        </div>
-      </div>
-
-      <!-- M4 -->
-      <div class="milestone-hub-card">
-        <div class="mhc-header">
-          <span class="mhc-tag tag-m4">MILESTONE 4</span>
-          <span class="mhc-icon">🛡️</span>
-        </div>
-        <h4>Security, AI & Compliance</h4>
-        <p>MediaPipe biometric liveness, rule-based AI risk scoring, and ISO-27001 cross-module audit trail.</p>
-        <div class="mhc-links">
-          <a routerLink="/liveness" class="mhc-link">🛡️ Biometric Liveness</a>
-          <a routerLink="/risk" class="mhc-link">🧠 AI Risk Assessment</a>
-          <a routerLink="/audit" class="mhc-link">📋 Unified Audit Trail</a>
-          <a routerLink="/settings" class="mhc-link">Platform Settings</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Portfolio Distribution Visual Bar Card -->
-  <div class="content-card">
-    <h3 class="card-header-title">National Loan Portfolio Asset Breakdown</h3>
-    <div style="display: flex; flex-direction: column; gap: 16px;">
       <div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px;">
-          <span>Home Loans (₹4,800 Cr)</span>
-          <span style="color: #38bdf8; font-weight: 600;">57.1%</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h2 class="welcome-title">Welcome back, {{ auth.currentAdmin()?.name || 'Banking User' }}</h2>
+          <span class="role-tag" [style.background]="auth.getRoleBadgeColor()">{{ auth.activeRole().replace('_', ' ') }}</span>
         </div>
-        <div style="height: 10px; background: #12141c; border-radius: 5px; overflow: hidden; border: 1px solid var(--border-color);">
-          <div style="width: 57.1%; height: 100%; background: #38bdf8;"></div>
-        </div>
-      </div>
-
-      <div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px;">
-          <span>Commercial & Business Loans (₹2,100 Cr)</span>
-          <span style="color: #34d399; font-weight: 600;">25.0%</span>
-        </div>
-        <div style="height: 10px; background: #12141c; border-radius: 5px; overflow: hidden; border: 1px solid var(--border-color);">
-          <div style="width: 25%; height: 100%; background: #34d399;"></div>
-        </div>
-      </div>
-
-      <div>
-        <div style="display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 6px;">
-          <span>Auto & Personal Loans (₹1,500 Cr)</span>
-          <span style="color: #c084fc; font-weight: 600;">17.9%</span>
-        </div>
-        <div style="height: 10px; background: #12141c; border-radius: 5px; overflow: hidden; border: 1px solid var(--border-color);">
-          <div style="width: 17.9%; height: 100%; background: #c084fc;"></div>
-        </div>
+        <p class="welcome-sub">{{ auth.currentAdmin()?.roleTitle || 'FinCore Banking Suite' }} • Session Active</p>
       </div>
     </div>
-  </div>
-
-  <!-- Real-time activity stream -->
-  <div class="content-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-      <h3 class="card-header-title" style="margin-bottom: 0; border-bottom: none;">Real-Time Saga Event Stream</h3>
-      <select [(ngModel)]="filterCategory" class="form-select" style="width: 180px;">
-        <option value="ALL">All Categories</option>
-        <option value="LOAN">Loan Events</option>
-        <option value="FRAUD">Fraud Alerts</option>
-        <option value="SETTLEMENT">Settlement Engine</option>
-        <option value="KYC">KYC Logs</option>
-      </select>
-    </div>
-
-    <ul class="activity-list" style="list-style: none; display: flex; flex-direction: column; gap: 12px;">
-      @for (item of filteredActivities; track item.desc) {
-        <li style="display: flex; align-items: center; gap: 14px; padding: 12px; background: #12141c; border-radius: 6px; border: 1px solid var(--border-color);">
-          <span class="badge" [class.info-badge]="item.category === 'LOAN'" [class.danger-badge]="item.category === 'FRAUD'" [class.approved-badge]="item.category === 'SETTLEMENT'" [class.warn-badge]="item.category === 'KYC'">
-            {{ item.category }}
-          </span>
-          <span class="activity-time" style="color: var(--text-muted); font-size: 0.82rem; min-width: 90px;">{{ item.time }}</span>
-          <span class="activity-desc" style="font-size: 0.9rem; color: var(--text-main);">{{ item.desc }}</span>
-        </li>
+    <div class="welcome-actions">
+      @if (auth.isCustomer()) {
+        <button class="btn-action-primary" (click)="openTransfer()">⚡ Send Money</button>
+        <button class="btn-action-outline" (click)="openApplyLoanModal()">📝 Apply Loan</button>
       }
-    </ul>
+      @if (auth.isStaff()) {
+        <a routerLink="/accounts" class="btn-action-primary">➕ Open Customer Account</a>
+        <button class="btn-action-outline" (click)="openTransfer()">🔄 Assisted Transfer</button>
+      }
+      @if (auth.isLoanOfficer()) {
+        <a routerLink="/loans/emi" class="btn-action-outline">🧮 EMI Calculator</a>
+        <a routerLink="/loans/disbursement" class="btn-action-primary">💸 Disburse Loan</a>
+      }
+      @if (auth.isFraudOfficer()) {
+        <a routerLink="/fraud-detection" class="btn-action-primary text-red">🚨 AI Threat Engine</a>
+      }
+      @if (auth.isAuditor()) {
+        <a routerLink="/audit" class="btn-action-outline">📋 Full ISO-27001 Audit Trail</a>
+      }
+      <button class="btn-refresh" (click)="refreshAllData()" title="Refresh Live Data">🔄</button>
+    </div>
   </div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. CUSTOMER DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  @if (auth.isCustomer()) {
+    <div class="customer-dashboard-grid">
+      <!-- Balance & Account Summary Card -->
+      <div class="content-card customer-hero-card">
+        <div class="customer-card-header">
+          <div>
+            <span class="card-eyebrow">PRIMARY CHECKING / SAVINGS ACCOUNT</span>
+            <h3 class="account-num-display">{{ auth.currentAdmin()?.accountNumber || accountService.activeAccount().accountNumber || 'ACC-8849-1001' }}</h3>
+          </div>
+          <span class="badge approved-badge">Active & Verified</span>
+        </div>
+        <div class="customer-balance-block">
+          <span class="bal-label">Available Balance</span>
+          <div class="bal-amount">₹{{ (accountService.activeAccount().balance || 128475).toLocaleString('en-IN') }}</div>
+          <span class="bal-subtext green-text">⚡ Instant UPI / NEFT / RTGS Enabled</span>
+        </div>
+        <div class="customer-quick-links">
+          <button class="quick-tile" (click)="openTransfer()">
+            <span class="qt-icon">💸</span>
+            <span class="qt-title">Transfer Funds</span>
+            <span class="qt-sub">Instant zero-fee</span>
+          </button>
+          <button class="quick-tile" (click)="openApplyLoanModal()">
+            <span class="qt-icon">💳</span>
+            <span class="qt-title">Instant Loan</span>
+            <span class="qt-sub">Pre-approved offers</span>
+          </button>
+          <a routerLink="/statements" class="quick-tile">
+            <span class="qt-icon">📄</span>
+            <span class="qt-title">e-Statements</span>
+            <span class="qt-sub">Download PDF/Excel</span>
+          </a>
+          <a routerLink="/notifications" class="quick-tile">
+            <span class="qt-icon">🔔</span>
+            <span class="qt-title">Alerts</span>
+            <span class="qt-sub">{{ notifications.length }} Unread</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Active Loan & EMI Status Card -->
+      <div class="content-card">
+        <h3 class="card-header-title">Active Loan & Repayment Overview</h3>
+        <div class="loan-status-box">
+          <div class="ls-header">
+            <div>
+              <span class="badge info-badge">Home Loan</span>
+              <h4 style="margin: 4px 0 0; color: var(--text-main);">HL-2024-1247</h4>
+            </div>
+            <span class="status-pill status-active">IN REPAYMENT</span>
+          </div>
+          <div class="ls-metrics">
+            <div class="ls-metric">
+              <span class="lsm-label">Sanctioned</span>
+              <span class="lsm-val">₹2,40,000</span>
+            </div>
+            <div class="ls-metric">
+              <span class="lsm-label">Outstanding</span>
+              <span class="lsm-val text-red">₹2,38,153</span>
+            </div>
+            <div class="ls-metric">
+              <span class="lsm-label">Monthly EMI</span>
+              <span class="lsm-val" style="color: #38bdf8;">₹2,083</span>
+            </div>
+            <div class="ls-metric">
+              <span class="lsm-label">Next Due Date</span>
+              <span class="lsm-val green-text">05-Oct-2026</span>
+            </div>
+          </div>
+          <div class="ls-footer">
+            <span class="auto-debit-tag">✅ Auto-Debit is Active on Primary Account</span>
+            <a routerLink="/loans" class="mhc-link">Manage Loan →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Recent Transactions -->
+    <div class="content-card">
+      <div class="table-header-row">
+        <h3 class="card-header-title" style="margin-bottom: 0;">Recent Transactions & Fund Transfers</h3>
+        <a routerLink="/statements" class="btn-action-outline">Full Statement</a>
+      </div>
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Reference</th>
+              <th>Counterparty Account</th>
+              <th>Type / Channel</th>
+              <th>Amount (INR)</th>
+              <th>Status</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (txn of recentTransactions.slice(0, 5); track txn.id) {
+              <tr>
+                <td style="font-family: monospace; color: #38bdf8;">{{ txn.reference || ('TXN-8849-0' + txn.id) }}</td>
+                <td>{{ txn.destinationAccount || txn.sourceAccount || 'ACC-8849-1002' }}</td>
+                <td><span class="channel-badge">{{ txn.transactionType || 'TRANSFER' }}</span></td>
+                <td style="font-weight: 700; color: #34d399;">₹{{ (txn.amount || 0).toLocaleString('en-IN') }}</td>
+                <td><span class="badge approved-badge">{{ txn.status || 'SETTLED' }}</span></td>
+                <td style="color: var(--text-muted); font-size: 0.8rem;">{{ txn.createdAt ? (txn.createdAt | date:'short') : 'Just now' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 2. ADMIN DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  @if (auth.isAdmin()) {
+    <!-- Executive KPIs -->
+    <div class="kpi-grid">
+      @for (m of metrics; track m.title) {
+        <div class="kpi-card">
+          <span class="kpi-label">{{ m.title }}</span>
+          <div class="kpi-value">{{ m.value }}</div>
+          <span class="kpi-subtext green-text">{{ m.trend }}</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">{{ m.subtext }}</span>
+        </div>
+      }
+    </div>
+
+    <!-- Integrated FinCore Suite Modules Quick Hub -->
+    <div class="content-card">
+      <h3 class="card-header-title">FinCore Integrated Platform Hub (All 12 Modules)</h3>
+      <div class="milestones-hub-grid">
+        <div class="milestone-hub-card">
+          <div class="mhc-header">
+            <span class="mhc-tag tag-m1">CORE BANKING</span>
+            <span class="mhc-icon">🏦</span>
+          </div>
+          <h4>Account & Balance Operations</h4>
+          <p>Customer lifecycle, deposit accounts, balance adjustments & statements.</p>
+          <div class="mhc-links">
+            <a routerLink="/core-dashboard" class="mhc-link">⚡ Core Operations</a>
+            <a routerLink="/accounts" class="mhc-link">Account Lifecycle</a>
+            <a routerLink="/balance" class="mhc-link">Balance Management</a>
+            <a routerLink="/statements" class="mhc-link">Statement Generation</a>
+          </div>
+        </div>
+
+        <div class="milestone-hub-card">
+          <div class="mhc-header">
+            <span class="mhc-tag tag-m2">CREDIT & LOANS</span>
+            <span class="mhc-icon">💳</span>
+          </div>
+          <h4>Loan Servicing & Collections</h4>
+          <p>Loan sanctioning, reducing EMI formulas, tranches & repayments.</p>
+          <div class="mhc-links">
+            <a routerLink="/loans" class="mhc-link">Loan Servicing</a>
+            <a routerLink="/loans/emi" class="mhc-link">🧮 EMI Calculator</a>
+            <a routerLink="/loans/disbursement" class="mhc-link">💸 Loan Disbursement</a>
+            <a routerLink="/loans/collections" class="mhc-link">Repayment Collections</a>
+          </div>
+        </div>
+
+        <div class="milestone-hub-card">
+          <div class="mhc-header">
+            <span class="mhc-tag tag-m3">CLEARING & SETTLEMENT</span>
+            <span class="mhc-icon">⚖️</span>
+          </div>
+          <h4>Interbank Settlement & Fraud</h4>
+          <p>Netting, RTGS clearing, enterprise ledger, customer advisories & fraud detection.</p>
+          <div class="mhc-links">
+            <a routerLink="/settlement" class="mhc-link">Settlement Engine</a>
+            <a routerLink="/payments" class="mhc-link">Interbank Payments</a>
+            <a routerLink="/ledger" class="mhc-link">Enterprise Ledger</a>
+            <a routerLink="/fraud-detection" class="mhc-link text-red">🚨 Fraud Detection</a>
+          </div>
+        </div>
+
+        <div class="milestone-hub-card">
+          <div class="mhc-header">
+            <span class="mhc-tag tag-m4">SECURITY & AUDIT</span>
+            <span class="mhc-icon">🛡️</span>
+          </div>
+          <h4>AI Risk, Liveness & Compliance</h4>
+          <p>MediaPipe biometric liveness, rule-based AI risk scoring & unified audit logs.</p>
+          <div class="mhc-links">
+            <a routerLink="/liveness" class="mhc-link">🛡️ Biometric Liveness</a>
+            <a routerLink="/risk" class="mhc-link">🧠 AI Risk Assessment</a>
+            <a routerLink="/audit" class="mhc-link">📋 Unified Audit Trail</a>
+            <a routerLink="/notifications" class="mhc-link">Notification Service</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 3. BANK STAFF DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  @if (auth.isStaff()) {
+    <div class="staff-dashboard-grid">
+      <!-- Quick Balance Adjustment Tool -->
+      <div class="content-card">
+        <h3 class="card-header-title">Branch Operations — Fast Balance Adjustment</h3>
+        <div class="staff-form-grid">
+          <div class="f-group">
+            <label>Target Account Number / ID:</label>
+            <select [(ngModel)]="staffSelectedAccountId" class="form-select">
+              @for (acc of accountService.accounts(); track acc.id) {
+                <option [value]="acc.id">{{ acc.name }} ({{ acc.accountNumber }}) - ₹{{ acc.balance.toLocaleString('en-IN') }}</option>
+              }
+            </select>
+          </div>
+          <div class="f-group">
+            <label>Adjustment Type:</label>
+            <select [(ngModel)]="staffAdjustType" class="form-select">
+              <option value="CREDIT">🟢 CREDIT (Deposit Funds)</option>
+              <option value="DEBIT">🔴 DEBIT (Withdraw / Fee)</option>
+            </select>
+          </div>
+          <div class="f-group">
+            <label>Amount (₹ INR):</label>
+            <input type="number" [(ngModel)]="staffAdjustAmount" min="1" class="form-control" />
+          </div>
+          <div class="f-group">
+            <label>Reason / Branch Memo:</label>
+            <input type="text" [(ngModel)]="staffAdjustReason" class="form-control" />
+          </div>
+        </div>
+        <button type="button" class="btn-action-primary" style="margin-top: 16px; width: 100%;" (click)="applyStaffBalanceAdjustment()">
+          ⚡ Post Adjustment & Update Ledger
+        </button>
+      </div>
+
+      <!-- Quick Branch Actions & Accounts -->
+      <div class="content-card">
+        <h3 class="card-header-title">Branch Fast Navigation & Customer Desk</h3>
+        <div class="staff-shortcuts-grid">
+          <a routerLink="/accounts" class="staff-shortcut-card">
+            <span class="sc-icon">👤</span>
+            <h4>Account Lifecycle</h4>
+            <p>Freeze, Activate, Close customer accounts</p>
+          </a>
+          <a routerLink="/statements" class="staff-shortcut-card">
+            <span class="sc-icon">📑</span>
+            <h4>Customer Statements</h4>
+            <p>Generate & export official bank statements</p>
+          </a>
+          <a routerLink="/balance" class="staff-shortcut-card">
+            <span class="sc-icon">💰</span>
+            <h4>Balance Management</h4>
+            <p>Audit minimum balance holds and overdrafts</p>
+          </a>
+          <a routerLink="/kyc" class="staff-shortcut-card">
+            <span class="sc-icon">🪪</span>
+            <h4>Branch KYC Desk</h4>
+            <p>Inspect identity verification status</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 4. LOAN OFFICER DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  @if (auth.isLoanOfficer()) {
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Active Loan Portfolio</span>
+        <div class="kpi-value">{{ metrics[2].value }}</div>
+        <span class="kpi-subtext green-text">{{ pendingLoans.length }} Active Loan(s)</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Pending Approval Queue</span>
+        <div class="kpi-value">{{ pendingLoanCount }} Pending</div>
+        <span class="kpi-subtext" style="color: #f59e0b;">Action Required</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Disbursement Engine</span>
+        <div class="kpi-value green-text">RTGS Active</div>
+        <span class="kpi-subtext green-text">Automated Settlements</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Monthly Collections</span>
+        <div class="kpi-value">₹2.29 Cr</div>
+        <span class="kpi-subtext green-text">98.4% On-time</span>
+      </div>
+    </div>
+
+    <!-- Loan Review & Decision Queue -->
+    <div class="content-card">
+      <div class="table-header-row">
+        <div>
+          <h3 class="card-header-title" style="margin-bottom: 0;">Loan Review & Disbursement Decision Queue</h3>
+          <p class="subtitle" style="margin: 4px 0 0;">Review applicant credit risk, grant approval/rejection, and trigger instant disbursement</p>
+        </div>
+        <a routerLink="/loans/emi" class="btn-action-outline">🧮 EMI Calculator</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Loan ID</th>
+              <th>Applicant</th>
+              <th>Loan Type</th>
+              <th>Sanctioned Amount</th>
+              <th>Rate / Tenure</th>
+              <th>Status</th>
+              <th>Decisions & Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (loan of pendingLoans; track loan.id || loan.loanId) {
+              <tr>
+                <td style="font-family: monospace; color: #38bdf8;">{{ loan.loanId || ('LN100' + loan.id) }}</td>
+                <td style="font-weight: 600;">{{ loan.customerName || 'Retail Borrower' }}</td>
+                <td><span class="channel-badge">{{ loan.loanType || 'Personal Loan' }}</span></td>
+                <td style="font-weight: 700; color: #34d399;">₹{{ (loan.sanctionedAmount || 0).toLocaleString('en-IN') }}</td>
+                <td>{{ loan.interestRate || 8.5 }}% • {{ loan.tenureMonths || 60 }}M</td>
+                <td>
+                  <span class="badge" [class.approved-badge]="loan.status === 'APPROVED' || loan.status === 'ACTIVE'" [class.warn-badge]="loan.status === 'PENDING' || loan.status === 'UNDER_REVIEW'" [class.danger-badge]="loan.status === 'REJECTED'">
+                    {{ loan.status || 'ACTIVE' }}
+                  </span>
+                </td>
+                <td>
+                  <div style="display: flex; gap: 6px;">
+                    @if (loan.status === 'PENDING' || loan.status === 'UNDER_REVIEW') {
+                      <button type="button" class="btn-small-approve" (click)="approveLoan(loan)">✓ Approve</button>
+                      <button type="button" class="btn-small-reject" (click)="rejectLoan(loan)">✕ Reject</button>
+                    }
+                    @if (loan.status === 'APPROVED') {
+                      <button type="button" class="btn-small-disburse" (click)="quickDisburse(loan)">💸 Disburse</button>
+                    }
+                    @if (loan.status === 'ACTIVE') {
+                      <a routerLink="/loans" class="mhc-link" style="font-size: 0.8rem;">Servicing →</a>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 5. FRAUD OFFICER DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  @if (auth.isFraudOfficer()) {
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">AI Risk & Threat Alerts</span>
+        <div class="kpi-value text-red">{{ suspiciousEvents.length }} Suspicious</div>
+        <span class="kpi-subtext" style="color: #ef4444;">Needs Analysis</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Protected Assets</span>
+        <div class="kpi-value green-text">₹1.48 Cr</div>
+        <span class="kpi-subtext green-text">Zero Loss Rate</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">AML Compliance SLA</span>
+        <div class="kpi-value">99.8%</div>
+        <span class="kpi-subtext green-text">&lt; 15 min review</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Engine Rule Count</span>
+        <div class="kpi-value">24 Active</div>
+        <span class="kpi-subtext" style="color: #38bdf8;">Real-time scoring</span>
+      </div>
+    </div>
+
+    <!-- Suspicious Transactions Queue -->
+    <div class="content-card">
+      <div class="table-header-row">
+        <div>
+          <h3 class="card-header-title text-red" style="margin-bottom: 0;">🚨 High Risk & Suspicious Transaction Reviews</h3>
+          <p class="subtitle" style="margin: 4px 0 0;">Transactions flagged by AI Risk scoring engine held in settlement quarantine</p>
+        </div>
+        <a routerLink="/fraud-detection" class="btn-action-primary text-red">Launch Fraud Engine</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Alert ID</th>
+              <th>Transaction Details</th>
+              <th>Risk Score</th>
+              <th>Trigger Reason</th>
+              <th>Status</th>
+              <th>Officer Decision Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (suspiciousEvents.length === 0) {
+              <tr>
+                <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 24px;">No suspicious transactions currently in quarantine. System secure.</td>
+              </tr>
+            }
+            @for (ev of suspiciousEvents; track ev.id || ev.eventId) {
+              <tr>
+                <td style="font-family: monospace; color: #ef4444;">TXN-FRD-{{ ev.id || ev.eventId }}</td>
+                <td>
+                  <strong>{{ ev.customerName || ('Customer #' + (ev.userId || 1)) }}</strong><br />
+                  <span style="color: var(--text-muted); font-size: 0.8rem;">Amount: ₹{{ (ev.amount || 150000).toLocaleString('en-IN') }}</span>
+                </td>
+                <td>
+                  <span class="badge danger-badge">{{ ev.fraudScore || ev.score || 85 }}/100</span>
+                </td>
+                <td style="font-size: 0.82rem; color: #cbd5e1; max-width: 250px;">{{ ev.reason || 'High velocity / unusual transfer pattern' }}</td>
+                <td>
+                  <span class="badge" [class.danger-badge]="ev.status === 'UNDER_REVIEW' || ev.status === 'BLOCKED'" [class.approved-badge]="ev.status === 'RESOLVED_CLEARED' || ev.status === 'APPROVED'" [class.info-badge]="ev.status === 'ESCALATED_AML'">
+                    {{ ev.status || 'UNDER_REVIEW' }}
+                  </span>
+                </td>
+                <td>
+                  <div style="display: flex; gap: 6px;">
+                    <button type="button" class="btn-small-approve" (click)="approveHold(ev)" title="Release hold and settle transaction">✓ Approve & Settle</button>
+                    <button type="button" class="btn-small-reject" (click)="blockHold(ev)" title="Block transaction and freeze account">⛔ Block</button>
+                    <button type="button" class="btn-small-escalate" (click)="escalateHold(ev)" title="Escalate to AML Level-3">⚠️ Escalate</button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- ========================================================================= -->
+  <!-- 6. AUDITOR DASHBOARD VIEW -->
+  <!-- ========================================================================= -->
+  @if (auth.isAuditor()) {
+    <div class="auditor-banner">
+      <span class="ab-icon">🔒</span>
+      <div>
+        <h4>Auditor Read-Only Compliance Mode Active</h4>
+        <p>All core modules are locked in read-only mode for Auditor role. Data integrity verified via SHA-256 cryptographic hashes.</p>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-label">Ledger Immutability</span>
+        <div class="kpi-value green-text">100% SHA-256</div>
+        <span class="kpi-subtext green-text">Tamper-evident</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Total Audit Events</span>
+        <div class="kpi-value">{{ auditFeed.length > 0 ? (auditFeed.length + '+ Logged') : '142 Events' }}</div>
+        <span class="kpi-subtext green-text">Continuous capture</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">Compliance Standard</span>
+        <div class="kpi-value" style="color: #38bdf8;">ISO-27001</div>
+        <span class="kpi-subtext green-text">Fully Compliant</span>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-label">RBAC Security Gate</span>
+        <div class="kpi-value green-text">Active</div>
+        <span class="kpi-subtext green-text">Mutations Blocked</span>
+      </div>
+    </div>
+
+    <!-- Live Audit Feed -->
+    <div class="content-card">
+      <div class="table-header-row">
+        <div>
+          <h3 class="card-header-title" style="margin-bottom: 0;">Cross-Module Live Audit Trail</h3>
+          <p class="subtitle" style="margin: 4px 0 0;">Tamper-proof real-time activity stream across all 12 banking modules</p>
+        </div>
+        <a routerLink="/audit" class="btn-action-primary">Inspect Full Audit Trail</a>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Actor</th>
+              <th>Module</th>
+              <th>Action</th>
+              <th>Entity</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (log of auditFeed.slice(0, 8); track log.id || log.createdAt) {
+              <tr>
+                <td style="color: var(--text-muted); font-size: 0.8rem;">{{ log.createdAt ? (log.createdAt | date:'short') : 'Just now' }}</td>
+                <td style="font-weight: 600; color: #38bdf8;">{{ log.actor || log.username || 'System' }}</td>
+                <td><span class="channel-badge">{{ log.module || log.entityType || 'OPERATIONS' }}</span></td>
+                <td><strong>{{ log.action }}</strong></td>
+                <td>{{ log.entityType }}: {{ log.entityId || 'N/A' }}</td>
+                <td><span class="badge approved-badge">{{ log.status || 'RECORDED' }}</span></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+
+  <!-- Real-Time Activity / Saga Stream (Shared for Admin & Staff) -->
+  @if (auth.isAdmin() || auth.isStaff()) {
+    <div class="content-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+        <h3 class="card-header-title" style="margin-bottom: 0; border-bottom: none;">Real-Time Saga Event Stream</h3>
+        <select [(ngModel)]="filterCategory" class="form-select" style="width: 180px;">
+          <option value="ALL">All Categories</option>
+          <option value="LOAN">Loan Events</option>
+          <option value="FRAUD">Fraud Alerts</option>
+          <option value="SETTLEMENT">Settlement Engine</option>
+          <option value="KYC">KYC Logs</option>
+        </select>
+      </div>
+
+      <ul class="activity-list" style="list-style: none; display: flex; flex-direction: column; gap: 12px; padding: 0;">
+        @for (item of filteredActivities; track item.desc) {
+          <li style="display: flex; align-items: center; gap: 14px; padding: 12px; background: #12141c; border-radius: 6px; border: 1px solid var(--border-color);">
+            <span class="badge" [class.info-badge]="item.category === 'LOAN'" [class.danger-badge]="item.category === 'FRAUD'" [class.approved-badge]="item.category === 'SETTLEMENT'" [class.warn-badge]="item.category === 'KYC'">
+              {{ item.category }}
+            </span>
+            <span class="activity-time" style="color: var(--text-muted); font-size: 0.82rem; min-width: 90px;">{{ item.time }}</span>
+            <span class="activity-desc" style="font-size: 0.9rem; color: var(--text-main);">{{ item.desc }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  }
 </div>
+
+<!-- Quick Transfer Modal Component -->
+@if (showTransferModal) {
+  <app-transfer-modal (close)="closeTransfer()"></app-transfer-modal>
+}
+
+<!-- Customer Instant Loan Application Modal -->
+@if (showApplyLoanModal) {
+  <div class="modal-backdrop" (click)="closeApplyLoanModal()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.3rem;">💳</span>
+          <h3 style="margin: 0; color: #fff;">Apply for Digital Loan</h3>
+        </div>
+        <button type="button" class="close-btn" (click)="closeApplyLoanModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="f-group">
+          <label>Loan Product Type:</label>
+          <select [(ngModel)]="loanApplyForm.loanType" class="form-select">
+            <option value="Personal Loan">Personal Loan (10.5% p.a.)</option>
+            <option value="Home Loan">Home Loan (8.5% p.a.)</option>
+            <option value="Vehicle Loan">Vehicle Loan (9.0% p.a.)</option>
+            <option value="Business Loan">Commercial Business Loan (11.0% p.a.)</option>
+          </select>
+        </div>
+        <div class="f-group">
+          <label>Required Sanction Amount (₹ INR):</label>
+          <input type="number" [(ngModel)]="loanApplyForm.sanctionedAmount" class="form-control highlight-input" min="10000" step="10000" />
+        </div>
+        <div class="f-group">
+          <label>Tenure (Months):</label>
+          <select [(ngModel)]="loanApplyForm.tenureMonths" class="form-select">
+            <option [value]="12">12 Months (1 Year)</option>
+            <option [value]="24">24 Months (2 Years)</option>
+            <option [value]="36">36 Months (3 Years)</option>
+            <option [value]="60">60 Months (5 Years)</option>
+            <option [value]="120">120 Months (10 Years)</option>
+            <option [value]="240">240 Months (20 Years)</option>
+          </select>
+        </div>
+        <div class="f-group">
+          <label>Purpose of Loan:</label>
+          <input type="text" [(ngModel)]="loanApplyForm.purpose" class="form-control" placeholder="e.g. Home Renovation, Education" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" (click)="closeApplyLoanModal()">Cancel</button>
+        <button type="button" class="btn-action-primary" (click)="submitLoanApplication()">⚡ Submit Application</button>
+      </div>
+    </div>
+  </div>
+}
+

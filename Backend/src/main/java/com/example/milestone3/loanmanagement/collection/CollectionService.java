@@ -13,12 +13,20 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import com.example.milestone3.audit.AuditLogService;
+import com.example.milestone3.notificationService.service.NotificationService;
+
 @Service
 public class CollectionService {
     @Autowired
     private CollectionRepo collectionRepo;
     @Autowired
     private EMIRepo emiRepo;
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private AuditLogService auditLogService;
+
     public CollectionResponse createCollection(CreateCollectionRequest request) {
         EMIEntity emi=emiRepo.findById(request.getEmiId()).orElseThrow();
 
@@ -111,6 +119,28 @@ public class CollectionService {
 
         CollectionEntity updated =
                 collectionRepo.save(collection);
+
+        // Notify customer
+        try {
+            Long custId = 1L;
+            notificationService.notifyCustomer(
+                    custId,
+                    "EMI Payment Received",
+                    "Dear Customer, we received ₹" + payment + " for your loan EMI. Status: " + updated.getStatus()
+            );
+
+            auditLogService.record(
+                    custId,
+                    "COLLECTIONS",
+                    "LOAN_EMI_COLLECTED",
+                    "LOAN_MANAGEMENT",
+                    "COLLECTION",
+                    updated.getId().toString(),
+                    "EMI payment ₹" + payment + " recorded for Loan #" + (collection.getEmi() != null && collection.getEmi().getLoan() != null ? collection.getEmi().getLoan().getId() : "N/A"),
+                    "SUCCESS",
+                    null
+            );
+        } catch (Exception ignored) { }
 
         return convertToResponse(updated);
     }

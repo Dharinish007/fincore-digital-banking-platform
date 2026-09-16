@@ -1,11 +1,18 @@
 package com.example.milestone3.fraudDetection;
 
 import com.example.milestone3.audit.AuditLogService;
+import com.example.milestone3.notificationService.service.NotificationService;
+import com.example.milestone3.operations.entity.Account;
+import com.example.milestone3.operations.entity.AccountStatement;
+import com.example.milestone3.operations.repo.AccountRepo;
+import com.example.milestone3.operations.repo.AccountStatementRepo;
 import com.example.milestone3.risk.RiskAssessment;
 import com.example.milestone3.risk.RiskAssessmentRepo;
 import com.example.milestone3.settlementEngine.entity.Loan;
+import com.example.milestone3.settlementEngine.entity.Settlement;
 import com.example.milestone3.settlementEngine.entity.Transaction;
 import com.example.milestone3.settlementEngine.repo.LoanRepo;
+import com.example.milestone3.settlementEngine.repo.SettlementRepo;
 import com.example.milestone3.settlementEngine.repo.TransactionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +41,14 @@ public class FraudDetectionService {
     private AuditLogService auditLogService;
     @Autowired
     private CustomerRepo customerRepo;
+    @Autowired
+    private AccountRepo accountRepo;
+    @Autowired
+    private AccountStatementRepo statementRepo;
+    @Autowired
+    private SettlementRepo settlementRepo;
+    @Autowired
+    private NotificationService notificationService;
 
     public record FraudResult(
             int score,
@@ -72,102 +87,51 @@ public class FraudDetectionService {
             String createdAt
     ) { }
 
-
     public FraudResult checkTransaction(Transaction transaction) {
-
         int score = 0;
-
         List<String> reasons = new ArrayList<>();
-        Loan loan = loanRepo
-                .findById(transaction.getLoanId())
-                .orElseThrow(() ->
-                        new RuntimeException("Loan not found"));
+        Long userId = transaction.getCustomerId() != null ? transaction.getCustomerId() : 1L;
 
-        Long userId = loan.getCustomerId();
-
-
-        if (transaction.getAmount()
-                .compareTo(new BigDecimal("100000")) >= 0) {
-
+        if (transaction.getAmount() != null && transaction.getAmount().compareTo(new BigDecimal("100000")) >= 0) {
             score += 30;
-
-            reasons.add("Large transaction amount");
+            reasons.add("Large transaction amount (>= ₹1,00,000)");
         }
 
-
-        long recentTransactions =
-                transactionRepository.countRecentTransactions(
-                        userId,
-                        LocalDateTime.now().minusMinutes(5)
-                );
-
-        if (recentTransactions >= 5) {
-
-            score += 25;
-
-            reasons.add(
-                    "Too many transactions in short time"
+        try {
+            long recentTransactions = transactionRepository.countRecentTransactions(
+                    userId,
+                    LocalDateTime.now().minusMinutes(5)
             );
-        }
+            if (recentTransactions >= 5) {
+                score += 25;
+                reasons.add("Too many transactions in short time window");
+            }
+        } catch (Exception ignored) { }
 
         String fraudStatus;
-
         if (score >= 80) {
             fraudStatus = "BLOCKED";
-
         } else if (score >= 50) {
             fraudStatus = "UNDER_REVIEW";
-
         } else if (score >= 25) {
             fraudStatus = "SUSPICIOUS";
-
         } else {
             fraudStatus = "SAFE";
         }
 
-        return new FraudResult(
-                score,
-                fraudStatus,
-                reasons
-        );
+        return new FraudResult(score, fraudStatus, reasons);
     }
 
-    public void saveFraudEvent(
-            Transaction transaction,
-            FraudResult result) {
-        Loan loan = loanRepo
-                .findById(transaction.getLoanId())
-                .orElseThrow(() ->
-                        new RuntimeException("Loan not found"));
-
-        Long userId = loan.getCustomerId();
+    public void saveFraudEvent(Transaction transaction, FraudResult result) {
+        Long userId = transaction.getCustomerId() != null ? transaction.getCustomerId() : 1L;
 
         FraudEvent fraudEvent = new FraudEvent();
-
-        fraudEvent.setUserId(
-                userId
-        );
-
-        fraudEvent.setTransactionId(
-                transaction.getId()
-        );
-
-        fraudEvent.setFraudScore(
-                result.score()
-        );
-
-        fraudEvent.setStatus(
-                result.status()
-        );
-
-        fraudEvent.setReason(
-                String.join(", ", result.reasons())
-        );
-
-        fraudEvent.setCreatedAt(
-                LocalDateTime.now()
-        );
-
+        fraudEvent.setUserId(userId);
+        fraudEvent.setTransactionId(transaction.getId());
+        fraudEvent.setFraudScore(result.score());
+        fraudEvent.setStatus(result.status());
+        fraudEvent.setReason(String.join(", ", result.reasons()));
+        fraudEvent.setCreatedAt(LocalDateTime.now());
         fraudEventRepository.save(fraudEvent);
 
         riskAssessmentRepo.save(new RiskAssessment(
@@ -181,7 +145,7 @@ public class FraudDetectionService {
         ));
 
         auditLogService.record(
-                "RISK_ENGINE",
+                "FRAUD_ENGINE",
                 "RISK_ASSESSMENT_CREATED",
                 "TRANSACTION",
                 transaction.getId().toString(),
@@ -299,7 +263,7 @@ public class FraudDetectionService {
         txn.setTransactionReference("TXN-2026-" + randSuffix);
         txn.setAmount(amount);
         txn.setType(txnType);
-        txn.setStatus("BLOCKED".equalsIgnoreCase(fraudStatus) ? "FAILED" : "SUCCESS");
+        txn.setStatus("BLOCKED".equalsIgnoreCase(fraudStatus) ? "BLOCKED" : ("UNDER_REVIEW".equalsIgnoreCase(fraudStatus) ? "UNDER_REVIEW" : "SUCCESS"));
         txn.setCreatedAt(LocalDateTime.now());
         Transaction savedTxn = transactionRepository.save(txn);
 
@@ -338,7 +302,7 @@ public class FraudDetectionService {
 
         // 4. Record in Audit Log
         auditLogService.record(
-                null,
+                customerId,
                 "FRAUD_ENGINE",
                 "FRAUD_EVALUATION_COMPLETED",
                 "FRAUD_DETECTION",
@@ -365,5 +329,142 @@ public class FraudDetectionService {
                 reasons,
                 savedEvent.getCreatedAt().toString()
         );
+    }
+
+    /**
+     * Fraud Officer Action: Approve Held Transaction & Trigger Settlement
+     */
+    @Transactional
+    public Transaction approveHold(Long transactionId) {
+        Transaction txn = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+
+        txn.setStatus("SUCCESS");
+        Transaction savedTxn = transactionRepository.save(txn);
+
+        // Update FraudEvent status
+        fraudEventRepository.findByTransactionId(transactionId).ifPresent(fe -> {
+            fe.setStatus("APPROVED_BY_OFFICER");
+            fraudEventRepository.save(fe);
+        });
+
+        // Debit sender account and create statement entry if not already executed
+        if (txn.getCustomerId() != null) {
+            List<Account> accs = accountRepo.findByCustomerId(txn.getCustomerId());
+            if (!accs.isEmpty()) {
+                Account acc = accs.get(0);
+                if (acc.getBalance().compareTo(txn.getAmount()) >= 0) {
+                    BigDecimal newBal = acc.getBalance().subtract(txn.getAmount());
+                    acc.setBalance(newBal);
+                    accountRepo.save(acc);
+
+                    AccountStatement stmt = new AccountStatement();
+                    stmt.setAccountId(acc.getId());
+                    stmt.setReference(txn.getTransactionReference());
+                    stmt.setEntryType("DEBIT");
+                    stmt.setAmount(txn.getAmount());
+                    stmt.setBalanceAfter(newBal);
+                    stmt.setDescription("Settlement released after fraud officer verification - Ref: " + txn.getTransactionReference());
+                    stmt.setCreatedAt(LocalDateTime.now());
+                    statementRepo.save(stmt);
+                }
+            }
+        }
+
+        // Record Settlement
+        Settlement settlement = new Settlement();
+        settlement.setTransactionId(savedTxn.getId());
+        settlement.setLoanId(savedTxn.getLoanId() != null ? savedTxn.getLoanId() : 1L);
+        settlement.setSettledAmount(savedTxn.getAmount());
+        settlement.setStatus("SETTLED");
+        settlement.setSettledAt(LocalDateTime.now());
+        settlementRepo.save(settlement);
+
+        notificationService.notifyCustomer(
+                txn.getCustomerId(),
+                "Transaction Approved & Settled",
+                "Your held transaction " + txn.getTransactionReference() + " for ₹" + txn.getAmount() + " has been verified and settled successfully."
+        );
+
+        auditLogService.record(
+                txn.getCustomerId(),
+                "FRAUD_OFFICER",
+                "FRAUD_HOLD_APPROVED",
+                "FRAUD_DETECTION",
+                "TRANSACTION",
+                txn.getTransactionReference(),
+                "Held transaction approved and released by Fraud Officer. Cleared to Settlement Engine.",
+                "SUCCESS",
+                null
+        );
+
+        return savedTxn;
+    }
+
+    /**
+     * Fraud Officer Action: Block Transaction
+     */
+    @Transactional
+    public Transaction blockHold(Long transactionId, String reason) {
+        Transaction txn = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+
+        txn.setStatus("BLOCKED");
+        Transaction savedTxn = transactionRepository.save(txn);
+
+        fraudEventRepository.findByTransactionId(transactionId).ifPresent(fe -> {
+            fe.setStatus("BLOCKED_BY_OFFICER");
+            fe.setReason(reason != null ? reason : "Manually blocked by Fraud Officer");
+            fraudEventRepository.save(fe);
+        });
+
+        notificationService.notifyCustomer(
+                txn.getCustomerId(),
+                "Transaction Blocked Notice",
+                "Security Notice: Transaction " + txn.getTransactionReference() + " has been permanently blocked following investigation."
+        );
+
+        auditLogService.record(
+                txn.getCustomerId(),
+                "FRAUD_OFFICER",
+                "TRANSACTION_BLOCKED_BY_OFFICER",
+                "FRAUD_DETECTION",
+                "TRANSACTION",
+                txn.getTransactionReference(),
+                "Transaction permanently blocked. Reason: " + reason,
+                "BLOCKED",
+                null
+        );
+
+        return savedTxn;
+    }
+
+    /**
+     * Fraud Officer Action: Escalate Case to AML Compliance Level 3
+     */
+    @Transactional
+    public Transaction escalateCase(Long transactionId, String reason) {
+        Transaction txn = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+
+        fraudEventRepository.findByTransactionId(transactionId).ifPresent(fe -> {
+            fe.setStatus("ESCALATED_AML_L3");
+            fe.setReason(reason != null ? reason : "Escalated to Level-3 AML Compliance");
+            fraudEventRepository.save(fe);
+        });
+
+        auditLogService.record(
+                txn.getCustomerId(),
+                "FRAUD_OFFICER",
+                "TRANSACTION_ESCALATED_AML",
+                "FRAUD_DETECTION",
+                "TRANSACTION",
+                txn.getTransactionReference(),
+                "Transaction escalated to Level-3 Anti-Money Laundering compliance team",
+                "ESCALATED",
+                null
+        );
+
+        return txn;
     }
 }

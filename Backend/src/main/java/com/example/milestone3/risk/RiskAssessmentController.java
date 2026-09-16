@@ -44,12 +44,35 @@ public class RiskAssessmentController {
     /** All stored transactions (formatted for the assessment picker). */
     @GetMapping("/transactions")
     public ResponseEntity<List<TransactionRiskOption>> transactions() {
-        List<TransactionRiskOption> options = transactionRepository.findTop5ByOrderByCreatedAtDescIdDesc().stream()
+        List<TransactionRiskOption> options = transactionRepository.findAllByOrderByCreatedAtDescIdDesc().stream()
                 .map(transaction -> new TransactionRiskOption(transaction.getId(),
                         customerIdFor(transaction),
                         transaction.getAmount(), transaction.getType(), transaction.getStatus(), transaction.getCreatedAt()))
                 .toList();
         return ResponseEntity.ok(options);
+    }
+
+    /** Add a new transaction directly from the risk assessment module. */
+    @PostMapping("/transactions")
+    public ResponseEntity<Transaction> createTransaction(@RequestBody TransactionCreateDto dto) {
+        Transaction txn = new Transaction();
+        txn.setTransactionReference((dto.transactionReference() != null && !dto.transactionReference().isBlank())
+                ? dto.transactionReference().trim()
+                : "TXN-" + System.currentTimeMillis() + "-" + (int) (Math.random() * 900 + 100));
+        txn.setCustomerId(dto.customerId() != null ? dto.customerId() : 1L);
+        txn.setLoanId(dto.loanId());
+        txn.setAmount(dto.amount() != null ? dto.amount() : BigDecimal.valueOf(10000));
+        txn.setType(dto.type() != null ? dto.type().toUpperCase() : "FUND_TRANSFER");
+        txn.setStatus(dto.status() != null ? dto.status().toUpperCase() : "SUCCESS");
+        txn.setCreatedAt(LocalDateTime.now());
+        Transaction saved = transactionRepository.save(txn);
+
+        auditLogService.record("RISK_ENGINE", "TRANSACTION_RECORDED", "TRANSACTION",
+                saved.getId().toString(),
+                "New transaction recorded for risk evaluation: " + saved.getType() + " ₹" + saved.getAmount(),
+                null);
+
+        return ResponseEntity.ok(saved);
     }
 
     private Long customerIdFor(Transaction transaction) {
@@ -74,7 +97,7 @@ public class RiskAssessmentController {
     /**
      * Full customer context (customer, accounts, loans and transaction
      * history) so the dashboard can pre-fill and display the data that is
-    * later used by the rule-based assessment.
+     * later used by the rule-based assessment.
      */
     @GetMapping("/customers/{customerId}/profile")
     public ResponseEntity<Map<String, Object>> customerProfile(@PathVariable Long customerId) {
@@ -107,6 +130,22 @@ public class RiskAssessmentController {
     public ResponseEntity<List<RiskAssessment>> getAll() {
         return ResponseEntity.ok(repository.findAllByOrderByAssessedAtDesc());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RiskAssessment> getById(@PathVariable Long id) {
+        return repository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    public record TransactionCreateDto(
+            Long customerId,
+            Long loanId,
+            BigDecimal amount,
+            String type,
+            String status,
+            String transactionReference
+    ) { }
 
     public record RiskRequest(
             @NotNull Long customerId,

@@ -46,6 +46,8 @@ export class KycComponent implements OnInit, OnDestroy {
   private readonly faceDetection = inject(FaceDetectionService);
 
   customerId: number | null = null;
+  selectedCustomer: any | null = null;
+  customerNotFound: boolean = false;
 
   toastMessage: string | null = null;
   toastType: 'success' | 'danger' | 'info' = 'info';
@@ -70,11 +72,60 @@ export class KycComponent implements OnInit, OnDestroy {
   private faceCheckTimer: ReturnType<typeof setInterval> | null = null;
   private challengeTimer: ReturnType<typeof setInterval> | null = null;
 
+  customers: any[] = [];
+
   get allChallengesPassed(): boolean {
     return this.challengePassed.every(Boolean);
   }
 
   ngOnInit(): void {
+    this.loadCustomers();
+  }
+
+  loadCustomers(): void {
+    this.api.get<any[]>('/api/operations/customers').subscribe({
+      next: (data) => {
+        this.customers = data || [];
+        if (this.customers.length > 0 && !this.customerId) {
+          this.customerId = this.customers[0].id;
+          this.fetchCustomerDetails(this.customerId!);
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  onCustomerIdChange(): void {
+    if (!this.customerId || this.customerId < 1) {
+      this.selectedCustomer = null;
+      this.customerNotFound = true;
+      this.livenessResult = null;
+      return;
+    }
+    this.fetchCustomerDetails(this.customerId);
+  }
+
+  fetchCustomerDetails(id: number): void {
+    this.api.get<any>(`/api/operations/customers/${id}`).subscribe({
+      next: (cust) => {
+        if (cust && cust.id) {
+          this.selectedCustomer = cust;
+          this.customerNotFound = false;
+          this.loadLivenessHistory();
+        } else {
+          this.selectedCustomer = null;
+          this.customerNotFound = true;
+          this.livenessResult = null;
+          this.showToast(`User with Customer ID #${id} not found in database.`, 'danger');
+        }
+      },
+      error: () => {
+        this.selectedCustomer = null;
+        this.customerNotFound = true;
+        this.livenessResult = null;
+        this.showToast(`User with Customer ID #${id} not found in database.`, 'danger');
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -123,8 +174,8 @@ export class KycComponent implements OnInit, OnDestroy {
   }
 
   async startVerification(): Promise<void> {
-    if (!this.customerId || this.customerId < 1) {
-      this.showToast('Enter a valid customer ID before starting verification.', 'danger');
+    if (!this.customerId || this.customerId < 1 || this.customerNotFound || !this.selectedCustomer) {
+      this.showToast(this.customerNotFound ? `User with Customer ID #${this.customerId} not found in database.` : 'Please select a valid customer before starting verification.', 'danger');
       return;
     }
     if (this.cameraStatus !== 'CONNECTED') {
@@ -140,9 +191,10 @@ export class KycComponent implements OnInit, OnDestroy {
         this.verificationStarted = true;
         this.beginChallenges();
       },
-      error: () => {
+      error: (err) => {
         this.stopCamera();
-        this.showToast('Unable to start a liveness verification session.', 'danger');
+        const msg = err.error?.message || 'Unable to start a liveness verification session.';
+        this.showToast(msg, 'danger');
       }
     });
   }
@@ -184,15 +236,18 @@ export class KycComponent implements OnInit, OnDestroy {
   }
 
   loadLivenessHistory(): void {
-    if (!this.customerId || this.customerId < 1) return;
+    if (!this.customerId || this.customerId < 1 || this.customerNotFound) return;
     this.api.get<LivenessVerification[]>(`/api/liveness/customer/${this.customerId}`).subscribe({
       next: results => this.livenessResult = results[0] ?? null,
-      error: () => this.showToast('Unable to load liveness verification history.', 'danger')
+      error: () => {}
     });
   }
 
   verifyLiveness(): void {
-    if (!this.customerId) return;
+    if (!this.customerId || this.customerNotFound || !this.selectedCustomer) {
+      this.showToast(`User with Customer ID #${this.customerId} not found in database.`, 'danger');
+      return;
+    }
     if (this.cameraStatus !== 'CONNECTED' || this.faceStatus !== 'DETECTED') {
       this.showToast('Connect the camera and position exactly one face inside the guide first.', 'danger');
       return;
@@ -215,16 +270,21 @@ export class KycComponent implements OnInit, OnDestroy {
         this.livenessLoading = false;
         this.showToast(`Camera verification ${result.status.toLowerCase()}.`, result.status === 'VERIFIED' ? 'success' : 'danger');
       },
-      error: () => {
+      error: (err) => {
         this.livenessLoading = false;
-        this.showToast('Liveness verification could not be completed.', 'danger');
+        const msg = err.error?.message || 'Liveness verification could not be completed.';
+        this.showToast(msg, 'danger');
       }
     });
   }
 
   verifyPasscode(): void {
-    if (!this.customerId || !/^\d{8}$/.test(this.passcodeInput)) {
-      this.showToast('Enter your date of birth as DDMMYYYY.', 'danger');
+    if (!this.customerId || this.customerNotFound || !this.selectedCustomer) {
+      this.showToast(`User with Customer ID #${this.customerId} not found in database.`, 'danger');
+      return;
+    }
+    if (!/^\d{8}$/.test(this.passcodeInput)) {
+      this.showToast('Enter date of birth in DDMMYYYY format (8 numeric digits, e.g. 15081995).', 'danger');
       return;
     }
     this.passcodeLoading = true;
@@ -250,7 +310,7 @@ export class KycComponent implements OnInit, OnDestroy {
       error: response => {
         this.passcodeLoading = false;
         this.passcodeInput = '';
-        this.showToast(response.error?.message || 'Date of birth verification failed.', 'danger');
+        this.showToast(response.error?.message || 'Date of birth verification failed. Customer not found or DOB did not match.', 'danger');
       }
     });
   }

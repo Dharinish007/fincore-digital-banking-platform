@@ -50,37 +50,61 @@
       </div>
     </div>
 
-    <!-- 2. To Who (Recipient Details) -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 18px;">
-      <div class="form-group">
-        <label style="display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
-          2. Enter Details (To Who):
-        </label>
-        <input type="text"
-               [(ngModel)]="recipient"
-               [placeholder]="notificationType === 'SMS' ? 'e.g. +91 98765 43210 (Mobile Number)' : 'e.g. customer@example.com (Email Address)'"
-               class="form-input"
-               style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 0.95rem;" />
-        <span style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px; display: block;">
-          {{ notificationType === 'SMS' ? 'Phone number to whom SMS notification is sent' : 'Email address to whom email notification is sent' }}
-        </span>
-      </div>
+    <!-- 2. Select Customer & To Who (Recipient Details) -->
+    <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid #334155; border-radius: 8px; padding: 16px; margin-bottom: 18px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 12px;">
+        <div class="form-group">
+          <label style="display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+            2. Select Customer from List of Customers:
+          </label>
+          <select [ngModel]="selectedCustomerId" (ngModelChange)="onCustomerSelect($event)" class="form-select" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 0.95rem;">
+            <option [ngValue]="null">-- Select a Customer --</option>
+            @for (cust of customers; track cust.id) {
+              <option [value]="cust.id">{{ cust.fullName }} (ID: #{{ cust.id }} | {{ cust.accountNumber }})</option>
+            }
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label style="display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
-          Quick-Select Database Customer:
-        </label>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          @for (cust of customers; track cust.id) {
-            <button type="button"
-                    (click)="selectCustomer(cust)"
-                    class="action-btn"
-                    style="font-size: 0.82rem; padding: 6px 12px; background: #1e293b; border: 1px solid #475569; color: #e2e8f0; border-radius: 4px; cursor: pointer;">
-              👤 {{ cust.fullName }}
-            </button>
-          }
+        <div class="form-group">
+          <label style="display: block; font-size: 0.88rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+            Recipient Destination ({{ notificationType }}):
+          </label>
+          <input type="text"
+                 [(ngModel)]="recipient"
+                 [placeholder]="notificationType === 'SMS' ? 'e.g. +91 98765 43210 (Mobile Number)' : 'e.g. customer@example.com (Email Address)'"
+                 class="form-input"
+                 style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-size: 0.95rem;" />
+          <span style="font-size: 0.78rem; color: #94a3b8; margin-top: 4px; display: block;">
+            {{ notificationType === 'SMS' ? 'Phone number for SMS dispatch' : 'Email address for advisory delivery' }}
+          </span>
         </div>
       </div>
+
+      <!-- Quick-Select Customer Badges -->
+      <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+        <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;">QUICK SELECT:</span>
+        @for (cust of customers; track cust.id) {
+          <button type="button"
+                  (click)="onCustomerSelect(cust.id)"
+                  class="action-btn"
+                  [style.border-color]="selectedCustomerId === cust.id ? '#38bdf8' : '#475569'"
+                  [style.background]="selectedCustomerId === cust.id ? '#1e3a5f' : '#1e293b'"
+                  style="font-size: 0.82rem; padding: 5px 12px; color: #e2e8f0; border-radius: 4px; cursor: pointer; border: 1px solid;">
+            👤 {{ cust.fullName }}
+          </button>
+        }
+      </div>
+
+      <!-- Selected Customer Context Summary -->
+      @if (selectedCustomer) {
+        <div style="margin-top: 12px; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="font-size: 0.85rem; color: #e2e8f0;">
+            Selected Customer: <strong style="color: #38bdf8;">{{ selectedCustomer.fullName }}</strong> (ID: #{{ selectedCustomer.id }})
+            <span style="color: #94a3b8; margin-left: 8px;">| Phone: {{ selectedCustomer.phoneNumber }} | Email: {{ selectedCustomer.email }} | Acc: {{ selectedCustomer.accountNumber }}</span>
+          </div>
+          <span style="font-size: 0.75rem; background: #0284c7; color: #fff; padding: 2px 8px; border-radius: 4px; font-weight: 600;">READY TO SEND</span>
+        </div>
+      }
     </div>
 
     <!-- 3. Notification Message -->

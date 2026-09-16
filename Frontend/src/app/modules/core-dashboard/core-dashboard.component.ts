@@ -1,10 +1,11 @@
-import { Component, inject, output } from '@angular/core';
+import { Component, OnInit, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { BalanceService } from '../../services/balance.service';
 import { DeliveryStorageService } from '../../services/delivery-storage.service';
 import { ModalService } from '../../services/modal.service';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-core-dashboard',
@@ -14,24 +15,24 @@ import { ModalService } from '../../services/modal.service';
     <div class="dashboard-view">
       <h2 class="view-title">Core Banking Operations</h2>
 
-      <!-- Top 3 Operational Metric Boxes matching image -->
+      <!-- Top 3 Operational Metric Boxes bound to PostgreSQL Database Data -->
       <div class="metrics-grid">
         <div class="metric-card">
           <div class="m-label">Active Accounts</div>
-          <div class="m-value">2.4M</div>
-          <div class="m-sub">Savings+Current</div>
+          <div class="m-value">{{ activeAccountsCount }}</div>
+          <div class="m-sub">{{ savingsCount }} Savings • {{ currentCount }} Current</div>
         </div>
 
         <div class="metric-card">
-          <div class="m-label">Transactions/Day</div>
-          <div class="m-value">12.4M</div>
-          <div class="m-sub">Real-time</div>
+          <div class="m-label">Total Transactions</div>
+          <div class="m-value">{{ totalTransactionsCount }}</div>
+          <div class="m-sub">PostgreSQL Ledger</div>
         </div>
 
         <div class="metric-card">
-          <div class="m-label">Uptime</div>
-          <div class="m-value">99.99%</div>
-          <div class="m-sub">SLA</div>
+          <div class="m-label">Total Core Balance</div>
+          <div class="m-value">₹{{ totalBalanceFormatted }}</div>
+          <div class="m-sub">Live Liquid Deposits</div>
         </div>
       </div>
 
@@ -121,9 +122,9 @@ import { ModalService } from '../../services/modal.service';
         </div>
       </div>
 
-      <!-- Quick Account Switcher Grid (8 Enterprise Accounts) -->
+      <!-- Quick Account Switcher Grid -->
       <div class="accounts-switcher-card">
-        <h3>ACTIVE ENTERPRISE ACCOUNTS PORTFOLIO (8 ACCOUNTS)</h3>
+        <h3>ACTIVE ENTERPRISE ACCOUNTS PORTFOLIO ({{ accountService.accounts().length }} ACCOUNTS)</h3>
         <div class="account-pills-grid">
           <div 
             *ngFor="let acc of accountService.accounts()" 
@@ -238,17 +239,53 @@ import { ModalService } from '../../services/modal.service';
     .asc-bal { font-size: 0.95rem; color: #34d399; }
   `]
 })
-export class CoreDashboardComponent {
+export class CoreDashboardComponent implements OnInit {
   accountService = inject(AccountService);
   balanceService = inject(BalanceService);
   deliveryService = inject(DeliveryStorageService);
   modalService = inject(ModalService);
   router = inject(Router);
+  private readonly api = inject(ApiService);
+
+  totalTransactionsCount = 0;
 
   readonly goToStatements = output<void>();
   readonly goToBalance = output<void>();
   readonly openEditModalTrigger = output<void>();
   readonly openTransferModalTrigger = output<void>();
+
+  ngOnInit(): void {
+    this.accountService.loadFromBackend();
+    this.loadTransactionsCount();
+  }
+
+  loadTransactionsCount(): void {
+    this.api.get<any[]>('/api/operations/transactions').subscribe({
+      next: (txs) => {
+        if (txs) {
+          this.totalTransactionsCount = txs.length;
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  get activeAccountsCount(): number {
+    return this.accountService.accounts().filter(a => a.status === 'ACTIVE').length || this.accountService.accounts().length;
+  }
+
+  get savingsCount(): number {
+    return this.accountService.accounts().filter(a => a.type === 'SAVINGS').length;
+  }
+
+  get currentCount(): number {
+    return this.accountService.accounts().filter(a => a.type !== 'SAVINGS').length;
+  }
+
+  get totalBalanceFormatted(): string {
+    const sum = this.accountService.accounts().reduce((total, a) => total + (a.balance || 0), 0);
+    return sum.toLocaleString('en-IN');
+  }
 
   openEditModal() {
     this.openEditModalTrigger.emit();

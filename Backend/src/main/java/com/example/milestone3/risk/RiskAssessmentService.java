@@ -61,7 +61,9 @@ public class RiskAssessmentService {
         enrichFromCustomerData(request, assessment);
 
         // Retrieve the customer's transaction history for additional analysis
-        List<Transaction> history = transactionRepository.findTransactionsByCustomerId(request.customerId());
+        List<Transaction> history = (request.customerId() != null)
+                ? transactionRepository.findTransactionsByCustomerId(request.customerId())
+                : List.of();
         assessment.setPreviousTransactionCount(history.size());
         assessment.setTransactionHistory(history.stream()
             .map(transaction -> "#" + transaction.getId() + " amount=" + transaction.getAmount()
@@ -81,6 +83,9 @@ public class RiskAssessmentService {
      * customer, account and loan records.
      */
     private void enrichFromCustomerData(RiskAssessmentController.RiskRequest request, RiskAssessment assessment) {
+        if (request.customerId() == null) {
+            return;
+        }
         customerRepository.findById(request.customerId())
                 .ifPresent(customer -> assessment.setCustomerName(customer.getFullName()));
 
@@ -206,8 +211,8 @@ public class RiskAssessmentService {
 
         assessment.setRiskScore(score);
         assessment.setRiskLevel(score >= 85 ? "CRITICAL" : score >= 65 ? "HIGH" : score >= 40 ? "MEDIUM" : "LOW");
-        assessment.setDecision(score >= 85 ? "BLOCKED" : score >= 65 ? "FLAGGED"
-                : score >= 40 ? "UNDER_REVIEW" : "APPROVED");
+        assessment.setDecision(score >= 85 ? "REJECT" : score >= 65 ? "FLAG"
+                : score >= 40 ? "CHALLENGE" : "APPROVE");
         assessment.setReasons(String.join("; ", reasons));
         assessment.setAiAnalysis("This assessment was calculated by the FinCore rule engine using the submitted "
                 + "customer, account, loan, transaction and database history details.");

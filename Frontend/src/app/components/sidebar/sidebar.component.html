@@ -1,6 +1,6 @@
 <aside class="fincore-sidebar">
   <nav class="sidebar-nav">
-    @for (section of navSections; track section.title) {
+    @for (section of navSections(); track section.title) {
       <div class="nav-section">
         <div class="section-title">{{ section.title }}</div>
         <ul class="nav-list">
@@ -27,9 +27,7 @@
   <div class="sidebar-footer">
     <div class="sf-info">
       <div class="sf-label">FinCore Suite</div>
-      <div class="sf-version">v4.0.0 Enterprise</div>
+      <div class="sf-version">v4.0.0 Enterprise • RBAC</div>
     </div>
   </div>
 </aside>
-
-
