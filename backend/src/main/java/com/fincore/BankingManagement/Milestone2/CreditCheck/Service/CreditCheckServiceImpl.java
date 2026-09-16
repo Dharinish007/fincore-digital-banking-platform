@@ -1,7 +1,7 @@
 package com.fincore.BankingManagement.Milestone2.CreditCheck.Service;
 
 import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.CreditCheckRepository;
-import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.CustomerRepository;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.CreditCheckCustomerRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.LoanApplicationRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.Repository.LoanHistoryRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.dto.CreditCheckRequest;
@@ -30,7 +30,7 @@ import java.util.List;
 public class CreditCheckServiceImpl {
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private CreditCheckCustomerRepository customerRepository;
 
     @Autowired
     private LoanApplicationRepository loanApplicationRepository;

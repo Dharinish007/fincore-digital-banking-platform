@@ -1,11 +1,9 @@
-package com.fincore.BankingManagement.Milestone2.CreditCheck.Repository;
+package com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Repository;
 
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, Long> {
+public interface CreditCheckCustomerRepo extends JpaRepository<Customer, Long> {
 }

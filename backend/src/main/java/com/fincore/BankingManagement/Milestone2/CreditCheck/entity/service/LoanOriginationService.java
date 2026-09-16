@@ -4,7 +4,7 @@ import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Customer;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.ApplicationStatus;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.LoanOrigination;
 
-import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Repository.CustomerRepo;
+import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Repository.CreditCheckCustomerRepo;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.Repository.LoanOriginationRepository;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto.LoanApplicationRequest;
 import com.fincore.BankingManagement.Milestone2.CreditCheck.entity.dto.LoanApplicationResponse;
@@ -26,7 +26,7 @@ public class LoanOriginationService {
 
         private final LoanProductService loanProductService;
 
-        private final CustomerRepo customerRepository;
+        private final CreditCheckCustomerRepo customerRepository;
 
         @Transactional
         public LoanOrigination createLoanApplication(
