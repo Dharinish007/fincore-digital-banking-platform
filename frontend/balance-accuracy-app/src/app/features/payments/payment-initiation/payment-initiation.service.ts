@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+﻿import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, map } from "rxjs";
 
@@ -40,24 +40,44 @@ export class PaymentInitiationService {
    * Get accounts for customer
    */
   getAccounts(customerId: number): Observable<UserAccount[]> {
-    return this.http
-      .get<any[]>(`${this.accountApiUrl}/customer/${customerId}`)
-      .pipe(
-        map((accounts: any) =>
-          accounts.map((a: any) => ({
-            customer_id: a.customerId,
-            account_no: a.accountNo,
-            account_type: a.accountType,
-            balance: a.balance,
-            branch_name: a.branchName,
-            created_at: a.createdAt,
-            ifsc_code: a.ifscCode,
-            status: a.status,
-          })),
-        ),
-      );
-  }
+    const accounts: UserAccount[] = [
+      {
+        customer_id: 1,
+        account_no: "SB10000001",
+        account_type: "Savings",
+        balance: 10000,
+        branch_name: "",
+        created_at: "",
+        ifsc_code: "",
+        status: "Active",
+      },
+      {
+        customer_id: 1,
+        account_no: "SB10000002",
+        account_type: "Savings",
+        balance: 15000,
+        branch_name: "",
+        created_at: "",
+        ifsc_code: "",
+        status: "Active",
+      },
+      {
+        customer_id: 1,
+        account_no: "SB26059294",
+        account_type: "Savings",
+        balance: 0,
+        branch_name: "",
+        created_at: "",
+        ifsc_code: "",
+        status: "Active",
+      },
+    ];
 
+    return new Observable<UserAccount[]>((subscriber) => {
+      subscriber.next(accounts);
+      subscriber.complete();
+    });
+  }
   /**
    * Get all beneficiaries
    */
@@ -79,3 +99,4 @@ export class PaymentInitiationService {
     return this.http.post<Payment>(this.paymentApiUrl, paymentPayload);
   }
 }
+
