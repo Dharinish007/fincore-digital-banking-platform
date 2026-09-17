@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/face")
-@CrossOrigin("*")
 public class FaceMatchController {
 
     private final FaceMatchService faceMatchService;

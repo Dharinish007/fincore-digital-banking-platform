@@ -12,7 +12,6 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/document-ocr")
-@CrossOrigin("*")
 public class DocumentOcrController {
 
     private final DocumentOcrService documentOcrService;

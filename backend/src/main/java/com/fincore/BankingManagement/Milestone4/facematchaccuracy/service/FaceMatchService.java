@@ -24,7 +24,7 @@ public class FaceMatchService {
         try {
 
             String fastApiUrl =
-                    "http://127.0.0.1:8001/face-match";
+                    "http://127.0.0.1:8000/face-match";
 
             HttpHeaders headers = new HttpHeaders();
 

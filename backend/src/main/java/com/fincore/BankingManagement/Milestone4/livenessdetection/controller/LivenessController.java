@@ -9,13 +9,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/kyc/liveness")
-@CrossOrigin(
-        origins = "http://localhost:4200",
-        methods = {
-                RequestMethod.POST,
-                RequestMethod.OPTIONS
-        }
-)
 public class LivenessController {
 
     private final LivenessService livenessService;
