@@ -17,7 +17,6 @@ import com.fincore.BankingManagement.Milestone3.paymentinitiation.service.Paymen
 
 @RestController
 @RequestMapping("/api/payments")
-@CrossOrigin("*")
 public class PaymentController {
     private final PaymentService paymentService;
 

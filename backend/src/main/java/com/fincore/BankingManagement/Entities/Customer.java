@@ -28,34 +28,45 @@ public class Customer {
     @Column(name = "email")
     private String email;
 
+    /*
+     * M1 uses mobileNumber.
+     * The actual database column is "phone".
+     */
     @Column(name = "phone")
-    private String phone;
-
-    @Column(name = "date_of_birth")
-    private LocalDate dateOfBirth;
-
-    @Column(name = "gender")
-    private String gender;
-
-    @Column(name = "mobile_no")
     private String mobileNumber;
-
-    @Column(name = "email_id")
-    private String emailId;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "e_type")
-    private String employmentType;
-
-    @Column(name = "salary")
-    private BigDecimal salary;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "time_stamp")
+    /*
+     * These fields are kept as Java properties because some
+     * application code may use them, but they are NOT columns
+     * in the current customer table.
+     */
+    @Transient
+    private LocalDate dateOfBirth;
+
+    @Transient
+    private String gender;
+
+    @Transient
+    private String emailId;
+
+    @Transient
+    private String address;
+
+    @Transient
+    private String employmentType;
+
+    /*
+     * M2 Credit Check uses customer.getSalary().
+     * The current GitHub customer table has no salary column,
+     * so keep the property without mapping it to the database.
+     */
+    @Transient
+    private BigDecimal salary;
+
+    @Transient
     private LocalDateTime timeStamp;
 
     @OneToMany(mappedBy = "customer")
