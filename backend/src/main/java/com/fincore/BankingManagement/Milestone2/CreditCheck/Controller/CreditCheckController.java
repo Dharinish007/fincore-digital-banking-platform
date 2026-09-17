@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
-@RequestMapping(path = { "/credit-check", "/credit-checks" })
+@RequestMapping(path = { "/api/credit-check", "/api/credit-checks" })
 public class CreditCheckController {
 
     @Autowired

@@ -6,13 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/BankingServices/TransactionController/TransactionController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/BankingServices/TransactionController/TransactionController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/balanceaccuracy/controller/BalanceAccuracyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/balanceaccuracy/controller/BalanceAccuracyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone2/CreditCheck/Controller/CreditCheckController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone2/CreditCheck/Controller/CreditCheckController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone2/CreditCheck/entity/controller/LoanOriginationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone2/CreditCheck/entity/controller/LoanOriginationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/config/CorsConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/config/CorsConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/beneficiaryverification/Controller/BeneficiaryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/beneficiaryverification/Controller/BeneficiaryController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/transaction.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/core/services/transaction.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/balance-accuracy-app/src/app/features/balance-accuracy/components/transfer/transfer.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,39 +71,39 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.BankingManagementApplication.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "Spring Boot.BankingManagementApplication.executor": "Run",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "copilot.chat.legacySessionMetadata.migrated": "true",
-    "git-widget-placeholder": "team-c",
-    "ignore.virus.scanning.warn.message": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.jshint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.jshint": "",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.12300122",
-    "project.structure.side.proportion": "0.2",
-    "to.speed.mode.migration.done": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BankingManagementApplication.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.BankingManagementApplication.executor&quot;: &quot;Run&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;copilot.chat.legacySessionMetadata.migrated&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;team-c&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.jshint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.jshint&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.12300122&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\practice\BankingManagement\fincore-digital-banking-platform\Integration\backend\src\main\resources" />

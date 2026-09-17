@@ -13,7 +13,6 @@ import com.fincore.BankingManagement.Milestone3.beneficiaryverification.service.
 
 @RestController
 @RequestMapping("beneficiary-verification")
-@CrossOrigin("*")
 public class BeneficiaryController {
 
     @Autowired
