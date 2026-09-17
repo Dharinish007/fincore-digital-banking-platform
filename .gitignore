@@ -1,0 +1,12 @@
+node_modules/
+build/
+dist/
+coverage/
+target/
+.DS_Store
+*.log
+.env*
+!.env.example
+
+package-lock.json
+bun.lock

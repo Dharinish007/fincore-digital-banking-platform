@@ -1,0 +1,6 @@
+{
+  "name": "FinCore Nexus",
+  "description": "Enterprise digital banking platform with KYC verification, Loan repayment & NPA tracking, Saga disbursement, Settlement confirmations, Risk scoring, Compliance checks, and SHA-256 audit integrity.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_API"]
+}
