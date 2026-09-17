@@ -15,8 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/loan-origination")
-@CrossOrigin("*")
+@RequestMapping("/api/api/loan-origination")
 @RequiredArgsConstructor
 public class LoanOriginationController {
 

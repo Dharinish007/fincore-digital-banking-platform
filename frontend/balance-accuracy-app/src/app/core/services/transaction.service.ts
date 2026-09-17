@@ -338,10 +338,10 @@ export class TransactionService {
     );
   }
 
-  public getReceiverName(receiverAccountNumber: string) {
+  getReceiverName(accountNumber: string) {
     return this.http.get(
-      `${environment.apiUrl}/transfer/getReceiver/${receiverAccountNumber}`,
-      { responseType: 'text' as 'json' },
+      `${environment.apiUrl}/transfer/getReceiver/${accountNumber}`,
+      { responseType: 'text' },
     );
   }
 

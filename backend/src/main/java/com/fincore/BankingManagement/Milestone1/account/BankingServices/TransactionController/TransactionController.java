@@ -37,7 +37,8 @@ public class TransactionController {
     }
 
     @GetMapping("/getReceiver/{receiverAccountNumber}")
-    public ResponseEntity<?> getReceiver(@PathVariable String receiverAccountNumber) {
+    public ResponseEntity<?> getReceiver( @PathVariable("receiverAccountNumber") String receiverAccountNumber) {
+        System.out.println("getReceiver");
         return transactionservice.getReceiver(receiverAccountNumber);
     }
 }

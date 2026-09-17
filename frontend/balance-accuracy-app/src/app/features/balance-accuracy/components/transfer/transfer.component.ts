@@ -120,39 +120,39 @@ export class TransferComponent {
     this.receiverName = '';
     this.receiverLookupMessage = '';
 
-    if (!this.receiver?.trim()) {
+    const accountNumber = this.receiver.trim();
+
+    if (!accountNumber) {
       this.receiverLookupMessage =
         'Please enter a receiver account number first.';
       return;
     }
 
-    this.txService.getReceiverName(this.receiver.trim()).subscribe(
-      (response) => {
-        let parsed = response;
+    console.log('Calling receiver API...');
+    console.log('Account:', accountNumber);
 
-        try {
-          const json = JSON.parse(response as string);
-          parsed =
-            json?.name ||
-            json?.receiverName ||
-            json?.accountName ||
-            json?.data ||
-            JSON.stringify(json);
-        } catch {
-          parsed = response;
-        }
+    this.txService.getReceiverName(accountNumber).subscribe({
+      next: (response: string) => {
+        console.log('✅ Receiver API SUCCESS');
+        console.log('Response:', response);
+        console.log('Type:', typeof response);
 
-        if (typeof parsed === 'string' && parsed.trim()) {
-          this.receiverName = parsed;
-        } else {
+        this.receiverName = response.trim();
+
+        if (!this.receiverName) {
           this.receiverLookupMessage = 'Receiver lookup returned empty result.';
         }
       },
-      (error) => {
-        this.receiverLookupMessage =
-          error?.message ||
-          'Unable to resolve receiver name. Please verify the account number.';
+
+      error: (error) => {
+        console.error('❌ Receiver API FAILED');
+        console.error('Status:', error.status);
+        console.error('Status Text:', error.statusText);
+        console.error('URL:', error.url);
+        console.error('Error:', error.error);
+
+        this.receiverLookupMessage = `API Error: ${error.status} ${error.statusText || ''}`;
       },
-    );
+    });
   }
 }
