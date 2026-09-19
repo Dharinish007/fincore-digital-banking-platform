@@ -1,6 +1,9 @@
 package com.fincore.BankingManagement.Milestone4.livenessdetection.service;
 
 import com.fincore.BankingManagement.Milestone4.livenessdetection.dto.LivenessResponse;
+import com.fincore.BankingManagement.Milestone4.livenessdetection.dto.LivenessResultData;
+import com.fincore.BankingManagement.Milestone4.livenessdetection.model.LivenessVerification;
+import com.fincore.BankingManagement.Milestone4.livenessdetection.repository.LivenessVerificationRepository;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
@@ -21,76 +24,40 @@ import java.io.IOException;
 public class LivenessService {
 
     private final RestTemplate restTemplate;
+    private final LivenessVerificationRepository livenessVerificationRepository;
 
     @Value("${liveness.service.url}")
     private String livenessServiceUrl;
 
+    public LivenessService(
+            RestTemplate restTemplate,
+            LivenessVerificationRepository livenessVerificationRepository) {
 
-    public LivenessService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
+        this.livenessVerificationRepository = livenessVerificationRepository;
     }
 
-
-    // ========================================================
-    // CALL FASTAPI
-    // ========================================================
-
-    public LivenessResponse verifyLiveness(
-            MultipartFile image
-    ) throws IOException {
-
+    public LivenessResponse verifyLiveness(MultipartFile image) throws IOException {
 
         if (image == null || image.isEmpty()) {
-
-            throw new IllegalArgumentException(
-                    "Image file is required"
-            );
+            throw new IllegalArgumentException("Image file is required");
         }
 
-
-        System.out.println(
-                "======================================"
-        );
-
-        System.out.println(
-                "Calling FastAPI Liveness Service"
-        );
-
-        System.out.println(
-                "File: " + image.getOriginalFilename()
-        );
-
-        System.out.println(
-                "Size: " + image.getSize()
-        );
-
+        System.out.println("======================================");
+        System.out.println("Calling FastAPI Liveness Service");
+        System.out.println("File: " + image.getOriginalFilename());
+        System.out.println("Size: " + image.getSize());
         System.out.println(
                 "FastAPI URL: "
                         + livenessServiceUrl
                         + "/liveness/verify"
         );
+        System.out.println("======================================");
 
-        System.out.println(
-                "======================================"
-        );
-
-
-        // ====================================================
-        // CREATE MULTIPART BODY
-        // ====================================================
-
-        MultiValueMap<String, Object> body =
-                new LinkedMultiValueMap<>();
-
-
-        // ====================================================
-        // CONVERT MULTIPART FILE TO RESOURCE
-        // ====================================================
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
 
         ByteArrayResource resource =
-                new ByteArrayResource(
-                        image.getBytes()
-                ) {
+                new ByteArrayResource(image.getBytes()) {
 
                     @Override
                     public String getFilename() {
@@ -98,9 +65,7 @@ public class LivenessService {
                         String filename =
                                 image.getOriginalFilename();
 
-                        if (filename == null ||
-                                filename.isBlank()) {
-
+                        if (filename == null || filename.isBlank()) {
                             return "image.jpg";
                         }
 
@@ -108,77 +73,74 @@ public class LivenessService {
                     }
                 };
 
-
-        // ====================================================
-        // IMPORTANT
-        //
-        // FastAPI expects:
-        //
-        // uploaded_file: UploadFile = File(...)
-        //
-        // Therefore the key MUST be uploaded_file
-        // ====================================================
-
-        body.add(
-                "uploaded_file",
-                resource
-        );
-
-
-        // ====================================================
-        // HEADERS
-        // ====================================================
+        // FastAPI expects uploaded_file
+        body.add("uploaded_file", resource);
 
         HttpHeaders headers = new HttpHeaders();
-
-        headers.setContentType(
-                MediaType.MULTIPART_FORM_DATA
-        );
-
-
-        // ====================================================
-        // CREATE HTTP REQUEST
-        // ====================================================
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         HttpEntity<MultiValueMap<String, Object>> request =
-                new HttpEntity<>(
-                        body,
-                        headers
-                );
-
-
-        // ====================================================
-        // FASTAPI URL
-        // ====================================================
+                new HttpEntity<>(body, headers);
 
         String url =
-                livenessServiceUrl
-                        + "/liveness/verify";
-
-
-        // ====================================================
-        // CALL FASTAPI
-        // ====================================================
+                livenessServiceUrl + "/liveness/verify";
 
         ResponseEntity<LivenessResponse> response =
                 restTemplate.exchange(
-
                         url,
-
                         HttpMethod.POST,
-
                         request,
-
                         LivenessResponse.class
                 );
-
 
         System.out.println(
                 "FastAPI response status: "
                         + response.getStatusCode()
         );
 
+        LivenessResponse result = response.getBody();
 
-        return response.getBody();
+        // Save result in database
+        if (result != null) {
+
+            LivenessVerification verification =
+                    new LivenessVerification();
+
+            verification.setSuccess(result.isSuccess());
+            verification.setRequestId(result.getRequestId());
+
+            // Successful liveness response
+            if (result.getData() != null) {
+
+                LivenessResultData data =
+                        result.getData();
+
+                verification.setPassed(data.isPassed());
+
+                verification.setConfidenceScore(
+                        data.getConfidenceScore()
+                );
+
+                verification.setLivenessScore(
+                        data.getLivenessScore()
+                );
+
+                verification.setVerificationStatus(
+                        data.getVerificationStatus()
+                );
+            }
+
+            // Save error message if FastAPI returned an error
+            if (result.getError() != null) {
+
+                verification.setMessage(
+                        result.getError().getMessage()
+                );
+            }
+
+            livenessVerificationRepository.save(verification);
+        }
+
+        return result;
     }
 }

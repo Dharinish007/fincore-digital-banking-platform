@@ -1,32 +1,34 @@
-import { Component, OnInit } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
-} from "@angular/forms";
-import { Router } from "@angular/router";
+} from '@angular/forms';
 
-import { MatIconModule } from "@angular/material/icon";
-import { MatButtonModule } from "@angular/material/button";
+import { Router } from '@angular/router';
+
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 import {
   PaymentInitiationService,
   UserAccount,
-} from "./payment-initiation.service";
+} from './payment-initiation.service';
 
-import { Beneficiary } from "./models/beneficiary.model";
-import { Payment } from "./models/payment.model";
-import { FraudCheck } from "./models/fraud-check.model";
+import { Beneficiary } from './models/beneficiary.model';
+import { Payment } from './models/payment.model';
+import { FraudCheck } from './models/fraud-check.model';
 
-import { HeaderComponent } from "../components/header/header.component";
-import { SidebarComponent } from "../components/sidebar/sidebar.component";
+import { HeaderComponent } from '../components/header/header.component';
+import { SidebarComponent } from '../components/sidebar/sidebar.component';
 
-export type FlowStep = "FORM" | "REVIEW" | "PROCESSING" | "SUCCESS";
+export type FlowStep = 'FORM' | 'REVIEW' | 'PROCESSING' | 'SUCCESS';
 
 @Component({
-  selector: "app-payment-initiation",
+  selector: 'app-payment-initiation',
   standalone: true,
 
   imports: [
@@ -38,15 +40,26 @@ export type FlowStep = "FORM" | "REVIEW" | "PROCESSING" | "SUCCESS";
     SidebarComponent,
   ],
 
-  templateUrl: "./payment-initiation.component.html",
-  styleUrls: ["./payment-initiation.component.scss"],
+  templateUrl: './payment-initiation.component.html',
+  styleUrls: ['./payment-initiation.component.scss'],
 })
 export class PaymentInitiationComponent implements OnInit {
+  // =========================================================
+  // SIDEBAR
+  // =========================================================
+
   sidebarCollapsed = false;
 
-  currentStep: FlowStep = "FORM";
+  // =========================================================
+  // PAYMENT FLOW
+  // =========================================================
 
-  // Data from backend
+  currentStep: FlowStep = 'FORM';
+
+  // =========================================================
+  // BACKEND DATA
+  // =========================================================
+
   accounts: UserAccount[] = [];
 
   allBeneficiaries: Beneficiary[] = [];
@@ -55,42 +68,69 @@ export class PaymentInitiationComponent implements OnInit {
 
   nonVerifiedBeneficiaries: Beneficiary[] = [];
 
-  // Selected beneficiary
+  // =========================================================
+  // SELECTED BENEFICIARY
+  // =========================================================
+
   selectedBeneficiary: Beneficiary | null = null;
 
-  // Payment form
+  // =========================================================
+  // PAYMENT FORM
+  // =========================================================
+
   paymentForm!: FormGroup;
 
-  // Processing
+  // =========================================================
+  // PROCESSING
+  // =========================================================
+
   isSubmitting = false;
 
-  processingStage = "";
+  processingStage = '';
 
-  // Backend response
+  // =========================================================
+  // BACKEND RESPONSE
+  // =========================================================
+
   completedPayment: Payment | null = null;
 
   fraudCheckResult: FraudCheck | null = null;
 
-  paymentTypes: ("Transfer" | "Bill Payment" | "Other")[] = [
-    "Transfer",
-    "Bill Payment",
-    "Other",
+  // =========================================================
+  // PAYMENT TYPES
+  // =========================================================
+
+  paymentTypes: ('Transfer' | 'Bill Payment' | 'Other')[] = [
+    'Transfer',
+    'Bill Payment',
+    'Other',
   ];
 
-  paymentModes: ("IMPS" | "NEFT" | "RTGS" | "UPI")[] = [
-    "IMPS",
-    "NEFT",
-    "RTGS",
-    "UPI",
+  // =========================================================
+  // PAYMENT MODES
+  // =========================================================
+
+  paymentModes: ('IMPS' | 'NEFT' | 'RTGS' | 'UPI')[] = [
+    'IMPS',
+    'NEFT',
+    'RTGS',
+    'UPI',
   ];
+
+  // =========================================================
+  // CUSTOMER ID
+  // =========================================================
 
   /*
    * For now customer ID = 1.
    *
-   * Later replace this with the ID
-   * of the logged-in customer.
+   * Later replace this with the logged-in customer ID.
    */
   customerId = 1;
+
+  // =========================================================
+  // CONSTRUCTOR
+  // =========================================================
 
   constructor(
     private fb: FormBuilder,
@@ -98,67 +138,97 @@ export class PaymentInitiationComponent implements OnInit {
     private router: Router,
   ) {}
 
+  // =========================================================
+  // INIT
+  // =========================================================
+
   ngOnInit(): void {
     this.initForm();
 
-    // First load beneficiaries from backend
+    // Load beneficiaries
     this.paymentService.loadBeneficiaries();
 
-    // Then load accounts and beneficiaries
+    // Load accounts and beneficiaries
     this.loadInitialData();
   }
-  /*
-   * Create payment form
-   *
-   * payment_id is NOT created in Angular.
-   * Backend/database should generate it.
-   */
+
+  // =========================================================
+  // CREATE FORM
+  // =========================================================
+
   private initForm(): void {
     this.paymentForm = this.fb.group({
+      /*
+       * Payment ID is generated by backend.
+       */
       payment_id: [null],
-      from_account_no: ["", [Validators.required]],
 
-      beneficiary_id: ["", [Validators.required]],
+      /*
+       * Sender account
+       */
+      from_account_no: ['', [Validators.required]],
 
-      to_account_no: ["", [Validators.required]],
+      /*
+       * Selected beneficiary
+       */
+      beneficiary_id: ['', [Validators.required]],
 
+      /*
+       * Receiver account
+       *
+       * Automatically filled when
+       * beneficiary is selected.
+       */
+      to_account_no: ['', [Validators.required]],
+
+      /*
+       * Payment amount
+       */
       amount: [null, [Validators.required, Validators.min(0.01)]],
 
-      payment_type: ["Transfer", [Validators.required]],
+      /*
+       * Payment type
+       */
+      payment_type: ['Transfer', [Validators.required]],
 
-      payment_mode: ["IMPS", [Validators.required]],
+      /*
+       * Payment mode
+       */
+      payment_mode: ['IMPS', [Validators.required]],
 
-      description: [""],
+      /*
+       * Optional description
+       */
+      description: [''],
     });
 
-    /*
-     * When beneficiary changes,
-     * automatically select destination account.
-     */
+    // Listen for beneficiary selection
     this.paymentForm
-      .get("beneficiary_id")
+      .get('beneficiary_id')
       ?.valueChanges.subscribe((beneficiaryId) => {
         this.onBeneficiarySelect(Number(beneficiaryId));
       });
   }
 
-  /*
-   * Load accounts and beneficiaries
-   * from Spring Boot backend.
-   */
+  // =========================================================
+  // LOAD ACCOUNTS AND BENEFICIARIES
+  // =========================================================
+
   private loadInitialData(): void {
-    const customerId = 1;
+    // =======================================================
+    // LOAD ACCOUNTS
+    // =======================================================
 
-    // =========================
-    // LOAD ACCOUNTS FROM DB
-    // =========================
-
-    this.paymentService.getAccounts(customerId).subscribe({
+    this.paymentService.getAccounts(this.customerId).subscribe({
       next: (accounts) => {
-        console.log("Accounts loaded from DB:", accounts);
+        console.log('Accounts loaded from DB:', accounts);
 
         this.accounts = accounts;
 
+        /*
+         * Automatically select first account
+         * if available.
+         */
         if (this.accounts.length > 0) {
           this.paymentForm.patchValue({
             from_account_no: this.accounts[0].account_no,
@@ -167,342 +237,404 @@ export class PaymentInitiationComponent implements OnInit {
       },
 
       error: (error) => {
-        console.error("Error loading accounts:", error);
+        console.error('Error loading accounts:', error);
+
+        alert('Unable to load accounts.');
       },
     });
 
-    // =========================
-    // LOAD BENEFICIARIES FROM DB
-    // =========================
+    // =======================================================
+    // LOAD BENEFICIARIES
+    // =======================================================
 
     this.paymentService.getBeneficiaries().subscribe({
       next: (beneficiaries) => {
-        console.log("Beneficiaries loaded from DB:", beneficiaries);
+        console.log('Beneficiaries loaded from DB:', beneficiaries);
 
         this.allBeneficiaries = beneficiaries;
 
+        /*
+         * Verified beneficiaries
+         */
         this.verifiedBeneficiaries = beneficiaries.filter(
-          (b) => b.status === "Verified",
+          (b) => b.status === 'Verified',
         );
 
+        /*
+         * Non-verified beneficiaries
+         */
         this.nonVerifiedBeneficiaries = beneficiaries.filter(
-          (b) => b.status !== "Verified",
+          (b) => b.status !== 'Verified',
         );
       },
 
       error: (error) => {
-        console.error("Error loading beneficiaries:", error);
+        console.error('Error loading beneficiaries:', error);
+
+        alert('Unable to load beneficiaries.');
       },
     });
   }
 
-  /*
-   * Toggle sidebar
-   */
+  // =========================================================
+  // TOGGLE SIDEBAR
+  // =========================================================
+
   toggleSidebar(): void {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
-  /*
-   * Select beneficiary
-   */
+  // =========================================================
+  // SELECT BENEFICIARY
+  // =========================================================
+
   onBeneficiarySelect(beneficiaryId: number): void {
-    /*
-     * Nothing selected
-     */
+    // -------------------------------------------------------
+    // Nothing selected
+    // -------------------------------------------------------
+
     if (!beneficiaryId) {
       this.selectedBeneficiary = null;
 
       this.paymentForm.patchValue({
-        to_account_no: "",
+        to_account_no: '',
       });
 
       return;
     }
 
-    /*
-     * Find beneficiary from backend data
-     */
+    // -------------------------------------------------------
+    // Find beneficiary
+    // -------------------------------------------------------
+
     const found = this.allBeneficiaries.find(
       (b) => b.beneficiary_id === beneficiaryId,
     );
+
+    // -------------------------------------------------------
+    // Beneficiary not found
+    // -------------------------------------------------------
 
     if (!found) {
       this.selectedBeneficiary = null;
 
       this.paymentForm.patchValue({
-        to_account_no: "",
+        to_account_no: '',
       });
 
       return;
     }
 
-    /*
-     * Only verified beneficiaries
-     * can receive payments.
-     */
-    if (found.status !== "Verified") {
+    // -------------------------------------------------------
+    // Only verified beneficiaries
+    // -------------------------------------------------------
+
+    if (found.status !== 'Verified') {
       this.selectedBeneficiary = null;
 
       this.paymentForm.patchValue({
-        beneficiary_id: "",
-        to_account_no: "",
+        beneficiary_id: '',
+        to_account_no: '',
       });
 
-      alert("Only verified beneficiaries can be selected.");
+      alert('Only verified beneficiaries can be selected.');
 
       return;
     }
 
-    /*
-     * Store selected beneficiary
-     */
+    // -------------------------------------------------------
+    // Store beneficiary
+    // -------------------------------------------------------
+
     this.selectedBeneficiary = found;
 
-    /*
-     * Automatically populate
-     * beneficiary account number.
-     */
+    // -------------------------------------------------------
+    // Automatically fill receiver account
+    // -------------------------------------------------------
+
     this.paymentForm.patchValue({
       to_account_no: found.account_no,
     });
+
+    console.log('Selected beneficiary:', found);
   }
 
+  // =========================================================
+  // GO TO REVIEW
+  // =========================================================
+
   /*
-   * Go to review page
+   * IMPORTANT:
+   *
+   * This method DOES NOT call the backend.
+   *
+   * It only moves the user to the review screen.
+   *
+   * Payment is created only after
+   * the user clicks Confirm.
    */
   goToReview(): void {
+    // Validate form
     if (this.paymentForm.invalid) {
       this.paymentForm.markAllAsTouched();
+
       return;
     }
 
+    // Validate beneficiary
     if (!this.selectedBeneficiary) {
-      alert("Please select a verified beneficiary.");
+      alert('Please select a verified beneficiary.');
+
       return;
     }
+
+    // Go to review
+    this.currentStep = 'REVIEW';
+  }
+
+  // =========================================================
+  // EDIT PAYMENT
+  // =========================================================
+
+  editPayment(): void {
+    this.currentStep = 'FORM';
+  }
+
+  // =========================================================
+  // CONFIRM PAYMENT
+  // =========================================================
+
+  /*
+   * This is where the actual backend flow starts.
+   *
+   * STEP 1:
+   * Create Payment
+   *
+   * STEP 2:
+   * Backend returns payment_id
+   *
+   * STEP 3:
+   * Process payment using payment_id
+   *
+   * STEP 4:
+   * Existing Milestone 1 TransactionService
+   * performs the actual money transfer.
+   */
+  confirmPayment(): void {
+    // -------------------------------------------------------
+    // Validate form
+    // -------------------------------------------------------
+
+    if (this.paymentForm.invalid) {
+      this.paymentForm.markAllAsTouched();
+
+      return;
+    }
+
+    // -------------------------------------------------------
+    // Validate beneficiary
+    // -------------------------------------------------------
+
+    if (!this.selectedBeneficiary) {
+      alert('Please select a verified beneficiary.');
+
+      return;
+    }
+
+    // -------------------------------------------------------
+    // Start processing
+    // -------------------------------------------------------
+
+    this.currentStep = 'PROCESSING';
+
+    this.isSubmitting = true;
+
+    this.processingStage = 'Creating payment request...';
+
+    // -------------------------------------------------------
+    // Get form values
+    // -------------------------------------------------------
 
     const formValues = this.paymentForm.value;
 
-    // Do NOT send payment_id.
-    // Backend/database generates it.
+    // -------------------------------------------------------
+    // Create payment payload
+    //
+    // Do NOT send:
+    //
+    // payment_id
+    // transaction_ref
+    // payment_status
+    // initiated_at
+    // updated_at
+    //
+    // Backend generates these.
+    // -------------------------------------------------------
+
     const payload: Payment = {
       from_account_no: formValues.from_account_no,
+
       to_account_no: formValues.to_account_no,
+
       beneficiary_id: Number(formValues.beneficiary_id),
+
       amount: Number(formValues.amount),
+
       payment_type: formValues.payment_type,
+
       payment_mode: formValues.payment_mode,
+
       description: formValues.description
         ? formValues.description.trim()
         : undefined,
     };
 
-    console.log("Creating payment:", payload);
+    console.log('Payment initiation request:', payload);
+
+    // =======================================================
+    // STEP 1
+    // CREATE PAYMENT
+    // =======================================================
 
     this.paymentService.initiatePayment(payload).subscribe({
-      next: (response: Payment) => {
-        console.log("Payment created successfully:", response);
+      next: (payment: Payment) => {
+        console.log('Payment created:', payment);
 
-        const reviewPayment = {
-          payment_id: response.payment_id
-            ? `PAY-${response.payment_id}`
-            : "N/A",
+        /*
+         * Make sure backend generated
+         * payment ID.
+         */
+        if (!payment.payment_id) {
+          console.error('Backend did not return payment_id', payment);
 
-          from_account_no: response.from_account_no,
+          this.isSubmitting = false;
 
-          beneficiary_name: this.selectedBeneficiary?.beneficiary_name || "",
+          this.currentStep = 'FORM';
 
-          to_account_no: response.to_account_no,
+          alert('Payment was created but payment ID was not returned.');
 
-          amount: response.amount,
+          return;
+        }
 
-          payment_type: response.payment_type,
+        // -------------------------------------------------
+        // STEP 2
+        // Process payment
+        // -------------------------------------------------
 
-          payment_mode: response.payment_mode,
+        this.processingStage = 'Processing payment...';
 
-          remarks: response.description || "",
+        console.log('Processing payment ID:', payment.payment_id);
 
-          payment_status: response.payment_status || "Processing",
-        };
+        this.paymentService.processPayment(payment.payment_id).subscribe({
+          next: (response: Payment) => {
+            console.log('Payment processed successfully:', response);
 
-        console.log("Sending to review page:", reviewPayment);
+            // -------------------------------------------
+            // Store backend response
+            // -------------------------------------------
 
-        this.router.navigate(["/payment-review"], {
-          state: {
-            payment: reviewPayment,
+            this.completedPayment = response;
+
+            this.fraudCheckResult = null;
+
+            // -------------------------------------------
+            // Stop loading
+            // -------------------------------------------
+
+            this.isSubmitting = false;
+
+            // -------------------------------------------
+            // Success
+            // -------------------------------------------
+
+            this.currentStep = 'SUCCESS';
+
+            this.processingStage = 'Payment completed successfully.';
+          },
+
+          error: (error) => {
+            console.error('Payment processing failed:', error);
+
+            this.isSubmitting = false;
+
+            this.currentStep = 'FORM';
+
+            this.processingStage = '';
+
+            console.error('Backend processing error:', error?.error);
+
+            alert(
+              error?.error?.message ||
+                'Payment processing failed. Please try again.',
+            );
           },
         });
       },
 
-      error: (error: any) => {
-        console.error("Unable to create payment:", error);
+      error: (error) => {
+        console.error('Payment initiation failed:', error);
 
-        if (error.error) {
-          console.error("Backend error:", error.error);
-        }
+        this.isSubmitting = false;
 
-        alert("Unable to create payment. Please check the backend.");
+        this.currentStep = 'FORM';
+
+        this.processingStage = '';
+
+        console.error('Backend initiation error:', error?.error);
+
+        alert(
+          error?.error?.message ||
+            'Unable to create payment. Please check the backend.',
+        );
       },
     });
   }
 
-  /*
-   * Return to payment form
-   */
-  editPayment(): void {
-    this.currentStep = "FORM";
-  }
+  // =========================================================
+  // RESET PAYMENT FORM
+  // =========================================================
 
-  /*
-   * Submit payment to Spring Boot
-   */
-  confirmPayment(): void {
-    /*
-     * Validate form
-     */
-    if (this.paymentForm.invalid) {
-      this.paymentForm.markAllAsTouched();
-
-      return;
-    }
-
-    /*
-     * Make sure beneficiary is selected
-     */
-    if (!this.selectedBeneficiary) {
-      alert("Please select a verified beneficiary.");
-
-      return;
-    }
-
-    /*
-     * Start processing UI
-     */
-    this.currentStep = "PROCESSING";
-
-    this.isSubmitting = true;
-
-    this.processingStage = "Validating Account Balance & Sanction Screening...";
-
-    /*
-     * UI progress only.
-     *
-     * Actual payment processing
-     * happens in Spring Boot.
-     */
-    setTimeout(() => {
-      this.processingStage = "Running AI Fraud & Risk Analysis...";
-    }, 600);
-
-    setTimeout(() => {
-      this.processingStage = "Executing Interbank Settlement Protocol...";
-    }, 1100);
-
-    const formValues = this.paymentForm.value;
-
-    /*
-     * Payment request.
-     *
-     * Backend generates:
-     *
-     * payment_id
-     * transaction_ref
-     * payment_status
-     * initiated_at
-     * updated_at
-     */
-    const payload: Payment = {
-      from_account_no: formValues.from_account_no,
-
-      to_account_no: formValues.to_account_no,
-
-      beneficiary_id: Number(formValues.beneficiary_id),
-
-      amount: Number(formValues.amount),
-
-      payment_type: formValues.payment_type,
-
-      payment_mode: formValues.payment_mode,
-
-      description: formValues.description
-        ? formValues.description.trim()
-        : undefined,
-    };
-
-    console.log("Payment request:", payload);
-
-    /*
-     * POST:
-     *
-     * http://localhost:8080/api/payments
-     */
-    this.paymentService.initiatePayment(payload).subscribe({
-      next: (response: any) => {
-        console.log("Payment response:", response);
-
-        /*
-         * Store actual backend response
-         */
-        this.completedPayment = response;
-
-        this.fraudCheckResult = null;
-
-        this.isSubmitting = false;
-
-        this.currentStep = "SUCCESS";
-      },
-
-      error: (error: any) => {
-        console.error("Payment API error:", error);
-
-        this.isSubmitting = false;
-
-        this.currentStep = "FORM";
-
-        alert("Payment processing failed. Please try again.");
-      },
-    });
-  }
-
-  /*
-   * Reset form
-   */
   resetForm(): void {
-    this.currentStep = "FORM";
+    // Reset flow
+    this.currentStep = 'FORM';
 
+    // Reset backend response
     this.completedPayment = null;
 
+    // Reset fraud result
     this.fraudCheckResult = null;
 
+    // Reset beneficiary
     this.selectedBeneficiary = null;
 
-    /*
-     * Reset using backend account data.
-     *
-     * No mock account number.
-     */
+    // Reset processing
+    this.isSubmitting = false;
+
+    this.processingStage = '';
+
+    // Reset form
     this.paymentForm.reset({
       from_account_no:
-        this.accounts.length > 0 ? this.accounts[0].account_no : "",
+        this.accounts.length > 0 ? this.accounts[0].account_no : '',
 
-      beneficiary_id: "",
+      beneficiary_id: '',
 
-      to_account_no: "",
+      to_account_no: '',
 
       amount: null,
 
-      payment_type: "Transfer",
+      payment_type: 'Transfer',
 
-      payment_mode: "IMPS",
+      payment_mode: 'IMPS',
 
-      description: "",
+      description: '',
     });
   }
 
-  /*
-   * Form controls
-   */
+  // =========================================================
+  // FORM CONTROLS
+  // =========================================================
+
   get f() {
     return this.paymentForm.controls;
   }

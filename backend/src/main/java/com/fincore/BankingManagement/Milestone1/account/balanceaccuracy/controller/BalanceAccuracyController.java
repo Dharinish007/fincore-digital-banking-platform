@@ -19,7 +19,6 @@ import com.fincore.BankingManagement.Milestone1.account.balanceaccuracy.dto.Bala
 
 @RestController
 @RequestMapping("/api/balance-accuracy")
-@CrossOrigin("*")
 public class BalanceAccuracyController {
 
         private final BalanceAccuracyService balanceAccuracyService;

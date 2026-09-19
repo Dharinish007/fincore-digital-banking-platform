@@ -6,11 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="245fc661-affa-49f6-96c0-06bc07f64216" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/documentocr/controller/DocumentOcrController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/documentocr/controller/DocumentOcrController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/facematchaccuracy/controller/FaceMatchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/facematchaccuracy/controller/FaceMatchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/balanceaccuracy/controller/BalanceAccuracyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/balanceaccuracy/controller/BalanceAccuracyController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/controller/AccountController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/controller/AccountController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/repository/AccoRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/repository/AccoRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone1/account/service/AccountService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/fraudcheck/Controller/FraudCheckController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/fraudcheck/Controller/FraudCheckController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/fraudcheck/Repository/FraudCheckRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/fraudcheck/Repository/FraudCheckRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/fraudcheck/service/FraudCheckService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/fraudcheck/service/FraudCheckService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/paymentinitiation/Controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/paymentinitiation/Controller/PaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/paymentinitiation/service/PaymentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone3/paymentinitiation/service/PaymentService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/facematchaccuracy/service/FaceMatchService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/facematchaccuracy/service/FaceMatchService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/livenessdetection/controller/LivenessController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/livenessdetection/controller/LivenessController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/livenessdetection/service/LivenessService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fincore/BankingManagement/Milestone4/livenessdetection/service/LivenessService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,8 +36,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
