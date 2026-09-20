@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { authGuard } from './core/guards/auth.guard';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { CustomerListComponent } from './features/customers/customer-list/customer-list.component';
 import { AccountListComponent } from './features/accounts/account-list/account-list.component';
@@ -17,11 +19,13 @@ import { NotificationCenterComponent } from './features/notifications/notificati
 import { UserManagementComponent } from './features/users/user-management/user-management.component';
 
 export const routes: Routes = [
-	{ path: '', pathMatch: 'full', redirectTo: 'dashboard' },
+	{ path: 'login', component: LoginComponent },
 	{
 		path: '',
 		component: MainLayoutComponent,
+		canActivate: [authGuard],
 		children: [
+			{ path: '', pathMatch: 'full', redirectTo: 'dashboard' },
 			{ path: 'dashboard', component: DashboardComponent },
 			{ path: 'customers', component: CustomerListComponent },
 			{ path: 'accounts', component: AccountListComponent },
@@ -44,3 +48,4 @@ export const routes: Routes = [
 	},
 	{ path: '**', redirectTo: 'dashboard' }
 ];
+

@@ -112,20 +112,16 @@
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
-            OAuth 2.0 / Keycloak
+            FinCore JWT • Verified
           </div>
         </div>
 
         <div class="role-selector-section">
-          <span class="section-title">SIMULATE RBAC ROLE</span>
+          <span class="section-title">ACTIVE AUTHENTICATED ROLE</span>
           <div class="role-pills">
-            <button
-              *ngFor="let r of availableRoles"
-              class="role-pill"
-              [class.active]="auth.currentSession.role === r"
-              (click)="changeRole(r)">
-              {{ r }}
-            </button>
+            <span class="role-pill active">
+              {{ auth.currentSession.role }} ({{ auth.currentSession.username }})
+            </span>
           </div>
         </div>
 
