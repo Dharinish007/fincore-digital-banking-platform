@@ -79,6 +79,36 @@ spring:
           predicates:
             - Path=/api/v1/face-match/**, /api/face-match/**
 
+        - id: risk-service-route
+          uri: ${services.risk-service.url:http://localhost:8091}
+          predicates:
+            - Path=/api/v1/risk/**, /api/risks/**
+
+        - id: compliance-service-route
+          uri: ${services.compliance-service.url:http://localhost:8092}
+          predicates:
+            - Path=/api/v1/compliance/**, /api/compliance/**
+
+        - id: notification-service-route
+          uri: ${services.notification-service.url:http://localhost:8093}
+          predicates:
+            - Path=/api/v1/notifications/**, /api/notifications/**
+
+        - id: disbursement-saga-route
+          uri: ${services.disbursement-saga.url:http://localhost:8094}
+          predicates:
+            - Path=/api/v1/disbursement-sagas/**, /api/disbursements/**
+
+        - id: settlement-service-route
+          uri: ${services.settlement-service.url:http://localhost:8095}
+          predicates:
+            - Path=/api/v1/settlements/**, /api/settlements/**
+
+        - id: audit-service-route
+          uri: ${services.audit-service.url:http://localhost:8096}
+          predicates:
+            - Path=/api/v1/audit/**, /api/audit-logs/**
+
 # Configurable Downstream Service URLs
 services:
   customer-service:
@@ -101,6 +131,18 @@ services:
     url: http://localhost:8089
   face-match-service:
     url: http://localhost:8090
+  risk-service:
+    url: http://localhost:8091
+  compliance-service:
+    url: http://localhost:8092
+  notification-service:
+    url: http://localhost:8093
+  disbursement-saga:
+    url: http://localhost:8094
+  settlement-service:
+    url: http://localhost:8095
+  audit-service:
+    url: http://localhost:8096
 
 management:
   endpoints:
