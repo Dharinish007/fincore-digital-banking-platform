@@ -2,6 +2,7 @@ import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AdminAuthService, UserRole } from '../../services/admin-auth.service';
+import { SidebarService } from '../../services/sidebar.service';
 
 export interface NavSection {
   title: string;
@@ -22,6 +23,7 @@ export interface NavSection {
 })
 export class SidebarComponent {
   readonly authService = inject(AdminAuthService);
+  readonly sidebarService = inject(SidebarService);
 
   readonly navSections = computed<NavSection[]>(() => {
     const role: UserRole = this.authService.activeRole();
@@ -41,6 +43,7 @@ export class SidebarComponent {
               { label: 'My Accounts', route: '/accounts', icon: '🏦' },
               { label: 'Instant Fund Transfer', route: '/fund-transfer', icon: '💸' },
               { label: 'Transaction Explorer', route: '/transactions', icon: '🔄' },
+              { label: 'Transaction History', route: '/transactions/history', icon: '📜' },
               { label: 'Payment Initiation', route: '/payment-initiation', icon: '💳' },
               { label: 'Balance & Adjustments', route: '/balance', icon: '💰' },
               { label: 'Certified Statements', route: '/statements', icon: '📄', badge: 'PDF' }
@@ -92,6 +95,7 @@ export class SidebarComponent {
               { label: 'Balance Adjustments', route: '/balance', icon: '💰' },
               { label: 'Fund Transfer Desk', route: '/fund-transfer', icon: '💸' },
               { label: 'Transaction Explorer', route: '/transactions', icon: '🔄' },
+              { label: 'Transaction History', route: '/transactions/history', icon: '📜' },
               { label: 'Beneficiary Verification', route: '/beneficiary-verification', icon: '🤝' },
               { label: 'Payment Review Queue', route: '/payment-review', icon: '🔍' },
               { label: 'Certified Statements', route: '/statements', icon: '📄', badge: 'PDF' },
@@ -103,6 +107,7 @@ export class SidebarComponent {
             items: [
               { label: 'Loan Inquiries', route: '/loans', icon: '📁' },
               { label: 'Loan Origination Pipeline', route: '/loan-origination', icon: '📋' },
+              { label: 'New Loan Application', route: '/loan-origination/loan-application', icon: '📝' },
               { label: 'Credit Risk Bureau', route: '/credit-check', icon: '📊' },
               { label: 'EMI Calculator', route: '/emi-calculator', icon: '🧮' },
               { label: 'Record Collections', route: '/loans/collections', icon: '💳' }
@@ -191,6 +196,7 @@ export class SidebarComponent {
               { label: 'Auditor Dashboard (Read-Only)', route: '/dashboard', icon: '🛡️' },
               { label: 'Balance Accuracy & Drift', route: '/balance-accuracy', icon: '⚖️' },
               { label: 'Transaction Explorer', route: '/transactions', icon: '🔄' },
+              { label: 'Transaction History', route: '/transactions/history', icon: '📜' },
               { label: 'Full System Audit Trail', route: '/audit', icon: '📋' }
             ]
           },
@@ -227,6 +233,7 @@ export class SidebarComponent {
               { label: 'Balance Management', route: '/balance', icon: '💰' },
               { label: 'Instant Fund Transfer', route: '/fund-transfer', icon: '💸' },
               { label: 'Transactions Explorer', route: '/transactions', icon: '🔄' },
+              { label: 'Transaction History', route: '/transactions/history', icon: '📜' },
               { label: 'Statements & Export', route: '/statements', icon: '📄', badge: 'PDF' },
               { label: 'Enterprise Ledger', route: '/ledger', icon: '📑' }
             ]
@@ -236,6 +243,7 @@ export class SidebarComponent {
             items: [
               { label: 'Loan Servicing', route: '/loans', icon: '📁' },
               { label: 'Origination Pipeline', route: '/loan-origination', icon: '📋' },
+              { label: 'New Loan Application', route: '/loan-origination/loan-application', icon: '📝' },
               { label: 'Credit Risk Bureau', route: '/credit-check', icon: '📊' },
               { label: 'EMI Calculator', route: '/emi-calculator', icon: '🧮' },
               { label: 'Loan Disbursement', route: '/loans/disbursement', icon: '💸' },

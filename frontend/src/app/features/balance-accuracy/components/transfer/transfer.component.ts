@@ -5,9 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { HeaderComponent } from '../header/header.component';
-import { SidebarComponent } from '../sidebar/sidebar.component';
-
 @Component({
   selector: 'app-transfer',
   standalone: true,
@@ -16,15 +13,11 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
     FormsModule,
     MatIconModule,
     MatButtonModule,
-    HeaderComponent,
-    SidebarComponent,
   ],
   templateUrl: './transfer.component.html',
   styleUrls: ['./transfer.component.scss'],
 })
 export class TransferComponent {
-  sidebarCollapsed = false;
-
   sender = '';
   receiver = '';
   amount = 0;
@@ -41,10 +34,6 @@ export class TransferComponent {
   private processingIndicatorTimeout?: number;
 
   constructor(private txService: TransactionService) {}
-
-  toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
-  }
 
   submit() {
     this.statusMessage = '';

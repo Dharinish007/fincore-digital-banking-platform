@@ -19,8 +19,6 @@ Chart.register(...registerables);
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { ExportService } from '../../../../core/services/export.service';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-transaction-dashboard',
@@ -39,8 +37,6 @@ import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/s
     MatOptionModule,
     MatFormFieldModule,
     MatTooltipModule,
-    HeaderComponent,
-    SidebarComponent
   ],
   templateUrl: './transaction-dashboard.component.html',
   styleUrls: ['./transaction-dashboard.component.scss']
@@ -51,7 +47,6 @@ export class TransactionDashboardComponent implements OnInit, AfterViewInit, OnD
   private router = inject(Router);
   private fb = inject(FormBuilder);
 
-  public sidebarCollapsed = false;
   public selectedTxForDrawer: Transaction | null = null;
   public isDrawerOpen = false;
 

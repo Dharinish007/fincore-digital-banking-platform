@@ -1,18 +1,5 @@
-<div class="dashboard-layout">
-  <!-- Top Navigation Header -->
-  <app-header
-    moduleTitle="Beneficiary Verification"
-    moduleIcon="verified_user"
-    (toggleSidebar)="toggleSidebar()"
-  >
-  </app-header>
+<div class="content-area beneficiary-verification-view">
 
-  <div class="main-container">
-    <!-- Left Navigation Sidebar -->
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <!-- Main Content Area -->
-    <main class="content-area">
       <!-- Toast Notification -->
       <div class="toast-banner" *ngIf="toastMessage" [ngClass]="toastType">
         <mat-icon>{{ toastType === 'success' ? 'check_circle' : 'warning' }}</mat-icon>
@@ -219,10 +206,8 @@
             </tbody>
           </table>
         </div>
-      </div>
-    </main>
-  </div>
-</div>
+    </div>
+
 
 <!-- VERIFICATION MODAL DIALOG -->
 <div class="modal-backdrop" *ngIf="showVerifyModal" (click)="closeVerifyModal()">

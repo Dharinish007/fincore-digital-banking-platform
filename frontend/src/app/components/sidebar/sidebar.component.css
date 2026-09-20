@@ -8,8 +8,30 @@
   position: sticky;
   top: 60px;
   overflow-y: auto;
+  overflow-x: hidden;
   flex-shrink: 0;
+  transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.fincore-sidebar.collapsed {
+  width: 68px;
+}
+
+.fincore-sidebar.collapsed .sidebar-nav {
+  padding: 16px 8px;
+  gap: 10px;
+}
+
+.fincore-sidebar.collapsed .nav-link {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.fincore-sidebar.collapsed .nav-icon {
+  font-size: 1.25rem;
+  width: auto;
+}
+
 
 .sidebar-nav {
   padding: 16px 12px;

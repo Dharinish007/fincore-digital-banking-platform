@@ -1,13 +1,1 @@
-<div class="dashboard-layout">
-  <app-header
-    moduleTitle="Loan Origination"
-    moduleIcon="assignment"
-    (toggleSidebar)="sidebarCollapsed = !sidebarCollapsed"
-  ></app-header>
-  <div class="main-container">
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-    <main class="content-area">
-      <router-outlet></router-outlet>
-    </main>
-  </div>
-</div>
+<router-outlet></router-outlet>

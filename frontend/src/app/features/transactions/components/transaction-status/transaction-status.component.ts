@@ -8,9 +8,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
-
 @Component({
   selector: 'app-transaction-status',
   standalone: true,
@@ -19,8 +16,6 @@ import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/s
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    HeaderComponent,
-    SidebarComponent
   ],
   templateUrl: './transaction-status.component.html',
   styleUrls: ['./transaction-status.component.scss']
@@ -30,7 +25,6 @@ export class TransactionStatusComponent implements OnInit, OnDestroy {
   private router = inject(Router);
   private txService = inject(TransactionService);
 
-  public sidebarCollapsed = false;
   public tx: Transaction | null = null;
   public id = '';
   private sub?: Subscription;
@@ -58,10 +52,6 @@ export class TransactionStatusComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
-  }
-
-  public toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   public retry(): void {

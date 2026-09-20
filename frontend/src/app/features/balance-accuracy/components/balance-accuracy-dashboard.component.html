@@ -1,13 +1,5 @@
-<div class="dashboard-layout">
-  <!-- Top Header Bar -->
-  <app-header moduleTitle="Balance Accuracy" (toggleSidebar)="toggleSidebar()"></app-header>
+<div class="content-area balance-accuracy-view">
 
-  <div class="main-container">
-    <!-- Left Navigation Sidebar -->
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <!-- Main Content Area -->
-    <main class="content-area">
       <!-- Title & Breadcrumb Header -->
       <div class="dashboard-header">
         <div class="title-group">
@@ -46,8 +38,7 @@
         (freeze)="openFreezeDialog($event)"
       >
       </app-accuracy-table>
-    </main>
-  </div>
+    </div>
 
   <!-- Right Slide-Over Detail Drawer -->
   <app-detail-drawer
@@ -58,4 +49,4 @@
     (auditClick)="openAuditLogDialog($event)"
   >
   </app-detail-drawer>
-</div>
+

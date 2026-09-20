@@ -1,10 +1,4 @@
-<div class="dashboard-layout">
-  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
-
-  <div class="main-container">
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <main class="content-area">
+<div class="content-area transaction-history-view">
       <div class="dashboard-header">
         <div class="title-group">
           <h1>Transaction History & Ledger Archives</h1>
@@ -118,6 +112,5 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewDetails(row)" style="cursor: pointer"></tr>
         </table>
       </div>
-    </main>
-  </div>
 </div>
+

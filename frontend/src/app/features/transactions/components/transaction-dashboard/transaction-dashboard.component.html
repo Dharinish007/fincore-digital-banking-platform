@@ -1,13 +1,4 @@
-<div class="dashboard-layout">
-  <!-- Top Header Bar -->
-  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
-
-  <div class="main-container">
-    <!-- Left Navigation Sidebar -->
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <!-- Main Content Area -->
-    <main class="content-area">
+<div class="content-area transaction-dashboard-view">
       <!-- Title & Header Bar -->
       <div class="dashboard-header">
         <div class="title-group">
@@ -215,9 +206,7 @@
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>
-      </div>
-    </main>
-  </div>
+    </div>
 
   <!-- Right Slide-Over Detail Drawer -->
   <div class="drawer-overlay" *ngIf="isDrawerOpen" (click)="closeDrawer()"></div>
@@ -280,4 +269,4 @@
       </div>
     </div>
   </div>
-</div>
+

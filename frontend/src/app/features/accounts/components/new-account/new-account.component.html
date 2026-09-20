@@ -1,18 +1,4 @@
-<div class="dashboard-layout">
-  <!-- Top Header Bar -->
-  <app-header
-    moduleTitle="Accounts Module"
-    moduleIcon="account_balance_wallet"
-    (toggleSidebar)="toggleSidebar()"
-  >
-  </app-header>
-
-  <div class="main-container">
-    <!-- Left Navigation Sidebar -->
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <!-- Main Content Area -->
-    <main class="content-area">
+<div class="content-area new-account-view">
       <!-- Title & Breadcrumb Header -->
       <div class="dashboard-header">
         <div class="title-group">
@@ -366,6 +352,4 @@
           </button>
         </div>
       </div>
-    </main>
-  </div>
 </div>

@@ -13,8 +13,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
 import { TransactionService } from '../../../../core/services/transaction.service';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
 import { Transaction } from '../../../../core/models/transaction.model';
 
 @Component({
@@ -31,8 +29,6 @@ import { Transaction } from '../../../../core/models/transaction.model';
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    HeaderComponent,
-    SidebarComponent
   ],
   templateUrl: './initiate-transaction.component.html',
   styleUrls: ['./initiate-transaction.component.scss']
@@ -42,7 +38,6 @@ export class InitiateTransactionComponent implements OnInit {
   private txService = inject(TransactionService);
   private router = inject(Router);
 
-  public sidebarCollapsed = false;
   public form: FormGroup;
 
   constructor() {
@@ -70,10 +65,6 @@ export class InitiateTransactionComponent implements OnInit {
         description: pending.description || ''
       });
     }
-  }
-
-  public toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   public generateReference(): string {

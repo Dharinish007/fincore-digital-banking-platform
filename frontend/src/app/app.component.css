@@ -32,14 +32,17 @@
   display: flex;
   flex: 1;
   min-height: calc(100vh - 60px);
+  overflow-x: hidden;
 }
 
 .main-content {
   flex: 1;
   padding: 24px 32px;
   overflow-y: auto;
-  max-width: 1500px;
+  overflow-x: hidden;
+  max-width: 100%;
   width: 100%;
+  min-width: 0;
 }
 
 /* Toast Container Overlay */

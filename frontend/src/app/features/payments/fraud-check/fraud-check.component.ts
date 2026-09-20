@@ -5,9 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
-import { HeaderComponent } from '../components/header/header.component';
-import { SidebarComponent } from '../components/sidebar/sidebar.component';
-
 import { FraudCheckService } from '../services/fraud-check.service';
 
 import { FraudCheck } from '../payment-initiation/models/fraud-check.model';
@@ -26,8 +23,6 @@ export type RiskLevel = 'low' | 'medium' | 'high';
     FormsModule,
     MatIconModule,
     MatButtonModule,
-    HeaderComponent,
-    SidebarComponent,
   ],
 
   templateUrl: './fraud-check.component.html',

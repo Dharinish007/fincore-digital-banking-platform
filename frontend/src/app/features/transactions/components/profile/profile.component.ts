@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
-
 @Component({
   selector: 'app-profile',
   standalone: true,
@@ -12,15 +9,11 @@ import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/s
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    HeaderComponent,
-    SidebarComponent
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent {
-  public sidebarCollapsed = false;
-
   public profile = {
     name: 'Aditi Verma',
     id: 'USR-89201',
@@ -30,8 +23,4 @@ export class ProfileComponent {
     branch: 'Global Treasury HQ',
     accessLevel: 'Tier 1 Operational Supervisor'
   };
-
-  public toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
-  }
 }

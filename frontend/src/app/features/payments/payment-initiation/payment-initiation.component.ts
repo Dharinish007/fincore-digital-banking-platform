@@ -22,9 +22,6 @@ import { Beneficiary } from './models/beneficiary.model';
 import { Payment } from './models/payment.model';
 import { FraudCheck } from './models/fraud-check.model';
 
-import { HeaderComponent } from '../components/header/header.component';
-import { SidebarComponent } from '../components/sidebar/sidebar.component';
-
 export type FlowStep = 'FORM' | 'REVIEW' | 'PROCESSING' | 'SUCCESS';
 
 @Component({
@@ -36,8 +33,6 @@ export type FlowStep = 'FORM' | 'REVIEW' | 'PROCESSING' | 'SUCCESS';
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
-    HeaderComponent,
-    SidebarComponent,
   ],
 
   templateUrl: './payment-initiation.component.html',

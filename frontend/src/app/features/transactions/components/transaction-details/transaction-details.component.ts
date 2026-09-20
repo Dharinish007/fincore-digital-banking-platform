@@ -7,9 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { ExportService } from '../../../../core/services/export.service';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
-
 @Component({
   selector: 'app-transaction-details',
   standalone: true,
@@ -17,8 +14,6 @@ import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/s
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    HeaderComponent,
-    SidebarComponent
   ],
   templateUrl: './transaction-details.component.html',
   styleUrls: ['./transaction-details.component.scss']
@@ -29,7 +24,6 @@ export class TransactionDetailsComponent implements OnInit {
   private txService = inject(TransactionService);
   private exportService = inject(ExportService);
 
-  public sidebarCollapsed = false;
   public tx: Transaction | null = null;
 
   ngOnInit(): void {
@@ -41,10 +35,6 @@ export class TransactionDetailsComponent implements OnInit {
     if (!this.tx) {
       this.router.navigate(['/transactions/history']);
     }
-  }
-
-  public toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   public backToHistory(): void {

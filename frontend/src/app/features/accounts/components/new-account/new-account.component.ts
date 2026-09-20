@@ -24,8 +24,6 @@ import {
   OpenedAccountType,
 } from '../../../../core/services/account.service';
 import { CustomValidators } from '../../../../core/validators/custom-validators';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
 
 @Component({
   selector: 'app-new-account',
@@ -42,8 +40,6 @@ import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/s
     MatNativeDateModule,
     MatCheckboxModule,
     MatProgressSpinnerModule,
-    HeaderComponent,
-    SidebarComponent,
   ],
   templateUrl: './new-account.component.html',
   styleUrls: ['./new-account.component.scss'],
@@ -52,8 +48,6 @@ export class NewAccountComponent {
   private fb = inject(FormBuilder);
   private accountService = inject(AccountService);
   private router = inject(Router);
-
-  public sidebarCollapsed = false;
 
   public form: FormGroup;
   public selectedAccountType: OpenedAccountType | '' = '';

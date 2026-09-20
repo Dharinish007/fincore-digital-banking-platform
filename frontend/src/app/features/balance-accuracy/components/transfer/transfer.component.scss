@@ -1,20 +1,8 @@
-.dashboard-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--bg-primary);
-  color: var(--text-white);
-}
-
-.main-container {
-  display: flex;
+.content-area,
+.transfer-view {
   flex: 1;
-}
-
-.content-area {
-  flex: 1;
+  width: 100%;
   padding: 24px 32px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 24px;

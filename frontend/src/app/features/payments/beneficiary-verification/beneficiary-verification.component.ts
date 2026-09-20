@@ -3,8 +3,6 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
-import { HeaderComponent } from "../components/header/header.component";
-import { SidebarComponent } from "../components/sidebar/sidebar.component";
 import { BeneficiaryService } from "../services/beneficiary.service";
 import { Beneficiary } from "../payment-initiation/models/beneficiary.model";
 
@@ -16,8 +14,6 @@ import { Beneficiary } from "../payment-initiation/models/beneficiary.model";
     FormsModule,
     MatIconModule,
     MatButtonModule,
-    HeaderComponent,
-    SidebarComponent,
   ],
   templateUrl: "./beneficiary-verification.component.html",
   styleUrls: ["./beneficiary-verification.component.scss"],

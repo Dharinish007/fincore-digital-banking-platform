@@ -6,8 +6,6 @@ import { ExportService } from '../../../core/services/export.service';
 import { BankAccount } from '../../../core/models/account.model';
 import { BalanceFilterCriteria } from '../../../core/models/filter.model';
 
-import { HeaderComponent } from './header/header.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { SummaryCardsComponent } from './summary-cards/summary-cards.component';
 import { FilterSectionComponent } from './filter-section/filter-section.component';
 import { AccuracyTableComponent } from './accuracy-table/accuracy-table.component';
@@ -22,8 +20,6 @@ import { FreezeDialogComponent } from './freeze-dialog/freeze-dialog.component';
   imports: [
     CommonModule,
     MatDialogModule,
-    HeaderComponent,
-    SidebarComponent,
     SummaryCardsComponent,
     FilterSectionComponent,
     AccuracyTableComponent,

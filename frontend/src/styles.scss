@@ -3,20 +3,25 @@
 @import '@angular/material/prebuilt-themes/purple-green.css';
 
 :root {
-  /* Color Palette Tokens */
-  --bg-primary: #111827;      /* Dark Background */
+  /* Unified Color Palette Tokens (Team B & Team C) */
+  --bg-primary: #12141c;      /* Dark Background */
+  --bg-page: #12141c;         /* Page Background */
   --bg-header: #0D47A1;       /* Primary Blue Header */
   --bg-sidebar: #0F172A;      /* Sidebar Dark Slate */
   --bg-card: #1E293B;         /* Cards Background */
   --bg-card-hover: #26354A;   /* Card Hover State */
   --bg-overlay: #1E293B;
 
-  --border-color: #334155;    /* Subtle Slate Border */
+  --border-color: #292d3e;    /* Subtle Slate Border */
   --border-focus: #2563EB;
 
   --text-white: #F9FAFB;
+  --text-main: #F9FAFB;
   --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
+  --text-muted: #9CA3AF;
+  --text-blue: #38bdf8;
+  --text-green: #34d399;
+  --text-header: #ffffff;
 
   /* Status Colors */
   --status-verified-fg: #10B981;
@@ -169,61 +174,9 @@ html, body {
   background: rgba(0, 0, 0, 0.6);
   z-index: 999;
 }
-/* Global FinCore Nexus Dark Theme */
-:root {
-  --bg-header: #194da3;
-  --bg-page: #12141c;
-  --bg-sidebar: #181a24;
-  --bg-card: #1c1f2b;
-  --bg-card-hover: #222636;
-  --border-color: #292d3e;
-  
-  --text-main: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-blue: #38bdf8;
-  --text-green: #34d399;
-  --text-header: #ffffff;
-  
-  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: var(--font-family);
-  background-color: var(--bg-page);
-  color: var(--text-main);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
-}
-
 button {
   font-family: inherit;
   cursor: pointer;
-}
-
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-page);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #3b4259;
 }
 
 /* Common Layout Utilities */

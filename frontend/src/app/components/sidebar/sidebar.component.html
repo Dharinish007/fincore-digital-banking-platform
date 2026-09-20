@@ -1,8 +1,10 @@
-<aside class="fincore-sidebar">
+<aside class="fincore-sidebar" [class.collapsed]="sidebarService.collapsed()">
   <nav class="sidebar-nav">
     @for (section of navSections(); track section.title) {
       <div class="nav-section">
-        <div class="section-title">{{ section.title }}</div>
+        @if (!sidebarService.collapsed()) {
+          <div class="section-title">{{ section.title }}</div>
+        }
         <ul class="nav-list">
           @for (item of section.items; track item.route) {
             <li class="nav-item-wrapper">
@@ -10,11 +12,14 @@
                 [routerLink]="item.route" 
                 routerLinkActive="active" 
                 class="nav-link"
+                [attr.title]="sidebarService.collapsed() ? item.label : null"
               >
                 <span class="nav-icon">{{ item.icon }}</span>
-                <span class="nav-text">{{ item.label }}</span>
-                @if (item.badge) {
-                  <span class="nav-badge" [class.badge-ai]="item.badge === 'AI'">{{ item.badge }}</span>
+                @if (!sidebarService.collapsed()) {
+                  <span class="nav-text">{{ item.label }}</span>
+                  @if (item.badge) {
+                    <span class="nav-badge" [class.badge-ai]="item.badge === 'AI'">{{ item.badge }}</span>
+                  }
                 }
               </a>
             </li>
@@ -24,10 +29,13 @@
     }
   </nav>
 
-  <div class="sidebar-footer">
-    <div class="sf-info">
-      <div class="sf-label">FinCore Suite</div>
-      <div class="sf-version">v4.0.0 Enterprise • RBAC</div>
+  @if (!sidebarService.collapsed()) {
+    <div class="sidebar-footer">
+      <div class="sf-info">
+        <div class="sf-label">FinCore Suite</div>
+        <div class="sf-version">v4.0.0 Enterprise • RBAC</div>
+      </div>
     </div>
-  </div>
+  }
 </aside>
+

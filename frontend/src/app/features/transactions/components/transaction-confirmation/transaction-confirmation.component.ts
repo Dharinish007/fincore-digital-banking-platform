@@ -6,9 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
-
 @Component({
   selector: 'app-transaction-confirmation',
   standalone: true,
@@ -16,8 +13,6 @@ import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/s
     CommonModule,
     MatButtonModule,
     MatIconModule,
-    HeaderComponent,
-    SidebarComponent
   ],
   templateUrl: './transaction-confirmation.component.html',
   styleUrls: ['./transaction-confirmation.component.scss']
@@ -26,7 +21,6 @@ export class TransactionConfirmationComponent implements OnInit {
   private txService = inject(TransactionService);
   private router = inject(Router);
 
-  public sidebarCollapsed = false;
   public tx: Transaction | null = null;
 
   ngOnInit(): void {
@@ -34,10 +28,6 @@ export class TransactionConfirmationComponent implements OnInit {
     if (!this.tx) {
       this.router.navigate(['/fund-transfer']);
     }
-  }
-
-  public toggleSidebar(): void {
-    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   public confirm(): void {

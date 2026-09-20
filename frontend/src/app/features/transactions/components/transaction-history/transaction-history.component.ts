@@ -14,9 +14,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { ExportService } from '../../../../core/services/export.service';
 import { Transaction } from '../../../../core/models/transaction.model';
-import { HeaderComponent } from '../../../balance-accuracy/components/header/header.component';
-import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/sidebar.component';
-
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
@@ -31,8 +28,6 @@ import { SidebarComponent } from '../../../balance-accuracy/components/sidebar/s
     MatSelectModule,
     MatOptionModule,
     MatTooltipModule,
-    HeaderComponent,
-    SidebarComponent
   ],
   templateUrl: './transaction-history.component.html',
   styleUrls: ['./transaction-history.component.scss']
@@ -43,7 +38,6 @@ export class TransactionHistoryComponent implements OnInit {
   private router = inject(Router);
   private fb = inject(FormBuilder);
 
-  public sidebarCollapsed = false;
   public transactions = this.txService.filteredTransactions;
   public displayedColumns: string[] = ['id', 'sender', 'receiver', 'type', 'amount', 'date', 'status', 'actions'];
 

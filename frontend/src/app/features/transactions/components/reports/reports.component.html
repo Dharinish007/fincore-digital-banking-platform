@@ -1,10 +1,4 @@
-<div class="dashboard-layout">
-  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
-
-  <div class="main-container">
-    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
-
-    <main class="content-area">
+<div class="content-area reports-view">
       <div class="dashboard-header">
         <div class="title-group">
           <h1>Financial & Audit Reports</h1>
@@ -38,6 +32,4 @@
           <button mat-stroked-button (click)="exportPdf()">Generate Report</button>
         </div>
       </div>
-    </main>
-  </div>
 </div>
