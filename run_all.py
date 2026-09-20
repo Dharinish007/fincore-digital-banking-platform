@@ -159,7 +159,7 @@ def main():
 
             if all_ready and not browser_opened:
                 browser_opened = True
-                print("\n[✓] All services are ONLINE! Opening http://localhost:4200 in browser...")
+                print("\n[OK] All services are ONLINE! Opening http://localhost:4200 in browser...")
                 try:
                     webbrowser.open("http://localhost:4200")
                 except Exception:

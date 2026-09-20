@@ -36,7 +36,7 @@ def kill_ports():
         except Exception:
             pass
 
-    print("\n✅ All FinCore ports freed.")
+    print("\n[OK] All FinCore ports freed.")
 
 if __name__ == "__main__":
     kill_ports()
