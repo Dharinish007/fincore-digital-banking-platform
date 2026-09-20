@@ -1,0 +1,394 @@
+<div class="module-container">
+  <!-- Toast Notification Banner -->
+  @if (toastMessage) {
+    <div class="toast-banner" [class.toast-danger]="toastType === 'danger'" [class.toast-success]="toastType === 'success'" [class.toast-info]="toastType === 'info'">
+      <span class="toast-text">{{ toastMessage }}</span>
+      <button class="toast-close" (click)="toastMessage = null">✕</button>
+    </div>
+  }
+
+  <!-- Header -->
+  <div class="header-action-row">
+    <div>
+      <h2 class="page-title">AI Fraud Detection & Real-Time Risk Engine</h2>
+      <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">
+        Perform instant anomaly detection on user-entered transaction details and persist results to PostgreSQL (<code style="color: #38bdf8;">fraud_event</code>, <code style="color: #38bdf8;">transaction</code> & <code style="color: #38bdf8;">risk_assessment</code>).
+      </p>
+    </div>
+    <div class="header-btns">
+      <button class="action-btn" (click)="openRulesModal()">⚙ View Detection Rules</button>
+    </div>
+  </div>
+
+  <!-- KPI Cards Grid -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-label">Recent High Risk Alerts</span>
+      <div class="kpi-value">{{ highRiskCount }}</div>
+      <span class="kpi-subtext red-text">Immediate AML Action Flagged</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Recent Evaluated Activities</span>
+      <div class="kpi-value">{{ recentFraudAlerts.length }}</div>
+      <span class="kpi-subtext green-text">Stored in Database</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-label">Protected Amount</span>
+      <div class="kpi-value">₹{{ (totalProtectedAmount / 100000).toFixed(2) }} L</div>
+      <span class="kpi-subtext blue-text">Auto-blocked via Rule Engine</span>
+    </div>
+  </div>
+
+  <!-- SECTION 1: User-Entered Transaction Details Form for Fraud Detection -->
+  <div class="details-card" style="border: 1px solid #1e293b; background: #0f172a; border-radius: 8px; padding: 24px; margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+      <div>
+        <h3 class="card-header-title" style="margin: 0; border: none; font-size: 1.15rem; color: #f8fafc;">
+          🛡️ Enter Transaction Details to Perform AI Fraud Detection
+        </h3>
+        <p style="margin: 4px 0 0 0; font-size: 0.82rem; color: #94a3b8;">
+          Evaluates risk score purely on entered parameters (no database fetch for analysis) and stores evaluation outcome in the database.
+        </p>
+      </div>
+      
+      <!-- Quick Test Scenario Presets -->
+      <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+        <span style="font-size: 0.78rem; color: #64748b; font-weight: 600;">TEST SCENARIOS:</span>
+        <button type="button" (click)="loadPreset('SAFE')" class="action-btn" style="font-size: 0.78rem; padding: 5px 10px; background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid #059669; border-radius: 4px; cursor: pointer;">
+          ✔ Safe Domestic (₹15k)
+        </button>
+        <button type="button" (click)="loadPreset('SUSPICIOUS')" class="action-btn" style="font-size: 0.78rem; padding: 5px 10px; background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid #d97706; border-radius: 4px; cursor: pointer;">
+          ⚠ Suspicious Velocity (₹75k)
+        </button>
+        <button type="button" (click)="loadPreset('HIGH_RISK')" class="action-btn" style="font-size: 0.78rem; padding: 5px 10px; background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid #dc2626; border-radius: 4px; cursor: pointer;">
+          🚨 High Risk Wire (₹2.5L)
+        </button>
+        <button type="button" (click)="loadPreset('CRITICAL_SPIKE')" class="action-btn" style="font-size: 0.78rem; padding: 5px 10px; background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid #9333ea; border-radius: 4px; cursor: pointer;">
+          ⚡ Critical Crypto Spike (₹8.5L)
+        </button>
+      </div>
+    </div>
+
+    <!-- Row 1: Customer Details -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px;">
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Select Registered Customer (DB):
+        </label>
+        <select (change)="onCustomerSelect($event)" class="form-select" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff;">
+          <option value="">-- Choose Customer --</option>
+          @for (cust of customers; track cust.id) {
+            <option [value]="cust.id">{{ cust.fullName || cust.name }} (ID: #{{ cust.id }})</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Customer Full Name:
+        </label>
+        <input type="text" [(ngModel)]="inputCustomerName" placeholder="e.g. Vikramaditya Rao" class="form-input" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff;" />
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Customer / User ID:
+        </label>
+        <input type="number" [(ngModel)]="inputCustomerId" placeholder="e.g. 101" class="form-input" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-family: monospace;" />
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Transaction Amount (₹):
+        </label>
+        <input type="number" [(ngModel)]="inputAmount" placeholder="e.g. 150000" class="form-input" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-family: monospace; font-size: 1rem; font-weight: 700;" />
+      </div>
+    </div>
+
+    <!-- Row 2: Channel, Location, Device IP -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 16px;">
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Transfer Category / Channel:
+        </label>
+        <select [(ngModel)]="inputTransactionType" class="form-select" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff;">
+          <option value="INTERNATIONAL_WIRE">International Wire (High Risk Flag)</option>
+          <option value="CRYPTO_EXCHANGE">Crypto Exchange Off-Ramp (High Risk Flag)</option>
+          <option value="TRANSFER">Domestic NEFT / RTGS Transfer</option>
+          <option value="UPI">Instant UPI / IMPS</option>
+          <option value="ATM_WITHDRAWAL">Cash ATM Withdrawal</option>
+          <option value="BILL_PAYMENT">Merchant & Bill Payment</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Origin Geolocation / City:
+        </label>
+        <input type="text" [(ngModel)]="inputLocation" placeholder="e.g. London, UK or Mumbai, IN" class="form-input" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff;" />
+      </div>
+
+      <div class="form-group">
+        <label style="display: block; font-size: 0.85rem; font-weight: 600; color: #cbd5e1; margin-bottom: 6px;">
+          Device IP Address:
+        </label>
+        <input type="text" [(ngModel)]="inputDeviceIp" placeholder="e.g. 192.168.1.185" class="form-input" style="width: 100%; padding: 10px; background: #0b1120; border: 1px solid #334155; border-radius: 6px; color: #fff; font-family: monospace;" />
+      </div>
+    </div>
+
+    <!-- Row 3: Security, Velocity & Flags -->
+    <div style="display: flex; gap: 24px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; background: #0b1120; padding: 14px 18px; border-radius: 6px; border: 1px solid #1e293b;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="color: #94a3b8; font-size: 0.85rem; font-weight: 600;">Failed PIN/2FA Attempts:</span>
+        <input type="number" [(ngModel)]="inputFailedAttempts" min="0" max="10" style="width: 60px; padding: 5px 8px; background: #1e293b; border: 1px solid #334155; border-radius: 4px; color: #fff; font-family: monospace;" />
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="color: #94a3b8; font-size: 0.85rem; font-weight: 600;">Txn Velocity (in 10 min):</span>
+        <input type="number" [(ngModel)]="inputRecentTxnCount" min="1" max="20" style="width: 60px; padding: 5px 8px; background: #1e293b; border: 1px solid #334155; border-radius: 4px; color: #fff; font-family: monospace;" />
+      </div>
+
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #e2e8f0; font-size: 0.88rem;">
+        <input type="checkbox" [(ngModel)]="inputIsInternational" style="width: 16px; height: 16px;" />
+        <span>Cross-Border / International</span>
+      </label>
+
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #e2e8f0; font-size: 0.88rem;">
+        <input type="checkbox" [(ngModel)]="inputIsNewDevice" style="width: 16px; height: 16px;" />
+        <span>New / Unregistered Device</span>
+      </label>
+
+      <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #e2e8f0; font-size: 0.88rem;">
+        <input type="checkbox" [(ngModel)]="inputIsUnusualTime" style="width: 16px; height: 16px;" />
+        <span>Off-Hours / Night Window</span>
+      </label>
+    </div>
+
+    <!-- Submit Action Button -->
+    <div style="display: flex; justify-content: flex-end; align-items: center; gap: 14px;">
+      <button class="action-btn primary-btn"
+              (click)="performFraudDetection()"
+              [disabled]="isEvaluating"
+              style="padding: 12px 28px; font-size: 1rem; font-weight: 700; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 8px; background: linear-gradient(135deg, #2563eb, #1d4ed8);">
+        <span>⚡ {{ isEvaluating ? 'Evaluating Rules & Storing in DB...' : 'Run Fraud Detection & Store in Database' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Real-Time Fraud Evaluation Result Card (Displayed when evaluated) -->
+  @if (evaluationResult) {
+    <div class="details-card" style="border: 2px solid #ef4444; border-radius: 8px; padding: 22px; margin-bottom: 24px; animation: slideDown 0.3s ease;"
+         [style.border-color]="evaluationResult.status === 'BLOCKED' ? '#ef4444' : evaluationResult.status === 'UNDER_REVIEW' ? '#f59e0b' : evaluationResult.status === 'SUSPICIOUS' ? '#fbbf24' : '#10b981'"
+         [style.background]="evaluationResult.status === 'BLOCKED' ? 'rgba(239, 68, 68, 0.12)' : evaluationResult.status === 'UNDER_REVIEW' ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)'">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 1.6rem;">{{ evaluationResult.status === 'BLOCKED' ? '🚨' : evaluationResult.status === 'UNDER_REVIEW' ? '⚠️' : '🛡️' }}</span>
+          <div>
+            <h3 style="margin: 0; font-size: 1.25rem; color: #fff; font-weight: 800;">
+              AI Fraud Detection Outcome: {{ evaluationResult.status }}
+            </h3>
+            <span style="font-size: 0.82rem; color: #cbd5e1;">
+              Transaction Ref: <code style="color: #38bdf8;">{{ evaluationResult.transactionReference }}</code> | Database Event ID: <code style="color: #34d399;">#{{ evaluationResult.eventId }}</code>
+            </span>
+          </div>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span style="font-size: 1.35rem; font-weight: 800; font-family: monospace;"
+                [style.color]="evaluationResult.score >= 75 ? '#f87171' : evaluationResult.score >= 50 ? '#fbbf24' : '#34d399'">
+            Risk Score: {{ evaluationResult.score }}/100
+          </span>
+          <span class="badge"
+                [class.danger-badge]="evaluationResult.threatLevel === 'CRITICAL' || evaluationResult.threatLevel === 'HIGH'"
+                [class.warn-badge]="evaluationResult.threatLevel === 'MEDIUM'"
+                [class.approved-badge]="evaluationResult.threatLevel === 'LOW'">
+            {{ evaluationResult.threatLevel }} THREAT
+          </span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; font-size: 0.9rem; margin-bottom: 14px;">
+        <div><span style="color: #94a3b8;">Customer Name:</span> <strong style="color: #fff;">{{ evaluationResult.customerName }}</strong></div>
+        <div><span style="color: #94a3b8;">Amount:</span> <strong style="color: #fff; font-family: monospace;">₹{{ evaluationResult.amount.toLocaleString('en-IN') }}</strong></div>
+        <div><span style="color: #94a3b8;">Channel:</span> <strong style="color: #38bdf8;">{{ evaluationResult.transactionType }}</strong></div>
+        <div><span style="color: #94a3b8;">Origin / IP:</span> <strong style="color: #fff;">{{ evaluationResult.location }} ({{ evaluationResult.deviceIp }})</strong></div>
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <span style="font-weight: 700; color: #f1f5f9; font-size: 0.88rem; display: block; margin-bottom: 6px;">
+          AI Rule Engine Trigger Reasons & Analysis Breakdown:
+        </span>
+        <ul style="margin: 0; padding-left: 20px; color: #e2e8f0; font-size: 0.85rem; line-height: 1.6;">
+          @for (reason of evaluationResult.reasons; track reason) {
+            <li [style.color]="evaluationResult.score >= 50 ? '#fca5a5' : '#86efac'">{{ reason }}</li>
+          }
+        </ul>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 12px;">
+        <span style="font-size: 0.82rem; color: #34d399; display: flex; align-items: center; gap: 6px;">
+          ✔ Stored in PostgreSQL tables: <code style="color: #38bdf8;">fraud_event</code>, <code style="color: #38bdf8;">transaction</code> & <code style="color: #38bdf8;">audit_log</code>.
+        </span>
+        <div style="display: flex; gap: 8px;">
+          <button class="action-btn danger-text" (click)="freezeAccount()">[Freeze Account]</button>
+          <button class="action-btn" (click)="dismissAlert()">[Dismiss]</button>
+          <button class="action-btn" (click)="escalateFraud()">[Escalate AML Level-3]</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- SECTION 3: Real-time Risk Assessment Details Card for Selected Alert -->
+  @if (selectedAlert) {
+    <div class="details-card">
+      <h3 class="card-header-title">Fraud Engine - Active Assessment Details</h3>
+
+      <div class="detail-rows">
+        <div class="detail-row">
+          <span class="label">Alert ID:</span> <span class="val highlight">{{ selectedAlert.id }}</span>
+          <span class="pipe">|</span>
+          <span class="label">Risk Score:</span> <span class="val score-high" [class.red-text]="selectedAlert.riskScore >= 75">{{ selectedAlert.riskScore }}/100</span>
+          <span class="pipe">|</span>
+          <span class="badge" [class.danger-badge]="selectedAlert.threatLevel === 'CRITICAL' || selectedAlert.threatLevel === 'HIGH'" [class.warn-badge]="selectedAlert.threatLevel === 'MEDIUM'" [class.approved-badge]="selectedAlert.threatLevel === 'LOW'">{{ selectedAlert.threatLevel }} RISK</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Customer:</span> <span class="val">{{ selectedAlert.customerName }}</span>
+          <span class="pipe">|</span>
+          <span class="label">Txn Amount:</span> <span class="val">₹{{ selectedAlert.amount.toLocaleString('en-IN') }}</span>
+          <span class="pipe">|</span>
+          <span class="label">Time:</span> <span class="val">{{ selectedAlert.timestamp }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Location / IP:</span> <span class="val">{{ selectedAlert.location }} (IP: {{ selectedAlert.deviceIp }})</span>
+          @if (selectedAlert.transactionType) {
+            <span class="pipe">|</span>
+            <span class="label">Channel:</span> <span class="val" style="color: #38bdf8;">{{ selectedAlert.transactionType }}</span>
+          }
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Trigger Reason:</span> <span class="val anomaly-text">{{ selectedAlert.triggerReason }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Engine Strategy:</span> <span class="val">Pure User-Input Rule Scoring + Automated DB Persistence</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="label">Status:</span> <span class="val status-active" [class.red-text]="selectedAlert.status.includes('Frozen') || selectedAlert.status === 'BLOCKED'" [class.green-text]="selectedAlert.status.includes('Cleared') || selectedAlert.status === 'SAFE'">{{ selectedAlert.status }}</span>
+        </div>
+
+        <div class="detail-row action-row">
+          <span class="label">Action:</span>
+          <div class="action-buttons">
+            <button class="action-btn danger-text" (click)="freezeAccount()">[Freeze Account]</button>
+            <button class="action-btn" (click)="dismissAlert()">[Dismiss Alert]</button>
+            <button class="action-btn" (click)="escalateFraud()">[Escalate to Fraud Team]</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- SECTION 4: Recent Fraud Detection Activities Table -->
+  <div class="table-card">
+    <div class="table-card-header">
+      <div>
+        <h3 class="card-header-title" style="margin-bottom: 2px; border-bottom: none;">
+          Recent Fraud Detection Activities
+        </h3>
+        <span style="font-size: 0.8rem; color: #94a3b8;">
+          Displaying recent evaluated activities recorded in PostgreSQL table <code style="color: #38bdf8;">fraud_event</code>
+        </span>
+      </div>
+      <div class="table-filters">
+        <input type="text" [(ngModel)]="searchTerm" placeholder="Search customer, ID..." class="form-input search-input" />
+        <select [(ngModel)]="selectedFilterThreat" class="form-select filter-select">
+          <option value="ALL">All Threat Levels</option>
+          <option value="CRITICAL">Critical Risk</option>
+          <option value="HIGH">High Risk</option>
+          <option value="MEDIUM">Medium Risk</option>
+          <option value="LOW">Low Risk</option>
+        </select>
+        <button class="action-btn" (click)="loadRecentFraudActivities()" style="padding: 6px 12px;">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Alert ID</th>
+          <th>Customer</th>
+          <th>Risk Score</th>
+          <th>Threat Level</th>
+          <th>Amount (₹)</th>
+          <th>Trigger Reason</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (alertItem of filteredAlerts; track alertItem.id) {
+          <tr (click)="selectAlert(alertItem)" [class.selected-row]="selectedAlert?.id === alertItem.id" style="cursor: pointer;">
+            <td class="alert-id">{{ alertItem.id }}</td>
+            <td>{{ alertItem.customerName }}</td>
+            <td><strong>{{ alertItem.riskScore }}/100</strong></td>
+            <td>
+              <span class="badge" 
+                [class.danger-badge]="alertItem.threatLevel === 'CRITICAL' || alertItem.threatLevel === 'HIGH'" 
+                [class.warn-badge]="alertItem.threatLevel === 'MEDIUM'" 
+                [class.approved-badge]="alertItem.threatLevel === 'LOW'">
+                {{ alertItem.threatLevel }}
+              </span>
+            </td>
+            <td>₹{{ alertItem.amount.toLocaleString('en-IN') }}</td>
+            <td style="max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ alertItem.triggerReason }}</td>
+            <td><span class="status-tag" [class.red-text]="alertItem.status.includes('Frozen') || alertItem.status === 'BLOCKED'">{{ alertItem.status }}</span></td>
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">No recent fraud detection activities matching criteria.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Active Rules Configuration Modal -->
+  @if (showRulesModal) {
+    <div class="modal-backdrop" (click)="closeRulesModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Active Fraud Detection Engine Rules</h3>
+          <button class="close-btn" (click)="closeRulesModal()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="rules-list" style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="rule-item" style="background: #12141c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <strong style="color: #38bdf8;">RULE #1: High Value Spike Rule</strong>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Adds <strong>+35 risk score</strong> for transactions >= ₹5,00,000 and <strong>+25</strong> for transactions >= ₹1,00,000.</p>
+            </div>
+            <div class="rule-item" style="background: #12141c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <strong style="color: #38bdf8;">RULE #2: Channel & Cross-Border Geofence</strong>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Adds <strong>+25</strong> for International Wire / Crypto Off-Ramp and <strong>+25</strong> for cross-border geographic anomalies.</p>
+            </div>
+            <div class="rule-item" style="background: #12141c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <strong style="color: #38bdf8;">RULE #3: Device Signature & Authentication Failures</strong>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Adds <strong>+15</strong> for unrecognized device hardware signatures and <strong>+20</strong> for 3+ consecutive failed PIN/2FA attempts.</p>
+            </div>
+            <div class="rule-item" style="background: #12141c; padding: 12px; border-radius: 6px; border: 1px solid var(--border-color);">
+              <strong style="color: #38bdf8;">RULE #4: High-Velocity Rapid Frequency</strong>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Adds <strong>+25</strong> for 5+ transactions or <strong>+15</strong> for 3+ transactions executed within short time windows.</p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn-secondary" (click)="closeRulesModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

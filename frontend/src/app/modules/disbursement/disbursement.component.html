@@ -1,0 +1,335 @@
+<div class="module-container">
+  <div class="module-header">
+    <div class="module-title-group">
+      <h2>Loan Disbursement Module</h2>
+      <p class="module-subtitle">Manage sanctioned loan release tranches, beneficiary bank transfers, and disbursement history logs.</p>
+    </div>
+
+    <!-- Loan Selector Pill Bar -->
+    <div class="loan-selector-bar">
+      <span class="selector-label">Select Active Loan:</span>
+      <div class="loan-pills">
+        <button 
+          *ngFor="let loan of loans" 
+          class="loan-pill" 
+          [class.active]="selectedLoan?.loanId === loan.loanId"
+          (click)="selectLoan(loan.loanId)">
+          <span class="pill-id">{{ loan.loanId }}</span>
+          <span class="pill-name">({{ loan.customerName.split(' ')[0] }})</span>
+        </button>
+        <button class="loan-pill add-pill" (click)="openCreateModal()">
+          <span>➕</span> New Loan
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alert Banner -->
+  <div *ngIf="alertMessage" class="alert-banner" [class.alert-success]="alertType === 'success'" [class.alert-error]="alertType === 'error'">
+    <span class="alert-icon">{{ alertType === 'success' ? '✅' : '⚠️' }}</span>
+    <span class="alert-text">{{ alertMessage }}</span>
+    <button class="alert-close" (click)="alertMessage = null">✕</button>
+  </div>
+
+  <!-- Last Disbursement Success Card -->
+  <div *ngIf="lastDisbursementRecord && alertType === 'success'" class="card receipt-card">
+    <div class="card-header">
+      <span class="card-icon">🎉</span>
+      <h3>Disbursement Confirmation Receipt</h3>
+    </div>
+
+    <div class="receipt-grid">
+      <div class="receipt-item">
+        <span class="r-label">Disbursement ID</span>
+        <span class="r-val text-cyan">{{ lastDisbursementRecord.disbursementId }}</span>
+      </div>
+
+      <div class="receipt-item">
+        <span class="r-label">Loan ID</span>
+        <span class="r-val">{{ lastDisbursementRecord.loanId }}</span>
+      </div>
+
+      <div class="receipt-item">
+        <span class="r-label">Amount Disbursed</span>
+        <span class="r-val text-green font-bold">{{ formatCurrency(lastDisbursementRecord.disbursementAmount) }}</span>
+      </div>
+
+      <div class="receipt-item">
+        <span class="r-label">Beneficiary Account</span>
+        <span class="r-val">{{ lastDisbursementRecord.beneficiaryAccount }}</span>
+      </div>
+
+      <div class="receipt-item">
+        <span class="r-label">Reference Number</span>
+        <span class="r-val text-purple">{{ lastDisbursementRecord.referenceNumber }}</span>
+      </div>
+
+      <div class="receipt-item">
+        <span class="r-label">Status</span>
+        <span class="status-badge status-success">{{ lastDisbursementRecord.status }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2col" *ngIf="selectedLoan">
+    <!-- Screen 1: Loan Overview -->
+    <div class="card overview-card">
+      <div class="card-header">
+        <span class="card-icon">🏛️</span>
+        <h3>Screen 1 — Loan Overview & Eligibility</h3>
+      </div>
+
+      <div class="loan-details-list">
+        <div class="detail-row">
+          <span class="d-label">Customer Name</span>
+          <span class="d-val">{{ selectedLoan.customerName }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="d-label">Loan ID</span>
+          <span class="d-val font-mono text-cyan">{{ selectedLoan.loanId }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="d-label">Loan Type</span>
+          <span class="d-val">{{ selectedLoan.loanType }}</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="d-label">Credit Score</span>
+          <span class="d-val text-green">{{ selectedLoan.creditScore }} (Verified)</span>
+        </div>
+
+        <div class="detail-row">
+          <span class="d-label">Loan Status</span>
+          <span class="status-badge" [class.status-success]="selectedLoan.status === 'ACTIVE' || selectedLoan.status === 'DISBURSED'" [class.status-warning]="selectedLoan.status === 'APPROVED'">
+            {{ selectedLoan.status }}
+          </span>
+        </div>
+
+        <div class="divider-line"></div>
+
+        <div class="financial-summary-box">
+          <div class="fin-box">
+            <span class="fb-label">Sanctioned Amount</span>
+            <span class="fb-val">{{ formatCurrency(selectedLoan.sanctionedAmount) }}</span>
+          </div>
+
+          <div class="fin-box">
+            <span class="fb-label">Already Disbursed</span>
+            <span class="fb-val text-purple">{{ formatCurrency(selectedLoan.disbursedAmount) }}</span>
+          </div>
+
+          <div class="fin-box highlight-eligible">
+            <span class="fb-label">Eligible Remaining</span>
+            <span class="fb-val text-green">{{ formatCurrency(selectedLoan.remainingAmount) }}</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="disbursement-progress font-sm">
+          <div class="progress-info">
+            <span>Disbursement Progress</span>
+            <span>{{ ((selectedLoan.disbursedAmount / selectedLoan.sanctionedAmount) * 100).toFixed(0) }}% Disbursed</span>
+          </div>
+          <div class="progress-track">
+            <div class="progress-fill" [style.width.%]="(selectedLoan.disbursedAmount / selectedLoan.sanctionedAmount) * 100"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2: Disbursement Form -->
+    <div class="card form-card">
+      <div class="card-header">
+        <span class="card-icon">💸</span>
+        <h3>Screen 2 — Disburse Loan Form</h3>
+      </div>
+
+      <form [formGroup]="disbursementForm" (ngSubmit)="submitDisbursement()" class="disbursement-form">
+        <!-- Interactive Selectable Loan Dropdown -->
+        <div class="form-group">
+          <label for="disbursementLoanSelect">Select Loan Account & Customer</label>
+          <select id="disbursementLoanSelect" formControlName="loanId" (change)="onFormLoanChange($event)">
+            <option *ngFor="let l of loans" [value]="l.loanId">
+              {{ l.loanId }} — {{ l.customerName }} (Eligible: {{ formatCurrency(l.remainingAmount) }})
+            </option>
+          </select>
+        </div>
+
+        <!-- Readonly Eligible Remaining Amount display -->
+        <div class="eligible-display">
+          <span class="ed-label">Eligible Amount Available:</span>
+          <span class="ed-val">{{ formatCurrency(selectedLoan.remainingAmount) }}</span>
+        </div>
+
+        <!-- Disbursement Amount Input -->
+        <div class="form-group">
+          <label for="disbursementAmount">Disbursement Amount (₹)</label>
+          <div class="input-with-prefix">
+            <span class="prefix">₹</span>
+            <input 
+              id="disbursementAmount" 
+              type="number" 
+              formControlName="disbursementAmount" 
+              placeholder="Enter amount to disburse"
+              [class.is-invalid]="disbursementForm.get('disbursementAmount')?.touched && disbursementForm.get('disbursementAmount')?.invalid"
+            />
+          </div>
+          <div *ngIf="disbursementForm.get('disbursementAmount')?.touched && disbursementForm.get('disbursementAmount')?.invalid" class="error-msg">
+            Amount must be greater than 0 and ≤ Eligible Amount.
+          </div>
+        </div>
+
+        <!-- Beneficiary Account -->
+        <div class="form-group">
+          <label for="beneficiaryAccount">Beneficiary Bank Account</label>
+          <input 
+            id="beneficiaryAccount" 
+            type="text" 
+            formControlName="beneficiaryAccount" 
+            placeholder="e.g. XXXX1234 or HDFC000123"
+            [class.is-invalid]="disbursementForm.get('beneficiaryAccount')?.touched && disbursementForm.get('beneficiaryAccount')?.invalid"
+          />
+          <div *ngIf="disbursementForm.get('beneficiaryAccount')?.touched && disbursementForm.get('beneficiaryAccount')?.invalid" class="error-msg">
+            Valid account number required.
+          </div>
+        </div>
+
+        <!-- Date & Mode -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="disbursementDate">Disbursement Date</label>
+            <input id="disbursementDate" type="date" formControlName="disbursementDate" />
+          </div>
+          <div class="form-group flex-1">
+            <label for="disbursementMode">Disbursement Mode</label>
+            <select id="disbursementMode" formControlName="disbursementMode">
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="NEFT">NEFT</option>
+              <option value="RTGS">RTGS</option>
+              <option value="IMPS">IMPS</option>
+              <option value="Cheque">Cheque</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Remarks -->
+        <div class="form-group">
+          <label for="remarks">Remarks / Purpose</label>
+          <input id="remarks" type="text" formControlName="remarks" placeholder="First tranche / construction release..." />
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-block" [disabled]="selectedLoan.remainingAmount === 0">
+            <span>🚀</span> Process Disbursement
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen 3: Disbursement History -->
+  <div class="card table-card">
+    <div class="card-header table-header">
+      <div class="table-title-group">
+        <span class="card-icon">📜</span>
+        <h3>Screen 3 — Disbursement History Log <span *ngIf="selectedLoan && !showAllHistory">({{ selectedLoan.customerName }} - {{ selectedLoan.loanId }})</span><span *ngIf="showAllHistory">(All Loans)</span></h3>
+      </div>
+      <button type="button" class="btn btn-outline" (click)="toggleHistoryView()">
+        {{ showAllHistory ? 'Show Selected Account Only' : 'Show All Accounts' }}
+      </button>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fincore-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Disbursement ID</th>
+            <th>Loan ID</th>
+            <th>Customer</th>
+            <th class="text-right">Amount (₹)</th>
+            <th>Mode</th>
+            <th>Reference #</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredDisbursements">
+            <td class="text-secondary">{{ item.disbursementDate }}</td>
+            <td class="font-mono text-cyan">{{ item.disbursementId }}</td>
+            <td class="font-mono">{{ item.loanId }}</td>
+            <td>{{ item.customerName }}</td>
+            <td class="text-right text-green font-bold">{{ formatCurrency(item.disbursementAmount) }}</td>
+            <td>{{ item.disbursementMode }}</td>
+            <td class="font-mono text-purple">{{ item.referenceNumber }}</td>
+            <td>
+              <span class="status-badge status-success">{{ item.status }}</span>
+            </td>
+          </tr>
+          <tr *ngIf="filteredDisbursements.length === 0">
+            <td colspan="8" class="no-data">No disbursement history found for this account.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Modal for Creating New Loan Account -->
+  <div class="modal-overlay" *ngIf="isCreateModalOpen">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h4>➕ Create New Borrower & Loan Application</h4>
+        <button (click)="closeCreateModal()" class="close-modal">✕</button>
+      </div>
+
+      <form [formGroup]="newLoanForm" (ngSubmit)="submitNewLoan()" class="disbursement-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="newCustName">Borrower Customer Name</label>
+            <input id="newCustName" type="text" formControlName="customerName" placeholder="e.g. Ananya Roy" />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="newLoanType">Loan Product Type</label>
+              <select id="newLoanType" formControlName="loanType">
+                <option value="Home Loan">Home Loan</option>
+                <option value="Personal Loan">Personal Loan</option>
+                <option value="Vehicle Loan">Vehicle Loan</option>
+                <option value="Education Loan">Education Loan</option>
+                <option value="Business Loan">Business Loan</option>
+              </select>
+            </div>
+            <div class="form-group flex-1">
+              <label for="newCreditScore">Credit Score</label>
+              <input id="newCreditScore" type="number" formControlName="creditScore" placeholder="750" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="newSanctionedAmount">Sanctioned Amount (₹)</label>
+              <input id="newSanctionedAmount" type="number" formControlName="sanctionedAmount" placeholder="500000" />
+            </div>
+            <div class="form-group flex-1">
+              <label for="newInterestRate">Interest Rate (% p.a.)</label>
+              <input id="newInterestRate" type="number" formControlName="interestRate" placeholder="9.5" />
+            </div>
+            <div class="form-group flex-1">
+              <label for="newTenureMonths">Tenure (Months)</label>
+              <input id="newTenureMonths" type="number" formControlName="tenureMonths" placeholder="120" />
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 16px;">
+          <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Loan Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

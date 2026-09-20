@@ -1,0 +1,88 @@
+<div class="modal-backdrop" (click)="onClose()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="modal-header">
+      <div class="title-wrap">
+        <div class="header-icon-box">
+          <mat-icon>biometrics</mat-icon>
+        </div>
+        <div>
+          <h3>Facial Biometric & Telemetry Details</h3>
+          <p class="subtitle">AI Embedding Vectors, Forensic Telemetry, and Audit Log</p>
+        </div>
+      </div>
+
+      <button class="close-btn" (click)="onClose()" aria-label="Close dialog">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <!-- Modal Content Grid -->
+    <div class="modal-body" *ngIf="report">
+      <!-- Section 1: Overview Summary Pills -->
+      <div class="summary-pills-row">
+        <div class="pill-box">
+          <span class="pill-label">Audit Ref</span>
+          <span class="pill-val mono">{{ report.auditRef }}</span>
+        </div>
+        <div class="pill-box">
+          <span class="pill-label">AI Matcher</span>
+          <span class="pill-val">BioVision v4.2</span>
+        </div>
+        <div class="pill-box">
+          <span class="pill-label">Processing Time</span>
+          <span class="pill-val mono">{{ report.processingTimeMs }} ms</span>
+        </div>
+        <div class="pill-box">
+          <span class="pill-label">Anti-Spoof Confidence</span>
+          <span class="pill-val highlight-green mono">{{ report.antiSpoofConfidence }}%</span>
+        </div>
+      </div>
+
+      <!-- Section 2: Detailed Matrix Table -->
+      <div class="telemetry-table-card">
+        <div class="table-title">Neural Biometric Feature Vectors</div>
+
+        <div class="telemetry-rows">
+          <div class="t-row">
+            <span class="t-label">Cosine Similarity Metric</span>
+            <span class="t-val mono">{{ report.cosineSimilarity }} (Range: 0.0 - 1.0)</span>
+          </div>
+
+          <div class="t-row">
+            <span class="t-label">Vector Euclidean Distance</span>
+            <span class="t-val mono">{{ report.vectorEuclideanDistance }} (Threshold &le; 0.600)</span>
+          </div>
+
+          <div class="t-row">
+            <span class="t-label">Facial Landmarks Matched</span>
+            <span class="t-val mono">{{ report.landmarksMatched }} / {{ report.totalLandmarks }} (96.8%)</span>
+          </div>
+
+          <div class="t-row">
+            <span class="t-label">Illumination Normalization</span>
+            <span class="t-val mono">{{ report.illuminationMatch }}% (Gamma Corrected)</span>
+          </div>
+
+          <div class="t-row">
+            <span class="t-label">Confidence Decision Rule</span>
+            <span class="t-val mono">{{ report.decisionRule }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Compliance & Privacy Seal -->
+      <div class="compliance-notice">
+        <mat-icon class="shield-icon">security</mat-icon>
+        <div class="notice-text">
+          <strong>Privacy & ISO 30107-3 Compliance:</strong> Raw biometric embeddings are hashed with SHA-256 and discarded immediately after similarity scoring. No biometric vectors are stored in plain text.
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="onClose()">Close</button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,93 @@
+.dashboard-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-white);
+}
+
+.main-container {
+  display: flex;
+  flex: 1;
+}
+
+.content-area {
+  flex: 1;
+  padding: 24px 32px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard-header {
+  .title-group {
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+  }
+}
+
+.profile-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 720px;
+
+  .profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+
+    .avatar-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: rgba(37, 99, 235, 0.2);
+      border: 2px solid #2563EB;
+      color: #3B82F6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      mat-icon { font-size: 36px; width: 36px; height: 36px; }
+    }
+
+    h2 { font-size: 1.35rem; font-weight: 700; }
+    .role { font-size: 0.875rem; color: var(--text-secondary); margin: 2px 0 6px 0; }
+    .badge {
+      font-size: 0.75rem;
+      background: rgba(16, 185, 129, 0.12);
+      color: #10B981;
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+  }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding-top: 24px;
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .lbl { font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
+      .val { font-size: 1rem; font-weight: 500; color: var(--text-white); }
+      .font-mono { font-family: monospace; }
+    }
+  }
+}

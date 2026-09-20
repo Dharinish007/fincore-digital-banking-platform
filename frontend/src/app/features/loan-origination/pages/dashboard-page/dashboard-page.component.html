@@ -1,0 +1,142 @@
+<div class="dashboard-page">
+
+  <!-- ── Top Action & Welcome Banner ── -->
+  <div class="hero-action-banner">
+    <div class="hero-content">
+      <div class="badge-tag">
+        <span class="live-dot"></span> LOAN ORIGINATION PORTAL
+      </div>
+      <h1 class="hero-title">Core Banking Loan Origination</h1>
+      <p class="hero-desc">
+        Streamlined borrower intake pipeline: from pre-qualification assessment to full application intake and centralized portfolio tracking.
+      </p>
+    </div>
+    <div class="hero-actions">
+      <button class="btn-hero-secondary" (click)="viewApplications()" id="dash-btn-view-apps">
+        <span class="icon">📂</span> View Applications
+      </button>
+      <button class="btn-hero-primary" (click)="startNewApplication()" id="dash-btn-new-app">
+        <span class="icon">✨</span> Start New Application
+      </button>
+    </div>
+  </div>
+
+  <!-- ── 5 Required Stat Cards ── -->
+  <div class="stats-grid-5">
+    <div class="stat-card stat-blue">
+      <div class="stat-top">
+        <span class="stat-label">TOTAL APPLICATIONS</span>
+        <div class="stat-icon stat-icon-blue">
+          <span style="font-size:16px">📁</span>
+        </div>
+      </div>
+      <div class="stat-value">{{ total }}</div>
+      <div class="stat-delta green">Portfolio Total Volume</div>
+    </div>
+
+    <div class="stat-card stat-teal">
+      <div class="stat-top">
+        <span class="stat-label">NEW APPLICATIONS</span>
+        <div class="stat-icon stat-icon-teal">
+          <span style="font-size:16px">📝</span>
+        </div>
+      </div>
+      <div class="stat-value">{{ newApplications }}</div>
+      <div class="stat-delta muted">Draft &amp; Intake Stage</div>
+    </div>
+
+    <div class="stat-card stat-orange">
+      <div class="stat-top">
+        <span class="stat-label">APPLICATIONS IN PROCESSING</span>
+        <div class="stat-icon stat-icon-orange">
+          <span style="font-size:16px">⚙️</span>
+        </div>
+      </div>
+      <div class="stat-value">{{ inProcessing }}</div>
+      <div class="stat-delta orange">Active Credit &amp; Verification</div>
+    </div>
+
+    <div class="stat-card stat-purple">
+      <div class="stat-top">
+        <span class="stat-label">APPROVED / COMPLETED</span>
+        <div class="stat-icon stat-icon-purple">
+          <span style="font-size:16px">✅</span>
+        </div>
+      </div>
+      <div class="stat-value approval-rate">{{ approvedCompleted }}</div>
+      <div class="stat-delta green">Sanctioned &amp; Ready</div>
+    </div>
+
+    <div class="stat-card stat-amber">
+      <div class="stat-top">
+        <span class="stat-label">PENDING APPLICATIONS</span>
+        <div class="stat-icon stat-icon-amber">
+          <span style="font-size:16px">⏳</span>
+        </div>
+      </div>
+      <div class="stat-value" style="color: #fbbf24;">{{ pendingApplications }}</div>
+      <div class="stat-delta muted">Awaiting Next Action</div>
+    </div>
+  </div>
+
+  <!-- ── Recent Loan Origination Records ── -->
+  <div class="panel table-panel">
+    <div class="table-panel-header">
+      <div class="table-title">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
+        Recent Origination Records
+        <span class="records-badge">{{ recentApplications.length || 0 }} Records</span>
+      </div>
+      <button class="btn-view-all" (click)="viewApplications()">
+        View All in Applications Page ➔
+      </button>
+    </div>
+
+    <div class="table-wrapper">
+      <table class="cc-table">
+        <thead>
+          <tr>
+            <th>APPLICATION ID</th>
+            <th>EMPLOYEE NAME</th>
+            <th>LOAN TYPE</th>
+            <th>LOAN AMOUNT</th>
+            <th>APPLICATION DATE</th>
+            <th>STAGE</th>
+            <th>STATUS</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let app of recentApplications" class="table-row">
+            <td>
+              <a (click)="openApplication(app)" class="loan-id-link">{{ app.id || ('LO-' + app.loanId) }}</a>
+            </td>
+            <td class="cell-name">{{ app.fullName || ('Employee #' + app.customerId) }}</td>
+            <td>{{ app.loanType }}</td>
+            <td class="cell-score">₹{{ (app.loanAmount || app.requestedAmount) | number }}</td>
+            <td class="cell-date">{{ app.applicationDate }}</td>
+            <td>
+              <span class="stage-tag">{{ app.stage || 'Loan Application' }}</span>
+            </td>
+            <td>
+              <span class="status-pill"
+                    [class.status-pass]="app.status === 'Approved' || app.status === 'Funded'"
+                    [class.status-review]="app.status === 'Under Review' || app.status === 'Pending'"
+                    [class.status-draft]="app.status === 'Draft'"
+                    [class.status-fail]="app.status === 'Rejected'">
+                {{ app.status }}
+              </span>
+            </td>
+            <td class="cell-actions">
+              <button class="btn-table-action" (click)="openApplication(app)" title="View Application Details">
+                View
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+

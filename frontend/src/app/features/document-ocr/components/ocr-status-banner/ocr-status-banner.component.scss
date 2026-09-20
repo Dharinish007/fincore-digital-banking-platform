@@ -1,0 +1,59 @@
+.status-banner-container {
+  margin-bottom: 24px;
+}
+
+.alert-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+
+  strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  span {
+    font-size: 0.8rem;
+    opacity: 0.9;
+  }
+}
+
+.width-full {
+  width: 100%;
+}
+
+.alert-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.btn-sm {
+  padding: 6px 12px !important;
+  font-size: 0.75rem !important;
+  height: auto !important;
+  margin-left: auto;
+}
+
+.processing-alert {
+  align-items: flex-start !important;
+}
+
+.spin-icon {
+  animation: spin 1.2s linear infinite;
+  color: #f59e0b;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.custom-progress {
+  margin-top: 10px;
+  height: 4px !important;
+  border-radius: 2px;
+}

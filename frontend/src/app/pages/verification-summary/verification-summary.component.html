@@ -1,0 +1,379 @@
+<div class="summary-page" *ngIf="result$ | async as result">
+  <!-- ========================================================= -->
+  <!-- HEADER -->
+  <!-- ========================================================= -->
+
+  <div class="page-header">
+    <div class="header-left-col">
+      <div class="breadcrumb-trail">
+        <span> KYC Verification </span>
+
+        <mat-icon class="bc-sep"> chevron_right </mat-icon>
+
+        <span class="active-crumb"> Verification Decision </span>
+      </div>
+
+      <h1 class="page-title">KYC Decision Summary</h1>
+
+      <p class="page-subtitle">
+        Consolidated verification assessment and KYC verification decision
+      </p>
+    </div>
+
+    <div class="header-right-col">
+      <div class="status-badge-ready">
+        <mat-icon> verified_user </mat-icon>
+
+        <span> FINAL DECISION STAGE </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- SUCCESS MESSAGE -->
+  <!-- ========================================================= -->
+
+  <div class="success-message" *ngIf="successMessage">
+    <mat-icon> check_circle </mat-icon>
+
+    <div>
+      <strong> KYC Successfully Verified </strong>
+
+      <p>
+        {{ successMessage }}
+      </p>
+
+      <p *ngIf="verificationResponse">
+        KYC ID:
+
+        <strong>
+          {{ verificationResponse.kycId }}
+        </strong>
+
+        &nbsp; | &nbsp; Status:
+
+        <strong>
+          {{ verificationResponse.kycStatus }}
+        </strong>
+
+        &nbsp; | &nbsp; Audit Ref:
+
+        <strong>
+          {{ verificationResponse.auditRef }}
+        </strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- ERROR MESSAGE -->
+  <!-- ========================================================= -->
+
+  <div class="error-message" *ngIf="errorMessage">
+    <mat-icon> error </mat-icon>
+
+    <span>
+      {{ errorMessage }}
+    </span>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- SUMMARY GRID -->
+  <!-- ========================================================= -->
+
+  <div class="summary-grid">
+    <!-- ======================================================= -->
+    <!-- VERIFICATION PIPELINE -->
+    <!-- ======================================================= -->
+
+    <div class="summary-card stages-card">
+      <div class="card-header">
+        <div class="title-with-icon">
+          <mat-icon> checklist </mat-icon>
+
+          <h3>Verification Pipeline Audits</h3>
+        </div>
+
+        <span class="audit-tag">
+          Ref:
+
+          {{ result.auditRef || "Not Available" }}
+        </span>
+      </div>
+
+      <div class="stages-list">
+        <!-- =================================================== -->
+        <!-- OCR -->
+        <!-- =================================================== -->
+
+        <div class="stage-row">
+          <div class="stage-icon-wrap">
+            <mat-icon> document_scanner </mat-icon>
+          </div>
+
+          <div class="stage-info">
+            <span class="stage-title"> OCR Verification </span>
+
+            <span class="stage-sub">
+              Identity document extraction & validation
+            </span>
+          </div>
+
+          <div class="stage-badge-wrap">
+            <span class="stage-score mono">
+              {{ result.ocr.score | number: "1.0-2" }}%
+            </span>
+
+            <span class="stage-badge" [class.failed]="!result.ocr.passed">
+              {{ result.ocr.passed ? "✓ PASSED" : "✕ FAILED" }}
+            </span>
+          </div>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- LIVENESS -->
+        <!-- =================================================== -->
+
+        <div class="stage-row">
+          <div class="stage-icon-wrap">
+            <mat-icon> face </mat-icon>
+          </div>
+
+          <div class="stage-info">
+            <span class="stage-title"> Liveness Detection </span>
+
+            <span class="stage-sub"> Live person verification </span>
+          </div>
+
+          <div class="stage-badge-wrap">
+            <span class="stage-score mono">
+              {{ result.liveness.score | number: "1.0-2" }}%
+            </span>
+
+            <span class="stage-badge" [class.failed]="!result.liveness.passed">
+              {{ result.liveness.passed ? "✓ PASSED" : "✕ FAILED" }}
+            </span>
+          </div>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- FACE MATCH -->
+        <!-- =================================================== -->
+
+        <div class="stage-row">
+          <div class="stage-icon-wrap">
+            <mat-icon> face_retouching_natural </mat-icon>
+          </div>
+
+          <div class="stage-info">
+            <span class="stage-title"> Face Match Accuracy </span>
+
+            <span class="stage-sub"> ID Face vs Live Selfie Bio-Matcher </span>
+          </div>
+
+          <div class="stage-badge-wrap">
+            <span class="stage-score mono">
+              {{ result.faceMatch.score | number: "1.0-2" }}%
+            </span>
+
+            <span class="stage-badge" [class.failed]="!result.faceMatch.passed">
+              {{ result.faceMatch.passed ? "✓ PASSED" : "✕ FAILED" }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================= -->
+    <!-- FINAL DECISION -->
+    <!-- ======================================================= -->
+
+    <div class="summary-card decision-card">
+      <div class="card-header">
+        <div class="title-with-icon">
+          <mat-icon> gavel </mat-icon>
+
+          <h3>KYC Authorization</h3>
+        </div>
+      </div>
+
+      <div class="decision-content">
+        <!-- =================================================== -->
+        <!-- OVERALL RESULT -->
+        <!-- =================================================== -->
+
+        <div class="score-banner" [class.failed-banner]="!result.overallPassed">
+          <div class="banner-top">
+            <span> Overall KYC Verification </span>
+
+            <span
+              [class.risk-low]="result.overallPassed"
+              [class.risk-high]="!result.overallPassed"
+            >
+              {{
+                result.overallPassed ? "ALL CHECKS PASSED" : "REVIEW REQUIRED"
+              }}
+            </span>
+          </div>
+
+          <p class="banner-desc">
+            {{
+              result.overallPassed
+                ? "OCR, liveness detection and face matching have all passed. KYC verification can now be completed."
+                : "One or more KYC verification stages require review before KYC verification."
+            }}
+          </p>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- IDENTITY INFORMATION -->
+        <!-- =================================================== -->
+
+        <div class="customer-info-box">
+          <!-- IDENTITY MATCH -->
+
+          <div class="info-row">
+            <span> Identity Match </span>
+
+            <strong class="text-green" *ngIf="result.customerName">
+              {{ result.customerName }}
+            </strong>
+
+            <strong *ngIf="!result.customerName"> Verified Identity </strong>
+          </div>
+
+          <!-- AUDIT REFERENCE -->
+
+          <div class="info-row">
+            <span> Audit Reference </span>
+
+            <strong class="mono">
+              {{ result.auditRef || "Not Available" }}
+            </strong>
+          </div>
+
+          <!-- DECISION DATE -->
+
+          <div class="info-row">
+            <span> Decision Date </span>
+
+            <strong class="mono">
+              {{ result.timestamp | date: "medium" }}
+            </strong>
+          </div>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- LIVENESS DETAILS -->
+        <!-- =================================================== -->
+
+        <div class="customer-info-box">
+          <div class="info-row">
+            <span> Liveness Confidence </span>
+
+            <strong class="mono">
+              {{ result.liveness.confidenceScore | number: "1.0-2" }}%
+            </strong>
+          </div>
+
+          <div class="info-row">
+            <span> Liveness Status </span>
+
+            <strong
+              [class.text-green]="result.liveness.passed"
+              [class.text-red]="!result.liveness.passed"
+            >
+              {{ result.liveness.verificationStatus }}
+            </strong>
+          </div>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- BACKEND VERIFICATION RESULT -->
+        <!-- =================================================== -->
+
+        <div class="customer-info-box" *ngIf="verificationResponse">
+          <div class="info-row">
+            <span> KYC Verification Status </span>
+
+            <strong
+              [class.text-green]="verificationResponse.kycStatus === 'VERIFIED'"
+              [class.text-red]="verificationResponse.kycStatus === 'REJECTED'"
+            >
+              {{ verificationResponse.kycStatus }}
+            </strong>
+          </div>
+
+          <div class="info-row">
+            <span> KYC ID </span>
+
+            <strong class="mono">
+              {{ verificationResponse.kycId }}
+            </strong>
+          </div>
+
+          <div class="info-row">
+            <span> Verified At </span>
+
+            <strong class="mono">
+              {{
+                verificationResponse.verifiedAt
+                  ? (verificationResponse.verifiedAt | date: "medium")
+                  : "Not Available"
+              }}
+            </strong>
+          </div>
+        </div>
+
+        <!-- =================================================== -->
+        <!-- ACTION BUTTONS -->
+        <!-- =================================================== -->
+
+        <div class="action-buttons-wrap">
+          <!-- BACK -->
+
+          <button
+            class="btn-back"
+            type="button"
+            (click)="backToFaceMatch()"
+            [disabled]="isApproving"
+          >
+            <mat-icon> arrow_back </mat-icon>
+
+            <span> Back to Face Match </span>
+          </button>
+
+          <!-- VERIFY KYC -->
+
+          <button
+            class="btn-approve"
+            type="button"
+            [class.approved]="isApproved"
+            [disabled]="!result.overallPassed || isApproved || isApproving"
+            (click)="approveKyc()"
+          >
+            <mat-icon>
+              {{
+                isApproved
+                  ? "check"
+                  : isApproving
+                    ? "hourglass_top"
+                    : "verified_user"
+              }}
+            </mat-icon>
+
+            <span>
+              {{
+                isApproved
+                  ? "KYC Verified ✓"
+                  : isApproving
+                    ? "Verifying KYC..."
+                    : "Verify KYC"
+              }}
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

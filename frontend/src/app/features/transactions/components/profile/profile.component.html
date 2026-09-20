@@ -1,0 +1,48 @@
+<div class="dashboard-layout">
+  <app-header (toggleSidebar)="toggleSidebar()"></app-header>
+
+  <div class="main-container">
+    <app-sidebar [collapsed]="sidebarCollapsed"></app-sidebar>
+
+    <main class="content-area">
+      <div class="dashboard-header">
+        <div class="title-group">
+          <h1>User Profile</h1>
+          <p class="subtitle">FinCore Enterprise Banking Security Profile & Credentials</p>
+        </div>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="avatar-wrap">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div>
+            <h2>{{ profile.name }}</h2>
+            <p class="role">{{ profile.role }}</p>
+            <span class="badge">{{ profile.accessLevel }}</span>
+          </div>
+        </div>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="lbl">Employee / User ID</span>
+            <span class="val font-mono">{{ profile.id }}</span>
+          </div>
+          <div class="info-item">
+            <span class="lbl">Official Email</span>
+            <span class="val">{{ profile.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="lbl">Registered Phone</span>
+            <span class="val">{{ profile.phone }}</span>
+          </div>
+          <div class="info-item">
+            <span class="lbl">Home Branch</span>
+            <span class="val">{{ profile.branch }}</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

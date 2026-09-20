@@ -1,0 +1,63 @@
+<div class="loans-portal">
+  <div class="content-header">
+    <div>
+      <h1 class="workspace-title">Loan Origination & Servicing Portal</h1>
+      <p class="workspace-subtitle">Comprehensive loan portfolio tracking, reducing-balance EMI modeling, tranches & collections</p>
+    </div>
+  </div>
+
+  <!-- Summary Metrics Cards -->
+  <app-metrics-header></app-metrics-header>
+
+  <!-- Module Tab Bar -->
+  <div class="module-tab-bar">
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'SERVICING'"
+      (click)="setTab('SERVICING')">
+      <span class="tab-icon">⚡</span> Loan Servicing Summary
+    </button>
+
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'EMI'"
+      (click)="setTab('EMI')">
+      <span class="tab-icon">🧮</span> EMI Calculation
+    </button>
+
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'DISBURSEMENT'"
+      (click)="setTab('DISBURSEMENT')">
+      <span class="tab-icon">💸</span> Loan Disbursement
+    </button>
+
+    <button 
+      class="tab-btn" 
+      [class.active]="activeTab === 'COLLECTIONS'"
+      (click)="setTab('COLLECTIONS')">
+      <span class="tab-icon">💳</span> Collections
+    </button>
+  </div>
+
+  <!-- Module Viewport -->
+  <div class="module-viewport">
+    <app-loan-servicing 
+      *ngIf="activeTab === 'SERVICING'" 
+      (viewScheduleClicked)="setTab('EMI')">
+    </app-loan-servicing>
+
+    <app-emi-calculator 
+      *ngIf="activeTab === 'EMI'">
+    </app-emi-calculator>
+
+    <app-disbursement 
+      *ngIf="activeTab === 'DISBURSEMENT'">
+    </app-disbursement>
+
+    <app-collections 
+      *ngIf="activeTab === 'COLLECTIONS'">
+    </app-collections>
+  </div>
+</div>
+

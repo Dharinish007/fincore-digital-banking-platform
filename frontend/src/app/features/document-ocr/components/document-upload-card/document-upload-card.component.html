@@ -1,0 +1,106 @@
+<div class="card form-card">
+  <h3 class="card-title">
+    <mat-icon>upload_file</mat-icon> Document Selection & Upload
+  </h3>
+
+  <!-- Document Type Selector Pills -->
+  <div class="doc-type-selector">
+    <label class="section-label">1. Select KYC Identity Document Type:</label>
+    <div class="doc-pills">
+      <button 
+        type="button"
+        class="doc-pill" 
+        [class.active]="selectedDocumentType === 'aadhaar'"
+        [disabled]="isProcessing"
+        (click)="onDocumentTypeSelect('aadhaar')">
+        <mat-icon>fingerprint</mat-icon> Aadhaar Card
+      </button>
+      <button 
+        type="button"
+        class="doc-pill" 
+        [class.active]="selectedDocumentType === 'pan'"
+        [disabled]="isProcessing"
+        (click)="onDocumentTypeSelect('pan')">
+        <mat-icon>credit_card</mat-icon> PAN Card
+      </button>
+      <button 
+        type="button"
+        class="doc-pill" 
+        [class.active]="selectedDocumentType === 'passport'"
+        [disabled]="isProcessing"
+        (click)="onDocumentTypeSelect('passport')">
+        <mat-icon>flight_takeoff</mat-icon> Passport
+      </button>
+      <button 
+        type="button"
+        class="doc-pill" 
+        [class.active]="selectedDocumentType === 'driving_license'"
+        [disabled]="isProcessing"
+        (click)="onDocumentTypeSelect('driving_license')">
+        <mat-icon>directions_car</mat-icon> Driving License
+      </button>
+    </div>
+  </div>
+
+  <!-- Drag and Drop Drop-zone -->
+  <div 
+    class="upload-dropzone"
+    [class.drag-over]="isDragOver"
+    [class.has-file]="!!selectedFile"
+    [class.disabled]="isProcessing"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onFileDropped($event)"
+    (click)="triggerFileInput()">
+
+    <input 
+      #fileInput 
+      type="file" 
+      class="hidden-file-input" 
+      accept=".jpg,.jpeg,.png,.pdf" 
+      (change)="onFileBrowse($event)" 
+      [disabled]="isProcessing" />
+
+    <!-- State A: No file selected -->
+    <div *ngIf="!selectedFile" class="dropzone-prompt">
+      <div class="upload-icon-circle">
+        <mat-icon>cloud_upload</mat-icon>
+      </div>
+      <div class="upload-instructions">
+        <span class="primary-text">Drag & drop your document here, or <span class="browse-link">browse</span></span>
+        <span class="secondary-text">Supports PNG, JPG, JPEG, or PDF files (Maximum file size: 5.0 MB)</span>
+      </div>
+    </div>
+
+    <!-- State B: File selected & preview -->
+    <div *ngIf="selectedFile" class="file-preview-wrapper" (click)="$event.stopPropagation()">
+      <div class="preview-thumbnail">
+        <img *ngIf="previewUrl" [src]="previewUrl" alt="Document Preview" class="img-preview" />
+        <div *ngIf="!previewUrl" class="pdf-placeholder">
+          <mat-icon class="pdf-icon">picture_as_pdf</mat-icon>
+          <span>PDF DOCUMENT</span>
+        </div>
+      </div>
+
+      <div class="file-details">
+        <div class="file-meta">
+          <span class="file-name">{{ selectedFile.name }}</span>
+          <span class="file-size">{{ formatFileSize(selectedFile.size) }}</span>
+        </div>
+        <div class="file-type-badge">
+          <mat-icon>task</mat-icon> Ready for OCR processing
+        </div>
+      </div>
+
+      <div class="file-actions" *ngIf="!isProcessing">
+        <button type="button" class="ghost-button btn-sm" (click)="triggerFileInput()">
+          <mat-icon>sync</mat-icon> Replace
+        </button>
+        <button type="button" class="ghost-button btn-sm btn-danger" (click)="removeFile($event)">
+          <mat-icon>delete</mat-icon> Remove
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

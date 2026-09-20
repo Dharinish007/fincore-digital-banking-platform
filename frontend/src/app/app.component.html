@@ -1,0 +1,50 @@
+<!-- Authentication Gate: Login & Sign Up -->
+<app-admin-login *ngIf="!authService.isLoggedIn()"></app-admin-login>
+
+<!-- Authenticated Banking Workspace -->
+<div *ngIf="authService.isLoggedIn()" class="fincore-app" [class.theme-light]="themeService.mode() === 'DAY'" [class.theme-dark]="themeService.mode() === 'NIGHT'">
+  <!-- Top Global Navigation Header -->
+  <app-header></app-header>
+
+  <div class="app-body">
+    <!-- Left Categorized Sidebar -->
+    <app-sidebar></app-sidebar>
+
+    <!-- Main Module Router Workspace -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+
+  <!-- Global Banking Modals -->
+  <app-statement-preview-modal
+    *ngIf="modalService.isPreviewModalOpen()"
+    (close)="modalService.closePreviewModal()"
+    (openEmailModal)="modalService.closePreviewModal(); modalService.openEmailModal()">
+  </app-statement-preview-modal>
+
+  <app-email-modal
+    *ngIf="modalService.isEmailModalOpen()"
+    (close)="modalService.closeEmailModal()">
+  </app-email-modal>
+
+  <app-edit-account-modal
+    *ngIf="modalService.editingAccountId()"
+    [accountId]="modalService.editingAccountId()!"
+    (close)="modalService.closeEditAccountModal()">
+  </app-edit-account-modal>
+
+  <app-transfer-modal
+    *ngIf="modalService.isTransferModalOpen()"
+    (close)="modalService.closeTransferModal()">
+  </app-transfer-modal>
+
+  <!-- Global Toast Notification Overlay -->
+  <div class="toast-container" *ngIf="deliveryService.toastMessage() as toast">
+    <div class="toast-card" [ngClass]="toast.type">
+      <div class="toast-title">{{ toast.title }}</div>
+      <div class="toast-desc">{{ toast.body }}</div>
+    </div>
+  </div>
+</div>
+

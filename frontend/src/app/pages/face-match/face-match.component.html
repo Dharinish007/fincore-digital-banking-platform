@@ -1,0 +1,92 @@
+<div class="face-match-page" *ngIf="result$ | async as result">
+  <div class="page-header">
+    <div class="header-left-col">
+      <div class="breadcrumb-trail">
+        <span>KYC Verification</span>
+        <mat-icon class="bc-sep">chevron_right</mat-icon>
+        <span class="active-crumb">Face Match Accuracy</span>
+      </div>
+      <h1 class="page-title">Face Match Accuracy</h1>
+      <p class="page-subtitle">
+        Upload the registered face and selfie for verification.
+      </p>
+    </div>
+    <div class="header-right-col" *ngIf="result.status !== 'IDLE'">
+      <div class="verification-badge" [ngClass]="result.status.toLowerCase()">
+        <span class="pulse-indicator"></span>
+        <span class="badge-text">{{
+          result.status === "PROCESSING"
+            ? "ANALYSIS IN PROGRESS"
+            : result.status
+        }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="face-match-content" *ngIf="sourceImages$ | async as sourceImages">
+    <app-face-comparison-card
+      [result]="result"
+      [sourceImages]="sourceImages"
+      [isProcessing]="(isComparing$ | async) ?? false"
+      (compareFaces)="onCompareFaces($event)"
+      (idFileChange)="onIdFileChange($event)"
+      (selfieFileChange)="onSelfieFileChange($event)"
+    ></app-face-comparison-card>
+
+    <div
+      class="backend-result"
+      *ngIf="result.status !== 'IDLE'"
+      [class.match-found]="result.matched"
+      [class.match-error]="result.status === 'ERROR'"
+    >
+      <div class="result-heading">
+        <mat-icon>{{
+          result.status === "ERROR"
+            ? "error"
+            : result.matched
+              ? "check_circle"
+              : "cancel"
+        }}</mat-icon>
+        <h2>
+          {{
+            result.status === "ERROR"
+              ? "Face verification error"
+              : result.matched
+                ? "Face match verified"
+                : "Face match not verified"
+          }}
+        </h2>
+      </div>
+      <p class="result-message" *ngIf="result.errorMessage">
+        {{ result.errorMessage }}
+      </p>
+      <dl class="result-values">
+        <div>
+          <dt>Matched</dt>
+          <dd>{{ result.matched ? "Yes" : "No" }}</dd>
+        </div>
+        <div *ngIf="result.distance !== undefined">
+          <dt>Distance</dt>
+          <dd>{{ result.distance }}</dd>
+        </div>
+        <div *ngIf="result.threshold !== undefined">
+          <dt>Threshold</dt>
+          <dd>{{ result.threshold }}</dd>
+        </div>
+        <div *ngIf="result.model">
+          <dt>Model</dt>
+          <dd>{{ result.model }}</dd>
+        </div>
+      </dl>
+      <button
+        type="button"
+        class="retry-button"
+        *ngIf="result.status === 'ERROR'"
+        (click)="onRetry()"
+      >
+        <mat-icon>refresh</mat-icon>
+        Try again
+      </button>
+    </div>
+  </div>
+</div>

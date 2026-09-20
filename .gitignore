@@ -1,0 +1,57 @@
+# ============================================================================
+# FinCore Digital Banking Platform - Git Ignore Rules
+# ============================================================================
+
+# Node / Frontend
+**/node_modules/
+**/dist/
+**/.angular/
+**/.angular/cache
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Java / Maven / Backend
+**/target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+**/.flattened-pom.xml
+
+# Python / Microservices
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+build/
+develop-eggs/
+eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs & Temporary Files
+*.log
+*.tmp
+*.bak
+temp_*
+team_*_raw
+
+# IDEs & Editors
+.idea/
+*.iml
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+
+# Uploads & Secrets
+uploads/
+*.env
+!.env.example

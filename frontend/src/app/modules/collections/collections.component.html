@@ -1,0 +1,280 @@
+<div class="module-container">
+  <div class="module-header">
+    <div class="module-title-group">
+      <h2>Loan Collections & Repayment Management</h2>
+      <p class="module-subtitle">Record customer EMI payments, track due dates, resolve delinquencies, and audit collection logs.</p>
+    </div>
+  </div>
+
+  <!-- Screen 1: Collection Dashboard KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <span class="kpi-icon">📁</span>
+      <div class="kpi-data">
+        <span class="kpi-label">Total Active Loans</span>
+        <span class="kpi-val">{{ metrics.totalLoans }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-icon text-amber">⏳</span>
+      <div class="kpi-data">
+        <span class="kpi-label">EMIs Due Today</span>
+        <span class="kpi-val text-amber">{{ metrics.emisDueToday }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-icon text-green">✅</span>
+      <div class="kpi-data">
+        <span class="kpi-label">EMIs Paid Today</span>
+        <span class="kpi-val text-green">{{ metrics.emisPaid }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-icon text-red">⚠️</span>
+      <div class="kpi-data">
+        <span class="kpi-label">Overdue EMIs</span>
+        <span class="kpi-val text-red">{{ metrics.overdueCount }}</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <span class="kpi-icon text-cyan">💰</span>
+      <div class="kpi-data">
+        <span class="kpi-label">Total Outstanding</span>
+        <span class="kpi-val text-cyan">{{ formatCurrency(metrics.totalOutstanding) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Banner -->
+  <div *ngIf="alertMessage" class="alert-banner" [class.alert-success]="alertType === 'success'" [class.alert-error]="alertType === 'error'">
+    <span class="alert-icon">{{ alertType === 'success' ? '✅' : '⚠️' }}</span>
+    <span class="alert-text">{{ alertMessage }}</span>
+    <button class="alert-close" (click)="alertMessage = null">✕</button>
+  </div>
+
+  <div class="grid-2col" *ngIf="selectedLoan">
+    <!-- Screen 2 - Part A: Loan Repayment Info -->
+    <div class="card info-card">
+      <div class="card-header">
+        <span class="card-icon">📄</span>
+        <h3>Screen 2 — Loan Repayment Status</h3>
+      </div>
+
+      <!-- Quick Loan Selector -->
+      <div class="form-group mb-16">
+        <label for="loanSelect">Select Customer Loan Account</label>
+        <select id="loanSelect" [ngModel]="selectedLoan.loanId" (ngModelChange)="selectLoan($event)">
+          <option *ngFor="let l of loans" [value]="l.loanId">
+            {{ l.loanId }} — {{ l.customerName }} (EMI: {{ formatCurrency(l.monthlyEmi) }})
+          </option>
+        </select>
+      </div>
+
+      <div class="status-summary-box">
+        <div class="ss-item">
+          <span class="ss-label">Borrower Customer</span>
+          <span class="ss-val text-white">{{ selectedLoan.customerName }}</span>
+        </div>
+
+        <div class="ss-item">
+          <span class="ss-label">Loan Account ID</span>
+          <span class="ss-val font-mono text-cyan">{{ selectedLoan.loanId }}</span>
+        </div>
+
+        <div class="ss-item highlight-emi">
+          <span class="ss-label">Monthly EMI Due</span>
+          <span class="ss-val text-amber font-bold">{{ formatCurrency(selectedLoan.monthlyEmi) }}</span>
+        </div>
+
+        <div class="ss-item">
+          <span class="ss-label">EMI Due Date</span>
+          <span class="ss-val text-white">{{ selectedLoan.nextEmiDate }}</span>
+        </div>
+
+        <div class="ss-item">
+          <span class="ss-label">Outstanding Principal</span>
+          <span class="ss-val text-green font-bold">{{ formatCurrency(selectedLoan.outstandingPrincipal ?? selectedLoan.disbursedAmount) }}</span>
+        </div>
+
+        <div class="ss-item">
+          <span class="ss-label">Current EMI Status</span>
+          <span class="status-badge" 
+            [class.status-success]="selectedLoan.emiStatus === 'PAID'" 
+            [class.status-error]="selectedLoan.status === 'OVERDUE' || selectedLoan.emiStatus === 'OVERDUE'" 
+            [class.status-warning]="selectedLoan.emiStatus === 'PARTIAL'"
+            [class.status-info]="selectedLoan.emiStatus === 'DUE' && selectedLoan.status !== 'OVERDUE'">
+            <ng-container [ngSwitch]="selectedLoan.status === 'OVERDUE' || selectedLoan.emiStatus === 'OVERDUE' ? 'OVERDUE' : selectedLoan.emiStatus">
+              <span *ngSwitchCase="'OVERDUE'">⚠️ OVERDUE FOR PAYMENT</span>
+              <span *ngSwitchCase="'PARTIAL'">⚠️ PARTIAL PAYMENT (Paid {{ formatCurrency(selectedLoan.partialPaidAmount || 0) }} / {{ formatCurrency(selectedLoan.monthlyEmi) }})</span>
+              <span *ngSwitchCase="'PAID'">PAID / UP TO DATE</span>
+              <span *ngSwitchDefault>DUE FOR PAYMENT</span>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 2 - Part B: Record Payment Form -->
+    <div class="card form-card">
+      <div class="card-header">
+        <span class="card-icon">💳</span>
+        <h3>Record Collection / EMI Payment</h3>
+      </div>
+
+      <form [formGroup]="paymentForm" (ngSubmit)="recordPayment()" class="payment-form">
+        <!-- Interactive Selectable Loan Dropdown -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="collectionLoanSelect">Select Loan Account & Customer</label>
+            <select id="collectionLoanSelect" formControlName="loanId" (change)="onFormLoanChange($event)">
+              <option *ngFor="let l of loans" [value]="l.loanId">
+                {{ l.loanId }} — {{ l.customerName }} ({{ l.status }})
+              </option>
+            </select>
+          </div>
+          <div class="form-group flex-1">
+            <label>Customer Name</label>
+            <input type="text" formControlName="customerId" readonly class="input-readonly text-white font-medium" />
+          </div>
+        </div>
+
+        <!-- Payment Amount -->
+        <div class="form-group">
+          <label for="paymentAmount">Payment Amount (₹)</label>
+          <div class="input-with-prefix">
+            <span class="prefix">₹</span>
+            <input 
+              id="paymentAmount" 
+              type="number" 
+              formControlName="paymentAmount" 
+              placeholder="Enter collected amount"
+              [class.is-invalid]="paymentForm.get('paymentAmount')?.touched && paymentForm.get('paymentAmount')?.invalid"
+            />
+          </div>
+          <div *ngIf="paymentForm.get('paymentAmount')?.touched && paymentForm.get('paymentAmount')?.invalid" class="error-msg">
+            Valid payment amount is required.
+          </div>
+        </div>
+
+        <!-- Payment Mode & Reference Number -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="paymentMode">Payment Mode</label>
+            <select id="paymentMode" formControlName="paymentMode">
+              <option value="UPI">UPI</option>
+              <option value="NEFT">NEFT</option>
+              <option value="IMPS">IMPS</option>
+              <option value="Debit Card">Debit Card</option>
+              <option value="Cash">Cash</option>
+            </select>
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="referenceNumber">Transaction / Reference ID</label>
+            <input 
+              id="referenceNumber" 
+              type="text" 
+              formControlName="referenceNumber" 
+              placeholder="e.g. TXN98765"
+              [class.is-invalid]="paymentForm.get('referenceNumber')?.touched && paymentForm.get('referenceNumber')?.invalid"
+            />
+            <div *ngIf="paymentForm.get('referenceNumber')?.touched && paymentForm.get('referenceNumber')?.invalid" class="error-msg">
+              Unique reference ID is required.
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Date & Remarks -->
+        <div class="form-row">
+          <div class="form-group flex-1">
+            <label for="paymentDate">Payment Date</label>
+            <input id="paymentDate" type="date" formControlName="paymentDate" />
+          </div>
+
+          <div class="form-group flex-1">
+            <label for="remarks">Remarks</label>
+            <input id="remarks" type="text" formControlName="remarks" placeholder="August EMI collection..." />
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary btn-block">
+            <span>✅</span> Record Collection Payment
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Screen 3: Payment History Table -->
+  <div class="card table-card">
+    <div class="card-header table-header">
+      <div class="table-title-group">
+        <span class="card-icon">📋</span>
+        <h3>Screen 3 — Payment Collection Audit Trail <span *ngIf="selectedLoan && !showAllPaymentHistory">({{ selectedLoan.customerName }} - {{ selectedLoan.loanId }})</span><span *ngIf="showAllPaymentHistory">(All Accounts)</span></h3>
+      </div>
+
+      <div class="table-controls" style="display: flex; gap: 12px; align-items: center;">
+        <button type="button" class="btn btn-outline" (click)="togglePaymentHistoryView()">
+          {{ showAllPaymentHistory ? 'Show Selected Account Only' : 'Show All Accounts' }}
+        </button>
+
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input 
+            type="text" 
+            placeholder="Filter by ID, Ref, or Mode..." 
+            [(ngModel)]="searchTerm" 
+            (input)="applyFilter()"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fincore-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Payment ID</th>
+            <th>Loan ID</th>
+            <th>Customer</th>
+            <th class="text-right">Amount (₹)</th>
+            <th>Mode</th>
+            <th>Reference Number</th>
+            <th>EMI Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of filteredHistory">
+            <td class="text-secondary">{{ item.paymentDate }}</td>
+            <td class="font-mono text-cyan">{{ item.paymentId }}</td>
+            <td class="font-mono">{{ item.loanId }}</td>
+            <td>{{ item.customerName }}</td>
+            <td class="text-right text-green font-bold">{{ formatCurrency(item.paymentAmount) }}</td>
+            <td>
+              <span class="mode-pill">{{ item.paymentMode }}</span>
+            </td>
+            <td class="font-mono text-purple">{{ item.referenceNumber }}</td>
+            <td>
+              <span class="status-badge"
+                [class.status-success]="item.status === 'PAID'"
+                [class.status-warning]="item.status === 'PARTIAL'"
+                [class.status-error]="item.status === 'FAILED' || item.status === 'REVERSED'">
+                {{ item.status }}
+              </span>
+            </td>
+          </tr>
+          <tr *ngIf="filteredHistory.length === 0">
+            <td colspan="8" class="no-data">No collection records found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

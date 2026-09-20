@@ -1,0 +1,36 @@
+.summary-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 720px) {
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.badge.pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.badge.ready-for-funding {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.badge.processing {
+  background: rgba(99, 102, 241, 0.15);
+  color: #818cf8;
+}
+
+.badge.funded {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.badge.failed {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}

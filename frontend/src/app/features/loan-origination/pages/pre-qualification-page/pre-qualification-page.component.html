@@ -1,0 +1,186 @@
+<div class="pre-qualification-view">
+
+  <!-- ── Page Header ── -->
+  <div class="flow-header-card">
+    <div class="header-text-group">
+      <h1 class="page-title">Loan Pre-Qualification Assessment</h1>
+      <p class="page-subtitle">
+        Enter essential borrower financial indicators to evaluate debt capacity and creditworthiness before initiating full loan origination.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Assessment Form ── -->
+  <div class="card form-card" [formGroup]="form">
+    <div class="form-section-title">
+      <span class="sec-icon">👤</span> Borrower &amp; Loan Parameters
+    </div>
+
+    <div class="form-grid">
+      <!-- Employee ID -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('customerId')">
+        <label>Employee ID <span class="req">*</span></label>
+        <input type="number" formControlName="customerId" placeholder="e.g. 101" />
+        <div *ngIf="isFieldInvalid('customerId')" class="form-error">Employee ID is required</div>
+      </div>
+
+      <!-- Full Name -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('fullName')">
+        <label>Full Name <span class="req">*</span></label>
+        <input formControlName="fullName" placeholder="e.g. Aarav Sharma" />
+        <div *ngIf="isFieldInvalid('fullName')" class="form-error">Full name is required</div>
+      </div>
+
+      <!-- Mobile Number -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('mobile')">
+        <label>Mobile Number <span class="req">*</span></label>
+        <input formControlName="mobile" placeholder="+91 98765 43210" />
+        <div *ngIf="isFieldInvalid('mobile')" class="form-error">Valid mobile number is required</div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('email')">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" formControlName="email" placeholder="borrower@example.com" />
+        <div *ngIf="isFieldInvalid('email')" class="form-error">Valid email address is required</div>
+      </div>
+
+      <!-- Loan Type -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('loanType')">
+        <label>Loan Product / Type <span class="req">*</span></label>
+        <select formControlName="loanType">
+          <option *ngFor="let t of loanTypes" [value]="t.value">{{ t.label }}</option>
+        </select>
+        <div *ngIf="isFieldInvalid('loanType')" class="form-error">Loan type is required</div>
+      </div>
+
+      <!-- Employment Type -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('employmentType')">
+        <label>Employment Type <span class="req">*</span></label>
+        <select formControlName="employmentType">
+          <option value="Salaried">Salaried (Corporate / Govt)</option>
+          <option value="Self-Employed">Self-Employed Professional / Business</option>
+          <option value="Freelancer">Independent Consultant / Freelancer</option>
+          <option value="Retired">Retired / Pensioner</option>
+        </select>
+        <div *ngIf="isFieldInvalid('employmentType')" class="form-error">Employment type is required</div>
+      </div>
+
+      <!-- Credit Score -->
+      <div class="form-group" [class.has-error]="isFieldInvalid('creditScore')">
+        <label>Credit / CIBIL Score (300 - 900) <span class="req">*</span></label>
+        <input type="number" formControlName="creditScore" min="300" max="900" placeholder="e.g. 760" />
+        <div *ngIf="isFieldInvalid('creditScore')" class="form-error">Score must be between 300 and 900</div>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="ghost-button" (click)="reset()">
+        ↺ Reset Form
+      </button>
+      <button type="button" class="primary-button check-btn" (click)="checkQualification()" id="btn-check-prequal">
+        <span class="icon">⚡</span> Run Eligibility Assessment
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Result Card (Displayed on evaluation) ── -->
+  <div *ngIf="isEvaluated" class="assessment-result-container">
+    
+    <!-- ELIGIBLE STATE -->
+    <div *ngIf="isEligible" class="result-card card eligible-card" id="prequal-eligible-result">
+      <div class="result-header">
+        <div class="status-indicator-badge success-badge">
+          <span class="badge-icon">✓</span> PRE-QUALIFIED / ELIGIBLE
+        </div>
+        <span class="decision-code">System Decision: PASS</span>
+      </div>
+
+      <div class="result-body">
+        <h3 class="result-heading">Applicant is Pre-Qualified for {{ form.value.loanType }} Loan</h3>
+        <p class="result-summary">{{ statusMessage }}</p>
+
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-label">CREDIT / CIBIL SCORE</span>
+            <span class="metric-val highlight">{{ form.value.creditScore }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">ESTIMATED INTEREST RATE</span>
+            <span class="metric-val">{{ estimatedRate }}% p.a.</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">LOAN PRODUCT</span>
+            <span class="metric-val">{{ form.value.loanType }} Loan</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">EMPLOYMENT TYPE</span>
+            <span class="metric-val">{{ form.value.employmentType }}</span>
+          </div>
+        </div>
+
+        <div class="action-handover-panel">
+          <div class="handover-text">
+            <strong>Ready for complete intake?</strong>
+            <span>Click below to carry this pre-qualified borrower's parameters directly into New Application (Stage 3).</span>
+          </div>
+          <button type="button" class="btn-proceed" (click)="proceedToNewApplication()" id="btn-proceed-to-app">
+            Proceed to New Application ➔
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INELIGIBLE STATE -->
+    <div *ngIf="!isEligible" class="result-card card ineligible-card" id="prequal-ineligible-result">
+      <div class="result-header">
+        <div class="status-indicator-badge error-badge">
+          <span class="badge-icon">✕</span> NOT ELIGIBLE AT CURRENT PARAMETERS
+        </div>
+        <span class="decision-code declined">System Decision: DECLINED</span>
+      </div>
+
+      <div class="result-body">
+        <h3 class="result-heading">Pre-Qualification Criteria Not Met</h3>
+        <p class="result-summary">{{ statusMessage }}</p>
+
+        <div class="ineligible-details-box">
+          <div class="reason-title">Primary Decline Factors:</div>
+          <div class="reason-content">{{ rejectionReason }}</div>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-item">
+            <span class="metric-label">CREDIT SCORE</span>
+            <span class="metric-val" [class.warning]="form.value.creditScore < 650">{{ form.value.creditScore }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">REQUIRED MINIMUM SCORE</span>
+            <span class="metric-val">650</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">LOAN PRODUCT</span>
+            <span class="metric-val">{{ form.value.loanType }} Loan</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">EMPLOYMENT TYPE</span>
+            <span class="metric-val">{{ form.value.employmentType }}</span>
+          </div>
+        </div>
+
+        <div class="advice-box">
+          <strong>💡 Recommended corrective actions:</strong>
+          <ul>
+            <li>Improve credit bureau rating above the 650 minimum score threshold before re-evaluation.</li>
+            <li>Resolve any overdue loan or credit card balances with reporting agencies.</li>
+            <li>Add an earning co-applicant / guarantor with a strong credit profile during the loan application.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
