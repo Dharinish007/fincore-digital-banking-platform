@@ -1,0 +1,2 @@
+-- Schema for Audit Trail Service
+-- Tables are managed by Hibernate (spring.jpa.hibernate.ddl-auto=update)

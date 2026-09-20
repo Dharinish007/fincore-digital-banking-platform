@@ -10,3 +10,6 @@ target/
 
 package-lock.json
 bun.lock
+.vscode/
+.idea/
+**/target/
