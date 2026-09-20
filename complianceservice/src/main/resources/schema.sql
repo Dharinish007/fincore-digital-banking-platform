@@ -1,0 +1,2 @@
+-- Schema for Compliance Service
+-- Tables are managed by Hibernate (spring.jpa.hibernate.ddl-auto=update)
