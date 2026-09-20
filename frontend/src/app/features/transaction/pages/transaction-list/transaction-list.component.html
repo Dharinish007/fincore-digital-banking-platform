@@ -1,0 +1,21 @@
+<app-page-header
+  title="Transaction Ledger"
+  subtitle="View, search, and manage all banking transactions"
+  icon="swap_horiz"
+  actionLabel="New Transaction"
+  actionIcon="add"
+  (actionClicked)="onCreateTransaction()">
+</app-page-header>
+
+<!-- Summary Statistics -->
+<app-transaction-summary-card [transactions]="transactions()"></app-transaction-summary-card>
+
+<!-- Filters -->
+<app-transaction-filter (filterChanged)="onFilterChanged($event)"></app-transaction-filter>
+
+<!-- Table -->
+<app-transaction-table
+  [transactions]="transactions()"
+  [isLoading]="isLoading()"
+  (createTransaction)="onCreateTransaction()">
+</app-transaction-table>

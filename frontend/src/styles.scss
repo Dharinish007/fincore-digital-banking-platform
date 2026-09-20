@@ -1,0 +1,849 @@
+/* ============================================================
+   FinCore Global Styles & Design System
+   Enterprise Digital Banking Platform
+   ============================================================ */
+
+/* ─── Theme Foundation Imports ────────────────────────────── */
+@use 'styles/themes/variables';
+@use 'styles/themes/mixins';
+
+/* ─── Typography (Inter & JetBrains Mono from Google Fonts) ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ─── Global Reset & Base Setup ──────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  scroll-behavior: smooth;
+  color-scheme: dark light;
+}
+
+body {
+  height: 100%;
+  font-family: var(--font-family-sans);
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  overflow-x: hidden;
+  transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+a {
+  text-decoration: none;
+  color: var(--color-primary);
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-primary-hover);
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+img, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ─── Custom Responsive Scrollbar ────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: var(--radius-full);
+
+  &:hover {
+    background: var(--color-text-muted);
+  }
+}
+
+/* ─── Material Icons Configuration ───────────────────────── */
+.material-icons-round,
+.material-icons,
+.mat-icon {
+  font-family: 'Material Icons Round', 'Material Icons', sans-serif;
+  font-size: 20px;
+  line-height: 1;
+  user-select: none;
+  vertical-align: middle;
+  flex-shrink: 0;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+}
+
+/* ─── Global Typography Scale Utilities ──────────────────── */
+.text-display {
+  font-size: var(--font-size-display);
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+}
+
+.text-page-title {
+  font-size: var(--font-size-page-title);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text-primary);
+  letter-spacing: -0.4px;
+}
+
+.text-section-title {
+  font-size: var(--font-size-section-title);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+  letter-spacing: -0.2px;
+}
+
+.text-subsection {
+  font-size: var(--font-size-subsection);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-text-primary);
+}
+
+.text-body {
+  font-size: var(--font-size-body);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+}
+
+.text-body-sm {
+  font-size: var(--font-size-body-sm);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+}
+
+.text-label {
+  font-size: var(--font-size-label);
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+.text-secondary {
+  font-size: var(--font-size-secondary);
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--color-text-muted);
+}
+
+.text-metric {
+  font-size: var(--font-size-metric);
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--color-text-primary);
+  letter-spacing: -0.4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* ─── Global Functional Utilities ────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 3px var(--color-primary-glow);
+  border-color: var(--color-primary);
+}
+
+.page {
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - var(--navbar-height));
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+/* Shimmer Animation Keyframe */
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Global Card System & Tinted Surfaces ────────────────── */
+.card,
+.corporate-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+
+  &:hover {
+    border-color: var(--color-border-strong);
+  }
+
+  &--emerald {
+    background-color: var(--color-surface-emerald);
+    border-color: var(--color-surface-emerald-border);
+  }
+
+  &--blue {
+    background-color: var(--color-surface-blue);
+    border-color: var(--color-surface-blue-border);
+  }
+
+  &--amber {
+    background-color: var(--color-surface-amber);
+    border-color: var(--color-surface-amber-border);
+  }
+
+  &--rose {
+    background-color: var(--color-surface-rose);
+    border-color: var(--color-surface-rose-border);
+  }
+}
+
+/* ─── Global Button System Utilities ─────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  height: 40px;
+  padding: 0 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+  }
+
+  &--primary {
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-hover);
+      box-shadow: 0 2px 8px var(--color-primary-glow);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--color-primary-active);
+    }
+  }
+
+  &--secondary {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+    border-color: var(--color-border);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-surface-hover);
+      border-color: var(--color-border-strong);
+    }
+  }
+
+  &--blue {
+    background-color: var(--color-accent);
+    color: #ffffff;
+    border-color: transparent;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-accent-hover);
+      box-shadow: 0 2px 8px var(--color-accent-glow);
+    }
+
+    &:active:not(:disabled) {
+      background-color: var(--color-accent-active);
+    }
+  }
+
+  &--blue-soft {
+    background-color: var(--color-accent-light);
+    color: var(--color-accent);
+    border-color: var(--color-accent-subtle);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-accent);
+      color: #ffffff;
+      border-color: transparent;
+    }
+  }
+
+  &--emerald-soft {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary);
+    border-color: var(--color-primary-subtle);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary);
+      color: #ffffff;
+      border-color: transparent;
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: var(--color-text-secondary);
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-surface-hover);
+      color: var(--color-text-primary);
+    }
+  }
+
+  &--danger {
+    background-color: var(--color-danger);
+    color: #ffffff;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-danger-hover);
+    }
+  }
+
+  &--sm {
+    height: 32px;
+    padding: 0 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  &--lg {
+    height: 44px;
+    padding: 0 1.25rem;
+    font-size: 0.9375rem;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* ─── Global Semantic Badge System Utilities ─────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.725rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+  line-height: 1.2;
+
+  &__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  &--success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+    border: 1px solid var(--color-success-border);
+  }
+
+  &--warning {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+    border: 1px solid var(--color-warning-border);
+  }
+
+  &--danger {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger-border);
+  }
+
+  &--info {
+    background-color: var(--color-info-bg);
+    color: var(--color-info);
+    border: 1px solid var(--color-info-border);
+  }
+
+  &--neutral {
+    background-color: var(--color-background-subtle);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-border);
+  }
+}
+
+/* ============================================================
+   Angular Material MDC Unified Theme Overrides
+   ============================================================ */
+
+/* 1. Form Fields & Text Inputs */
+.mat-mdc-form-field {
+  width: 100%;
+  font-family: var(--font-family-sans);
+
+  .mat-mdc-text-field-wrapper {
+    background-color: var(--color-input-bg) !important;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Outline Appearance Overrides */
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: var(--color-border) !important;
+    transition: border-color var(--transition-fast) !important;
+  }
+
+  .mdc-notched-outline__leading {
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm) !important;
+  }
+
+  .mdc-notched-outline__trailing {
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0 !important;
+  }
+
+  /* Hover State */
+  &:hover:not(.mat-form-field-disabled) {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--color-border-strong) !important;
+    }
+  }
+
+  /* Focus State */
+  &.mat-focused {
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+      border-color: var(--color-primary) !important;
+      border-width: 1.5px !important;
+    }
+
+    .mat-mdc-floating-label {
+      color: var(--color-primary) !important;
+    }
+  }
+
+  /* Labels & Text Input */
+  .mat-mdc-floating-label {
+    color: var(--color-text-secondary) !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .mat-mdc-input-element,
+  .mat-mdc-select-value-text {
+    color: var(--color-text-primary) !important;
+    font-size: 0.9375rem;
+    font-weight: 500;
+  }
+
+  .mat-mdc-input-element::placeholder {
+    color: var(--color-text-muted) !important;
+  }
+
+  .mat-mdc-select-arrow {
+    color: var(--color-text-muted) !important;
+  }
+
+  .mat-mdc-form-field-icon-prefix,
+  .mat-mdc-form-field-icon-suffix {
+    color: var(--color-text-muted);
+  }
+
+  .mat-mdc-form-field-error {
+    color: var(--color-danger) !important;
+    font-size: 0.775rem;
+    font-weight: 500;
+  }
+
+  .mat-mdc-form-field-hint {
+    color: var(--color-text-muted) !important;
+    font-size: 0.775rem;
+  }
+}
+
+/* 2. Select Panels & Dropdowns */
+.mat-mdc-select-panel {
+  background: var(--color-surface-elevated) !important;
+  border: 1px solid var(--color-border-strong) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xl) !important;
+  padding: 4px !important;
+
+  .mat-mdc-option {
+    color: var(--color-text-secondary) !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-height: 38px !important;
+    border-radius: var(--radius-xs);
+    margin-bottom: 2px;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+
+    &:hover:not(.mdc-list-item--disabled) {
+      background: var(--color-surface-hover) !important;
+      color: var(--color-text-primary) !important;
+    }
+
+    &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background: var(--color-primary-light) !important;
+      color: var(--color-primary) !important;
+      font-weight: 600;
+    }
+  }
+}
+
+/* 3. Menus */
+.mat-mdc-menu-panel {
+  background: var(--color-surface-elevated) !important;
+  border: 1px solid var(--color-border-strong) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xl) !important;
+  padding: 4px !important;
+
+  .mat-mdc-menu-item {
+    color: var(--color-text-secondary) !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: var(--radius-xs);
+    min-height: 38px;
+
+    &:hover:not([disabled]) {
+      background: var(--color-surface-hover) !important;
+      color: var(--color-text-primary) !important;
+    }
+  }
+}
+
+/* 4. Datepicker & Calendar */
+.mat-datepicker-content {
+  background-color: var(--color-surface-elevated) !important;
+  color: var(--color-text-primary) !important;
+  border: 1px solid var(--color-border-strong) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-2xl) !important;
+
+  .mat-calendar-body-cell-content {
+    color: var(--color-text-secondary) !important;
+    font-weight: 500;
+    border-radius: var(--radius-sm) !important;
+
+    &:hover {
+      background-color: var(--color-surface-hover) !important;
+      color: var(--color-text-primary) !important;
+    }
+  }
+
+  .mat-calendar-body-selected {
+    background-color: var(--color-primary) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+  }
+
+  .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+    border-color: var(--color-primary) !important;
+  }
+
+  .mat-calendar-table-header th {
+    color: var(--color-text-muted) !important;
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+
+  .mat-calendar-arrow {
+    fill: var(--color-text-secondary) !important;
+  }
+
+  .mat-calendar-period-button {
+    color: var(--color-text-primary) !important;
+    font-weight: 600 !important;
+  }
+
+  .mat-calendar-previous-button,
+  .mat-calendar-next-button {
+    color: var(--color-text-secondary) !important;
+  }
+}
+
+/* 5. Buttons (Primary, Stroked, Flat, Icon) */
+.mat-mdc-flat-button.mat-primary {
+  --mdc-filled-button-container-color: var(--color-primary) !important;
+  --mdc-filled-button-label-text-color: #ffffff !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  height: 40px !important;
+  padding: 0 18px !important;
+  box-shadow: var(--shadow-xs) !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover:not(:disabled) {
+    --mdc-filled-button-container-color: var(--color-primary-hover) !important;
+    box-shadow: 0 2px 8px var(--color-primary-glow) !important;
+  }
+
+  &:active:not(:disabled) {
+    --mdc-filled-button-container-color: var(--color-primary-active) !important;
+  }
+
+  &:disabled {
+    --mdc-filled-button-container-color: var(--color-surface-secondary) !important;
+    --mdc-filled-button-label-text-color: var(--color-text-disabled) !important;
+    opacity: 0.6;
+  }
+}
+
+.mat-mdc-flat-button.mat-warn {
+  --mdc-filled-button-container-color: var(--color-danger) !important;
+  --mdc-filled-button-label-text-color: #ffffff !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  height: 40px !important;
+  padding: 0 18px !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover:not(:disabled) {
+    --mdc-filled-button-container-color: var(--color-danger-hover) !important;
+  }
+}
+
+.mat-mdc-stroked-button {
+  --mdc-outlined-button-outline-color: var(--color-border) !important;
+  --mdc-outlined-button-label-text-color: var(--color-text-primary) !important;
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  height: 40px !important;
+  padding: 0 16px !important;
+  background-color: var(--color-surface) !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-surface-hover) !important;
+    --mdc-outlined-button-outline-color: var(--color-border-strong) !important;
+  }
+
+  &.mat-warn {
+    --mdc-outlined-button-outline-color: var(--color-danger-border) !important;
+    --mdc-outlined-button-label-text-color: var(--color-danger) !important;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-danger-bg) !important;
+    }
+  }
+}
+
+.mat-mdc-button {
+  border-radius: var(--radius-sm) !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  height: 40px !important;
+  padding: 0 14px !important;
+  color: var(--color-text-secondary) !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover:not(:disabled) {
+    background-color: var(--color-surface-hover) !important;
+    color: var(--color-text-primary) !important;
+  }
+
+  &.mat-warn {
+    color: var(--color-danger) !important;
+
+    &:hover:not(:disabled) {
+      background-color: var(--color-danger-bg) !important;
+    }
+  }
+}
+
+.mat-mdc-icon-button {
+  color: var(--color-text-secondary) !important;
+  border-radius: var(--radius-sm) !important;
+  transition: all var(--transition-fast) !important;
+
+  &:hover {
+    color: var(--color-text-primary) !important;
+    background-color: var(--color-surface-hover) !important;
+  }
+}
+
+/* 6. Mat-Table & Paginator */
+.mat-mdc-table {
+  background: transparent !important;
+  font-family: var(--font-family-sans) !important;
+  width: 100%;
+
+  .mat-mdc-header-row {
+    background-color: var(--color-background-subtle) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    height: 44px !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: var(--color-text-muted) !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border-bottom: 1px solid var(--color-border) !important;
+  }
+
+  .mat-mdc-row {
+    border-bottom: 1px solid var(--color-border-subtle) !important;
+    transition: background-color var(--transition-fast);
+    height: 52px !important;
+
+    &:hover {
+      background-color: var(--color-surface-hover) !important;
+    }
+  }
+
+  .mat-mdc-cell {
+    color: var(--color-text-primary) !important;
+    font-size: 0.875rem !important;
+    border-bottom: 1px solid var(--color-border-subtle) !important;
+  }
+}
+
+.mat-mdc-paginator {
+  background: transparent !important;
+  color: var(--color-text-secondary) !important;
+  border-top: 1px solid var(--color-border) !important;
+  font-size: 0.8125rem !important;
+
+  .mat-mdc-paginator-range-label {
+    color: var(--color-text-secondary) !important;
+  }
+
+  .mat-mdc-paginator-navigation-next,
+  .mat-mdc-paginator-navigation-previous,
+  .mat-mdc-paginator-navigation-first,
+  .mat-mdc-paginator-navigation-last {
+    color: var(--color-text-secondary) !important;
+
+    &:hover:not([disabled]) {
+      color: var(--color-text-primary) !important;
+      background: var(--color-surface-hover) !important;
+    }
+  }
+}
+
+/* 7. Dialogs & Modals */
+.cdk-overlay-backdrop {
+  background: var(--color-overlay) !important;
+  backdrop-filter: blur(6px) !important;
+}
+
+.mat-mdc-dialog-container .mdc-dialog__surface {
+  background: var(--color-surface-elevated) !important;
+  border-radius: var(--radius-xl) !important;
+  border: 1px solid var(--color-border-strong) !important;
+  box-shadow: var(--shadow-2xl) !important;
+  padding: var(--spacing-6) !important;
+  color: var(--color-text-primary) !important;
+}
+
+/* 8. Snackbars & Rich Toast Notifications */
+.mat-mdc-snack-bar-container {
+  --mdc-snackbar-container-color: var(--color-surface-elevated) !important;
+  --mdc-snackbar-supporting-text-color: var(--color-text-primary) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: var(--shadow-xl) !important;
+  padding: 0 !important;
+
+  &.toast-snack-container {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+
+    .mdc-snackbar__surface {
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+      padding: 0 !important;
+    }
+
+    .mat-mdc-snack-bar-label {
+      padding: 0 !important;
+      width: 100%;
+    }
+  }
+
+  &.snackbar-success {
+    border-left: 4px solid var(--color-success) !important;
+  }
+
+  &.snackbar-error {
+    border-left: 4px solid var(--color-danger) !important;
+  }
+
+  &.snackbar-warning {
+    border-left: 4px solid var(--color-warning) !important;
+  }
+}
+
+/* 9. Dividers & Progress Spinners */
+.mat-divider {
+  border-top-color: var(--color-border) !important;
+}
+
+.mat-mdc-progress-spinner circle,
+.mat-spinner circle {
+  stroke: var(--color-primary) !important;
+}

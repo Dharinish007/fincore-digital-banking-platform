@@ -1,0 +1,498 @@
+<div class="dashboard-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Operations Console</div>
+      <h1 class="page-title">Executive Banking Dashboard</h1>
+      <p class="page-subtitle">Real-time telemetry across 2.4M+ customers, 3.1M active accounts & instant clearing rails.</p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/payments/send" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        Send Money
+      </a>
+
+      <a routerLink="/accounts" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        New Account
+      </a>
+
+      <button (click)="exportData()" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Export
+      </button>
+    </div>
+  </div>
+
+  <!-- 6 Top Summary KPI Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card" *ngFor="let kpi of kpis" [ngClass]="'kpi-' + kpi.bgClass">
+      <div class="kpi-top">
+        <span class="kpi-title">{{ kpi.title }}</span>
+        <span class="kpi-trend" [class.trend-up]="kpi.trendUp">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
+          </svg>
+          {{ kpi.trend }}
+        </span>
+      </div>
+
+      <div class="kpi-value tabular-nums">{{ kpi.value }}</div>
+
+      <div class="kpi-footer">
+        <span class="kpi-subtext">{{ kpi.subtext }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Primary Analytics Grid: Charts -->
+  <div class="charts-grid-main">
+    <!-- Chart 1: Transaction Volume Line / Area -->
+    <div class="fc-card chart-card-volume">
+      <div class="fc-card-header">
+        <div>
+          <div class="fc-card-title">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            Intraday Transaction Volume
+          </div>
+          <div class="fc-card-subtitle">Real-time clearing breakdown across UPI, IMPS, NEFT & Internal ledgers</div>
+        </div>
+
+        <div class="volume-channel-tabs">
+          <button
+            class="tab-btn"
+            [class.active]="activeVolumeChannel === 'ALL'"
+            (click)="activeVolumeChannel = 'ALL'">
+            All Channels
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="activeVolumeChannel === 'UPI'"
+            (click)="activeVolumeChannel = 'UPI'">
+            UPI (62%)
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="activeVolumeChannel === 'IMPS'"
+            (click)="activeVolumeChannel = 'IMPS'">
+            IMPS (24%)
+          </button>
+          <button
+            class="tab-btn"
+            [class.active]="activeVolumeChannel === 'NEFT'"
+            (click)="activeVolumeChannel = 'NEFT'">
+            NEFT (14%)
+          </button>
+        </div>
+      </div>
+
+      <div class="fc-card-body">
+        <!-- SVG Line/Area Graph -->
+        <div class="svg-chart-container">
+          <svg viewBox="0 0 700 220" class="line-chart-svg">
+            <!-- Grid Lines -->
+            <line x1="40" y1="20" x2="680" y2="20" stroke="#E2E8F0" stroke-dasharray="3,3" />
+            <line x1="40" y1="70" x2="680" y2="70" stroke="#E2E8F0" stroke-dasharray="3,3" />
+            <line x1="40" y1="120" x2="680" y2="120" stroke="#E2E8F0" stroke-dasharray="3,3" />
+            <line x1="40" y1="170" x2="680" y2="170" stroke="#E2E8F0" stroke-dasharray="3,3" />
+
+            <!-- Y-Axis Labels -->
+            <text x="5" y="25" fill="#94A3B8" font-size="11">5K TPS</text>
+            <text x="5" y="75" fill="#94A3B8" font-size="11">3.5K</text>
+            <text x="5" y="125" fill="#94A3B8" font-size="11">2K</text>
+            <text x="5" y="175" fill="#94A3B8" font-size="11">500</text>
+
+            <!-- Gradient Definition -->
+            <defs>
+              <linearGradient id="areaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.35" />
+                <stop offset="100%" stop-color="#3B82F6" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+
+            <!-- Shaded Area -->
+            <polygon
+              points="60,180 140,140 220,90 300,50 380,75 460,35 540,40 620,80 620,180 60,180"
+              fill="url(#areaGradient)"
+            />
+
+            <!-- Main Line -->
+            <polyline
+              points="60,180 140,140 220,90 300,50 380,75 460,35 540,40 620,80"
+              fill="none"
+              stroke="#2563EB"
+              stroke-width="3.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <!-- Secondary UPI line -->
+            <polyline
+              points="60,190 140,165 220,130 300,105 380,118 460,85 540,90 620,120"
+              fill="none"
+              stroke="#10B981"
+              stroke-width="2.5"
+              stroke-dasharray="4,3"
+            />
+
+            <!-- Interactive Highlight Circles -->
+            <circle cx="60" cy="180" r="4.5" fill="#2563EB" />
+            <circle cx="140" cy="140" r="4.5" fill="#2563EB" />
+            <circle cx="220" cy="90" r="4.5" fill="#2563EB" />
+            <circle cx="300" cy="50" r="4.5" fill="#2563EB" />
+            <circle cx="380" cy="75" r="4.5" fill="#2563EB" />
+            <circle cx="460" cy="35" r="5.5" fill="#2563EB" stroke="#FFFFFF" stroke-width="2" />
+            <circle cx="540" cy="40" r="4.5" fill="#2563EB" />
+            <circle cx="620" cy="80" r="4.5" fill="#2563EB" />
+
+            <!-- X-Axis Labels -->
+            <text x="50" y="205" fill="#64748B" font-size="11">06:00</text>
+            <text x="130" y="205" fill="#64748B" font-size="11">08:00</text>
+            <text x="210" y="205" fill="#64748B" font-size="11">10:00</text>
+            <text x="290" y="205" fill="#64748B" font-size="11">12:00</text>
+            <text x="370" y="205" fill="#64748B" font-size="11">14:00</text>
+            <text x="450" y="205" fill="#2563EB" font-weight="700" font-size="11">16:00 (Peak)</text>
+            <text x="530" y="205" fill="#64748B" font-size="11">18:00</text>
+            <text x="610" y="205" fill="#64748B" font-size="11">20:00</text>
+          </svg>
+        </div>
+
+        <div class="chart-legend-bottom">
+          <div class="legend-item"><span class="legend-color blue"></span> Gross Transaction Flow</div>
+          <div class="legend-item"><span class="legend-color emerald"></span> UPI Realtime Switch</div>
+          <div class="legend-metric">Peak Observed: <strong>4,650 TPS</strong> at 16:00 IST</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart 2: Account Distribution Donut Chart -->
+    <div class="fc-card chart-card-donut">
+      <div class="fc-card-header">
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+            <line x1="12" y1="12" x2="20" y2="16"></line>
+          </svg>
+          Account Distribution
+        </div>
+        <div class="fc-card-subtitle">3.1M Active Accounts</div>
+      </div>
+
+      <div class="fc-card-body">
+        <div class="donut-visual-wrapper">
+          <!-- Circular SVG Donut -->
+          <div class="donut-chart-svg">
+            <svg viewBox="0 0 160 160" width="140" height="140">
+              <circle cx="80" cy="80" r="60" fill="transparent" stroke="#E2E8F0" stroke-width="20" />
+              <!-- Savings (45%) -> stroke-dasharray="169.6 377" -->
+              <circle cx="80" cy="80" r="60" fill="transparent" stroke="#2563EB" stroke-width="20"
+                stroke-dasharray="170 377" stroke-dashoffset="0" />
+              <!-- Current (28%) -> stroke-dasharray="105.5 377" -->
+              <circle cx="80" cy="80" r="60" fill="transparent" stroke="#06B6D4" stroke-width="20"
+                stroke-dasharray="105 377" stroke-dashoffset="-170" />
+              <!-- Salary (18%) -> stroke-dasharray="67.8 377" -->
+              <circle cx="80" cy="80" r="60" fill="transparent" stroke="#10B981" stroke-width="20"
+                stroke-dasharray="68 377" stroke-dashoffset="-275" />
+              <!-- Fixed Deposit (9%) -> stroke-dasharray="33.9 377" -->
+              <circle cx="80" cy="80" r="60" fill="transparent" stroke="#F59E0B" stroke-width="20"
+                stroke-dasharray="34 377" stroke-dashoffset="-343" />
+            </svg>
+            <div class="donut-center-text">
+              <div class="big-num">3.1M</div>
+              <div class="label">Total Accts</div>
+            </div>
+          </div>
+
+          <!-- Donut Breakdown List -->
+          <div class="donut-legend-list">
+            <div class="legend-row">
+              <span class="bullet" style="background: #2563EB;"></span>
+              <span class="label">Savings Account</span>
+              <span class="percent">45%</span>
+              <span class="count">1.40M</span>
+            </div>
+            <div class="legend-row">
+              <span class="bullet" style="background: #06B6D4;"></span>
+              <span class="label">Current Account</span>
+              <span class="percent">28%</span>
+              <span class="count">868K</span>
+            </div>
+            <div class="legend-row">
+              <span class="bullet" style="background: #10B981;"></span>
+              <span class="label">Corporate Salary</span>
+              <span class="percent">18%</span>
+              <span class="count">558K</span>
+            </div>
+            <div class="legend-row">
+              <span class="bullet" style="background: #F59E0B;"></span>
+              <span class="label">Fixed Deposits (FD)</span>
+              <span class="percent">9%</span>
+              <span class="count">279K</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secondary Row: Loan Portfolio, Payment Success Rate, KYC Breakdown -->
+  <div class="charts-row-secondary">
+    <!-- Loan Portfolio -->
+    <div class="fc-card">
+      <div class="fc-card-header">
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+          </svg>
+          Loan Portfolio
+        </div>
+        <span class="badge badge-info">₹4,120 Cr Total</span>
+      </div>
+      <div class="fc-card-body">
+        <div class="portfolio-bars">
+          <div class="bar-item">
+            <div class="bar-header">
+              <span>Home Loan</span>
+              <span>42% • ₹1,730 Cr</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 42%; background: #2563EB;"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-header">
+              <span>Business Loan</span>
+              <span>24% • ₹988 Cr</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 24%; background: #06B6D4;"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-header">
+              <span>Personal Loan</span>
+              <span>18% • ₹741 Cr</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 18%; background: #10B981;"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-header">
+              <span>Vehicle Loan</span>
+              <span>11% • ₹453 Cr</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 11%; background: #F59E0B;"></div></div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-header">
+              <span>Education Loan</span>
+              <span>5% • ₹208 Cr</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width: 5%; background: #8B5CF6;"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Success Rate Gauge -->
+    <div class="fc-card">
+      <div class="fc-card-header">
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+          Payment Success Rate
+        </div>
+        <span class="badge badge-success">NPCI Live</span>
+      </div>
+      <div class="fc-card-body text-center">
+        <div class="gauge-display">
+          <div class="gauge-number tabular-nums">99.82%</div>
+          <div class="gauge-label">24-Hour Settlement Health</div>
+        </div>
+
+        <div class="success-stats-grid">
+          <div class="stat-pill success">
+            <span class="lbl">Successful</span>
+            <span class="val">8,384,880</span>
+          </div>
+          <div class="stat-pill warning">
+            <span class="lbl">Pending</span>
+            <span class="val">10,080</span>
+          </div>
+          <div class="stat-pill danger">
+            <span class="lbl">Failed</span>
+            <span class="val">5,040</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KYC Compliance Status -->
+    <div class="fc-card">
+      <div class="fc-card-header">
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          KYC Compliance
+        </div>
+        <a routerLink="/kyc" class="view-link">Review Queue</a>
+      </div>
+      <div class="fc-card-body">
+        <div class="kyc-stats-stack">
+          <div class="kyc-stat-row">
+            <div class="kyc-info">
+              <span class="status-dot-sm verified"></span>
+              <span class="lbl">Verified & Active</span>
+            </div>
+            <span class="count">2,112,000 (88%)</span>
+          </div>
+          <div class="kyc-stat-row">
+            <div class="kyc-info">
+              <span class="status-dot-sm review"></span>
+              <span class="lbl">Review Required</span>
+            </div>
+            <span class="count">144,000 (6%)</span>
+          </div>
+          <div class="kyc-stat-row">
+            <div class="kyc-info">
+              <span class="status-dot-sm pending"></span>
+              <span class="lbl">Document Pending</span>
+            </div>
+            <span class="count">96,000 (4%)</span>
+          </div>
+          <div class="kyc-stat-row">
+            <div class="kyc-info">
+              <span class="status-dot-sm rejected"></span>
+              <span class="lbl">Rejected / Blocked</span>
+            </div>
+            <span class="count">48,000 (2%)</span>
+          </div>
+        </div>
+
+        <div class="kyc-composite-bar mt-4">
+          <div class="seg seg-verified" style="width: 88%;"></div>
+          <div class="seg seg-review" style="width: 6%;"></div>
+          <div class="seg seg-pending" style="width: 4%;"></div>
+          <div class="seg seg-rejected" style="width: 2%;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Transactions Section -->
+  <div class="fc-card mt-6">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          Recent Transactions
+        </div>
+        <div class="fc-card-subtitle">Showing latest atomic double-entry ledger entries</div>
+      </div>
+
+      <div class="table-filter-controls">
+        <input
+          type="text"
+          class="form-control filter-input"
+          placeholder="Search by customer, TXN ID, account..."
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()"
+        />
+
+        <select class="form-control filter-select" [(ngModel)]="selectedChannel" (change)="applyFilters()">
+          <option value="ALL">All Channels</option>
+          <option value="UPI">UPI</option>
+          <option value="IMPS">IMPS</option>
+          <option value="NEFT">NEFT</option>
+          <option value="ATM">ATM</option>
+          <option value="Net Banking">Net Banking</option>
+        </select>
+
+        <select class="form-control filter-select" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+          <option value="ALL">All Status</option>
+          <option value="Success">Success</option>
+          <option value="Pending">Pending</option>
+          <option value="Failed">Failed</option>
+          <option value="Reversed">Reversed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Transaction ID</th>
+            <th>Customer</th>
+            <th>Account Number</th>
+            <th>Type</th>
+            <th>Amount (INR)</th>
+            <th>Timestamp</th>
+            <th>Channel</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of filteredTransactions">
+            <td class="font-mono text-sm font-semibold">{{ t.transactionId }}</td>
+            <td>
+              <div class="customer-cell">
+                <span class="cust-name font-semibold">{{ t.customerName }}</span>
+                <span class="cust-id text-xs text-muted">{{ t.customerId }}</span>
+              </div>
+            </td>
+            <td class="font-mono text-sm text-muted">{{ t.accountNumber }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-info]="t.transactionType === 'Transfer'"
+                [class.badge-success]="t.transactionType === 'Credit' || t.transactionType === 'Deposit'"
+                [class.badge-danger]="t.transactionType === 'Debit' || t.transactionType === 'Withdrawal'">
+                {{ t.transactionType }}
+              </span>
+            </td>
+            <td class="tabular-nums font-semibold" [class.text-emerald-600]="t.transactionType === 'Credit'" [class.text-rose-600]="t.transactionType === 'Debit'">
+              {{ t.transactionType === 'Credit' ? '+' : '-' }}₹{{ t.amount | number:'1.2-2' }}
+            </td>
+            <td class="text-sm text-muted">{{ t.timestamp }}</td>
+            <td>
+              <span class="channel-pill">{{ t.channel }}</span>
+            </td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="t.status === 'Success'"
+                [class.badge-warning]="t.status === 'Pending'"
+                [class.badge-danger]="t.status === 'Failed'"
+                [class.badge-neutral]="t.status === 'Reversed'">
+                {{ t.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="fc-card-footer flex justify-between items-center">
+      <span class="text-sm text-muted">Showing {{ filteredTransactions.length }} of {{ transactions.length }} transactions</span>
+      <a routerLink="/transactions" class="btn btn-secondary btn-sm">View Full Ledger →</a>
+    </div>
+  </div>
+</div>

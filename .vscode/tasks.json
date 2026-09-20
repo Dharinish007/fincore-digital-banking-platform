@@ -1,0 +1,220 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1. API Gateway (8080)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/api-gateway"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "2. Customer Service (8081)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/customer-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "3. Account Service (8082)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/account-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "4. Transaction Service (8083)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/transaction-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "5. Dashboard Service (8084)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/dashboard-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "6. Loan Service (8085)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/loan-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "7. Beneficiary Service (8086)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/beneficiary-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "8. Payment Service (8087)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/payment-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "9. IMPS-NEFT-UPI Service (8088)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/imps-neft-upi-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "10. KYC Service (8089)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/kyc-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "11. Face Match Service (8090)",
+      "type": "shell",
+      "command": "mvn spring-boot:run",
+      "options": {
+        "cwd": "${workspaceFolder}/backend/face-match-service"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "12. Angular Frontend (4200)",
+      "type": "shell",
+      "command": "npm start",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend_fincore"
+      },
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": false,
+        "clear": false
+      }
+    },
+    {
+      "label": "Run All FinCore Services (Antigravity Terminals)",
+      "dependsOn": [
+        "1. API Gateway (8080)",
+        "2. Customer Service (8081)",
+        "3. Account Service (8082)",
+        "4. Transaction Service (8083)",
+        "5. Dashboard Service (8084)",
+        "6. Loan Service (8085)",
+        "7. Beneficiary Service (8086)",
+        "8. Payment Service (8087)",
+        "9. IMPS-NEFT-UPI Service (8088)",
+        "10. KYC Service (8089)",
+        "11. Face Match Service (8090)",
+        "12. Angular Frontend (4200)"
+      ],
+      "dependsOrder": "parallel",
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}

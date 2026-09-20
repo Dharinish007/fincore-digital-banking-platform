@@ -1,0 +1,312 @@
+<div class="page loan-apply-page">
+  <app-page-header
+    title="Apply for a Loan"
+    subtitle="Complete the guided application process in just a few simple steps."
+    icon="post_add">
+  </app-page-header>
+
+  <!-- Step Wizard Indicator (Steps 1 to 4) -->
+  @if (currentStep() < 5) {
+    <div class="stepper-header">
+      <div class="step-badge" [class.active]="currentStep() === 1" [class.done]="currentStep() > 1" (click)="goToStep(1)">
+        <span class="step-num">{{ currentStep() > 1 ? '✓' : '1' }}</span>
+        <span class="step-text">Choose Product</span>
+      </div>
+      <div class="step-divider"></div>
+
+      <div class="step-badge" [class.active]="currentStep() === 2" [class.done]="currentStep() > 2" (click)="goToStep(2)">
+        <span class="step-num">{{ currentStep() > 2 ? '✓' : '2' }}</span>
+        <span class="step-text">Loan & Account</span>
+      </div>
+      <div class="step-divider"></div>
+
+      <div class="step-badge" [class.active]="currentStep() === 3" [class.done]="currentStep() > 3" (click)="goToStep(3)">
+        <span class="step-num">{{ currentStep() > 3 ? '✓' : '3' }}</span>
+        <span class="step-text">Financial Details</span>
+      </div>
+      <div class="step-divider"></div>
+
+      <div class="step-badge" [class.active]="currentStep() === 4" (click)="goToStep(4)">
+        <span class="step-num">4</span>
+        <span class="step-text">Review & Submit</span>
+      </div>
+    </div>
+  }
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading available loan products..."></app-loading-spinner>
+  } @else {
+    <!-- Step 1: Select Loan Product -->
+    @if (currentStep() === 1) {
+      <app-card-container title="Select a Loan Product" subtitle="Choose the financing product that best matches your borrowing needs.">
+        <div class="products-grid">
+          @for (prod of products(); track prod.id) {
+            <app-loan-product-card
+              [product]="prod"
+              [isSelected]="selectedProduct()?.id === prod.id"
+              (select)="onSelectProduct($event)">
+            </app-loan-product-card>
+          }
+        </div>
+
+        <div class="wizard-actions">
+          <button mat-stroked-button (click)="cancel()">Cancel</button>
+          <button mat-flat-button color="primary" [disabled]="!selectedProduct()" (click)="goToStep(2)">
+            Continue to Loan Details
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </app-card-container>
+    }
+
+    <!-- Step 2: Amount, Tenure & Account -->
+    @if (currentStep() === 2) {
+      <div class="step-grid">
+        <div class="form-column">
+          <app-card-container title="Configure Loan Amount & Account" subtitle="Specify how much you wish to borrow and select your disbursement account.">
+            <form [formGroup]="form" class="application-form">
+              <!-- Selected Product Summary Header -->
+              <div class="selected-product-banner">
+                <div class="banner-left">
+                  <span class="banner-badge">{{ selectedProduct()?.loanType }}</span>
+                  <h4 class="banner-title">{{ selectedProduct()?.name }}</h4>
+                </div>
+                <div class="banner-rate">
+                  <span class="rate-bold">{{ selectedProduct()?.interestRate }}% APR</span>
+                </div>
+              </div>
+
+              <!-- Requested Amount Input -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Requested Loan Amount ($)</mat-label>
+                <input matInput type="number" formControlName="requestedAmount" [min]="selectedProduct()?.minAmount || 1000" [max]="selectedProduct()?.maxAmount || 50000">
+                <span matPrefix class="currency-prefix">$ &nbsp;</span>
+                <mat-hint>Allowed: {{ selectedProduct()?.minAmount | currency:'USD':'symbol':'1.0-0' }} – {{ selectedProduct()?.maxAmount | currency:'USD':'symbol':'1.0-0' }}</mat-hint>
+              </mat-form-field>
+
+              <!-- Requested Tenure Input -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Tenure (Months)</mat-label>
+                <input matInput type="number" formControlName="requestedTenureMonths" [min]="selectedProduct()?.minTenureMonths || 6" [max]="selectedProduct()?.maxTenureMonths || 60">
+                <mat-hint>Allowed: {{ selectedProduct()?.minTenureMonths }} to {{ selectedProduct()?.maxTenureMonths }} Months</mat-hint>
+              </mat-form-field>
+
+              <!-- Disbursement Account Dropdown -->
+              <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Disbursement Bank Account</mat-label>
+                <mat-select formControlName="accountNumber">
+                  @for (acc of accounts(); track acc.accountId) {
+                    <mat-option [value]="acc.accountNumber">
+                      {{ acc.accountNumber }} — {{ acc.accountType }} (Balance: {{ acc.balance | currency:'USD':'symbol':'1.2-2' }})
+                    </mat-option>
+                  }
+                </mat-select>
+                <mat-hint>Funds will be disbursed directly to this account upon approval.</mat-hint>
+              </mat-form-field>
+            </form>
+
+            <div class="wizard-actions">
+              <button mat-stroked-button (click)="goToStep(1)">
+                <mat-icon>arrow_back</mat-icon>
+                Back
+              </button>
+              <button mat-flat-button color="primary" [disabled]="form.get('requestedAmount')?.invalid || form.get('requestedTenureMonths')?.invalid || form.get('accountNumber')?.invalid" (click)="goToStep(3)">
+                Continue to Income Details
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </app-card-container>
+        </div>
+
+        <!-- Live Projection Column -->
+        <div class="summary-column">
+          <div class="live-projection-box">
+            <h4 class="proj-title">Estimated Monthly Payment</h4>
+            <div class="proj-emi">{{ projectedEmi() | currency:'USD':'symbol':'1.2-2' }}</div>
+            <p class="proj-sub">Based on {{ selectedProduct()?.interestRate }}% APR over {{ form.get('requestedTenureMonths')?.value }} months</p>
+            
+            <div class="proj-rows">
+              <div class="p-row">
+                <span>Principal:</span>
+                <strong>{{ form.get('requestedAmount')?.value | currency:'USD':'symbol':'1.0-0' }}</strong>
+              </div>
+              <div class="p-row">
+                <span>Total Interest:</span>
+                <strong class="text-amber">{{ totalInterest() | currency:'USD':'symbol':'1.2-2' }}</strong>
+              </div>
+              <div class="p-row total-row">
+                <span>Total Repayment:</span>
+                <strong>{{ totalPayable() | currency:'USD':'symbol':'1.2-2' }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Step 3: Financial Details & Income -->
+    @if (currentStep() === 3) {
+      <app-card-container title="Financial Declaration" subtitle="Please provide your monthly income and financial details for credit underwriting.">
+        <form [formGroup]="form" class="application-form max-form-width">
+          <div class="form-row-2">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Monthly Net Income ($)</mat-label>
+              <input matInput type="number" formControlName="monthlyIncome">
+              <span matPrefix>$ &nbsp;</span>
+              <mat-hint>Your take-home monthly salary or business income</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Monthly Living Expenses ($)</mat-label>
+              <input matInput type="number" formControlName="monthlyExpenses">
+              <span matPrefix>$ &nbsp;</span>
+              <mat-hint>Rent, utilities, food, and other recurring costs</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Loan Purpose / Reason</mat-label>
+            <mat-select formControlName="purpose">
+              <mat-option value="Debt Consolidation">Debt Consolidation</mat-option>
+              <mat-option value="Home Renovation">Home Renovation</mat-option>
+              <mat-option value="Vehicle Purchase">Vehicle Purchase</mat-option>
+              <mat-option value="Education & Tuition">Education & Tuition</mat-option>
+              <mat-option value="Business Expansion">Business Expansion</mat-option>
+              <mat-option value="Medical & Emergency">Medical & Emergency</mat-option>
+              <mat-option value="Other Personal Purpose">Other Personal Purpose</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Additional Remarks (Optional)</mat-label>
+            <textarea matInput rows="3" formControlName="remarks" placeholder="Provide any additional context for the loan officer..."></textarea>
+          </mat-form-field>
+        </form>
+
+        <div class="wizard-actions">
+          <button mat-stroked-button (click)="goToStep(2)">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+          </button>
+          <button mat-flat-button color="primary" [disabled]="form.get('monthlyIncome')?.invalid || form.get('purpose')?.invalid" (click)="goToStep(4)">
+            Review Application
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </div>
+      </app-card-container>
+    }
+
+    <!-- Step 4: Final Review & Submit -->
+    @if (currentStep() === 4) {
+      <app-card-container title="Review & Confirm Loan Application" subtitle="Please verify all loan terms and financial information prior to final submission.">
+        <div class="review-grid">
+          <!-- Left Column: Loan Summary -->
+          <div class="review-section">
+            <h4 class="review-heading">Loan Details</h4>
+            <div class="review-list">
+              <div class="r-item">
+                <span class="r-lbl">Selected Product:</span>
+                <span class="r-val font-bold">{{ selectedProduct()?.name }}</span>
+              </div>
+              <div class="r-item">
+                <span class="r-lbl">Principal Amount:</span>
+                <span class="r-val text-primary font-bold">{{ form.get('requestedAmount')?.value | currency:'USD':'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="r-item">
+                <span class="r-lbl">Annual Interest Rate:</span>
+                <span class="r-val">{{ selectedProduct()?.interestRate }}% APR</span>
+              </div>
+              <div class="r-item">
+                <span class="r-lbl">Tenure:</span>
+                <span class="r-val">{{ form.get('requestedTenureMonths')?.value }} Months</span>
+              </div>
+              <div class="r-item">
+                <span class="r-lbl">Estimated Monthly EMI:</span>
+                <span class="r-val text-emerald font-bold">{{ projectedEmi() | currency:'USD':'symbol':'1.2-2' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Account & Financial -->
+          <div class="review-section">
+            <h4 class="review-heading">Account & Applicant Information</h4>
+            <div class="review-list">
+              <div class="r-item">
+                <span class="r-lbl">Disbursement Account:</span>
+                <span class="r-val font-bold">{{ form.get('accountNumber')?.value }}</span>
+              </div>
+              <div class="r-item">
+                <span class="r-lbl">Declared Net Income:</span>
+                <span class="r-val">{{ form.get('monthlyIncome')?.value | currency:'USD':'symbol':'1.0-0' }} / mo</span>
+              </div>
+              <div class="r-item">
+                <span class="r-lbl">Declared Expenses:</span>
+                <span class="r-val">{{ form.get('monthlyExpenses')?.value | currency:'USD':'symbol':'1.0-0' }} / mo</span>
+              </div>
+              <div class="r-item">
+                <span class="r-lbl">Loan Purpose:</span>
+                <span class="r-val">{{ form.get('purpose')?.value }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="declaration-note">
+          <mat-icon>info</mat-icon>
+          <span>By submitting this application, you authorize FinCore to perform automated credit scoring and KYC risk assessments based on your account activity.</span>
+        </div>
+
+        <div class="wizard-actions">
+          <button mat-stroked-button [disabled]="isSubmitting()" (click)="goToStep(3)">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+          </button>
+          <button mat-flat-button color="primary" [disabled]="isSubmitting()" (click)="submitApplication()">
+            @if (isSubmitting()) {
+              <span>Submitting Application...</span>
+            } @else {
+              <span>Submit Loan Application</span>
+            }
+          </button>
+        </div>
+      </app-card-container>
+    }
+
+    <!-- Step 5: Success Confirmation -->
+    @if (currentStep() === 5 && submittedApplication()) {
+      <div class="success-card">
+        <div class="success-icon-box">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h3 class="success-title">Loan Application Submitted!</h3>
+        <p class="success-desc">
+          Your application has been received and registered under application number 
+          <strong>{{ submittedApplication()?.applicationNumber }}</strong>.
+        </p>
+
+        <div class="app-summary-pill">
+          <div class="pill-item">
+            <span class="pill-lbl">Amount:</span>
+            <span class="pill-val">{{ submittedApplication()?.requestedAmount | currency:'USD':'symbol':'1.0-0' }}</span>
+          </div>
+          <div class="pill-divider"></div>
+          <div class="pill-item">
+            <span class="pill-lbl">Status:</span>
+            <span class="pill-val text-amber">{{ submittedApplication()?.status }}</span>
+          </div>
+        </div>
+
+        <div class="success-actions">
+          <button mat-flat-button color="primary" (click)="viewApplicationDetails()">
+            Track Application Status
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+          <button mat-stroked-button (click)="cancel()">
+            Return to Loan Dashboard
+          </button>
+        </div>
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,95 @@
+<div class="page customer-page">
+
+  <!-- Customer Page Header -->
+  <div *appHasPermission="'edit:customers'">
+    <app-page-header
+      title="Customer Directory"
+      subtitle="Manage customer profiles, KYC compliance, and banking relationships."
+      icon="people_alt"
+      actionLabel="Add Customer"
+      actionIcon="person_add"
+      (actionClicked)="onAddCustomer()">
+    </app-page-header>
+  </div>
+
+  <div *appHasPermission="'view:customers'">
+    
+    <!-- Operational Customer Statistics Row -->
+    <section class="stats-section" aria-label="Customer Overview Statistics">
+      <div class="stats-grid">
+        <app-statistic-card
+          label="Total Customers"
+          [value]="totalCustomersCount()"
+          icon="people_alt"
+          cardVariant="emerald"
+          iconColor="var(--color-primary)"
+          iconBgColor="var(--color-primary-light)">
+        </app-statistic-card>
+
+        <app-statistic-card
+          label="Active Accounts"
+          [value]="activeCustomersCount()"
+          icon="verified_user"
+          cardVariant="blue"
+          iconColor="var(--color-accent)"
+          iconBgColor="var(--color-accent-light)">
+        </app-statistic-card>
+
+        <app-statistic-card
+          label="Pending KYC"
+          [value]="pendingKycCount()"
+          icon="pending_actions"
+          cardVariant="amber"
+          iconColor="var(--color-warning)"
+          iconBgColor="var(--color-warning-bg)">
+        </app-statistic-card>
+
+        <app-statistic-card
+          label="Inactive / Suspended"
+          [value]="inactiveCount()"
+          icon="person_off"
+          cardVariant="rose"
+          iconColor="var(--color-danger)"
+          iconBgColor="var(--color-danger-bg)">
+        </app-statistic-card>
+      </div>
+    </section>
+
+    <!-- Error Banner -->
+    @if (hasError()) {
+      <div class="error-banner" role="alert">
+        <div class="error-content">
+          <span class="material-icons-round error-icon">sync_problem</span>
+          <span class="error-text">Failed to retrieve customer records from the core banking service.</span>
+        </div>
+        <button type="button" class="btn btn--secondary btn--sm" (click)="retryFetch()">
+          <span class="material-icons-round">refresh</span>
+          Retry
+        </button>
+      </div>
+    }
+
+    <!-- Search and Filter Bar -->
+    <app-customer-filter
+      (filterChanged)="onFilterChanged($event)">
+    </app-customer-filter>
+
+    <!-- Results Header / Summary -->
+    <div class="results-bar">
+      <span class="results-count">
+        Showing <strong>{{ customers().length }}</strong> customer record{{ customers().length !== 1 ? 's' : '' }}
+      </span>
+    </div>
+
+    <!-- Scannable Customer Data Table -->
+    <app-customer-table
+      [customers]="customers()"
+      [isLoading]="isLoading() || isDeleting()"
+      [isFiltered]="isFiltered()"
+      (addCustomer)="onAddCustomer()"
+      (clearFilters)="clearFilters()"
+      (deleteCustomer)="onDeleteCustomer($event)">
+    </app-customer-table>
+
+  </div>
+</div>

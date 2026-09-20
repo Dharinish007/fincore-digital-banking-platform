@@ -1,0 +1,79 @@
+.notif-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+
+  .breadcrumb {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--fc-blue-600);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--fc-slate-900);
+  }
+
+  .page-subtitle {
+    font-size: 13.5px;
+    color: var(--fc-slate-500);
+    margin-top: 4px;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.channel-filter-strip {
+  padding: 10px 14px;
+
+  .channel-btn {
+    background: transparent;
+    border: none;
+    padding: 6px 14px;
+    border-radius: var(--fc-radius-sm);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--fc-slate-600);
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: var(--fc-slate-100);
+      color: var(--fc-slate-900);
+    }
+
+    &.active {
+      background: var(--fc-blue-600);
+      color: #FFFFFF;
+    }
+  }
+}
+
+.channel-pill {
+  background: var(--fc-slate-100);
+  color: var(--fc-slate-700);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.max-w-md {
+  max-width: 380px;
+}
+
+.text-blue-600 { color: var(--fc-blue-600); }

@@ -1,0 +1,391 @@
+<div class="customer-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Directory</div>
+      <h1 class="page-title">Customer Relationship Management</h1>
+      <p class="page-subtitle">Centralized master customer directory, identity registry & KYC risk categorization.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Customer
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Container Card -->
+  <div class="fc-card">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+          </svg>
+          Customer Directory
+        </div>
+        <div class="fc-card-subtitle">Showing {{ filteredCustomers.length }} customers</div>
+      </div>
+
+      <div class="table-filter-controls">
+        <input
+          type="text"
+          class="form-control filter-input"
+          placeholder="Search by name, email, PAN, phone..."
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()"
+        />
+
+        <select class="form-control filter-select" [(ngModel)]="selectedKyc" (change)="applyFilters()">
+          <option value="ALL">All KYC Status</option>
+          <option value="Verified">Verified</option>
+          <option value="Pending">Pending</option>
+          <option value="Review Required">Review Required</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+
+        <select class="form-control filter-select" [(ngModel)]="selectedRisk" (change)="applyFilters()">
+          <option value="ALL">All Risk Levels</option>
+          <option value="Low">Low Risk</option>
+          <option value="Medium">Medium Risk</option>
+          <option value="High">High Risk</option>
+          <option value="Critical">Critical</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Customer ID</th>
+            <th>Full Name</th>
+            <th>Email & Contact</th>
+            <th>PAN Reference</th>
+            <th>KYC Status</th>
+            <th>Risk Score</th>
+            <th>Customer Since</th>
+            <th>Status</th>
+            <th style="text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of filteredCustomers">
+            <td class="font-mono text-sm font-semibold text-blue-600">{{ c.customerId }}</td>
+            <td>
+              <div class="customer-info-cell">
+                <div class="avatar-letter">{{ c.firstName.charAt(0) }}{{ c.lastName.charAt(0) }}</div>
+                <div>
+                  <div class="font-semibold">{{ c.firstName }} {{ c.lastName }}</div>
+                  <div class="text-xs text-muted">{{ c.employmentType }} • {{ c.city }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="contact-cell">
+                <div>{{ c.email }}</div>
+                <div class="text-xs text-muted">{{ c.phone }}</div>
+              </div>
+            </td>
+            <td class="font-mono text-sm">{{ c.pan }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="c.kycStatus === 'Verified'"
+                [class.badge-warning]="c.kycStatus === 'Pending' || c.kycStatus === 'Review Required'"
+                [class.badge-danger]="c.kycStatus === 'Rejected'">
+                {{ c.kycStatus }}
+              </span>
+            </td>
+            <td>
+              <div class="risk-pill-wrapper">
+                <span class="risk-pill" [ngClass]="'risk-' + c.riskCategory.toLowerCase()">
+                  {{ c.riskScore }} / 100 ({{ c.riskCategory }})
+                </span>
+              </div>
+            </td>
+            <td class="text-sm text-muted">{{ c.customerSince }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="c.status === 'Active'"
+                [class.badge-danger]="c.status === 'Blocked'"
+                [class.badge-neutral]="c.status === 'Inactive'">
+                {{ c.status }}
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <div class="action-buttons-cell">
+                <button class="btn btn-secondary btn-sm" (click)="viewDetails(c)" title="View 360 Profile">
+                  View
+                </button>
+                <button
+                  class="btn btn-sm"
+                  [class.btn-danger]="c.status === 'Active'"
+                  [class.btn-success]="c.status === 'Blocked'"
+                  (click)="toggleBlock(c)">
+                  {{ c.status === 'Active' ? 'Block' : 'Unblock' }}
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add Customer Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showAddModal">
+    <div class="fc-modal-dialog modal-lg">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Add New Banking Customer</h3>
+          <p class="text-sm text-muted">Complete primary identity and KYC onboarding registration.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeAddModal()">✕</button>
+      </div>
+
+      <form [formGroup]="customerForm" (ngSubmit)="submitCustomer()">
+        <div class="fc-modal-body">
+          <div class="form-section-title">1. Personal & Identity Details</div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="form-group">
+              <label>First Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="firstName" placeholder="e.g. Ramesh" />
+              <div class="form-error" *ngIf="customerForm.get('firstName')?.invalid && customerForm.get('firstName')?.touched">
+                First name is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Last Name <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="lastName" placeholder="e.g. Gupta" />
+              <div class="form-error" *ngIf="customerForm.get('lastName')?.invalid && customerForm.get('lastName')?.touched">
+                Last name is required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Date of Birth <span class="required">*</span></label>
+              <input type="date" class="form-control" formControlName="dateOfBirth" />
+            </div>
+
+            <div class="form-group">
+              <label>Gender <span class="required">*</span></label>
+              <select class="form-control" formControlName="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>PAN Card <span class="required">*</span></label>
+              <input type="text" class="form-control font-mono" formControlName="pan" placeholder="ABCDE1234F" />
+              <div class="form-error" *ngIf="customerForm.get('pan')?.invalid && customerForm.get('pan')?.touched">
+                Valid 10-char PAN required
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Aadhaar / ID Ref <span class="required">*</span></label>
+              <input type="text" class="form-control font-mono" formControlName="aadhaarRef" placeholder="XXXX-XXXX-9912" />
+            </div>
+          </div>
+
+          <div class="form-section-title mt-4">2. Contact & Address</div>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-group">
+              <label>Email Address <span class="required">*</span></label>
+              <input type="email" class="form-control" formControlName="email" placeholder="customer@domain.com" />
+            </div>
+
+            <div class="form-group">
+              <label>Mobile Phone <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="phone" placeholder="+91 98200 00000" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Street Address <span class="required">*</span></label>
+            <input type="text" class="form-control" formControlName="address" placeholder="Flat No, Building, Street" />
+          </div>
+
+          <div class="grid grid-cols-4 gap-4">
+            <div class="form-group">
+              <label>City <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="city" placeholder="e.g. Mumbai" />
+            </div>
+            <div class="form-group">
+              <label>State <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="state" placeholder="e.g. Maharashtra" />
+            </div>
+            <div class="form-group">
+              <label>Postal Code <span class="required">*</span></label>
+              <input type="text" class="form-control font-mono" formControlName="postalCode" placeholder="400001" />
+            </div>
+            <div class="form-group">
+              <label>Country <span class="required">*</span></label>
+              <input type="text" class="form-control" formControlName="country" />
+            </div>
+          </div>
+
+          <div class="form-section-title mt-4">3. Employment & Risk Classification</div>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="form-group">
+              <label>Employment Type <span class="required">*</span></label>
+              <select class="form-control" formControlName="employmentType">
+                <option value="Salaried">Salaried</option>
+                <option value="Self-Employed">Self-Employed</option>
+                <option value="Business">Business</option>
+                <option value="Professional">Professional</option>
+                <option value="Retired">Retired</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Annual Income (INR) <span class="required">*</span></label>
+              <input type="number" class="form-control" formControlName="annualIncome" />
+            </div>
+
+            <div class="form-group">
+              <label>Initial Risk Category <span class="required">*</span></label>
+              <select class="form-control" formControlName="riskCategory">
+                <option value="Low">Low Risk</option>
+                <option value="Medium">Medium Risk</option>
+                <option value="High">High Risk</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="fc-modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Customer Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Customer Details 360° Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showDetailsModal && selectedCustomer">
+    <div class="fc-modal-dialog modal-lg">
+      <div class="fc-modal-header">
+        <div class="flex items-center gap-3">
+          <div class="avatar-letter large">
+            {{ selectedCustomer.firstName.charAt(0) }}{{ selectedCustomer.lastName.charAt(0) }}
+          </div>
+          <div>
+            <h3>{{ selectedCustomer.firstName }} {{ selectedCustomer.lastName }}</h3>
+            <p class="text-sm text-muted">Customer ID: <strong class="text-blue-600 font-mono">{{ selectedCustomer.customerId }}</strong> • Member since {{ selectedCustomer.customerSince }}</p>
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeDetailsModal()">✕</button>
+      </div>
+
+      <div class="fc-modal-body">
+        <!-- Customer Summary Cards -->
+        <div class="grid grid-cols-4 gap-4 mb-4">
+          <div class="summary-box">
+            <span class="lbl">KYC Status</span>
+            <span
+              class="badge mt-1"
+              [class.badge-success]="selectedCustomer.kycStatus === 'Verified'"
+              [class.badge-warning]="selectedCustomer.kycStatus !== 'Verified'">
+              {{ selectedCustomer.kycStatus }}
+            </span>
+          </div>
+          <div class="summary-box">
+            <span class="lbl">Risk Score</span>
+            <span class="val font-semibold text-rose-600">{{ selectedCustomer.riskScore }}/100</span>
+          </div>
+          <div class="summary-box">
+            <span class="lbl">Employment</span>
+            <span class="val">{{ selectedCustomer.employmentType }}</span>
+          </div>
+          <div class="summary-box">
+            <span class="lbl">Annual Income</span>
+            <span class="val font-semibold">₹{{ selectedCustomer.annualIncome | number }}</span>
+          </div>
+        </div>
+
+        <!-- Contact & PAN Row -->
+        <div class="detail-section-card mb-4">
+          <div class="section-heading">Contact & Identity Documents</div>
+          <div class="grid grid-cols-3 gap-3 text-sm">
+            <div><strong>Email:</strong> {{ selectedCustomer.email }}</div>
+            <div><strong>Phone:</strong> {{ selectedCustomer.phone }}</div>
+            <div><strong>PAN:</strong> <span class="font-mono font-semibold">{{ selectedCustomer.pan }}</span></div>
+            <div><strong>Aadhaar Ref:</strong> <span class="font-mono">{{ selectedCustomer.aadhaarRef }}</span></div>
+            <div class="grid-span-2"><strong>Address:</strong> {{ selectedCustomer.address }}, {{ selectedCustomer.city }}, {{ selectedCustomer.state }} - {{ selectedCustomer.postalCode }}</div>
+          </div>
+        </div>
+
+        <!-- Linked Accounts -->
+        <div class="detail-section-card mb-4">
+          <div class="section-heading flex justify-between items-center">
+            <span>Linked Core Accounts ({{ customerAccounts.length }})</span>
+            <a routerLink="/accounts" (click)="closeDetailsModal()" class="text-xs text-blue-600 font-semibold">Manage Accounts →</a>
+          </div>
+
+          <div *ngIf="customerAccounts.length === 0" class="text-sm text-muted">No accounts linked yet.</div>
+          <div class="account-pill-list" *ngIf="customerAccounts.length > 0">
+            <div class="account-pill-card" *ngFor="let acc of customerAccounts">
+              <div class="flex justify-between items-center">
+                <span class="acc-type font-semibold">{{ acc.accountType }} Account</span>
+                <span class="badge badge-success">{{ acc.status }}</span>
+              </div>
+              <div class="font-mono text-sm text-muted mt-1">{{ acc.accountNumber }}</div>
+              <div class="font-semibold text-lg mt-2 text-slate-900">₹{{ acc.balance | number:'1.2-2' }}</div>
+              <div class="text-xs text-muted">IFSC: {{ acc.ifsc }} • {{ acc.branchName }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Linked Loans -->
+        <div class="detail-section-card">
+          <div class="section-heading flex justify-between items-center">
+            <span>Active Loans ({{ customerLoans.length }})</span>
+            <a routerLink="/loans" (click)="closeDetailsModal()" class="text-xs text-blue-600 font-semibold">Loan Origination →</a>
+          </div>
+          <div *ngIf="customerLoans.length === 0" class="text-sm text-muted">No active loans for this customer.</div>
+          <div class="table-responsive mt-2" *ngIf="customerLoans.length > 0">
+            <table class="fc-table">
+              <thead>
+                <tr>
+                  <th>Loan ID</th>
+                  <th>Type</th>
+                  <th>Principal</th>
+                  <th>Interest Rate</th>
+                  <th>Monthly EMI</th>
+                  <th>Outstanding</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let l of customerLoans">
+                  <td class="font-mono font-semibold">{{ l.loanId }}</td>
+                  <td>{{ l.loanType }}</td>
+                  <td>₹{{ l.principalAmount | number }}</td>
+                  <td>{{ l.interestRate }}%</td>
+                  <td>₹{{ l.emiAmount | number }}</td>
+                  <td class="font-semibold text-rose-600">₹{{ l.outstandingAmount | number }}</td>
+                  <td><span class="badge badge-info">{{ l.status }}</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="fc-modal-footer">
+        <button class="btn btn-secondary" (click)="closeDetailsModal()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

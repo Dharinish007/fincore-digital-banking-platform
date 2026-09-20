@@ -1,0 +1,149 @@
+<div class="notif-page">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Engagement</div>
+      <h1 class="page-title">Notification Center & Delivery Dispatcher</h1>
+      <p class="page-subtitle">Multi-channel delivery broker across Push, SMS, Email and In-App notification queues.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="openSendModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        Broadcast Alert
+      </button>
+    </div>
+  </div>
+
+  <!-- Channel Tabs Filter -->
+  <div class="channel-filter-strip fc-card">
+    <div class="flex items-center gap-2">
+      <button class="channel-btn" [class.active]="activeChannel === 'ALL'" (click)="setChannel('ALL')">
+        All Channels ({{ notifications.length }})
+      </button>
+      <button class="channel-btn" [class.active]="activeChannel === 'Push'" (click)="setChannel('Push')">
+        FCM Mobile Push
+      </button>
+      <button class="channel-btn" [class.active]="activeChannel === 'SMS'" (click)="setChannel('SMS')">
+        Transactional SMS
+      </button>
+      <button class="channel-btn" [class.active]="activeChannel === 'Email'" (click)="setChannel('Email')">
+        Email SMTP
+      </button>
+      <button class="channel-btn" [class.active]="activeChannel === 'In-App'" (click)="setChannel('In-App')">
+        In-App Toast
+      </button>
+    </div>
+  </div>
+
+  <!-- Notifications List Table -->
+  <div class="fc-card mt-4">
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Notification ID</th>
+            <th>Recipient</th>
+            <th>Channel</th>
+            <th>Type</th>
+            <th>Alert Title & Content</th>
+            <th>Timestamp</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let n of filteredNotifications">
+            <td class="font-mono text-xs font-semibold text-blue-600">{{ n.notificationId }}</td>
+            <td class="font-semibold">{{ n.customerName }}</td>
+            <td>
+              <span class="channel-pill">{{ n.channel }}</span>
+            </td>
+            <td>
+              <span class="badge badge-info">{{ n.notificationType }}</span>
+            </td>
+            <td>
+              <div class="flex flex-col max-w-md">
+                <span class="font-semibold text-slate-900">{{ n.title }}</span>
+                <span class="text-xs text-muted mt-1">{{ n.message }}</span>
+              </div>
+            </td>
+            <td class="font-mono text-xs text-muted">{{ n.createdAt }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="n.status === 'Delivered' || n.status === 'Read'"
+                [class.badge-warning]="n.status === 'Pending'"
+                [class.badge-danger]="n.status === 'Failed'">
+                {{ n.status }}
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <div class="flex justify-end gap-2">
+                <button *ngIf="n.status !== 'Read'" class="btn btn-secondary btn-sm" (click)="markRead(n.notificationId)">
+                  Mark Read
+                </button>
+                <button *ngIf="n.status === 'Pending' || n.status === 'Failed'" class="btn btn-secondary btn-sm" (click)="retry(n)">
+                  Retry
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Broadcast Alert Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showSendModal">
+    <div class="fc-modal-dialog">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Dispatch Real-Time Notification</h3>
+          <p class="text-sm text-muted">Transmit critical banking message across carrier gateways.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeSendModal()">✕</button>
+      </div>
+
+      <div class="fc-modal-body">
+        <div class="form-group">
+          <label>Target Channel</label>
+          <select class="form-control" [(ngModel)]="newNotif.channel">
+            <option value="Push">FCM Push Notification</option>
+            <option value="SMS">Transactional SMS Gateway</option>
+            <option value="Email">Secure Bank Email</option>
+            <option value="In-App">In-App Notification</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Alert Category</label>
+          <select class="form-control" [(ngModel)]="newNotif.notificationType">
+            <option value="Transaction">Transaction Alert</option>
+            <option value="Security">Security / 2FA OTP</option>
+            <option value="Loan">Loan Servicing Reminder</option>
+            <option value="KYC">KYC & Compliance Update</option>
+            <option value="System">System Notice</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Title <span class="required">*</span></label>
+          <input type="text" class="form-control" [(ngModel)]="newNotif.title" placeholder="e.g. Balance Debited: ₹5,000.00" />
+        </div>
+
+        <div class="form-group">
+          <label>Message Content <span class="required">*</span></label>
+          <textarea class="form-control" rows="3" [(ngModel)]="newNotif.message" placeholder="Include reference, date, remaining balance..."></textarea>
+        </div>
+      </div>
+
+      <div class="fc-modal-footer">
+        <button class="btn btn-secondary" (click)="closeSendModal()">Cancel</button>
+        <button class="btn btn-primary" (click)="submitSend()">Dispatch Alert</button>
+      </div>
+    </div>
+  </div>
+</div>

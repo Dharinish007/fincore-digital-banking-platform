@@ -1,0 +1,147 @@
+// Skeleton Loading
+.skeleton-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px 0;
+}
+
+.skeleton-row {
+  height: 48px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-surface-secondary) 50%, var(--color-surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border: 1px solid var(--color-border);
+}
+
+// Table Wrapper
+.table-wrapper {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  box-shadow: var(--shadow-sm);
+}
+
+.txn-table {
+  width: 100%;
+  min-width: 950px;
+  background: transparent;
+
+  .mat-mdc-header-cell {
+    background: var(--color-surface-elevated);
+    font-size: 0.725rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mat-mdc-cell {
+    padding: 12px 16px;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+}
+
+// Data Row
+.data-row {
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+
+  &:hover {
+    background: var(--color-surface-hover);
+
+    .row-actions {
+      opacity: 1;
+    }
+  }
+}
+
+// Cell Types
+.txn-id {
+  font-family: var(--font-family-mono);
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  border: 1px solid var(--color-primary-subtle);
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+}
+
+.ref-number {
+  font-family: var(--font-family-mono);
+  font-size: 0.775rem;
+  color: var(--color-text-secondary);
+}
+
+.customer-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .customer-name {
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+  }
+
+  .customer-id {
+    font-size: 0.725rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-family-mono);
+  }
+}
+
+.acc-number {
+  font-family: var(--font-family-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+.amount {
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+
+  &.amount-credit { color: var(--color-success); }
+  &.amount-debit  { color: var(--color-text-primary); }
+}
+
+.currency-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-secondary);
+  font-family: var(--font-family-mono);
+  font-size: 0.725rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+}
+
+.created-by {
+  font-size: 0.775rem;
+  color: var(--color-text-muted);
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
+}
+
+@media (max-width: 768px) {
+  .table-wrapper {
+    overflow-x: auto;
+  }
+}

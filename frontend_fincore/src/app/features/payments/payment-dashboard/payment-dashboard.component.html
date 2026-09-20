@@ -1,0 +1,130 @@
+<div class="payment-dash-page">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Clearing Rails</div>
+      <h1 class="page-title">Interbank Clearing & Payment Hub</h1>
+      <p class="page-subtitle">Real-time switch monitoring across NPCI UPI 2.0, RBI NEFT/RTGS & IMPS networks.</p>
+    </div>
+
+    <div class="header-actions">
+      <a routerLink="/payments/send" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+        Send Money Wizard
+      </a>
+      <a routerLink="/beneficiaries" class="btn btn-secondary">
+        Beneficiaries Directory
+      </a>
+    </div>
+  </div>
+
+  <!-- Cards: Total Payments, UPI, IMPS, NEFT, Failed, Settlements -->
+  <div class="pay-kpi-grid">
+    <div class="kpi-card">
+      <span class="lbl">Total Payments Today</span>
+      <div class="val tabular-nums text-blue-600">₹2,840 Cr</div>
+      <span class="sub">8.4M transactions processed</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="lbl">UPI 2.0 Volume</span>
+      <div class="val tabular-nums text-emerald-600">₹1,760 Cr</div>
+      <span class="sub">62% of gross flow • 0.01% fail</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="lbl">IMPS Volume</span>
+      <div class="val tabular-nums text-indigo-600">₹680 Cr</div>
+      <span class="sub">24% share • Instant settlement</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="lbl">NEFT Volume</span>
+      <div class="val tabular-nums text-cyan-600">₹400 Cr</div>
+      <span class="sub">14% share • Batch clearing</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="lbl">Failed Transactions</span>
+      <div class="val tabular-nums text-rose-600">0.06%</div>
+      <span class="sub">-2.1% lower than target</span>
+    </div>
+
+    <div class="kpi-card">
+      <span class="lbl">Pending Settlements</span>
+      <div class="val tabular-nums text-amber-600">₹14.2 Cr</div>
+      <span class="sub">In NPCI clearing cycle</span>
+    </div>
+  </div>
+
+  <!-- Recent Payments Batch Table -->
+  <div class="fc-card mt-6">
+    <div class="fc-card-header">
+      <div class="fc-card-title">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path>
+        </svg>
+        Recent Electronic Clearing Instructions
+      </div>
+      <span class="badge badge-success">Saga Engine Synchronized</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Debit Account</th>
+            <th>Beneficiary & Bank</th>
+            <th>Rail</th>
+            <th>Amount (INR)</th>
+            <th>Fraud Score</th>
+            <th>Timestamp</th>
+            <th>Settlement</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let p of payments">
+            <td class="font-mono text-sm font-semibold text-blue-600">{{ p.transactionReference }}</td>
+            <td class="font-mono text-xs">{{ p.sourceAccount }}</td>
+            <td>
+              <div class="flex flex-col">
+                <span class="font-semibold">{{ p.beneficiaryName }}</span>
+                <span class="text-xs text-muted font-mono">{{ p.beneficiaryAccount }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-info">{{ p.paymentType }}</span>
+            </td>
+            <td class="font-semibold tabular-nums text-slate-900">₹{{ p.amount | number:'1.2-2' }}</td>
+            <td>
+              <span
+                class="score-tag"
+                [class.clean]="p.fraudScore < 30"
+                [class.suspicious]="p.fraudScore >= 70">
+                {{ p.fraudScore }}/100
+              </span>
+            </td>
+            <td class="font-mono text-xs text-muted">{{ p.initiatedAt }}</td>
+            <td>
+              <span class="badge badge-success">{{ p.settlementStatus }}</span>
+            </td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="p.status === 'Success'"
+                [class.badge-warning]="p.status === 'Processing'"
+                [class.badge-danger]="p.status === 'Failed'">
+                {{ p.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

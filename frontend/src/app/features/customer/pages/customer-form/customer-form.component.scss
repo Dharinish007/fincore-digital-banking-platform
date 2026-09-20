@@ -1,0 +1,128 @@
+.customer-form-page {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding-bottom: var(--spacing-8);
+}
+
+.form-container {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+
+  .section-step {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .section-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .section-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--color-text-primary);
+      margin: 0;
+      letter-spacing: -0.2px;
+    }
+
+    .section-desc {
+      font-size: 0.8125rem;
+      color: var(--color-text-secondary);
+      margin: 0;
+    }
+  }
+}
+
+.section-divider {
+  height: 1px;
+  background-color: var(--color-border);
+  margin: 2rem 0;
+}
+
+.fields-grid {
+  display: grid;
+  gap: 1rem;
+
+  &.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  &.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  .form-field {
+    width: 100%;
+  }
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.875rem;
+  margin-top: 0.5rem;
+
+  .btn {
+    min-width: 130px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .btn-spinner {
+    display: inline-block;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: 1.25rem 1rem;
+  }
+
+  .fields-grid.grid-2,
+  .fields-grid.grid-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    
+    .btn {
+      width: 100%;
+    }
+  }
+}

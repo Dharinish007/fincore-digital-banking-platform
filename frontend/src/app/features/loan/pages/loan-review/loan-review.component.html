@@ -1,0 +1,540 @@
+<div class="loan-review-page container-fluid">
+
+  <!-- Page Header -->
+  <app-page-header
+    title="Loan Underwriting & Review"
+    subtitle="Operational workbench for credit assessment, underwriting approvals, and loan disbursement"
+  >
+  </app-page-header>
+
+  <!-- KPI Overview Cards -->
+  <div class="metrics-grid">
+    <app-statistic-card
+      label="Pending Applications"
+      [value]="statistics()?.pendingApplications ?? 0"
+      icon="pending_actions"
+      cardVariant="amber"
+    >
+    </app-statistic-card>
+
+    <app-statistic-card
+      label="Approved Applications"
+      [value]="statistics()?.approvedApplications ?? 0"
+      icon="verified"
+      cardVariant="emerald"
+    >
+    </app-statistic-card>
+
+    <app-statistic-card
+      label="Awaiting Disbursement"
+      [value]="statistics()?.pendingDisbursementLoans ?? 0"
+      icon="hourglass_top"
+      cardVariant="blue"
+    >
+    </app-statistic-card>
+
+    <app-statistic-card
+      label="Total Disbursed Volume"
+      [value]="((statistics()?.totalDisbursedAmount ?? 0) | currency:'USD':'symbol':'1.0-0') || '$0'"
+      icon="payments"
+      cardVariant="emerald"
+    >
+    </app-statistic-card>
+  </div>
+
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading underwriting applications and loans..."></app-loading-spinner>
+  } @else {
+
+    <!-- Section 1: Loans Awaiting Disbursement -->
+    @if (pendingDisbursementLoans().length > 0) {
+      <div class="mb-4">
+        <app-card-container title="Disbursement Queue" subtitle="Approved loans ready for immediate fund release to customer accounts">
+          <div class="table-responsive">
+            <table mat-table [dataSource]="pendingDisbursementLoans()" class="fincore-table">
+              <ng-container matColumnDef="loanNumber">
+                <th mat-header-cell *matHeaderCellDef>Loan #</th>
+                <td mat-cell *matCellDef="let loan" class="font-medium text-primary">{{ loan.loanNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="customerId">
+                <th mat-header-cell *matHeaderCellDef>Customer ID</th>
+                <td mat-cell *matCellDef="let loan">Cust #{{ loan.customerId }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="accountNumber">
+                <th mat-header-cell *matHeaderCellDef>Disbursement Account</th>
+                <td mat-cell *matCellDef="let loan">{{ loan.accountNumber }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="productName">
+                <th mat-header-cell *matHeaderCellDef>Product</th>
+                <td mat-cell *matCellDef="let loan">{{ loan.loanProductName }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="principalAmount">
+                <th mat-header-cell *matHeaderCellDef>Principal</th>
+                <td mat-cell *matCellDef="let loan" class="font-semibold">{{ loan.principalAmount | currency }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="emiAmount">
+                <th mat-header-cell *matHeaderCellDef>Monthly EMI</th>
+                <td mat-cell *matCellDef="let loan">{{ loan.emiAmount | currency }}/mo</td>
+              </ng-container>
+
+              <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>Status</th>
+                <td mat-cell *matCellDef="let loan">
+                  <app-loan-status-badge [status]="loan.status"></app-loan-status-badge>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let loan">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    class="disburse-action-btn"
+                    (click)="openDisburseDialog(loan)"
+                    [disabled]="isActionInProgress()"
+                  >
+                    <span class="material-icons-round text-sm mr-1">send</span>
+                    Disburse Funds
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="loanColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: loanColumns;"></tr>
+            </table>
+          </div>
+        </app-card-container>
+      </div>
+    }
+
+    <!-- Section 2: Loan Applications Workbench -->
+    <app-card-container title="Applications Workbench" subtitle="Underwrite, assess risk, and approve or reject incoming loan applications">
+
+      <!-- Status Filters -->
+      <div class="filter-chips-bar">
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="selectedStatus() === 'ALL'"
+          (click)="filterByStatus('ALL')"
+        >
+          All Applications ({{ applications().length }})
+        </button>
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="selectedStatus() === 'SUBMITTED'"
+          (click)="filterByStatus('SUBMITTED')"
+        >
+          Submitted
+        </button>
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="selectedStatus() === 'CREDIT_ASSESSED'"
+          (click)="filterByStatus('CREDIT_ASSESSED')"
+        >
+          Credit Assessed
+        </button>
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="selectedStatus() === 'APPROVED'"
+          (click)="filterByStatus('APPROVED')"
+        >
+          Approved
+        </button>
+        <button
+          type="button"
+          class="filter-chip"
+          [class.active]="selectedStatus() === 'REJECTED'"
+          (click)="filterByStatus('REJECTED')"
+        >
+          Rejected
+        </button>
+      </div>
+
+      <!-- Applications Table -->
+      @if (filteredApplications().length === 0) {
+        <app-empty-state
+          icon="fact_check"
+          title="No applications in this category"
+          description="There are currently no loan applications matching the selected filter."
+        >
+        </app-empty-state>
+      } @else {
+        <div class="table-responsive">
+          <table mat-table [dataSource]="filteredApplications()" class="fincore-table">
+            <ng-container matColumnDef="applicationNumber">
+              <th mat-header-cell *matHeaderCellDef>App #</th>
+              <td mat-cell *matCellDef="let app" class="font-medium text-primary">
+                {{ app.applicationNumber }}
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="customerId">
+              <th mat-header-cell *matHeaderCellDef>Customer ID</th>
+              <td mat-cell *matCellDef="let app">
+                <span class="customer-tag">Cust #{{ app.customerId }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="accountNumber">
+              <th mat-header-cell *matHeaderCellDef>Account</th>
+              <td mat-cell *matCellDef="let app">{{ app.accountNumber }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="productName">
+              <th mat-header-cell *matHeaderCellDef>Product</th>
+              <td mat-cell *matCellDef="let app">{{ app.loanProduct?.name || 'Personal Loan' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="requestedAmount">
+              <th mat-header-cell *matHeaderCellDef>Requested</th>
+              <td mat-cell *matCellDef="let app" class="font-semibold">{{ app.requestedAmount | currency }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="tenure">
+              <th mat-header-cell *matHeaderCellDef>Tenure</th>
+              <td mat-cell *matCellDef="let app">{{ app.requestedTenureMonths }} mos</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let app">
+                <app-loan-status-badge [status]="app.status"></app-loan-status-badge>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef>Submitted</th>
+              <td mat-cell *matCellDef="let app">{{ app.createdAt | date:'shortDate' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef class="text-right">Underwriting Actions</th>
+              <td mat-cell *matCellDef="let app" class="text-right">
+                <div class="action-buttons-group">
+                  <!-- Assess / View Assessment -->
+                  @if (app.status === 'SUBMITTED' || app.status === 'UNDER_REVIEW') {
+                    <button
+                      mat-stroked-button
+                      color="primary"
+                      class="btn-sm"
+                      (click)="onRunAssessment(app)"
+                      [disabled]="isActionInProgress()"
+                    >
+                      <span class="material-icons-round text-xs mr-1">speed</span>
+                      Run Assessment
+                    </button>
+                  } @else if (app.status === 'CREDIT_ASSESSED' || app.creditAssessment) {
+                    <button
+                      mat-stroked-button
+                      class="btn-sm text-info"
+                      (click)="onViewAssessment(app)"
+                      [disabled]="isActionInProgress()"
+                    >
+                      <span class="material-icons-round text-xs mr-1">insights</span>
+                      Scorecard
+                    </button>
+                  }
+
+                  <!-- Approve / Reject Controls -->
+                  @if (app.status === 'CREDIT_ASSESSED') {
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      class="btn-sm btn-approve"
+                      (click)="openApproveDialog(app)"
+                      [disabled]="isActionInProgress()"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      mat-stroked-button
+                      color="warn"
+                      class="btn-sm"
+                      (click)="openRejectDialog(app)"
+                      [disabled]="isActionInProgress()"
+                    >
+                      Reject
+                    </button>
+                  } @else if (app.status === 'SUBMITTED') {
+                    <button
+                      mat-stroked-button
+                      color="warn"
+                      class="btn-sm"
+                      (click)="openRejectDialog(app)"
+                      [disabled]="isActionInProgress()"
+                    >
+                      Reject
+                    </button>
+                  }
+
+                  <!-- View Details -->
+                  <button
+                    mat-icon-button
+                    (click)="viewDetails(app)"
+                    title="View Application Details"
+                  >
+                    <span class="material-icons-round">visibility</span>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="appColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: appColumns;"></tr>
+          </table>
+        </div>
+      }
+
+    </app-card-container>
+  }
+
+  <!-- ── MODAL: Credit Assessment Scorecard ────────────────────── -->
+  @if (showAssessmentModal() && activeAssessment()) {
+    <div class="modal-backdrop" (click)="closeAssessmentModal()">
+      <div class="modal-content assessment-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-primary">assessment</span>
+            <div>
+              <h3>Credit Assessment & Risk Scorecard</h3>
+              <p class="text-secondary">Application: {{ activeAssessmentApp()?.applicationNumber }} | Customer: #{{ activeAssessmentApp()?.customerId }}</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeAssessmentModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Main Score Gauge Banner -->
+          <div class="score-card-banner" [ngClass]="'risk-' + activeAssessment()?.riskLevel?.toLowerCase()">
+            <div class="score-dial">
+              <span class="score-value">{{ activeAssessment()?.creditScore }}</span>
+              <span class="score-max">/ 850</span>
+            </div>
+            <div class="score-details">
+              <div class="risk-badge-row">
+                <span class="decision-chip" [ngClass]="'decision-' + activeAssessment()?.decision?.toLowerCase()">
+                  {{ activeAssessment()?.decision }}
+                </span>
+                <span class="risk-level-tag">
+                  Risk Level: <strong>{{ activeAssessment()?.riskLevel }}</strong>
+                </span>
+              </div>
+              <p class="assessment-summary-text">{{ activeAssessment()?.assessmentSummary }}</p>
+            </div>
+          </div>
+
+          <!-- Financial Metrics Grid -->
+          <div class="financial-metrics-grid">
+            <div class="metric-box">
+              <span class="metric-label">Assessed Income</span>
+              <span class="metric-val">{{ activeAssessment()?.assessedMonthlyIncome | currency }}</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Assessed Expenses</span>
+              <span class="metric-val">{{ activeAssessment()?.assessedMonthlyExpenses | currency }}</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Debt-to-Income (DTI)</span>
+              <span class="metric-val" [class.text-danger]="(activeAssessment()?.debtToIncomeRatio ?? 0) > 50">
+                {{ activeAssessment()?.debtToIncomeRatio }}%
+              </span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Proposed Monthly EMI</span>
+              <span class="metric-val">{{ activeAssessment()?.proposedEmi | currency }}</span>
+            </div>
+            <div class="metric-box full-width">
+              <span class="metric-label">Maximum Eligible Principal</span>
+              <span class="metric-val text-emerald">{{ activeAssessment()?.maxEligibleAmount | currency }}</span>
+            </div>
+          </div>
+
+          <!-- Scoring Breakdown Factors -->
+          @if (activeAssessment()?.scoreBreakdown) {
+            <div class="factor-breakdown-card">
+              <h4>Deterministic Scoring Breakdown</h4>
+              <p class="breakdown-text">{{ activeAssessment()?.scoreBreakdown }}</p>
+            </div>
+          }
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button (click)="closeAssessmentModal()">Close</button>
+
+          @if (activeAssessmentApp()?.status === 'CREDIT_ASSESSED' || activeAssessmentApp()?.status === 'SUBMITTED') {
+            <button mat-stroked-button color="warn" (click)="openRejectDialog(activeAssessmentApp()!)">
+              Reject
+            </button>
+            <button mat-raised-button color="primary" (click)="openApproveDialog(activeAssessmentApp()!)">
+              Proceed to Approve
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── MODAL: Approve Application ───────────────────────────── -->
+  @if (showApproveModal() && approveTargetApp()) {
+    <div class="modal-backdrop" (click)="closeApproveModal()">
+      <div class="modal-content confirmation-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-emerald">verified</span>
+            <div>
+              <h3>Approve Loan Application</h3>
+              <p class="text-secondary">App: {{ approveTargetApp()?.applicationNumber }} ({{ approveTargetApp()?.requestedAmount | currency }})</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeApproveModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p class="dialog-prompt">
+            Approving this application will generate an active Loan record in status <strong>PENDING DISBURSEMENT</strong>.
+          </p>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Underwriter / Officer Notes (Optional)</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              [(ngModel)]="officerNotes"
+              placeholder="e.g. Approved under prime customer criteria, verified salary slips."
+            ></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button (click)="closeApproveModal()" [disabled]="isActionInProgress()">Cancel</button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn-approve"
+            (click)="confirmApprove()"
+            [disabled]="isActionInProgress()"
+          >
+            Confirm Approval
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── MODAL: Reject Application ────────────────────────────── -->
+  @if (showRejectModal() && rejectTargetApp()) {
+    <div class="modal-backdrop" (click)="closeRejectModal()">
+      <div class="modal-content confirmation-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-danger">cancel</span>
+            <div>
+              <h3>Reject Loan Application</h3>
+              <p class="text-secondary">App: {{ rejectTargetApp()?.applicationNumber }}</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeRejectModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p class="dialog-prompt">
+            Please provide the reason for application rejection:
+          </p>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Rejection Reason</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              [(ngModel)]="rejectionReason"
+              placeholder="e.g. Debt-to-income exceeds policy limits (>50%), insufficient cash flow."
+            ></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button (click)="closeRejectModal()" [disabled]="isActionInProgress()">Cancel</button>
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="confirmReject()"
+            [disabled]="isActionInProgress()"
+          >
+            Confirm Rejection
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── MODAL: Disburse Loan Funds ───────────────────────────── -->
+  @if (showDisburseModal() && disburseTargetLoan()) {
+    <div class="modal-backdrop" (click)="closeDisburseModal()">
+      <div class="modal-content confirmation-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-primary">account_balance</span>
+            <div>
+              <h3>Execute Loan Disbursement</h3>
+              <p class="text-secondary">Loan: {{ disburseTargetLoan()?.loanNumber }}</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeDisburseModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="disburse-summary-card">
+            <div class="summary-row">
+              <span>Disbursement Amount:</span>
+              <strong>{{ disburseTargetLoan()?.principalAmount | currency }}</strong>
+            </div>
+            <div class="summary-row">
+              <span>Destination Account:</span>
+              <strong>{{ disburseTargetLoan()?.accountNumber }}</strong>
+            </div>
+            <div class="summary-row">
+              <span>Customer ID:</span>
+              <strong>#{{ disburseTargetLoan()?.customerId }}</strong>
+            </div>
+          </div>
+
+          <p class="disburse-notice">
+            <span class="material-icons-round text-sm text-primary">info</span>
+            Executing this disbursement will credit funds immediately to the customer's account in Account Service and record an audit transaction in the Transaction ledger.
+          </p>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button (click)="closeDisburseModal()" [disabled]="isActionInProgress()">Cancel</button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="confirmDisburse()"
+            [disabled]="isActionInProgress()"
+          >
+            Authorize & Disburse
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>

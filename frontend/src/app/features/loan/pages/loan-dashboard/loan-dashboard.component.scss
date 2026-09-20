@@ -1,0 +1,123 @@
+.loan-dashboard-page {
+  padding: 1.5rem 2rem;
+  max-width: 1440px;
+  margin: 0 auto;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+}
+
+.stats-section {
+  margin-bottom: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.error-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-danger-bg, #fee2e2);
+  border: 1px solid var(--color-danger-border, #fca5a5);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+
+  .error-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--color-danger, #dc2626);
+    font-weight: 500;
+  }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.5rem;
+  align-items: start;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.loan-tab-group {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+
+  .tab-icon {
+    margin-right: 0.5rem;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .tab-content {
+    padding: 1.25rem;
+  }
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.loan-table {
+  width: 100%;
+  background: transparent;
+
+  th {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.875rem 1rem;
+    background: var(--color-background-subtle);
+  }
+
+  td {
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.875rem 1rem;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  .font-bold {
+    font-weight: 700;
+  }
+
+  .font-semibold {
+    font-weight: 600;
+  }
+
+  .text-primary {
+    color: var(--color-primary);
+  }
+
+  .btn-action {
+    font-weight: 600;
+    font-size: 0.8125rem;
+  }
+}

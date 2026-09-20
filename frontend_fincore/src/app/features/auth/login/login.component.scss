@@ -1,0 +1,233 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 20%, #172554 0%, #0B132B 60%, #070D1F 100%);
+  padding: 1.5rem;
+  font-family: inherit;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 480px;
+}
+
+.login-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.4);
+  padding: 2.5rem 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 2rem;
+
+  .brand-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #eff6ff;
+    padding: 0.35rem 1rem;
+    border-radius: 9999px;
+    margin-bottom: 1rem;
+    border: 1px solid #dbeafe;
+
+    .brand-icon {
+      font-size: 1.25rem;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #1e3a8a;
+      letter-spacing: 0.05em;
+    }
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+  }
+}
+
+.alert-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff1f2;
+  border: 1px solid #ffe4e6;
+  color: #e11d48;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: #334155;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+
+      .input-icon {
+        position: absolute;
+        left: 0.875rem;
+        font-size: 1rem;
+        pointer-events: none;
+        opacity: 0.7;
+      }
+
+      input {
+        width: 100%;
+        padding: 0.75rem 0.875rem 0.75rem 2.6rem;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        font-size: 0.9375rem;
+        color: #0f172a;
+        background: #f8fafc;
+        transition: border-color 0.2s, box-shadow 0.2s;
+
+        &:focus {
+          outline: none;
+          background: #ffffff;
+          border-color: #2563eb;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+      }
+    }
+  }
+
+  .btn-submit {
+    margin-top: 0.5rem;
+    background: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.875rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+
+    &:hover:not(:disabled) {
+      background: #1d4ed8;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.demo-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed #e2e8f0;
+
+  .demo-title {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+    margin-bottom: 0.875rem;
+  }
+
+  .demo-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+
+    .btn-demo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.5rem 0.25rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+
+      &:hover {
+        background: #f1f5f9;
+        border-color: #cbd5e1;
+      }
+
+      .role-badge {
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 0.15rem 0.4rem;
+        border-radius: 4px;
+      }
+
+      .role-desc {
+        font-size: 0.65rem;
+        color: #64748b;
+      }
+
+      &.admin .role-badge {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+
+      &.officer .role-badge {
+        background: #e0e7ff;
+        color: #3730a3;
+      }
+
+      &.cust .role-badge {
+        background: #dcfce7;
+        color: #15803d;
+      }
+    }
+  }
+}
+
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+
+  code {
+    background: #f1f5f9;
+    padding: 0.15rem 0.35rem;
+    border-radius: 4px;
+    color: #475569;
+    font-family: monospace;
+  }
+}

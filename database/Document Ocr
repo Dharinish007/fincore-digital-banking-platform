@@ -1,0 +1,122 @@
+-- =====================================================================
+-- FinCore Digital Banking Platform — Document OCR Service Schema (PostgreSQL)
+-- Milestone 4: Document Upload | OCR Extraction | Document Verification
+--
+-- Runs against the SAME shared database as the other services
+-- (fincore_database_postgres.sql):
+--   spring.datasource.url=jdbc:postgresql://localhost:5432/BankingApp
+--   spring.datasource.username=postgres
+--   spring.datasource.password=1998
+--
+-- PREREQUISITE: run fincore_database_postgres.sql first (customers
+-- table must already exist — document_upload references it with a
+-- real foreign key).
+--
+-- SETUP:
+--   psql -U postgres -d BankingApp -f fincore_document_ocr_postgres.sql
+-- =====================================================================
+
+\c BankingApp
+
+DROP TABLE IF EXISTS document_verification CASCADE;
+DROP TABLE IF EXISTS ocr_result CASCADE;
+DROP TABLE IF EXISTS document_upload CASCADE;
+
+- ───────────────────────────── DOCUMENT UPLOADS ─────────────────────────────
+INSERT INTO document_upload (document_id, customer_id, document_type, file_name, file_path, file_size_kb, mime_type, upload_status, uploaded_at) VALUES
+(13, 14, 'PAN',             'divya_pan.jpg',        '/docs/2026/07/divya_pan.jpg',        798,  'image/jpeg',      'PROCESSED', '2026-07-09 09:10:00'),
+(14, 15, 'AADHAAR',         'rahul_g_aadhaar.pdf',  '/docs/2026/07/rahul_g_aadhaar.pdf',  1180, 'application/pdf', 'PROCESSED', '2026-07-09 11:25:00'),
+(15, 16, 'PASSPORT',        'arjun_passport.jpg',   '/docs/2026/07/arjun_passport.jpg',   1020, 'image/jpeg',      'PROCESSED', '2026-07-10 08:40:00'),
+(16, 17, 'VOTER_ID',        'sneha_voterid.jpg',    '/docs/2026/07/sneha_voterid.jpg',    680,  'image/jpeg',      'PROCESSED', '2026-07-10 13:05:00'),
+(17, 18, 'DRIVING_LICENSE', 'aditya_dl.jpg',        '/docs/2026/07/aditya_dl.jpg',        740,  'image/jpeg',      'PROCESSED', '2026-07-11 10:15:00'),
+(18, 19, 'BANK_STATEMENT',  'deepa19_stmt.pdf',     '/docs/2026/07/deepa19_stmt.pdf',     2210, 'application/pdf', 'PROCESSED', '2026-07-11 14:50:00'),
+(19, 20, 'SALARY_SLIP',     'swathi_salary.pdf',    '/docs/2026/07/swathi_salary.pdf',    560,  'application/pdf', 'PROCESSED', '2026-07-12 09:30:00'),
+(20, 21, 'PAN',             'neha_r_pan.jpg',       '/docs/2026/07/neha_r_pan.jpg',       805,  'image/jpeg',      'PROCESSED', '2026-07-12 15:00:00'),
+(21, 22, 'AADHAAR',         'vivek_aadhaar.jpg',    '/docs/2026/07/vivek_aadhaar.jpg',    960,  'image/jpeg',      'PROCESSED', '2026-07-13 08:20:00'),
+(22, 23, 'PASSPORT',        'pooja_passport.jpg',   '/docs/2026/07/pooja_passport.jpg',   1090, 'image/jpeg',      'FAILED',    '2026-07-13 12:45:00'),
+(23, 6,  'PAN',             'rahul_m_pan.jpg',      '/docs/2026/07/rahul_m_pan.jpg',      770,  'image/jpeg',      'PROCESSED', '2026-07-14 09:00:00'),
+(24, 9,  'PAN',             'anjali_pan.jpg',       '/docs/2026/07/anjali_pan.jpg',       815,  'image/jpeg',      'PROCESSED', '2026-07-14 11:30:00'),
+(25, 10, 'AADHAAR',         'priya_g_aadhaar.pdf',  '/docs/2026/07/priya_g_aadhaar.pdf',  1150, 'application/pdf', 'PROCESSED', '2026-07-15 10:10:00'),
+(26, 24, 'AADHAAR',         'priya_k_aadhaar.jpg',  '/docs/2026/07/priya_k_aadhaar.jpg',  940,  'image/jpeg',      'PROCESSED', '2026-07-15 14:20:00');
+
+
+- ───────────────────────────── OCR RESULTS ─────────────────────────────
+INSERT INTO ocr_result (ocr_id, document_id, extracted_name, extracted_dob, extracted_id_number, extracted_address, extracted_gender, issue_date, expiry_date, confidence_score, ocr_engine, processing_time_ms, status, processed_at) VALUES
+(11, 13, 'DIVYA MENON',   '1979-05-24', 'FXQPM6712R', NULL, 'F', '2016-03-18', NULL,        96.90, 'GOOGLE_VISION', 800,  'SUCCESS',       '2026-07-09 09:10:03'),
+(12, 14, 'RAHUL GUPTA',   '1995-05-30', '6543 2109 8765', '1 Church Street, Hyderabad', 'M', '2018-07-09', NULL, 92.80, 'AWS_TEXTRACT',   1090, 'SUCCESS',       '2026-07-09 11:25:05'),
+(13, 15, 'ARJUN MENON',   '1998-10-28', 'R8123456',   NULL, 'M', '2019-11-02', '2029-11-01', 95.10, 'AZURE_OCR',      1250, 'SUCCESS',       '2026-07-10 08:40:06'),
+(14, 16, 'SNEHA VERMA',   '1993-10-21', 'ABC1234567', '6 Indiranagar, Chennai', 'F', '2014-09-30', NULL, 84.30, 'TESSERACT',      1400, 'LOW_CONFIDENCE','2026-07-10 13:05:08'),
+(15, 17, 'ADITYA RAO',    '1995-07-23', 'DL-0620190067890', NULL, 'M', '2019-06-12', '2039-06-11', 90.70, 'AZURE_OCR', 1310, 'SUCCESS',       '2026-07-11 10:15:07'),
+(16, 18, NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,          91.50, 'AWS_TEXTRACT',    1850, 'SUCCESS',       '2026-07-11 14:50:12'),
+(17, 19, NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,          88.20, 'AWS_TEXTRACT',    1020, 'SUCCESS',       '2026-07-12 09:30:04'),
+(18, 20, 'NEHA RAO',      '1994-03-09', 'GXTPR2345S', NULL, 'F', '2017-01-25', NULL,        97.60, 'GOOGLE_VISION', 780,  'SUCCESS',       '2026-07-12 15:00:03'),
+(19, 21, 'VIVEK IYER',    '1991-01-19', '8765 4321 0987', '40 Brigade Road, Bengaluru', 'M', '2020-05-16', NULL, 93.40, 'AWS_TEXTRACT',    1070, 'SUCCESS',       '2026-07-13 08:20:05'),
+(20, 22, NULL,            NULL,        NULL,         NULL, NULL, NULL, NULL,          18.60, 'TESSERACT',      2600, 'FAILED',        '2026-07-13 12:45:11'),
+(21, 23, 'RAHUL MENON',   '1986-10-14', 'HXLPM7890T', NULL, 'M', '2015-12-08', NULL,        96.20, 'GOOGLE_VISION', 810,  'SUCCESS',       '2026-07-14 09:00:03'),
+(22, 24, 'ANJALI KRISHNAN','1975-11-16','JXNPK4567U', NULL, 'F', '2014-04-27', NULL,        94.90, 'GOOGLE_VISION', 830,  'SUCCESS',       '2026-07-14 11:30:04'),
+(23, 25, 'PRIYA GUPTA',   '1998-09-02', '1098 7654 3210', '71 Anna Nagar, Hyderabad', 'F', '2021-08-19', NULL, 92.10, 'AWS_TEXTRACT',    1150, 'SUCCESS',       '2026-07-15 10:10:06'),
+(24, 26, 'PRIYA KUMAR',   '1978-02-11', '5432 1098 7654', '52 Brigade Road, Hyderabad', 'F', '2019-10-03', NULL, 95.70, 'AWS_TEXTRACT',    1000, 'SUCCESS',       '2026-07-15 14:20:05'),
+-- Retry attempt on the previously FAILED document (id 3) - second OCR pass succeeds
+(25, 3,  'RAHUL KAPOOR',  '1988-02-25', 'P9876543',   NULL, 'M', '2020-02-14', '2030-02-13', 93.80, 'AZURE_OCR',      1180, 'SUCCESS',       '2026-07-16 10:00:00');
+ 
+- ───────────────────────────── DOCUMENT VERIFICATIONS ─────────────────────────────
+INSERT INTO document_verification (verification_id, document_id, verification_status, name_match_score, dob_match, verified_by, remarks, verified_at) VALUES
+(11, 13, 'VERIFIED',      98.20, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-09 09:11:00'),
+(12, 14, 'VERIFIED',      95.00, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-09 11:26:00'),
+(13, 15, 'VERIFIED',      96.50, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-10 08:41:00'),
+(14, 16, 'MANUAL_REVIEW', 79.40, TRUE,  'KYC Officer - S. Menon','Low OCR confidence, manually cross-checked and approved','2026-07-10 16:00:00'),
+(15, 17, 'VERIFIED',      92.30, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-11 10:16:00'),
+(16, 18, 'VERIFIED',      88.00, NULL,  'SYSTEM',                'Bank statement accepted as address proof',             '2026-07-11 14:51:00'),
+(17, 19, 'VERIFIED',      85.50, NULL,  'SYSTEM',                'Salary slip accepted as income proof',                 '2026-07-12 09:31:00'),
+(18, 20, 'VERIFIED',      99.00, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-12 15:01:00'),
+(19, 21, 'VERIFIED',      95.80, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-13 08:21:00'),
+(20, 22, 'REJECTED',       0.00, FALSE, 'SYSTEM',                'OCR failed - document image unreadable, re-upload requested', '2026-07-13 12:46:00'),
+(21, 23, 'VERIFIED',      97.10, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-14 09:01:00'),
+(22, 24, 'VERIFIED',      96.00, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-14 11:31:00'),
+(23, 25, 'VERIFIED',      93.60, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-15 10:11:00'),
+(24, 26, 'VERIFIED',      97.90, TRUE,  'SYSTEM',                'Auto-verified - high confidence match',                '2026-07-15 14:21:00'),
+(25, 3,  'VERIFIED',      91.20, TRUE,  'KYC Officer - R. Iyer', 'Re-upload successful on retry, manually confirmed',    '2026-07-16 10:05:00');
+-- ───────────────────────────── DOCUMENT UPLOADS ─────────────────────────────
+INSERT INTO document_upload (customer_id, document_type, file_name, file_path, file_size_kb, mime_type, upload_status, uploaded_at) VALUES
+(1,  'PAN',            'manoj_pan.jpg',        '/docs/2026/07/manoj_pan.jpg',        842,  'image/jpeg', 'PROCESSED', '2026-07-01 09:15:00'),
+(2,  'AADHAAR',        'john_aadhaar.pdf',     '/docs/2026/07/john_aadhaar.pdf',     1240, 'application/pdf', 'PROCESSED', '2026-07-02 10:20:00'),
+(3,  'PASSPORT',       'rahul_k_passport.jpg', '/docs/2026/07/rahul_k_passport.jpg', 980,  'image/jpeg', 'FAILED', '2026-07-03 11:05:00'),
+(4,  'PAN',            'sanjay_pan.jpg',       '/docs/2026/07/sanjay_pan.jpg',       765,  'image/jpeg', 'PROCESSED', '2026-07-03 14:40:00'),
+(5,  'AADHAAR',        'ritu_aadhaar.jpg',     '/docs/2026/07/ritu_aadhaar.jpg',     1105, 'image/jpeg', 'PROCESSED', '2026-07-04 08:50:00'),
+(6,  'VOTER_ID',       'rahul_m_voterid.jpg',  '/docs/2026/07/rahul_m_voterid.jpg',  650,  'image/jpeg', 'PROCESSING', '2026-07-05 12:30:00'),
+(7,  'DRIVING_LICENSE','rohan_dl.jpg',         '/docs/2026/07/rohan_dl.jpg',         720,  'image/jpeg', 'PROCESSED', '2026-07-05 16:00:00'),
+(8,  'PAN',            'amit_pan.jpg',         '/docs/2026/07/amit_pan.jpg',         810,  'image/jpeg', 'PROCESSED', '2026-07-06 09:45:00'),
+(9,  'BANK_STATEMENT', 'anjali_stmt.pdf',      '/docs/2026/07/anjali_stmt.pdf',      2340, 'application/pdf', 'PROCESSED', '2026-07-06 13:15:00'),
+(10, 'SALARY_SLIP',    'priya_g_salary.pdf',   '/docs/2026/07/priya_g_salary.pdf',   540,  'application/pdf', 'UPLOADED', '2026-07-07 10:00:00'),
+(13, 'AADHAAR',        'neha_aadhaar.jpg',     '/docs/2026/07/neha_aadhaar.jpg',     990,  'image/jpeg', 'PROCESSED', '2026-07-08 11:20:00'),
+(24, 'PAN',            'priya_k_pan.jpg',      '/docs/2026/07/priya_k_pan.jpg',      870,  'image/jpeg', 'PROCESSED', '2026-07-08 15:35:00');
+
+
+-- ───────────────────────────── RESET SEQUENCES ─────────────────────────────
+SELECT setval('document_upload_document_id_seq', 26, true);
+SELECT setval('ocr_result_ocr_id_seq', 25, true);
+SELECT setval('document_verification_verification_id_seq', 25, true);
+
+-- ═══════════════════════════════════════════════════════════════════
+-- NOTES
+-- ═══════════════════════════════════════════════════════════════════
+-- 1. ocr_result and document_verification are both 1:N against
+--    document_upload, not 1:1 - a document can be OCR'd more than once
+--    (retry after a FAILED attempt, e.g. document_id 3) and can be
+--    verified more than once (e.g. an initial MANUAL_REVIEW followed
+--    by a final decision). Always query the LATEST row per document_id
+--    (ORDER BY processed_at DESC / verified_at DESC LIMIT 1) rather
+--    than assuming one row per document.
+-- 2. name_match_score / dob_match compare ocr_result's extracted fields
+--    against customers.first_name + last_name + date_of_birth. This
+--    comparison logic belongs in the service layer (fuzzy name
+--    matching, nickname handling, etc.) - the database only stores the
+--    resulting score, it doesn't compute it.
+-- 3. file_path stores a reference (e.g. an S3 key), not the actual
+--    file - this database does not store document images/PDFs
+--    directly. Actual file storage (S3, local disk, etc.) is a
+--    separate concern from this schema.
+-- 4. When document-ocr-service (Java) is built, its @Table names must
+--    match document_upload, ocr_result, document_verification exactly,
+--    and its enums must match the CHECK constraint values above - same
+--    class of integration bug already flagged for account-service.

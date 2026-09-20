@@ -1,0 +1,292 @@
+<div class="account-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Ledger</div>
+      <h1 class="page-title">Account Management & Lifecycle</h1>
+      <p class="page-subtitle">Master ledger accounts, balance controls, branch routing & lifecycle states (Active, Dormant, Frozen, Closed).</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="openCreateModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Open Account
+      </button>
+
+      <a routerLink="/statement" class="btn btn-secondary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+        </svg>
+        Statements
+      </a>
+    </div>
+  </div>
+
+  <!-- Table Container Card -->
+  <div class="fc-card">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+          </svg>
+          Active Bank Accounts
+        </div>
+        <div class="fc-card-subtitle">Showing {{ filteredAccounts.length }} accounts across Savings, Current, Salary and Fixed Deposit</div>
+      </div>
+
+      <div class="table-filter-controls">
+        <input
+          type="text"
+          class="form-control filter-input"
+          placeholder="Search by Acct #, ID, customer, IFSC..."
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()"
+        />
+
+        <select class="form-control filter-select" [(ngModel)]="selectedType" (change)="applyFilters()">
+          <option value="ALL">All Account Types</option>
+          <option value="Savings">Savings</option>
+          <option value="Current">Current</option>
+          <option value="Salary">Corporate Salary</option>
+          <option value="Fixed Deposit">Fixed Deposit</option>
+        </select>
+
+        <select class="form-control filter-select" [(ngModel)]="selectedStatus" (change)="applyFilters()">
+          <option value="ALL">All Status</option>
+          <option value="Active">Active</option>
+          <option value="Dormant">Dormant</option>
+          <option value="Frozen">Frozen</option>
+          <option value="Closed">Closed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Account Number</th>
+            <th>Customer & ID</th>
+            <th>Type</th>
+            <th>Current Balance (INR)</th>
+            <th>Branch & IFSC</th>
+            <th>Opened Date</th>
+            <th>Status</th>
+            <th style="text-align: right;">Lifecycle Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let a of filteredAccounts">
+            <td>
+              <div class="acct-number-cell">
+                <span class="font-mono font-semibold">{{ a.accountNumber }}</span>
+                <span class="text-xs text-muted font-mono">{{ a.accountId }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="customer-cell">
+                <span class="font-semibold">{{ a.customerName }}</span>
+                <span class="text-xs text-muted font-mono">{{ a.customerId }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="account-type-tag" [ngClass]="a.accountType.toLowerCase().replace(' ', '-')">
+                {{ a.accountType }}
+              </span>
+            </td>
+            <td>
+              <div class="balance-cell">
+                <span class="font-semibold text-base tabular-nums">₹{{ a.balance | number:'1.2-2' }}</span>
+                <span class="text-xs text-muted">Avail: ₹{{ a.availableBalance | number:'1.2-2' }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="branch-cell">
+                <span class="font-mono text-xs font-semibold">{{ a.ifsc }}</span>
+                <span class="text-xs text-muted">{{ a.branchName }}</span>
+              </div>
+            </td>
+            <td class="text-sm text-muted">{{ a.openedDate }}</td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-success]="a.status === 'Active'"
+                [class.badge-warning]="a.status === 'Dormant'"
+                [class.badge-danger]="a.status === 'Frozen'"
+                [class.badge-neutral]="a.status === 'Closed'">
+                {{ a.status }}
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <div class="action-buttons-cell">
+                <button class="btn btn-secondary btn-sm" (click)="openAdjustBalance(a)" title="Credit / Debit Adjustment">
+                  Adjust
+                </button>
+                <button class="btn btn-secondary btn-sm" (click)="openLifecycle(a)" title="Lifecycle State Machine">
+                  Lifecycle
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Create Account Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showCreateModal">
+    <div class="fc-modal-dialog">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Open New Bank Account</h3>
+          <p class="text-sm text-muted">Initialize customer core ledger record with branch allocation.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeCreateModal()">✕</button>
+      </div>
+
+      <form [formGroup]="accountForm" (ngSubmit)="submitCreateAccount()">
+        <div class="fc-modal-body">
+          <div class="form-group">
+            <label>Select Customer <span class="required">*</span></label>
+            <select class="form-control" formControlName="customerId">
+              <option *ngFor="let c of customers" [value]="c.customerId">
+                {{ c.firstName }} {{ c.lastName }} ({{ c.customerId }} - {{ c.pan }})
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Account Type <span class="required">*</span></label>
+            <select class="form-control" formControlName="accountType">
+              <option value="Savings">Savings Account (4.25% p.a.)</option>
+              <option value="Current">Current Account (Business/Corporate)</option>
+              <option value="Salary">Corporate Salary Account</option>
+              <option value="Fixed Deposit">Fixed Deposit (7.40% p.a.)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Initial Deposit (INR) <span class="required">*</span></label>
+            <input type="number" class="form-control font-mono" formControlName="initialDeposit" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-group">
+              <label>Branch Name</label>
+              <input type="text" class="form-control" formControlName="branchName" />
+            </div>
+
+            <div class="form-group">
+              <label>Branch IFSC</label>
+              <input type="text" class="form-control font-mono" formControlName="ifsc" />
+            </div>
+          </div>
+        </div>
+
+        <div class="fc-modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeCreateModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Generate Account & Provision</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Account Lifecycle Management Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showLifecycleModal && selectedAccount">
+    <div class="fc-modal-dialog">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Account Lifecycle State Machine</h3>
+          <p class="text-sm text-muted">{{ selectedAccount.customerName }} • {{ selectedAccount.accountNumber }}</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeLifecycle()">✕</button>
+      </div>
+
+      <div class="fc-modal-body">
+        <div class="current-state-banner mb-4">
+          <span class="lbl">Current State:</span>
+          <span class="badge" [class.badge-success]="selectedAccount.status === 'Active'" [class.badge-danger]="selectedAccount.status === 'Frozen'">
+            {{ selectedAccount.status }}
+          </span>
+          <span class="balance-tag">Balance: ₹{{ selectedAccount.balance | number:'1.2-2' }}</span>
+        </div>
+
+        <div class="lifecycle-options-grid">
+          <button class="lifecycle-option-btn active-btn" (click)="changeStatus('Active')">
+            <div class="title">Active</div>
+            <div class="desc">Enable all credit, debit, UPI, ATM and IMPS operations.</div>
+          </button>
+
+          <button class="lifecycle-option-btn dormant-btn" (click)="changeStatus('Dormant')">
+            <div class="title">Dormant</div>
+            <div class="desc">Freeze automatic debits until re-KYC activation is performed.</div>
+          </button>
+
+          <button class="lifecycle-option-btn frozen-btn" (click)="changeStatus('Frozen')">
+            <div class="title">Frozen (AML / Risk Hold)</div>
+            <div class="desc">Immediately block all in/out cashflows per regulatory or fraud directive.</div>
+          </button>
+
+          <button class="lifecycle-option-btn closed-btn" (click)="changeStatus('Closed')">
+            <div class="title">Closed</div>
+            <div class="desc">Permanently decommission account ledger after balance settlement.</div>
+          </button>
+        </div>
+      </div>
+
+      <div class="fc-modal-footer">
+        <button class="btn btn-secondary" (click)="closeLifecycle()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Adjust Balance Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showAdjustBalanceModal && selectedAccount">
+    <div class="fc-modal-dialog">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Ledger Balance Adjustment</h3>
+          <p class="text-sm text-muted">Post double-entry transaction to {{ selectedAccount.accountNumber }}</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeAdjustBalance()">✕</button>
+      </div>
+
+      <form [formGroup]="adjustForm" (ngSubmit)="submitAdjustBalance()">
+        <div class="fc-modal-body">
+          <div class="form-group">
+            <label>Adjustment Type</label>
+            <div class="flex gap-4">
+              <label class="radio-label">
+                <input type="radio" formControlName="actionType" value="Credit" /> Credit (+)
+              </label>
+              <label class="radio-label">
+                <input type="radio" formControlName="actionType" value="Debit" /> Debit (-)
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Adjustment Amount (INR) <span class="required">*</span></label>
+            <input type="number" class="form-control font-mono text-lg" formControlName="amount" />
+          </div>
+
+          <div class="form-group">
+            <label>Reason / Audit Description <span class="required">*</span></label>
+            <input type="text" class="form-control" formControlName="description" />
+          </div>
+        </div>
+
+        <div class="fc-modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeAdjustBalance()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Commit Double-Entry Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

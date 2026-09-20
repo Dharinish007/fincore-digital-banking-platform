@@ -1,0 +1,134 @@
+<div class="audit-page">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Security & Governance</div>
+      <h1 class="page-title">Immutable Audit Trail & Ledger Integrity</h1>
+      <p class="page-subtitle">Cryptographically-sealed historical record of all operator actions, state transitions & gateway events.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="verifyChainIntegrity()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        </svg>
+        Verify Ledger Cryptography
+      </button>
+    </div>
+  </div>
+
+  <div class="fc-card">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+          </svg>
+          Audit Ledger Stream
+        </div>
+        <div class="fc-card-subtitle">Showing {{ filteredLogs.length }} verifiable operational events</div>
+      </div>
+
+      <div class="table-filter-controls">
+        <input
+          type="text"
+          class="form-control filter-input"
+          placeholder="Search by Audit ID, user, entity ID, IP..."
+          [(ngModel)]="searchQuery"
+          (input)="applyFilter()"
+        />
+
+        <select class="form-control filter-select" [(ngModel)]="selectedModule" (change)="applyFilter()">
+          <option value="ALL">All Modules</option>
+          <option value="ACCOUNT_SERVICE">ACCOUNT_SERVICE</option>
+          <option value="CUSTOMER_SERVICE">CUSTOMER_SERVICE</option>
+          <option value="TRANSACTION_SERVICE">TRANSACTION_SERVICE</option>
+          <option value="LOAN_SERVICE">LOAN_SERVICE</option>
+          <option value="KYC_SERVICE">KYC_SERVICE</option>
+          <option value="SECURITY_GATEWAY">SECURITY_GATEWAY</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Audit ID</th>
+            <th>Operator / System</th>
+            <th>Action</th>
+            <th>Module</th>
+            <th>Entity ID</th>
+            <th>IP Address</th>
+            <th>Timestamp</th>
+            <th>Integrity Hash</th>
+            <th style="text-align: right;">Diff Trace</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let l of filteredLogs">
+            <td class="font-mono text-xs font-semibold text-blue-600">{{ l.auditId }}</td>
+            <td>
+              <div class="flex flex-col">
+                <span class="font-semibold">{{ l.userName }}</span>
+                <span class="font-mono text-xs text-muted">{{ l.userId }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="action-tag">{{ l.action }}</span>
+            </td>
+            <td class="font-mono text-xs">{{ l.module }}</td>
+            <td class="font-mono text-xs font-semibold">{{ l.entityId }}</td>
+            <td class="font-mono text-xs text-muted">{{ l.ipAddress }}</td>
+            <td class="font-mono text-xs text-muted">{{ l.timestamp }}</td>
+            <td class="font-mono text-xs text-emerald-600" title="{{ l.integrityHash }}">
+              {{ l.integrityHash.substring(0, 10) }}...
+            </td>
+            <td style="text-align: right;">
+              <button class="btn btn-secondary btn-sm" (click)="viewDiff(l)">
+                View Diff
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Diff Viewer Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showDiffModal && selectedLog">
+    <div class="fc-modal-dialog modal-lg">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Audit State Transition Diff</h3>
+          <p class="text-sm text-muted font-mono">{{ selectedLog.auditId }} • {{ selectedLog.action }} on {{ selectedLog.entityId }}</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeDiff()">✕</button>
+      </div>
+
+      <div class="fc-modal-body">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="diff-pane">
+            <div class="diff-pane-title before">Previous Value (Before Action)</div>
+            <pre class="diff-code">{{ selectedLog.previousValue }}</pre>
+          </div>
+
+          <div class="diff-pane">
+            <div class="diff-pane-title after">New Value (Committed State)</div>
+            <pre class="diff-code">{{ selectedLog.newValue }}</pre>
+          </div>
+        </div>
+
+        <div class="crypto-card mt-4">
+          <span class="lbl font-bold text-xs text-slate-500">SHA-256 Cryptographic Block Hash:</span>
+          <div class="hash-text font-mono text-xs text-emerald-600 mt-1">{{ selectedLog.integrityHash }}</div>
+          <span class="text-xs text-muted mt-1 block">Signed by FinCore Vault HSM Hardware Security Module</span>
+        </div>
+      </div>
+
+      <div class="fc-modal-footer">
+        <button class="btn btn-secondary" (click)="closeDiff()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

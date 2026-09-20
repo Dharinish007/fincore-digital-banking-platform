@@ -1,0 +1,183 @@
+<div class="ben-page">
+  <div class="page-header">
+    <div>
+      <div class="breadcrumb">FinCore Core Banking / Payees</div>
+      <h1 class="page-title">Beneficiary & Payee Directory</h1>
+      <p class="page-subtitle">NPCI & RBI-verified interbank payees for instant UPI, IMPS & NEFT settlements.</p>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Beneficiary
+      </button>
+      <a routerLink="/payments/send" class="btn btn-secondary">
+        Send Money
+      </a>
+    </div>
+  </div>
+
+  <div class="fc-card">
+    <div class="fc-card-header">
+      <div>
+        <div class="fc-card-title">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+          </svg>
+          Registered Payees
+        </div>
+        <div class="fc-card-subtitle">Showing {{ filteredBeneficiaries.length }} registered beneficiaries</div>
+      </div>
+
+      <div class="table-filter-controls">
+        <input
+          type="text"
+          class="form-control filter-input"
+          placeholder="Search by payee name, IFSC, bank..."
+          [(ngModel)]="searchQuery"
+          (input)="applyFilters()"
+        />
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="fc-table">
+        <thead>
+          <tr>
+            <th>Payee Name</th>
+            <th>Account Number</th>
+            <th>Bank & IFSC</th>
+            <th>Supported Rails</th>
+            <th>Verification</th>
+            <th>Created Date</th>
+            <th>Status</th>
+            <th style="text-align: right;">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of filteredBeneficiaries">
+            <td>
+              <div class="flex items-center gap-3">
+                <div class="ben-circle">{{ b.beneficiaryName.charAt(0) }}</div>
+                <div>
+                  <span class="font-semibold">{{ b.beneficiaryName }}</span>
+                  <div class="text-xs text-muted" *ngIf="b.nickName">"{{ b.nickName }}"</div>
+                </div>
+              </div>
+            </td>
+            <td class="font-mono text-sm font-semibold">{{ b.accountNumber }}</td>
+            <td>
+              <div class="flex flex-col">
+                <span class="font-semibold text-slate-800">{{ b.bankName }}</span>
+                <span class="font-mono text-xs text-muted">{{ b.ifsc }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-info">{{ b.paymentType }}</span>
+            </td>
+            <td>
+              <span class="badge badge-success">
+                <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Penny-Drop Verified
+              </span>
+            </td>
+            <td class="text-xs text-muted">{{ b.createdDate }}</td>
+            <td>
+              <span class="badge" [class.badge-success]="b.status === 'Active'">{{ b.status }}</span>
+            </td>
+            <td style="text-align: right;">
+              <div class="flex justify-end gap-2">
+                <a [routerLink]="['/payments/send']" class="btn btn-secondary btn-sm">Pay</a>
+                <button class="btn btn-ghost btn-sm text-rose-600" (click)="deleteBen(b)">✕</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Add Beneficiary Modal -->
+  <div class="fc-modal-backdrop" *ngIf="showAddModal">
+    <div class="fc-modal-dialog">
+      <div class="fc-modal-header">
+        <div>
+          <h3>Register New Beneficiary</h3>
+          <p class="text-sm text-muted">Automated penny-drop validation with target bank core ledger.</p>
+        </div>
+        <button class="btn btn-ghost btn-sm" (click)="closeAddModal()">✕</button>
+      </div>
+
+      <form [formGroup]="benForm" (ngSubmit)="submitBeneficiary()">
+        <div class="fc-modal-body">
+          <div class="form-group">
+            <label>Beneficiary Full Name <span class="required">*</span></label>
+            <input type="text" class="form-control" formControlName="beneficiaryName" placeholder="As per bank passbook" />
+          </div>
+
+          <div class="form-group">
+            <label>Nickname (Optional)</label>
+            <input type="text" class="form-control" formControlName="nickName" placeholder="e.g. Landlord, Consulting" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="form-group">
+              <label>Account Number <span class="required">*</span></label>
+              <input type="password" class="form-control font-mono" formControlName="accountNumber" />
+            </div>
+
+            <div class="form-group">
+              <label>Confirm Account Number <span class="required">*</span></label>
+              <input type="text" class="form-control font-mono" formControlName="confirmAccountNumber" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Bank IFSC Code (11 Chars) <span class="required">*</span></label>
+            <div class="flex gap-2">
+              <input
+                type="text"
+                class="form-control font-mono uppercase"
+                formControlName="ifsc"
+                placeholder="e.g. HDFC0000128"
+                (input)="lookupIfsc()"
+              />
+              <button type="button" class="btn btn-secondary btn-sm" (click)="lookupIfsc()" [disabled]="isVerifyingIfsc">
+                {{ isVerifyingIfsc ? 'Validating...' : 'Verify' }}
+              </button>
+            </div>
+            <div class="text-xs text-emerald-600 mt-1 font-semibold" *ngIf="resolvedBankBranch">
+              ✓ {{ resolvedBankBranch }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Target Bank Name</label>
+            <input type="text" class="form-control" formControlName="bankName" />
+          </div>
+
+          <div class="form-group">
+            <label>Allowed Rails</label>
+            <select class="form-control" formControlName="paymentType">
+              <option value="All">All Channels (UPI, IMPS, NEFT)</option>
+              <option value="IMPS">IMPS Only</option>
+              <option value="NEFT">NEFT Only</option>
+              <option value="UPI">UPI Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="fc-modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeAddModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Verify & Add Payee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

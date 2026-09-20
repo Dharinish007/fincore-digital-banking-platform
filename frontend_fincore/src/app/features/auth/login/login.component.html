@@ -1,0 +1,82 @@
+<div class="login-page">
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="brand-badge">
+          <span class="brand-icon">🏛️</span>
+          <span class="brand-title">FinCore</span>
+        </div>
+        <h2>Core Banking Portal</h2>
+        <p class="subtitle">Secure Digital Banking & Financial Operations Platform</p>
+      </div>
+
+      <div class="alert-error" *ngIf="errorMessage">
+        <span class="error-icon">⚠️</span>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <form (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="username">Username / System ID</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              [(ngModel)]="username"
+              placeholder="e.g. admin, employee, customer"
+              required
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Security Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              [(ngModel)]="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit" [disabled]="loading">
+          <span *ngIf="!loading">Authenticate & Enter</span>
+          <span *ngIf="loading" class="spinner-text">Authenticating...</span>
+        </button>
+      </form>
+
+      <div class="demo-section">
+        <div class="demo-title">
+          <span>Quick Demo Roles (One-Click Login)</span>
+        </div>
+        <div class="demo-buttons">
+          <button type="button" class="btn-demo admin" (click)="fillDemo('admin', 'admin123')">
+            <span class="role-badge">ADMIN</span>
+            <span class="role-desc">admin / admin123</span>
+          </button>
+          <button type="button" class="btn-demo officer" (click)="fillDemo('employee', 'employee123')">
+            <span class="role-badge">OFFICER</span>
+            <span class="role-desc">employee / employee123</span>
+          </button>
+          <button type="button" class="btn-demo cust" (click)="fillDemo('customer', 'customer123')">
+            <span class="role-badge">CUSTOMER</span>
+            <span class="role-desc">customer / customer123</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="login-footer">
+        <span>Team A Core Banking Gateway: <code>http://localhost:8080</code></span>
+      </div>
+    </div>
+  </div>
+</div>

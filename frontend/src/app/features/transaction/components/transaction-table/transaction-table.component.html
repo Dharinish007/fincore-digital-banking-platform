@@ -1,0 +1,116 @@
+@if (isLoading) {
+  <div class="skeleton-rows">
+    @for (i of [1,2,3,4,5,6]; track i) { <div class="skeleton-row"></div> }
+  </div>
+} @else if (transactions.length === 0) {
+  <app-empty-state
+    icon="swap_horiz"
+    title="No transactions found"
+    description="Try adjusting your search or filters, or create a new transaction."
+    actionLabel="New Transaction"
+    (actionClicked)="createTransaction.emit()">
+  </app-empty-state>
+} @else {
+  <div class="table-wrapper">
+    <table mat-table [dataSource]="dataSource" matSort class="txn-table">
+
+      <!-- ID -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Txn ID</th>
+        <td mat-cell *matCellDef="let t"><span class="txn-id">{{ t.id }}</span></td>
+      </ng-container>
+
+      <!-- Reference Number -->
+      <ng-container matColumnDef="referenceNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Reference</th>
+        <td mat-cell *matCellDef="let t"><span class="ref-number">{{ t.referenceNumber }}</span></td>
+      </ng-container>
+
+      <!-- Customer -->
+      <ng-container matColumnDef="customerName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Customer</th>
+        <td mat-cell *matCellDef="let t">
+          <div class="customer-cell">
+            <span class="customer-name">{{ t.customerName }}</span>
+            <span class="customer-id">{{ t.customerId }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <!-- Account Number -->
+      <ng-container matColumnDef="sourceAccountNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account</th>
+        <td mat-cell *matCellDef="let t">
+          <span class="acc-number">{{ t.sourceAccountNumber }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Type -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+        <td mat-cell *matCellDef="let t">
+          <app-transaction-status-chip [value]="t.type"></app-transaction-status-chip>
+        </td>
+      </ng-container>
+
+      <!-- Amount -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Amount</th>
+        <td mat-cell *matCellDef="let t">
+          <span class="amount" [class.amount-debit]="t.type === 'WITHDRAWAL' || t.type === 'FEE' || t.type === 'PAYMENT'"
+                               [class.amount-credit]="t.type === 'DEPOSIT'">
+            {{ t.amount | currency:t.currency:'symbol':'1.2-2' }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Currency -->
+      <ng-container matColumnDef="currency">
+        <th mat-header-cell *matHeaderCellDef>CCY</th>
+        <td mat-cell *matCellDef="let t">
+          <span class="currency-badge">{{ t.currency }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+        <td mat-cell *matCellDef="let t">
+          <app-transaction-status-chip [value]="t.status"></app-transaction-status-chip>
+        </td>
+      </ng-container>
+
+      <!-- Date -->
+      <ng-container matColumnDef="transactionDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Date & Time</th>
+        <td mat-cell *matCellDef="let t">{{ t.transactionDate | date:'MMM d, y, h:mm a' }}</td>
+      </ng-container>
+
+      <!-- Created By -->
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created By</th>
+        <td mat-cell *matCellDef="let t">
+          <span class="created-by">{{ t.createdBy }}</span>
+        </td>
+      </ng-container>
+
+      <!-- Actions -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let t">
+          <div class="row-actions">
+            <a mat-icon-button [routerLink]="['/transaction', t.id]" matTooltip="View Details">
+              <mat-icon>visibility</mat-icon>
+            </a>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+          [routerLink]="['/transaction', row.id]"
+          class="data-row"></tr>
+    </table>
+    <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+  </div>
+}

@@ -1,0 +1,94 @@
+<div class="auth-wrapper">
+  
+  <!-- Left Panel: Branding / Imagery for Big Screens -->
+  <div class="auth-branding">
+    <div class="branding-content">
+      <div class="brand-logo">
+        <span class="material-icons-round brand-icon">account_balance</span>
+      </div>
+      <h1>FinCore Enterprise</h1>
+      <p>Next-generation digital banking platform for modern enterprises. Secure, scalable, and intuitive.</p>
+      
+      <div class="system-status-indicator">
+        <span class="status-dot"></span>
+        <span>All systems operational</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right Panel: Login Form -->
+  <div class="auth-form-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <h2>Welcome Back</h2>
+        <p class="subtitle">Please sign in to your account</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        
+        @if (errorMessage) {
+          <div class="alert alert-danger" role="alert">
+            <span class="material-icons-round">error_outline</span>
+            <span>{{ errorMessage }}</span>
+          </div>
+        }
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-with-icon">
+            <span class="material-icons-round input-icon">person</span>
+            <input 
+              type="text" 
+              id="username" 
+              formControlName="username" 
+              placeholder="Enter your username"
+              [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+            >
+          </div>
+          @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
+            <div class="invalid-feedback">Username is required</div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <span class="material-icons-round input-icon">lock</span>
+            <input 
+              type="password" 
+              id="password" 
+              formControlName="password" 
+              placeholder="Enter your password"
+              [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            >
+          </div>
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <div class="invalid-feedback">Password is required</div>
+          }
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary focus-ring" [disabled]="isLoading">
+            @if (isLoading) {
+              <span class="spinner"></span>
+              Authenticating...
+            } @else {
+              Login to FinCore
+            }
+          </button>
+        </div>
+        
+        <div class="demo-credentials">
+          <p><strong>Demo Credentials:</strong></p>
+          <div class="demo-list">
+            <span><code>admin</code> / <code>admin123</code></span>
+            <span><code>employee</code> / <code>employee123</code></span>
+            <span><code>customer</code> / <code>customer123</code></span>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</div>

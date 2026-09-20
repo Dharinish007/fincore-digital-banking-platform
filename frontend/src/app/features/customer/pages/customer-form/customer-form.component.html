@@ -1,0 +1,195 @@
+<div class="page customer-form-page">
+
+  <!-- Form Page Header -->
+  <app-page-header
+    [title]="pageTitle"
+    [subtitle]="pageSubtitle"
+    icon="person_add">
+  </app-page-header>
+
+  <div class="form-container">
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+
+      <!-- ── Section 01: Personal Information ────────────────── -->
+      <section class="form-section" aria-labelledby="section-personal">
+        <div class="section-header">
+          <div class="section-step">01</div>
+          <div class="section-meta">
+            <h2 id="section-personal" class="section-title">Personal Identity</h2>
+            <p class="section-desc">Enter the customer's legal personal details for KYC compliance.</p>
+          </div>
+        </div>
+
+        <div class="fields-grid grid-2">
+          <!-- First Name -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="firstName" placeholder="e.g. Alexander" required autocomplete="given-name" />
+            @if (hasError('firstName', 'required')) {
+              <mat-error>First name is required.</mat-error>
+            }
+            @if (hasError('firstName', 'minlength')) {
+              <mat-error>First name must be at least 2 characters.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Last Name -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="lastName" placeholder="e.g. Wright" required autocomplete="family-name" />
+            @if (hasError('lastName', 'required')) {
+              <mat-error>Last name is required.</mat-error>
+            }
+            @if (hasError('lastName', 'minlength')) {
+              <mat-error>Last name must be at least 2 characters.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Date of Birth -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Date of Birth</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="dateOfBirth" placeholder="Select date" required />
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (hasError('dateOfBirth', 'required')) {
+              <mat-error>Date of birth is required for KYC verification.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <div class="section-divider" aria-hidden="true"></div>
+
+      <!-- ── Section 02: Contact Information ─────────────────── -->
+      <section class="form-section" aria-labelledby="section-contact">
+        <div class="section-header">
+          <div class="section-step">02</div>
+          <div class="section-meta">
+            <h2 id="section-contact" class="section-title">Contact Information</h2>
+            <p class="section-desc">Primary channels for transactional notifications and account recovery.</p>
+          </div>
+        </div>
+
+        <div class="fields-grid grid-2">
+          <!-- Email Address -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Email Address</mat-label>
+            <input matInput type="email" formControlName="email" placeholder="name@domain.com" required autocomplete="email" />
+            @if (hasError('email', 'required')) {
+              <mat-error>Email address is required.</mat-error>
+            }
+            @if (hasError('email', 'email')) {
+              <mat-error>Please enter a valid email address.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Phone Number -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Phone Number</mat-label>
+            <input matInput type="tel" formControlName="phoneNumber" placeholder="+1 (555) 000-0000" required autocomplete="tel" />
+            @if (hasError('phoneNumber', 'required')) {
+              <mat-error>Phone number is required.</mat-error>
+            }
+            @if (hasError('phoneNumber', 'pattern')) {
+              <mat-error>Enter a valid phone number (7 to 15 digits).</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <div class="section-divider" aria-hidden="true"></div>
+
+      <!-- ── Section 03: Address Details ─────────────────────── -->
+      <section class="form-section" aria-labelledby="section-address">
+        <div class="section-header">
+          <div class="section-step">03</div>
+          <div class="section-meta">
+            <h2 id="section-address" class="section-title">Residential Address</h2>
+            <p class="section-desc">Official residence address for regulatory compliance and tax jurisdiction.</p>
+          </div>
+        </div>
+
+        <div class="fields-grid">
+          <!-- Street Address -->
+          <mat-form-field appearance="outline" class="form-field full-width">
+            <mat-label>Street Address</mat-label>
+            <input matInput formControlName="address" placeholder="123 Financial Way, Suite 400" required autocomplete="street-address" />
+            @if (hasError('address', 'required')) {
+              <mat-error>Street address is required.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="fields-grid grid-3">
+          <!-- City -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" placeholder="New York" required autocomplete="address-level2" />
+            @if (hasError('city', 'required')) {
+              <mat-error>City is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- State -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>State / Province</mat-label>
+            <input matInput formControlName="state" placeholder="NY" required autocomplete="address-level1" />
+            @if (hasError('state', 'required')) {
+              <mat-error>State is required.</mat-error>
+            }
+          </mat-form-field>
+
+          <!-- Postal Code -->
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Postal Code</mat-label>
+            <input matInput formControlName="postalCode" placeholder="10001" required autocomplete="postal-code" />
+            @if (hasError('postalCode', 'required')) {
+              <mat-error>Postal code is required.</mat-error>
+            }
+            @if (hasError('postalCode', 'pattern')) {
+              <mat-error>Enter a valid postal code (4–10 digits).</mat-error>
+            }
+          </mat-form-field>
+        </div>
+
+        <div class="fields-grid">
+          <!-- Country -->
+          <mat-form-field appearance="outline" class="form-field full-width">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" placeholder="United States" required autocomplete="country-name" />
+            @if (hasError('country', 'required')) {
+              <mat-error>Country is required.</mat-error>
+            }
+          </mat-form-field>
+        </div>
+      </section>
+
+      <div class="section-divider" aria-hidden="true"></div>
+
+      <!-- ── Form Actions ───────────────────────────────────── -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn btn--secondary"
+          (click)="cancel()"
+          [disabled]="isSaving">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn btn--primary"
+          [disabled]="isSaving || form.invalid">
+          @if (isSaving) {
+            <mat-spinner diameter="18" class="btn-spinner"></mat-spinner>
+            <span>Saving...</span>
+          } @else {
+            <span class="material-icons-round">{{ isEditMode ? 'save' : 'check' }}</span>
+            <span>{{ isEditMode ? 'Save Changes' : 'Create Customer' }}</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>

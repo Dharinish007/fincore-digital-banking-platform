@@ -1,0 +1,164 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:4200"
+            allowedMethods:
+              - "GET"
+              - "POST"
+              - "PUT"
+              - "PATCH"
+              - "DELETE"
+              - "OPTIONS"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+            maxAge: 3600
+
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_FIRST
+
+      routes:
+        - id: customer-service-route
+          uri: ${services.customer-service.url:http://localhost:8081}
+          predicates:
+            - Path=/api/v1/customers/**, /api/v1/auth/**
+
+        - id: account-service-route
+          uri: ${services.account-service.url:http://localhost:8082}
+          predicates:
+            - Path=/api/v1/accounts/**
+
+        - id: transaction-service-route
+          uri: ${services.transaction-service.url:http://localhost:8083}
+          predicates:
+            - Path=/api/v1/transactions/**
+
+        - id: dashboard-service-route
+          uri: ${services.dashboard-service.url:http://localhost:8084}
+          predicates:
+            - Path=/api/v1/dashboard/**
+
+        - id: loan-service-route
+          uri: ${services.loan-service.url:http://localhost:8085}
+          predicates:
+            - Path=/api/v1/loans/**, /api/v1/loan-products/**, /api/v1/loan-applications/**
+
+        - id: beneficiary-service-route
+          uri: ${services.beneficiary-service.url:http://localhost:8086}
+          predicates:
+            - Path=/api/v1/beneficiaries/**, /api/beneficiaries/**
+
+        - id: payment-service-route
+          uri: ${services.payment-service.url:http://localhost:8087}
+          predicates:
+            - Path=/api/v1/payments/**, /api/payments/**
+
+        - id: payment-mode-service-route
+          uri: ${services.imps-neft-upi-service.url:http://localhost:8088}
+          predicates:
+            - Path=/api/v1/payment-modes/**, /api/payment-modes/**
+
+        - id: kyc-service-route
+          uri: ${services.kyc-service.url:http://localhost:8089}
+          predicates:
+            - Path=/api/v1/kyc/**, /api/kyc/**
+
+        - id: face-match-service-route
+          uri: ${services.face-match-service.url:http://localhost:8090}
+          predicates:
+            - Path=/api/v1/face-match/**, /api/face-match/**
+
+        - id: risk-service-route
+          uri: ${services.risk-service.url:http://localhost:8091}
+          predicates:
+            - Path=/api/v1/risk/**, /api/risks/**
+
+        - id: compliance-service-route
+          uri: ${services.compliance-service.url:http://localhost:8092}
+          predicates:
+            - Path=/api/v1/compliance/**, /api/compliance/**
+
+        - id: notification-service-route
+          uri: ${services.notification-service.url:http://localhost:8093}
+          predicates:
+            - Path=/api/v1/notifications/**, /api/notifications/**
+
+        - id: disbursement-saga-route
+          uri: ${services.disbursement-saga.url:http://localhost:8094}
+          predicates:
+            - Path=/api/v1/disbursement-sagas/**, /api/disbursements/**
+
+        - id: settlement-service-route
+          uri: ${services.settlement-service.url:http://localhost:8095}
+          predicates:
+            - Path=/api/v1/settlements/**, /api/settlements/**
+
+        - id: audit-service-route
+          uri: ${services.audit-service.url:http://localhost:8096}
+          predicates:
+            - Path=/api/v1/audit/**, /api/audit-logs/**
+
+# Configurable Downstream Service URLs
+services:
+  customer-service:
+    url: http://localhost:8081
+  account-service:
+    url: http://localhost:8082
+  transaction-service:
+    url: http://localhost:8083
+  dashboard-service:
+    url: http://localhost:8084
+  loan-service:
+    url: http://localhost:8085
+  beneficiary-service:
+    url: http://localhost:8086
+  payment-service:
+    url: http://localhost:8087
+  imps-neft-upi-service:
+    url: http://localhost:8088
+  kyc-service:
+    url: http://localhost:8089
+  face-match-service:
+    url: http://localhost:8090
+  risk-service:
+    url: http://localhost:8091
+  compliance-service:
+    url: http://localhost:8092
+  notification-service:
+    url: http://localhost:8093
+  disbursement-saga:
+    url: http://localhost:8094
+  settlement-service:
+    url: http://localhost:8095
+  audit-service:
+    url: http://localhost:8096
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+      cors:
+        allowed-origins:
+          - "http://localhost:4200"
+        allowed-methods:
+          - "GET"
+          - "OPTIONS"
+        allowed-headers:
+          - "*"
+        allow-credentials: true
+        max-age: 3600s
+  endpoint:
+    health:
+      show-details: always

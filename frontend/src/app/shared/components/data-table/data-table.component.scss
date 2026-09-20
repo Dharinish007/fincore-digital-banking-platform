@@ -1,0 +1,70 @@
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-xs);
+}
+
+.empty-cell {
+  text-align: center;
+  padding: var(--spacing-8);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+/* ── Override Angular Material Table for Enterprise Look ── */
+::ng-deep {
+  .mat-mdc-table {
+    background: transparent !important;
+    width: 100%;
+  }
+
+  .mat-mdc-header-row {
+    background-color: var(--color-background-subtle) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    min-height: 44px !important;
+  }
+
+  .mat-mdc-header-cell {
+    color: var(--color-text-secondary) !important;
+    font-weight: 600 !important;
+    font-size: 0.75rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    border-bottom: none !important;
+    padding: 0 var(--spacing-4) !important;
+  }
+
+  .mat-mdc-row {
+    border-bottom: 1px solid var(--color-border-subtle) !important;
+    transition: background-color var(--transition-fast) !important;
+    min-height: 52px !important;
+    
+    &:hover {
+      background-color: var(--color-surface-hover) !important;
+    }
+  }
+
+  .mat-mdc-cell {
+    color: var(--color-text-primary) !important;
+    font-size: 0.875rem !important;
+    border-bottom: none !important;
+    padding: 0 var(--spacing-4) !important;
+  }
+
+  .mat-mdc-paginator {
+    background: transparent !important;
+    color: var(--color-text-secondary) !important;
+    border-top: 1px solid var(--color-border) !important;
+  }
+
+  .mat-mdc-icon-button {
+    color: var(--color-text-muted) !important;
+    
+    &:hover {
+      color: var(--color-primary) !important;
+      background-color: var(--color-surface-hover) !important;
+    }
+  }
+}

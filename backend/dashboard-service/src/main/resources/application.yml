@@ -1,0 +1,25 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: dashboard-service
+
+services:
+  customer-service:
+    url: http://localhost:8081
+
+  account-service:
+    url: http://localhost:8082
+
+  transaction-service:
+    url: http://localhost:8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

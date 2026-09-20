@@ -1,0 +1,188 @@
+<div class="loan-products-admin container-fluid">
+
+  <!-- Page Header -->
+  <app-page-header
+    title="Loan Products Management"
+    subtitle="Configure, activate, and manage platform-wide credit facilities and lending parameters"
+  >
+    <button mat-raised-button color="primary" (click)="openCreateModal()" class="create-btn">
+      <span class="material-icons-round mr-1">add_circle</span>
+      Create Loan Product
+    </button>
+  </app-page-header>
+
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading loan products..."></app-loading-spinner>
+  } @else {
+    <app-card-container title="Active & Inactive Lending Facilities" subtitle="System lending products configured across consumer, business, auto, and mortgage tiers">
+
+      @if (products().length === 0) {
+        <app-empty-state
+          icon="inventory_2"
+          title="No Loan Products Configured"
+          description="No credit products exist in the catalog. Click below to configure the first loan product."
+          actionLabel="Create Loan Product"
+          (actionClicked)="openCreateModal()"
+        >
+        </app-empty-state>
+      } @else {
+        <div class="table-responsive">
+          <table mat-table [dataSource]="products()" class="fincore-table">
+            <ng-container matColumnDef="productCode">
+              <th mat-header-cell *matHeaderCellDef>Code</th>
+              <td mat-cell *matCellDef="let p" class="font-mono text-primary font-semibold">{{ p.productCode }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef>Product Name</th>
+              <td mat-cell *matCellDef="let p">
+                <div class="product-info-cell">
+                  <span class="product-name font-medium">{{ p.name }}</span>
+                  <span class="product-desc text-secondary text-xs">{{ p.description }}</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="loanType">
+              <th mat-header-cell *matHeaderCellDef>Type</th>
+              <td mat-cell *matCellDef="let p">
+                <span class="type-pill">{{ p.loanType }}</span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="interestRate">
+              <th mat-header-cell *matHeaderCellDef>Interest Rate</th>
+              <td mat-cell *matCellDef="let p" class="font-semibold text-emerald">{{ p.interestRate }}% APR</td>
+            </ng-container>
+
+            <ng-container matColumnDef="amountRange">
+              <th mat-header-cell *matHeaderCellDef>Principal Limits</th>
+              <td mat-cell *matCellDef="let p">{{ p.minAmount | currency:'USD':'symbol':'1.0-0' }} – {{ p.maxAmount | currency:'USD':'symbol':'1.0-0' }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="tenureRange">
+              <th mat-header-cell *matHeaderCellDef>Tenure Limits</th>
+              <td mat-cell *matCellDef="let p">{{ p.minTenureMonths }} – {{ p.maxTenureMonths }} Months</td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let p">
+                <span class="status-indicator" [class.status-active]="p.status === 'ACTIVE'" [class.status-inactive]="p.status === 'INACTIVE'">
+                  {{ p.status }}
+                </span>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef class="text-right">Actions</th>
+              <td mat-cell *matCellDef="let p" class="text-right">
+                <button
+                  mat-stroked-button
+                  [color]="p.status === 'ACTIVE' ? 'warn' : 'primary'"
+                  class="btn-sm"
+                  (click)="toggleStatus(p)"
+                >
+                  {{ p.status === 'ACTIVE' ? 'Deactivate' : 'Activate' }}
+                </button>
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      }
+
+    </app-card-container>
+  }
+
+  <!-- ── MODAL: Create Loan Product ───────────────────────────── -->
+  @if (showCreateModal()) {
+    <div class="modal-backdrop" (click)="closeCreateModal()">
+      <div class="modal-content create-product-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-primary">add_business</span>
+            <div>
+              <h3>Configure New Loan Product</h3>
+              <p class="text-secondary">Define lending tier, interest rate, and borrowing bounds</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeCreateModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <form [formGroup]="productForm" (ngSubmit)="submitProduct()">
+          <div class="modal-body">
+            <div class="form-grid">
+              <mat-form-field appearance="outline">
+                <mat-label>Product Code</mat-label>
+                <input matInput formControlName="productCode" placeholder="e.g. PERSONAL_PRIME_01">
+                @if (productForm.get('productCode')?.invalid && productForm.get('productCode')?.touched) {
+                  <mat-error>Product code is required (alphanumeric uppercase)</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Product Name</mat-label>
+                <input matInput formControlName="name" placeholder="e.g. Prime Personal Loan">
+                @if (productForm.get('name')?.invalid && productForm.get('name')?.touched) {
+                  <mat-error>Product name is required</mat-error>
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Loan Type</mat-label>
+                <mat-select formControlName="loanType">
+                  @for (t of loanTypes; track t) {
+                    <mat-option [value]="t">{{ t }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Interest Rate (% APR)</mat-label>
+                <input matInput type="number" step="0.1" formControlName="interestRate" placeholder="e.g. 7.5">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Minimum Amount ($)</mat-label>
+                <input matInput type="number" formControlName="minAmount" placeholder="e.g. 1000">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Maximum Amount ($)</mat-label>
+                <input matInput type="number" formControlName="maxAmount" placeholder="e.g. 50000">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Min Tenure (Months)</mat-label>
+                <input matInput type="number" formControlName="minTenureMonths" placeholder="e.g. 6">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Max Tenure (Months)</mat-label>
+                <input matInput type="number" formControlName="maxTenureMonths" placeholder="e.g. 60">
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="col-span-2">
+                <mat-label>Description</mat-label>
+                <textarea matInput rows="2" formControlName="description" placeholder="Brief details about terms or eligibility criteria"></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button mat-stroked-button type="button" (click)="closeCreateModal()" [disabled]="isSubmitting()">Cancel</button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="isSubmitting()">
+              Create Product
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+</div>

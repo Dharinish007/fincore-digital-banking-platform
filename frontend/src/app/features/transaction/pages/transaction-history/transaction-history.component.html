@@ -1,0 +1,70 @@
+<app-page-header
+  title="Transaction History"
+  subtitle="Chronological record of all banking transactions"
+  icon="history"
+  actionLabel="New Transaction"
+  actionIcon="add"
+  (actionClicked)="onCreateTransaction()">
+</app-page-header>
+
+@if (history$ | async; as history) {
+  @if (history.length === 0) {
+    <app-empty-state
+      icon="history"
+      title="No transaction history"
+      description="No transactions have been recorded yet."
+      actionLabel="Create Transaction"
+      (actionClicked)="onCreateTransaction()">
+    </app-empty-state>
+  } @else {
+    <div class="history-container">
+      <div class="history-header">
+        <span class="history-count">{{ history.length }} transactions</span>
+        <a mat-stroked-button routerLink="/transaction">
+          <mat-icon>list</mat-icon> View Table
+        </a>
+      </div>
+
+      <div class="timeline">
+        @for (item of history; track item.transactionId) {
+          <div class="timeline-item" [routerLink]="['/transaction', item.transactionId]">
+            <div class="timeline-indicator">
+              <div class="timeline-dot" [class.dot-credit]="isCredit(item.type)"
+                                         [class.dot-debit]="isDebit(item.type)"
+                                         [class.dot-transfer]="item.type === 'TRANSFER'">
+                <mat-icon>{{ getTypeIcon(item.type) }}</mat-icon>
+              </div>
+              <div class="timeline-line"></div>
+            </div>
+
+            <div class="timeline-card">
+              <div class="card-top">
+                <div class="card-info">
+                  <div class="card-title-row">
+                    <span class="txn-ref">{{ item.referenceNumber }}</span>
+                    <app-transaction-status-chip [value]="item.status"></app-transaction-status-chip>
+                  </div>
+                  <p class="card-description">{{ item.description }}</p>
+                  <div class="card-meta">
+                    <span class="meta-account"><mat-icon>account_balance</mat-icon>{{ item.accountNumber }}</span>
+                    <app-transaction-status-chip [value]="item.type"></app-transaction-status-chip>
+                  </div>
+                </div>
+                <div class="card-amount">
+                  <span class="amount-value"
+                        [class.amount-credit]="isCredit(item.type)"
+                        [class.amount-debit]="isDebit(item.type)">
+                    {{ (isDebit(item.type) ? '- ' : '+ ') }}{{ item.amount | currency:item.currency:'symbol':'1.2-2' }}
+                  </span>
+                  <span class="amount-currency">{{ item.currency }}</span>
+                  <span class="amount-date">{{ item.date | date:'MMM d, y' }}</span>
+                  <span class="amount-time">{{ item.date | date:'h:mm a' }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+}

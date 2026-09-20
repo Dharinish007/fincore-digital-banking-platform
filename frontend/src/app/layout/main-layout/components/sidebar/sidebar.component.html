@@ -1,0 +1,82 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed()" aria-label="Main navigation">
+
+  <!-- ── Sidebar Header ──────────────────────────────────── -->
+  <div class="sidebar-header">
+    <div class="brand">
+      <div class="brand-icon" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="var(--color-primary)"/>
+          <path d="M6 22h20M6 22v-2l10-8 10 8v2" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <rect x="12" y="16" width="4" height="6" rx="1" fill="#fff" opacity=".95"/>
+          <rect x="19" y="14" width="3" height="8" rx="1" fill="#fff" opacity=".75"/>
+          <rect x="10" y="12" width="2" height="10" rx="1" fill="#fff" opacity=".75"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">FinCore</span>
+        <span class="brand-badge">Enterprise Banking</span>
+      </div>
+    </div>
+
+    <!-- Toggle Button -->
+    <button
+      class="toggle-btn focus-ring"
+      (click)="toggle()"
+      [attr.aria-label]="isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      [attr.title]="isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar'"
+      type="button"
+    >
+      <span class="material-icons-round">
+        {{ isCollapsed() ? 'chevron_right' : 'chevron_left' }}
+      </span>
+    </button>
+  </div>
+
+  <!-- ── Categorized Navigation ─────────────────────────── -->
+  <nav class="sidebar-nav" aria-label="Primary navigation">
+    @for (group of navGroups; track group.category) {
+      <div class="nav-group">
+        <div class="nav-category-header" [attr.aria-hidden]="isCollapsed()">
+          <span class="category-label">{{ group.category }}</span>
+        </div>
+        <ul class="nav-list" role="list">
+          @for (item of group.items; track item.route) {
+            <li class="nav-item">
+              <a
+                [routerLink]="item.isAction ? null : item.route"
+                (click)="onItemClick(item, $event)"
+                [routerLinkActive]="item.isAction ? '' : 'active'"
+                [routerLinkActiveOptions]="{ exact: item.exactMatch ?? false }"
+                class="nav-link focus-ring"
+                [attr.title]="isCollapsed() ? item.label : null"
+                [attr.aria-label]="item.label"
+              >
+                <span class="nav-icon material-icons-round" aria-hidden="true">{{ item.icon }}</span>
+                <span class="nav-label">{{ item.label }}</span>
+                @if (!item.isAction) {
+                  <span class="active-indicator" aria-hidden="true"></span>
+                }
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+    }
+  </nav>
+
+  <!-- ── Sidebar Footer ─────────────────────────────────── -->
+  <div class="sidebar-footer">
+    <div class="footer-divider" aria-hidden="true"></div>
+    <button
+      class="nav-link logout-btn focus-ring"
+      type="button"
+      (click)="logout()"
+      [attr.title]="isCollapsed() ? 'Sign out' : null"
+      aria-label="Sign out"
+    >
+      <span class="nav-icon material-icons-round" aria-hidden="true">logout</span>
+      <span class="nav-label">Sign Out</span>
+    </button>
+  </div>
+
+</aside>

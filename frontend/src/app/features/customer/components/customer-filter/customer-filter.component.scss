@@ -1,0 +1,135 @@
+.filter-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 0.875rem 1.25rem;
+  margin-bottom: var(--spacing-6);
+  box-shadow: var(--shadow-xs);
+}
+
+.filter-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.search-field-wrapper {
+  flex: 1;
+  min-width: 260px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--color-background-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 0 0.75rem;
+  height: 42px;
+  transition: all var(--transition-fast);
+
+  .search-icon {
+    font-size: 18px;
+    color: var(--color-text-muted);
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .filter-search-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    min-width: 0;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+      font-weight: 400;
+    }
+  }
+
+  .clear-search-btn {
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 50%;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    .material-icons-round {
+      font-size: 16px;
+    }
+  }
+
+  &:hover {
+    border-color: var(--color-border-strong);
+    background-color: var(--color-surface);
+  }
+
+  &:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-glow);
+    background-color: var(--color-surface);
+
+    .search-icon {
+      color: var(--color-primary);
+    }
+  }
+}
+
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+
+  .select-field {
+    width: 180px;
+  }
+
+  .reset-btn {
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+
+    .material-icons-round {
+      font-size: 16px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .filter-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-field-wrapper {
+    width: 100%;
+  }
+
+  .filter-controls {
+    width: 100%;
+    
+    .select-field {
+      flex: 1;
+      min-width: 130px;
+    }
+
+    .reset-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}

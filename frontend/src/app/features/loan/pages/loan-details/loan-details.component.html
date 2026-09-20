@@ -1,0 +1,356 @@
+<div class="page loan-details-page">
+  <!-- Page Header -->
+  <div class="header-nav-row">
+    <button mat-button class="back-btn" (click)="backToDashboard()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Loan Portfolio
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <app-loading-spinner message="Loading details..."></app-loading-spinner>
+  } @else if (hasError()) {
+    <app-empty-state
+      icon="error_outline"
+      title="Record Not Found"
+      description="The requested loan or application record could not be retrieved from the server."
+      actionLabel="Back to Loan Dashboard"
+      (actionClicked)="backToDashboard()">
+    </app-empty-state>
+  } @else {
+    <!-- CASE A: LOAN APPLICATION VIEW -->
+    @if (isApplicationView() && application()) {
+      <div class="details-container">
+        <!-- Top Status Banner -->
+        <div class="status-header-card">
+          <div class="header-left">
+            <div class="id-row">
+              <span class="type-label">Loan Application</span>
+              <span class="record-id">{{ application()?.applicationNumber }}</span>
+            </div>
+            <h2 class="record-title">{{ application()?.loanProduct?.name }}</h2>
+            <p class="submitted-date">Submitted on {{ application()?.createdAt | date:'mediumDate' }}</p>
+          </div>
+          <div class="header-right">
+            <app-loan-status-badge [status]="application()!.status"></app-loan-status-badge>
+          </div>
+        </div>
+
+        <!-- Rejection Alert if applicable -->
+        @if (application()?.status === 'REJECTED' && application()?.rejectionReason) {
+          <div class="rejection-alert">
+            <mat-icon>cancel</mat-icon>
+            <div class="alert-body">
+              <h4 class="alert-title">Application Not Approved</h4>
+              <p class="alert-desc">{{ application()?.rejectionReason }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- Origination Progress Stepper -->
+        <app-card-container title="Origination Workflow Progress" subtitle="Real-time lifecycle tracking of your credit application.">
+          <app-application-timeline
+            [status]="application()!.status"
+            [submittedAt]="application()?.createdAt"
+            [rejectionReason]="application()?.rejectionReason">
+          </app-application-timeline>
+        </app-card-container>
+
+        <!-- Application Parameters & Credit Assessment Grid -->
+        <div class="two-col-grid">
+          <!-- Application Info Card -->
+          <app-card-container title="Application Parameters" subtitle="Financial request details submitted for underwriting.">
+            <div class="spec-list">
+              <div class="spec-row">
+                <span class="spec-lbl">Requested Principal:</span>
+                <span class="spec-val font-bold text-primary">{{ application()?.requestedAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-lbl">Requested Tenure:</span>
+                <span class="spec-val">{{ application()?.requestedTenureMonths }} Months</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-lbl">Interest Rate:</span>
+                <span class="spec-val">{{ application()?.loanProduct?.interestRate }}% APR</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-lbl">Disbursement Account:</span>
+                <span class="spec-val font-medium">{{ application()?.accountNumber }}</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-lbl">Purpose:</span>
+                <span class="spec-val">{{ application()?.purpose || 'Not specified' }}</span>
+              </div>
+              <div class="spec-row">
+                <span class="spec-lbl">Declared Income:</span>
+                <span class="spec-val">{{ application()?.monthlyIncome | currency:'USD':'symbol':'1.0-0' }} / mo</span>
+              </div>
+            </div>
+          </app-card-container>
+
+          <!-- Credit Assessment Card (if evaluated) -->
+          @if (application()?.creditAssessment) {
+            <app-card-container title="Credit Assessment Evaluation" subtitle="Automated underwriting assessment results.">
+              <div class="assessment-box">
+                <div class="score-display">
+                  <span class="score-lbl">Credit Score</span>
+                  <div class="score-num" [class.score-good]="application()!.creditAssessment!.creditScore >= 700" [class.score-avg]="application()!.creditAssessment!.creditScore >= 550 && application()!.creditAssessment!.creditScore < 700" [class.score-bad]="application()!.creditAssessment!.creditScore < 550">
+                    {{ application()?.creditAssessment?.creditScore }}
+                  </div>
+                  <span class="score-scale">Scale: 300 – 850</span>
+                </div>
+
+                <div class="spec-list">
+                  <div class="spec-row">
+                    <span class="spec-lbl">Risk Classification:</span>
+                    <span class="spec-val font-bold" [class.text-emerald]="application()?.creditAssessment?.riskLevel === 'LOW'" [class.text-amber]="application()?.creditAssessment?.riskLevel === 'MEDIUM'" [class.text-rose]="application()?.creditAssessment?.riskLevel === 'HIGH'">
+                      {{ application()?.creditAssessment?.riskLevel }}
+                    </span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-lbl">Underwriting Decision:</span>
+                    <span class="spec-val font-bold">{{ application()?.creditAssessment?.decision }}</span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-lbl">Debt-to-Income (DTI):</span>
+                    <span class="spec-val font-semibold">{{ application()?.creditAssessment?.debtToIncomeRatio }}%</span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-lbl">Max Eligible Credit:</span>
+                    <span class="spec-val font-bold text-primary">{{ application()?.creditAssessment?.maxEligibleAmount | currency:'USD':'symbol':'1.0-0' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              @if (application()?.creditAssessment?.assessmentSummary) {
+                <div class="assessment-notes">
+                  <mat-icon>info</mat-icon>
+                  <span>{{ application()?.creditAssessment?.assessmentSummary }}</span>
+                </div>
+              }
+            </app-card-container>
+          } @else {
+            <app-card-container title="Credit Assessment" subtitle="Automated Underwriting">
+              <div class="pending-assessment-box">
+                <mat-icon class="pending-icon">hourglass_empty</mat-icon>
+                <h4 class="pending-title">Underwriting in Progress</h4>
+                <p class="pending-desc">Automated KYC and credit verification is currently queued for this application.</p>
+              </div>
+            </app-card-container>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- CASE B: ACTIVE / DISBURSED LOAN VIEW -->
+    @if (!isApplicationView() && loan()) {
+      <div class="details-container">
+        <!-- Top Summary Banner -->
+        <div class="status-header-card">
+          <div class="header-left">
+            <div class="id-row">
+              <span class="type-label">Active Loan Facility</span>
+              <span class="record-id">{{ loan()?.loanNumber }}</span>
+            </div>
+            <h2 class="record-title">{{ loan()?.loanProductName }}</h2>
+            <p class="submitted-date">Disbursed to {{ loan()?.accountNumber }} on {{ loan()?.disbursedAt | date:'mediumDate' }}</p>
+          </div>
+          <div class="header-right">
+            <app-loan-status-badge [status]="loan()!.status"></app-loan-status-badge>
+          </div>
+        </div>
+
+        <!-- Financial KPI Highlights -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-lbl">Principal Amount</span>
+            <span class="kpi-val text-primary">{{ loan()?.principalAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-lbl">Outstanding Balance</span>
+            <span class="kpi-val font-bold">{{ loan()?.outstandingAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-lbl">Monthly EMI</span>
+            <span class="kpi-val text-emerald font-bold">{{ loan()?.emiAmount | currency:'USD':'symbol':'1.2-2' }}</span>
+          </div>
+
+          <div class="kpi-card">
+            <span class="kpi-lbl">Interest Rate</span>
+            <span class="kpi-val">{{ loan()?.interestRate }}% APR</span>
+          </div>
+        </div>
+
+        <!-- Staff Disbursement Bar -->
+        @if (isStaff && loan()?.status === 'PENDING_DISBURSEMENT') {
+          <div class="staff-action-card mb-4">
+            <div class="action-info">
+              <span class="material-icons-round text-primary text-xl">account_balance</span>
+              <div>
+                <h4 class="font-semibold">Ready for Disbursement</h4>
+                <p class="text-secondary text-sm">Disburse approved principal funds to customer account {{ loan()?.accountNumber }}.</p>
+              </div>
+            </div>
+            <button mat-raised-button color="primary" (click)="openDisburseDialog()" [disabled]="isActionInProgress()">
+              Disburse Funds
+            </button>
+          </div>
+        }
+
+        <!-- Repayment Amortization Schedule -->
+        @if (repaymentSchedule()?.schedule) {
+          <app-card-container title="Amortization Repayment Schedule" subtitle="Month-by-month principal and interest breakdown.">
+            <app-repayment-schedule-table [schedule]="repaymentSchedule()!.schedule"></app-repayment-schedule-table>
+          </app-card-container>
+        }
+      </div>
+    }
+  }
+
+  <!-- ── MODAL: Approve Application ───────────────────────────── -->
+  @if (showApproveModal() && application()) {
+    <div class="modal-backdrop" (click)="closeApproveModal()">
+      <div class="modal-content confirmation-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-emerald">verified</span>
+            <div>
+              <h3>Approve Loan Application</h3>
+              <p class="text-secondary">App: {{ application()?.applicationNumber }} ({{ application()?.requestedAmount | currency }})</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeApproveModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p class="dialog-prompt">
+            Approving this application will transition status to <strong>APPROVED</strong> and generate a loan facility awaiting disbursement.
+          </p>
+
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Underwriter / Officer Notes (Optional)</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              [(ngModel)]="officerNotes"
+              placeholder="e.g. Approved under prime customer criteria."
+            ></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button (click)="closeApproveModal()" [disabled]="isActionInProgress()">Cancel</button>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn-approve"
+            (click)="confirmApprove()"
+            [disabled]="isActionInProgress()"
+          >
+            Confirm Approval
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── MODAL: Reject Application ────────────────────────────── -->
+  @if (showRejectModal() && application()) {
+    <div class="modal-backdrop" (click)="closeRejectModal()">
+      <div class="modal-content confirmation-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-danger">cancel</span>
+            <div>
+              <h3>Reject Loan Application</h3>
+              <p class="text-secondary">App: {{ application()?.applicationNumber }}</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeRejectModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <p class="dialog-prompt">Please provide the reason for rejection:</p>
+          <mat-form-field appearance="outline" class="w-full">
+            <mat-label>Rejection Reason</mat-label>
+            <textarea
+              matInput
+              rows="3"
+              [(ngModel)]="rejectionReason"
+              placeholder="e.g. Debt-to-income exceeds policy limits."
+            ></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button (click)="closeRejectModal()" [disabled]="isActionInProgress()">Cancel</button>
+          <button
+            mat-raised-button
+            color="warn"
+            (click)="confirmReject()"
+            [disabled]="isActionInProgress()"
+          >
+            Confirm Rejection
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ── MODAL: Disburse Loan Funds ───────────────────────────── -->
+  @if (showDisburseModal() && loan()) {
+    <div class="modal-backdrop" (click)="closeDisburseModal()">
+      <div class="modal-content confirmation-dialog" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <div class="header-title">
+            <span class="material-icons-round modal-icon text-primary">account_balance</span>
+            <div>
+              <h3>Execute Loan Disbursement</h3>
+              <p class="text-secondary">Loan: {{ loan()?.loanNumber }}</p>
+            </div>
+          </div>
+          <button mat-icon-button (click)="closeDisburseModal()">
+            <span class="material-icons-round">close</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="disburse-summary-card">
+            <div class="summary-row">
+              <span>Disbursement Amount:</span>
+              <strong>{{ loan()?.principalAmount | currency }}</strong>
+            </div>
+            <div class="summary-row">
+              <span>Destination Account:</span>
+              <strong>{{ loan()?.accountNumber }}</strong>
+            </div>
+          </div>
+
+          <p class="disburse-notice">
+            <span class="material-icons-round text-sm text-primary">info</span>
+            Executing this disbursement will credit funds immediately to the customer's account in Account Service.
+          </p>
+        </div>
+
+        <div class="modal-footer">
+          <button mat-stroked-button (click)="closeDisburseModal()" [disabled]="isActionInProgress()">Cancel</button>
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="confirmDisburse()"
+            [disabled]="isActionInProgress()"
+          >
+            Authorize & Disburse
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

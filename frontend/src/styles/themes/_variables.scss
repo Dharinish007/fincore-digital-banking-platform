@@ -1,0 +1,372 @@
+/* ============================================================
+   FinCore Global Design Tokens — Enterprise Digital Banking
+   Emerald (Primary) + Blue (Secondary) + Amber (Controlled Accent)
+   Medium-Strength Solid/Pastel Surface Hierarchy (Light Mode)
+   ============================================================ */
+
+/* ─── 1. Medium-Strength Solid Light Theme Tokens ──────────── */
+:root {
+  /* Brand & Primary Accents (Prestigious Banking Emerald) */
+  --color-primary: #059669;                  /* Deep Banking Emerald */
+  --color-primary-hover: #047857;            /* Forest Green Hover */
+  --color-primary-active: #065F46;           /* Deep Forest Active */
+  --color-primary-light: #D8EEE2;            /* Clearly Visible Mint-Emerald Tint */
+  --color-primary-subtle: #B2DEC4;           /* Mint Border Subtle */
+  --color-primary-glow: rgba(5, 150, 105, 0.20);
+
+  /* Secondary Accents (Trust & Technology Blue) */
+  --color-accent: #2563EB;                   /* Royal Tech Blue */
+  --color-accent-hover: #1D4ED8;             /* Darker Blue Hover */
+  --color-accent-active: #1E40AF;            /* Deep Blue Active */
+  --color-accent-light: #DCEAF8;             /* Clearly Visible Soft Blue Tint */
+  --color-accent-subtle: #BBD6F0;            /* Blue Border Subtle */
+  --color-accent-glow: rgba(37, 99, 235, 0.18);
+
+  /* Clearly Visible Layered Surface Hierarchy */
+  --color-background: #F1E9DD;               /* Clearly Colored Warm Cream Canvas */
+  --color-background-subtle: #DCEAF7;        /* Soft Blue Table Header & Sections */
+  --color-background-warm: #EFE6D8;          /* Warm Cream Alternative */
+
+  /* Structural Specific Surfaces */
+  --color-surface-sidebar: #CFE5D8;          /* Clearly Colored Soft Mint Sidebar */
+  --color-border-sidebar: #B8D4C3;           /* Soft Mint Sidebar Border */
+  --color-surface-navbar: #DCEAF7;           /* Clearly Colored Soft Blue Navbar */
+  --color-border-navbar: #C4D8EC;            /* Soft Blue Navbar Border */
+
+  /* Content Cards & Elevated Containers */
+  --color-surface: #FBF8F2;                  /* Warm Off-White Primary Card Surface */
+  --color-surface-secondary: #F1ECE4;        /* Soft Cream Sub-Cards & Containers */
+  --color-surface-elevated: #FCF9F4;         /* Elevated Modals, Dialogs, Dropdowns */
+  --color-surface-hover: #E5F2EA;            /* Interactive Row Hover with Clear Soft Mint Tint */
+  --color-surface-active: #D2E6DB;           /* Interactive Active State */
+  --color-surface-glass: rgba(220, 234, 247, 0.96); /* Blue Frosted Topbar */
+  --color-input-bg: #F6F1EA;                 /* Warm Cream Form Inputs */
+  --color-overlay: rgba(17, 24, 21, 0.55);   /* Warm Charcoal Modal Backdrop */
+
+  /* Tinted Semantic Card Surfaces (Clearly Visible Medium-Strength) */
+  --color-surface-emerald: #D8EEE2;          /* Visible Mint-Emerald Surface (Revenue/Positive) */
+  --color-surface-emerald-border: #B2DEC4;
+  --color-surface-blue: #DCEAF8;             /* Visible Blue Surface (Accounts/Transfers) */
+  --color-surface-blue-border: #BBD6F0;
+  --color-surface-amber: #FFF8EB;            /* Visible Amber Surface (Pending/Warnings) */
+  --color-surface-amber-border: #FDE68A;
+  --color-surface-rose: #FEE8E8;             /* Visible Rose Surface (Expenses/Danger) */
+  --color-surface-rose-border: #FECACA;
+  --color-surface-warm: #F1ECE4;             /* Warm Cream Secondary Surface */
+  --color-surface-warm-border: #DDD3C4;
+
+  /* Typography Colors (High Legibility on Cream & Off-White) */
+  --color-text-primary: #181E1B;             /* Deep Charcoal Primary Text */
+  --color-text-secondary: #445148;           /* Subdued Moss Slate Secondary */
+  --color-text-muted: #6E7E74;               /* Muted Gray Captions & Placeholders */
+  --color-text-disabled: #9EB0A5;            /* Inactive / Disabled Text */
+  --color-text-inverse: #FFFFFF;             /* Inverted White Text */
+
+  /* Soft Tinted Borders & Dividers */
+  --color-border: #DDD3C4;                   /* Warm Neutral/Cream Border */
+  --color-border-strong: #C4B8A5;            /* Hover / Focus Outline */
+  --color-border-subtle: #E8DECFC;           /* Table Inner Row Dividers */
+  --color-border-blue: #BBD6F0;              /* Blue Supporting Divider */
+  --color-border-warm: #D9CDBE;              /* Warm Cream Border */
+  --color-border-focus: #059669;             /* Emerald Focus Ring */
+
+  /* Semantic Statuses (Light Mode) */
+  --color-success: #059669;                  /* Emerald Success */
+  --color-success-hover: #047857;
+  --color-success-bg: #D8EEE2;               /* Clearly Visible Mint-Emerald Success BG */
+  --color-success-border: #B2DEC4;
+  --color-success-dark: #065F46;
+
+  --color-warning: #D97706;                  /* Warm Amber Warning */
+  --color-warning-hover: #B45309;
+  --color-warning-bg: #FFF8EB;               /* Visible Amber Warning BG */
+  --color-warning-border: #FDE68A;
+  --color-warning-dark: #92400E;
+
+  --color-danger: #DC2626;                   /* Crimson Rose Danger */
+  --color-danger-hover: #B91C1C;
+  --color-danger-bg: #FEE8E8;                /* Visible Rose Danger BG */
+  --color-danger-border: #FECACA;
+  --color-danger-dark: #991B1B;
+
+  --color-info: #2563EB;                     /* Tech Blue Info */
+  --color-info-hover: #1D4ED8;
+  --color-info-bg: #DCEAF8;                  /* Visible Blue Info BG */
+  --color-info-border: #BBD6F0;
+  --color-info-dark: #1E40AF;
+
+  /* Typography Scale */
+  --font-family-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --font-size-display: 2rem;                 /* 32px / 700 */
+  --font-size-page-title: 1.75rem;           /* 28px / 700 */
+  --font-size-section-title: 1.25rem;        /* 20px / 600 */
+  --font-size-subsection: 1.0625rem;         /* 17px / 600 */
+  --font-size-body: 0.9375rem;               /* 15px / 400 */
+  --font-size-body-sm: 0.875rem;             /* 14px / 400 */
+  --font-size-label: 0.8125rem;              /* 13px / 500 */
+  --font-size-secondary: 0.75rem;            /* 12px / 400 */
+  --font-size-metric: 1.75rem;               /* 28px / 700 */
+
+  /* 8px Spacing System */
+  --spacing-1: 0.25rem;                      /* 4px */
+  --spacing-2: 0.5rem;                       /* 8px */
+  --spacing-3: 0.75rem;                      /* 12px */
+  --spacing-4: 1rem;                         /* 16px */
+  --spacing-5: 1.25rem;                      /* 20px */
+  --spacing-6: 1.5rem;                       /* 24px */
+  --spacing-8: 2rem;                         /* 32px */
+  --spacing-10: 2.5rem;                      /* 40px */
+  --spacing-12: 3rem;                        /* 48px */
+  --spacing-16: 4rem;                        /* 64px */
+
+  /* Corner Radii */
+  --radius-xs: 4px;                          /* Chips, tags, micro */
+  --radius-sm: 6px;                          /* Form fields, buttons */
+  --radius-md: 8px;                          /* Sub-surfaces, dropdowns */
+  --radius-lg: 12px;                         /* Primary cards, tables */
+  --radius-xl: 16px;                         /* Modals, banners */
+  --radius-2xl: 20px;                        /* Large dialogs */
+  --radius-full: 9999px;                     /* Pills, status badges */
+
+  /* Elevation Shadows (Soft Warm Shadows) */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgba(24, 30, 27, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(24, 30, 27, 0.08), 0 1px 2px -1px rgba(24, 30, 27, 0.05);
+  --shadow-md: 0 4px 8px -1px rgba(24, 30, 27, 0.09), 0 2px 4px -2px rgba(24, 30, 27, 0.05);
+  --shadow-lg: 0 10px 18px -3px rgba(24, 30, 27, 0.10), 0 4px 6px -4px rgba(24, 30, 27, 0.04);
+  --shadow-xl: 0 20px 28px -5px rgba(24, 30, 27, 0.10), 0 8px 10px -6px rgba(24, 30, 27, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(24, 30, 27, 0.16);
+
+  /* Transitions & Layout */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --sidebar-transition: 250ms cubic-bezier(0.2, 0, 0, 1);
+
+  --sidebar-width: 256px;
+  --sidebar-collapsed-width: 72px;
+  --navbar-height: 64px;
+
+  --z-dropdown: 200;
+  --z-navbar: 280;
+  --z-overlay: 290;
+  --z-sidebar: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+
+  /* Backward Compatibility Token Aliases */
+  --bg-canvas: var(--color-background);
+  --bg-main: var(--color-background);
+  --bg-dark: var(--color-background);
+  --bg-surface: var(--color-surface);
+  --bg-surface-elevated: var(--color-surface-elevated);
+  --bg-surface-2: var(--color-surface-secondary);
+  --bg-surface-hover: var(--color-surface-hover);
+  --bg-surface-glass: var(--color-surface-glass);
+  --bg-overlay: var(--color-overlay);
+
+  --border-color: var(--color-border);
+  --border-subtle: var(--color-border-subtle);
+  --border-highlight: var(--color-border-strong);
+  --border-strong: var(--color-border-strong);
+  --border-focus: var(--color-border-focus);
+
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --text-disabled: var(--color-text-disabled);
+
+  --primary: var(--color-primary);
+  --primary-hover: var(--color-primary-hover);
+  --primary-active: var(--color-primary-active);
+  --primary-light: var(--color-primary-subtle);
+  --primary-transparent: var(--color-primary-light);
+  --primary-glow: var(--color-primary-glow);
+
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+  --accent-light: var(--color-accent-subtle);
+  --accent-transparent: var(--color-accent-light);
+
+  --success: var(--color-success);
+  --success-hover: var(--color-success-hover);
+  --success-bg: var(--color-success-bg);
+  --success-border: var(--color-success-border);
+  --success-dark: var(--color-success-dark);
+
+  --warning: var(--color-warning);
+  --warning-hover: var(--color-warning-hover);
+  --warning-bg: var(--color-warning-bg);
+  --warning-border: var(--color-warning-border);
+  --warning-dark: var(--color-warning-dark);
+
+  --danger: var(--color-danger);
+  --danger-hover: var(--color-danger-hover);
+  --danger-bg: var(--color-danger-bg);
+  --danger-border: var(--color-danger-border);
+  --danger-dark: var(--color-danger-dark);
+
+  --info: var(--color-info);
+  --info-hover: var(--color-info-hover);
+  --info-bg: var(--color-info-bg);
+  --info-border: var(--color-info-border);
+  --info-dark: var(--color-info-dark);
+}
+
+/* ─── 2. Premium Dark-First Theme Tokens (Preserved Completely) ─── */
+:root.dark-theme,
+body.dark-theme,
+html.dark-theme {
+  /* Brand & Primary Accents (Vibrant on Dark) */
+  --color-primary: #3B82F6;                  /* Vibrant Sky-Blue Primary */
+  --color-primary-hover: #60A5FA;
+  --color-primary-active: #2563EB;
+  --color-primary-light: rgba(59, 130, 246, 0.14);
+  --color-primary-subtle: rgba(59, 130, 246, 0.25);
+  --color-primary-glow: rgba(59, 130, 246, 0.24);
+
+  /* Secondary Accents */
+  --color-accent: #38BDF8;                   /* Cyan / Sky Light */
+  --color-accent-hover: #7DD3FC;
+  --color-accent-light: rgba(56, 189, 248, 0.12);
+  --color-accent-subtle: rgba(56, 189, 248, 0.22);
+  --color-accent-glow: rgba(56, 189, 248, 0.22);
+
+  /* Background & Surface System (Deep Obsidian Multi-Level) */
+  --color-background: #0B0F17;               /* Deep Obsidian Canvas */
+  --color-background-subtle: #111726;        /* Subtle Row Background */
+  --color-background-warm: #111726;
+  --color-surface-sidebar: #111726;          /* Dark Sidebar Surface */
+  --color-border-sidebar: rgba(255, 255, 255, 0.08);
+  --color-surface-navbar: rgba(17, 23, 38, 0.88); /* Dark Frosted Glass Topbar */
+  --color-border-navbar: rgba(255, 255, 255, 0.08);
+  --color-surface: #111726;                  /* Primary Surface (Cards, Tables, Sidebar) */
+  --color-surface-elevated: #182234;         /* Elevated Surface (Dropdowns, Menus, Modals) */
+  --color-surface-secondary: #0E1420;        /* Secondary / Input Container Surface */
+  --color-surface-hover: #182234;            /* Row & Control Hover */
+  --color-surface-active: #1F2C42;           /* Active / Pressed Surface */
+  --color-surface-glass: rgba(17, 23, 38, 0.88); /* Sticky Glass Topbar */
+  --color-input-bg: #0E1420;                 /* Dark Input Fields */
+  --color-overlay: rgba(3, 7, 18, 0.75);     /* Dark Modal Backdrop */
+
+  /* Tinted Semantic Card Surfaces (Dark Mode Glows) */
+  --color-surface-emerald: rgba(16, 185, 129, 0.08);
+  --color-surface-emerald-border: rgba(16, 185, 129, 0.22);
+  --color-surface-blue: rgba(59, 130, 246, 0.08);
+  --color-surface-blue-border: rgba(59, 130, 246, 0.22);
+  --color-surface-amber: rgba(245, 158, 11, 0.08);
+  --color-surface-amber-border: rgba(245, 158, 11, 0.22);
+  --color-surface-rose: rgba(244, 63, 94, 0.08);
+  --color-surface-rose-border: rgba(244, 63, 94, 0.22);
+  --color-surface-warm: #111726;
+  --color-surface-warm-border: rgba(255, 255, 255, 0.08);
+
+  /* Typography Colors (High Legibility on Dark) */
+  --color-text-primary: #F1F5F9;             /* Bright, Comfortable Off-White */
+  --color-text-secondary: #94A3B8;           /* Clean Slate Secondary Text */
+  --color-text-muted: #64748B;               /* Subdued Captions, Icons */
+  --color-text-disabled: #475569;            /* Disabled Text */
+  --color-text-inverse: #0F172A;             /* Inverted Dark Text */
+
+  /* Precision Borders & Dividers */
+  --color-border: rgba(255, 255, 255, 0.08); /* Crisp Subtle Border */
+  --color-border-strong: rgba(255, 255, 255, 0.18); /* Hover / Active Border */
+  --color-border-subtle: rgba(255, 255, 255, 0.05); /* Table Row Dividers */
+  --color-border-blue: rgba(59, 130, 246, 0.25);
+  --color-border-warm: rgba(255, 255, 255, 0.08);
+  --color-border-focus: #3B82F6;             /* Focus Border Glow */
+
+  /* Semantic Statuses (Refined Dark Accents) */
+  --color-success: #10B981;                  /* Emerald Green */
+  --color-success-hover: #34D399;
+  --color-success-bg: rgba(16, 185, 129, 0.12);
+  --color-success-border: rgba(16, 185, 129, 0.28);
+  --color-success-dark: #34D399;
+
+  --color-warning: #F59E0B;                  /* Warm Amber */
+  --color-warning-hover: #FBBF24;
+  --color-warning-bg: rgba(245, 158, 11, 0.12);
+  --color-warning-border: rgba(245, 158, 11, 0.28);
+  --color-warning-dark: #FBBF24;
+
+  --color-danger: #F43F5E;                   /* Rose Red */
+  --color-danger-hover: #FB7185;
+  --color-danger-bg: rgba(244, 63, 94, 0.12);
+  --color-danger-border: rgba(244, 63, 94, 0.28);
+  --color-danger-dark: #FB7185;
+
+  --color-info: #38BDF8;                     /* Sky Info */
+  --color-info-hover: #7DD3FC;
+  --color-info-bg: rgba(56, 189, 248, 0.12);
+  --color-info-border: rgba(56, 189, 248, 0.28);
+  --color-info-dark: #7DD3FC;
+
+  /* Elevation Shadows (Dark Theme Depth & Glows) */
+  --shadow-none: none;
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 10px -1px rgba(0, 0, 0, 0.6), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.7), 0 4px 6px -4px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 30px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+
+  /* Backward Compatibility Token Aliases for Dark Mode */
+  --bg-canvas: var(--color-background);
+  --bg-main: var(--color-background);
+  --bg-dark: var(--color-background);
+  --bg-surface: var(--color-surface);
+  --bg-surface-elevated: var(--color-surface-elevated);
+  --bg-surface-2: var(--color-surface-secondary);
+  --bg-surface-hover: var(--color-surface-hover);
+  --bg-surface-glass: var(--color-surface-glass);
+  --bg-overlay: var(--color-overlay);
+
+  --border-color: var(--color-border);
+  --border-subtle: var(--color-border-subtle);
+  --border-highlight: var(--color-border-strong);
+  --border-strong: var(--color-border-strong);
+  --border-focus: var(--color-border-focus);
+
+  --text-primary: var(--color-text-primary);
+  --text-secondary: var(--color-text-secondary);
+  --text-muted: var(--color-text-muted);
+  --text-disabled: var(--color-text-disabled);
+
+  --primary: var(--color-primary);
+  --primary-hover: var(--color-primary-hover);
+  --primary-active: var(--color-primary-active);
+  --primary-light: var(--color-primary-light);
+  --primary-transparent: var(--color-primary-light);
+  --primary-glow: var(--color-primary-glow);
+
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+  --accent-light: var(--color-accent-light);
+  --accent-transparent: var(--color-accent-light);
+
+  --success: var(--color-success);
+  --success-hover: var(--color-success-hover);
+  --success-bg: var(--color-success-bg);
+  --success-border: var(--color-success-border);
+  --success-dark: var(--color-success-dark);
+
+  --warning: var(--color-warning);
+  --warning-hover: var(--color-warning-hover);
+  --warning-bg: var(--color-warning-bg);
+  --warning-border: var(--color-warning-border);
+  --warning-dark: var(--color-warning-dark);
+
+  --danger: var(--color-danger);
+  --danger-hover: var(--color-danger-hover);
+  --danger-bg: var(--color-danger-bg);
+  --danger-border: var(--color-danger-border);
+  --danger-dark: var(--color-danger-dark);
+
+  --info: var(--color-info);
+  --info-hover: var(--color-info-hover);
+  --info-bg: var(--color-info-bg);
+  --info-border: var(--color-info-border);
+  --info-dark: var(--color-info-dark);
+}

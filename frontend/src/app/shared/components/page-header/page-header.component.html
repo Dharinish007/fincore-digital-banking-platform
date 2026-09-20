@@ -1,0 +1,37 @@
+<div class="page-header">
+  <div class="header-content">
+    <div class="title-area">
+      @if (icon) {
+        <div class="header-icon-container">
+          <mat-icon class="header-icon">{{ icon }}</mat-icon>
+        </div>
+      }
+      <div class="title-text-group">
+        <h1 class="page-title">{{ title }}</h1>
+        @if (subtitle) {
+          <p class="page-subtitle">{{ subtitle }}</p>
+        }
+      </div>
+    </div>
+  </div>
+  
+  @if (actionLabel) {
+    <div class="action-area">
+      @if (actionRoute) {
+        <a mat-flat-button color="primary" [routerLink]="actionRoute">
+          @if (actionIcon) {
+            <mat-icon>{{ actionIcon }}</mat-icon>
+          }
+          {{ actionLabel }}
+        </a>
+      } @else {
+        <button mat-flat-button color="primary" (click)="actionClicked.emit()" type="button">
+          @if (actionIcon) {
+            <mat-icon>{{ actionIcon }}</mat-icon>
+          }
+          {{ actionLabel }}
+        </button>
+      }
+    </div>
+  }
+</div>
