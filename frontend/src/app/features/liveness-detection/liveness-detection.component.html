@@ -245,7 +245,7 @@
           <span class="detail-label"> Confidence Score </span>
 
           <span class="detail-value">
-            {{ (resultData.confidenceScore ?? 0) * 100 | number: "1.2-2" }}%
+            {{ resultData.confidenceScore * 100 | number: "1.2-2" }}%
           </span>
         </div>
 
@@ -254,7 +254,7 @@
           <span class="detail-label"> Liveness Score </span>
 
           <span class="detail-value">
-            {{ (resultData.livenessScore ?? 0) * 100 | number: "1.2-2" }}%
+            {{ resultData.livenessScore * 100 | number: "1.2-2" }}%
           </span>
         </div>
       </div>

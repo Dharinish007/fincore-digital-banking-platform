@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { ExportService } from '../../../../core/services/export.service';
 import { Transaction } from '../../../../core/models/transaction.model';
+import { SidebarService } from '../../../../services/sidebar.service';
 @Component({
   selector: 'app-transaction-history',
   standalone: true,
@@ -37,6 +38,14 @@ export class TransactionHistoryComponent implements OnInit {
   private exportService = inject(ExportService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private sidebarService = inject(SidebarService);
+
+  public get sidebarCollapsed(): boolean {
+    return this.sidebarService.collapsed();
+  }
+  public set sidebarCollapsed(value: boolean) {
+    this.sidebarService.setCollapsed(value);
+  }
 
   public transactions = this.txService.filteredTransactions;
   public displayedColumns: string[] = ['id', 'sender', 'receiver', 'type', 'amount', 'date', 'status', 'actions'];

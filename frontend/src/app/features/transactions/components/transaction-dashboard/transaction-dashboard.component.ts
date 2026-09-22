@@ -19,6 +19,7 @@ Chart.register(...registerables);
 import { TransactionService } from '../../../../core/services/transaction.service';
 import { ExportService } from '../../../../core/services/export.service';
 import { Transaction } from '../../../../core/models/transaction.model';
+import { SidebarService } from '../../../../services/sidebar.service';
 
 @Component({
   selector: 'app-transaction-dashboard',
@@ -46,6 +47,14 @@ export class TransactionDashboardComponent implements OnInit, AfterViewInit, OnD
   private exportService = inject(ExportService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private sidebarService = inject(SidebarService);
+
+  public get sidebarCollapsed(): boolean {
+    return this.sidebarService.collapsed();
+  }
+  public set sidebarCollapsed(value: boolean) {
+    this.sidebarService.setCollapsed(value);
+  }
 
   public selectedTxForDrawer: Transaction | null = null;
   public isDrawerOpen = false;

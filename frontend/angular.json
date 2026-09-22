@@ -34,7 +34,18 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "canvg",
+              "html2canvas",
+              "jspdf",
+              "jspdf-autotable",
+              "tesseract.js",
+              "dompurify",
+              "raf",
+              "rgbcolor",
+              "core-js"
+            ]
           },
           "configurations": {
             "production": {

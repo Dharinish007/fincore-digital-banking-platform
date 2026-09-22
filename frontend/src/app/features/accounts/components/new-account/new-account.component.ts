@@ -53,6 +53,7 @@ export class NewAccountComponent {
   public selectedAccountType: OpenedAccountType | '' = '';
   public submitting = false;
   public submitted = false;
+  public sidebarCollapsed = false;
   public createdAccount: OpenedAccount | null = null;
   public serverError = '';
 
