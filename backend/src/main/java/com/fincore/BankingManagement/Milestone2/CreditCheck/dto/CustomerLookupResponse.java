@@ -7,7 +7,7 @@ public class CustomerLookupResponse {
     private Long customerId;
     private String customerName;
     private BigDecimal monthlyIncome;
-    private Integer loanId;
+    private Long loanId;
     private String loanType;
     private BigDecimal loanAmount;
     private List<PreviousLoanResponse> previousLoans;
@@ -36,11 +36,11 @@ public class CustomerLookupResponse {
         this.monthlyIncome = monthlyIncome;
     }
 
-    public Integer getLoanId() {
+    public Long getLoanId() {
         return loanId;
     }
 
-    public void setLoanId(Integer loanId) {
+    public void setLoanId(Long loanId) {
         this.loanId = loanId;
     }
 

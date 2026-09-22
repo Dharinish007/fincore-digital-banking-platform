@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 public class CreditCheckRequest {
     private Integer customerId;
     private String customerName;
-    private Integer loanId;
+    private Long loanId;
     private String loanType;
     private BigDecimal loanAmount;
     private BigDecimal monthlyIncome;
@@ -17,7 +17,7 @@ public class CreditCheckRequest {
     public CreditCheckRequest() {
     }
 
-    public CreditCheckRequest(Integer customerId, String customerName, Integer loanId, String loanType,
+    public CreditCheckRequest(Integer customerId, String customerName, Long loanId, String loanType,
             BigDecimal loanAmount, BigDecimal monthlyIncome, Integer creditScore,
             Integer existingLoanCount, String creditStatus, String remarks) {
         this.customerId = customerId;
@@ -48,11 +48,11 @@ public class CreditCheckRequest {
         this.customerName = customerName;
     }
 
-    public Integer getLoanId() {
+    public Long getLoanId() {
         return loanId;
     }
 
-    public void setLoanId(Integer loanId) {
+    public void setLoanId(Long loanId) {
         this.loanId = loanId;
     }
 

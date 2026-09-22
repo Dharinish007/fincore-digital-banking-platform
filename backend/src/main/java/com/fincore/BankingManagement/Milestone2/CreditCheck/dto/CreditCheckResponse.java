@@ -7,7 +7,7 @@ public class CreditCheckResponse {
     private Integer creditCheckId;
     private Integer customerId;
     private String customerName;
-    private Integer loanId;
+    private Long loanId;
     private String loanType;
     private BigDecimal loanAmount;
     private BigDecimal monthlyIncome;
@@ -21,7 +21,7 @@ public class CreditCheckResponse {
     public CreditCheckResponse() {
     }
 
-    public CreditCheckResponse(Integer creditCheckId, Integer customerId, String customerName, Integer loanId,
+    public CreditCheckResponse(Integer creditCheckId, Integer customerId, String customerName, Long loanId,
             String loanType, BigDecimal loanAmount, BigDecimal monthlyIncome, Integer creditScore,
             Integer existingLoanCount, String creditStatus, String remarks,
             LocalDateTime checkedAt, String message) {
@@ -64,11 +64,11 @@ public class CreditCheckResponse {
         this.customerName = customerName;
     }
 
-    public Integer getLoanId() {
+    public Long getLoanId() {
         return loanId;
     }
 
-    public void setLoanId(Integer loanId) {
+    public void setLoanId(Long loanId) {
         this.loanId = loanId;
     }
 

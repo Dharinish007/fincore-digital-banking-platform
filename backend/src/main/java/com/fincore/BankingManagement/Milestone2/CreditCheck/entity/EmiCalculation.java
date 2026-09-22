@@ -15,7 +15,7 @@ public class EmiCalculation {
     private Long emiId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "loan_id", nullable = false)
+    @JoinColumn(name = "loan_id", nullable = false,columnDefinition = "INT")
     private LoanApplication loanApplication;
 
     @Column(name = "principal_amount", nullable = false)

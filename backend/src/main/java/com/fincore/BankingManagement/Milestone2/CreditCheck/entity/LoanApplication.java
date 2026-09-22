@@ -15,7 +15,7 @@ public class LoanApplication {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "loan_id")
-    private Integer loanId;
+    private Long  loanId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
@@ -55,7 +55,7 @@ public class LoanApplication {
     public LoanApplication() {
     }
 
-    public LoanApplication(Integer loanId, Customer customer, String loanType, BigDecimal loanAmount,
+    public LoanApplication(Long loanId, Customer customer, String loanType, BigDecimal loanAmount,
             Integer tenureMonths, BigDecimal interestRate, String purpose,
             ApplicationStatus applicationStatus, LocalDateTime applicationDate,
             List<CreditCheck> creditChecks, List<EmiCalculation> emiCalculations,
@@ -74,11 +74,11 @@ public class LoanApplication {
         this.loanHistories = loanHistories;
     }
 
-    public Integer getLoanId() {
+    public Long getLoanId() {
         return loanId;
     }
 
-    public void setLoanId(Integer loanId) {
+    public void setLoanId(Long loanId) {
         this.loanId = loanId;
     }
 
