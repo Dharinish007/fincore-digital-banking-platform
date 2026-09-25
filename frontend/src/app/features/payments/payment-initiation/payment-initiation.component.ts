@@ -68,7 +68,7 @@ export class PaymentInitiationComponent implements OnInit {
   // =========================================================
 
   selectedBeneficiary: Beneficiary | null = null;
-
+  // PAYMENT FLOW
   // =========================================================
   // PAYMENT FORM
   // =========================================================
